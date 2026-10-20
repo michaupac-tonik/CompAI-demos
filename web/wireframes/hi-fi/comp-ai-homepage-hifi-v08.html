@@ -457,13 +457,13 @@ em.hl{font-style:normal;color:var(--ink-3)}
 .badges{display:flex;gap:8px}.badges span{border:1px solid var(--dark-line);border-radius:8px;padding:6px 10px;font-size:11.5px;letter-spacing:.04em;color:#a8a8a8}
 
 /* ========= notes + controls ========= */
-.note{display:none;position:absolute;z-index:45;top:16px;right:16px;width:360px;background:#fff;color:var(--ink);border:1px solid var(--line-2);border-radius:14px;padding:16px 18px 14px;font-size:13px;line-height:1.45;box-shadow:0 24px 50px -24px rgba(0,0,0,.35)}
-.note h6{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
-.note dt{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:10px}
-.note dd{margin:3px 0 0;color:var(--ink-2)}
-.note ul{display:block!important;list-style:disc;margin:0;padding-left:16px;gap:0;font-size:13px;color:var(--ink-2)}.note li{display:list-item!important;margin-top:3px;font-size:13px}
-.note .none{color:var(--ink-3)}
-.dark .note,.final .note,.foot .note{color:var(--ink)}
+.note{display:none;position:absolute;z-index:45;top:16px;right:16px;width:360px;background:#FFF5B5;color:#2B2611;border:1px solid #E8D46A;border-radius:6px;padding:16px 18px 14px;font-size:13px;line-height:1.45;box-shadow:0 1px 0 rgba(0,0,0,.04),0 14px 28px -12px rgba(80,60,0,.35),0 30px 60px -30px rgba(0,0,0,.35)}
+.note h6{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #E3CE5E;color:#2B2611}
+.note dt{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8A7420;margin-top:10px}
+.note dd{margin:3px 0 0;color:#3D3615}
+.note ul{display:block!important;list-style:disc;margin:0;padding-left:16px;gap:0;font-size:13px;color:#3D3615}.note li{display:list-item!important;margin-top:3px;font-size:13px}
+.note .none{color:#8A7420}
+.dark .note,.final .note,.foot .note{color:#2B2611}
 .notes-on .note{display:block}
 .ctrl{position:fixed;right:20px;bottom:20px;z-index:100;display:flex;gap:8px;align-items:center;background:var(--ink);color:#fff;border-radius:999px;padding:6px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);font-size:13.5px}
 .ctrl button{font-family:inherit;font-size:13.5px;border:0;background:transparent;color:#bdbdbd;height:34px;padding:0 14px;border-radius:999px;cursor:pointer}
@@ -495,8 +495,8 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- ============ 02 hero · VARIANT A (Ramp) ============ -->
 <section class="heroA railed">
-  <div class="note" style="top:16px"><h6>01 · Top bar &amp; navigation</h6><dl><dt>About</dt><dd>Gets visitors anywhere on the site in one click. The same bar appears on every page, including the ~100 existing pages (guides, comparisons, templates).</dd><dt>Why it matters</dt><dd>It's the entry point to every page. The new Resources menu puts guides, comparisons and templates one click away instead of footer-only.</dd><dt>Blockers</dt><dd><ul><li>Which button is the main action: “Book a demo” or “Get started”?</li><li>Please confirm the official list and names of your product modules. They will appear in the Product menu and in the Platform section.</li></ul></dd></dl></div>
-  <div class="note" style="top:auto;bottom:24px"><h6>02 · Hero</h6><dl><dt>About</dt><dd>Says what Comp AI does and the outcome, shows the real product, and offers one clear next step.</dd><dt>Why it matters</dt><dd>It decides in seconds whether a founder or a security lead keeps reading, and it carries the main conversion: the demo call. The visual is your onboarding, with the plan it builds from the answers (numbers are illustrative).</dd><dt>Blockers</dt><dd><ul><li>Who the page speaks to first: founders or security leads?</li><li>Which claims we can make: is the audit included, and how many days to audit-ready?</li></ul></dd></dl></div>
+  <div class="note" style="top:16px"><h6>01 · Top bar &amp; navigation</h6><dl><dt>About</dt><dd>The same menu on every page, including the ~100 existing ones.</dd><dt>Why it matters</dt><dd>The new Resources menu puts guides, comparisons and templates one click away.</dd><dt>Blockers</dt><dd><ul><li>Main button: “Book a demo” or “Get started”?</li><li>Confirm the list and names of your product modules (Product menu and Platform).</li></ul></dd></dl></div>
+  <div class="note" style="top:auto;bottom:24px"><h6>02 · Hero</h6><dl><dt>About</dt><dd>What Comp AI does, the outcome and one clear next step.</dd><dt>Why it matters</dt><dd>It decides in seconds who keeps reading. The visual shows your onboarding and the plan it builds (numbers are illustrative).</dd><dt>Blockers</dt><dd><ul><li>Who comes first: founders or security leads?</li><li>Confirm the claims: audit included, days to audit-ready.</li></ul></dd></dl></div>
   <div class="rails">
     <div class="grid">
       <div class="txt">
@@ -538,7 +538,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 03 logoBand -->
 <section class="logos railed" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
-  <div class="note" style="top:16px"><h6>03 · Proof band</h6><dl><dt>About</dt><dd>Who already uses Comp AI, right under the hero: one line with the number of customers and up to 12 logos.</dd><dt>Why it matters</dt><dd>The quickest credibility signal, and the first support for the mid-market story. The key numbers sit where they prove something: G2 in the hero, reply time in the Slack section, results in the customer stories.</dd><dt>Blockers</dt><dd><ul><li>Which customer logos we can use, ideally some larger companies.</li><li>Which numbers we can make public (1,000+ customers).</li></ul></dd></dl></div>
+  <div class="note" style="top:16px"><h6>03 · Proof band</h6><dl><dt>About</dt><dd>Who already uses Comp AI.</dd><dt>Why it matters</dt><dd>The fastest credibility signal. Key numbers sit where they prove something.</dd><dt>Blockers</dt><dd><ul><li>Confirm the logos we can use, ideally some larger companies.</li><li>Confirm the numbers we can make public (1,000+ customers).</li></ul></dd></dl></div>
   <div class="rails">
     <div class="intro"><p>Trusted by 1,000+ companies. <span>From seed-stage startups to enterprise.</span></p></div>
     <div class="lgrid">
@@ -550,7 +550,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 04 steps -->
 <section class="sec railed">
-  <div class="note" style="top:240px"><h6>04 · How it works</h6><dl><dt>About</dt><dd>The process from connecting your tools to passing the audit: a short before / after and four steps, each with a product visual.</dd><dt>Why it matters</dt><dd>Explains the product in one picture and gives a sceptical security lead “a bit less magic”. Slack support and the Trust Center get their own sections.</dd><dt>Blockers</dt><dd><p class="none">None</p></dd></dl></div>
+  <div class="note" style="top:240px"><h6>04 · How it works</h6><dl><dt>About</dt><dd>From connecting your tools to passing the audit, in four steps.</dd><dt>Why it matters</dt><dd>Explains the product in one picture.</dd><dt>Blockers</dt><dd><p class="none">None</p></dd></dl></div>
   <div class="rails">
     <div class="sec-hd">
       <div class="l"><div class="eyebrow"><span class="sq"></span><span class="idx">01</span>How it works</div>
@@ -580,7 +580,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 06 featureGrid -->
 <section class="sec railed" style="padding-top:0">
-  <div class="note"><h6>05 · Platform</h6><dl><dt>About</dt><dd>The product modules, one card each with a name, one line and a visual. The whole card links to that module's page.</dd><dt>Why it matters</dt><dd>Shows what customers actually get, and it's where the Product menu lands.</dd><dt>Blockers</dt><dd><ul><li>The official list and names of modules. The menu shows 10 today, the page shows 5, and some names differ.</li></ul></dd></dl></div>
+  <div class="note"><h6>05 · Platform</h6><dl><dt>About</dt><dd>Your product modules, each card linking to its page.</dd><dt>Why it matters</dt><dd>Shows what customers actually get.</dd><dt>Blockers</dt><dd><ul><li>Confirm the list and names of modules (the menu shows 10, the page 5).</li></ul></dd></dl></div>
   <div class="rails">
     <div class="sec-hd">
       <div class="l"><div class="eyebrow"><span class="sq"></span><span class="idx">02</span>Platform</div>
@@ -637,7 +637,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 05 integrations -->
 <section class="sec railed" style="padding-top:0">
-  <div class="note"><h6>06 · Integrations</h6><dl><dt>About</dt><dd>The 580+ number, the tools buyers look for first, and a link to the full list.</dd><dt>Why it matters</dt><dd>“Does it work with our stack?” is a real buying question, and it's where your evidence comes from.</dd><dt>Blockers</dt><dd><ul><li>Is there a full integrations list or page to link to?</li></ul></dd></dl></div>
+  <div class="note"><h6>06 · Integrations</h6><dl><dt>About</dt><dd>580+ integrations, with the key stacks in view.</dd><dt>Why it matters</dt><dd>Answers “does it work with our stack?”</dd><dt>Blockers</dt><dd><ul><li>Is there a full integrations page to link to?</li></ul></dd></dl></div>
   <div class="rails">
     <div class="integ">
       <div class="l">
@@ -658,7 +658,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 07 proofPoints (dark) -->
 <section class="sec dark railed">
-  <div class="note"><h6>07 · Security</h6><dl><dt>About</dt><dd>Comp makes you safer, not just certified, and anyone can verify it: four points, a real check as proof, and links to GitHub and your Trust Center.</dd><dt>Why it matters</dt><dd>Gives security the same weight as compliance. “Verify, don't trust” is your most distinctive argument and speaks to the technical audience.</dd><dt>Blockers</dt><dd><ul><li>Which security claims are live today, and which are on the roadmap?</li></ul></dd></dl></div>
+  <div class="note"><h6>07 · Security</h6><dl><dt>About</dt><dd>Comp makes you safer, and anyone can verify it.</dd><dt>Why it matters</dt><dd>Gives security the same weight as compliance. “Verify, don't trust” is your most distinctive argument.</dd><dt>Blockers</dt><dd><ul><li>Confirm which claims are live today and which are on the roadmap.</li></ul></dd></dl></div>
   <div class="rails">
     <div class="sec-hd"><div class="l"><div class="eyebrow"><span class="sq"></span><span class="idx">04</span>Security</div>
       <h2 class="h2">Compliance that actually improves your security. <em class="hl">Don’t trust us. Verify.</em></h2></div></div>
@@ -694,7 +694,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 09 featureHighlight -->
 <section class="sec railed">
-  <div class="note"><h6>08 · Experts on Slack</h6><dl><dt>About</dt><dd>A shared Slack channel with your in-house experts: who answers, how fast, and a real (anonymised) conversation.</dd><dt>Why it matters</dt><dd>Your main differentiator and the human side of the brand: software that does the work, people who've done it before.</dd><dt>Blockers</dt><dd><ul><li>Can we show the reply time publicly (< 3 min)?</li></ul></dd></dl></div>
+  <div class="note"><h6>08 · Experts on Slack</h6><dl><dt>About</dt><dd>Real experts in a shared Slack channel.</dd><dt>Why it matters</dt><dd>Your key differentiator and the human side of the brand.</dd><dt>Blockers</dt><dd><ul><li>Confirm the public reply time (< 3 min).</li></ul></dd></dl></div>
   <div class="rails">
     <div class="exp">
       <div class="l">
@@ -743,7 +743,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 10 audiencePaths -->
 <section class="sec railed" style="padding-top:0">
-  <div class="note"><h6>09 · Who it's for</h6><dl><dt>About</dt><dd>Three paths in tabs: Startup, Mid-Market and Enterprise. Each tab shows what that team needs and a matching customer story, plus the message that you can add frameworks as you grow.</dd><dt>Why it matters</dt><dd>Lets each visitor find their path, and carries the “we grow with you” message the mid-market push needs.</dd><dt>Blockers</dt><dd><ul><li>Same as the hero: founders or security leads first?</li><li>A matching story for each path (Enterprise is still open).</li></ul></dd></dl></div>
+  <div class="note"><h6>09 · Who it's for</h6><dl><dt>About</dt><dd>Startup, Mid-Market and Enterprise, each with a matching story.</dd><dt>Why it matters</dt><dd>Lets each visitor find their path and carries the “we grow with you” message.</dd><dt>Blockers</dt><dd><ul><li>Who comes first: founders or security leads?</li><li>Confirm a story for each path (Enterprise is open).</li></ul></dd></dl></div>
   <div class="rails">
     <div class="sec-hd"><div class="l"><div class="eyebrow"><span class="sq"></span><span class="idx">06</span>Who it’s for</div>
       <h2 class="h2">Built for where you are, <em class="hl">and where you’re going.</em></h2></div>
@@ -781,7 +781,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 11 caseStudies -->
 <section class="sec" style="padding-top:0">
-  <div class="note"><h6>10 · Customer stories</h6><dl><dt>About</dt><dd>One featured story with three numbers and a quote, three shorter stories (each card a link), and a link to all stories.</dd><dt>Why it matters</dt><dd>Stories with numbers are the strongest proof Comp has. We lead with the strongest one instead of six quotes of equal weight.</dd><dt>Blockers</dt><dd><ul><li>Which stories to feature, and any newer or larger customers we can show.</li><li>Are you comfortable naming a competitor on the homepage (“Switched from Vanta”)?</li></ul></dd></dl></div>
+  <div class="note"><h6>10 · Customer stories</h6><dl><dt>About</dt><dd>One featured story with numbers, plus three shorter ones.</dd><dt>Why it matters</dt><dd>Stories with numbers are your strongest proof.</dd><dt>Blockers</dt><dd><ul><li>Confirm which stories to feature.</li><li>OK to name a competitor (“Switched from Vanta”)?</li></ul></dd></dl></div>
   <div class="rails">
     <div class="stories-hd">
       <div><div class="eyebrow" style="margin-bottom:24px"><span class="sq"></span><span class="idx">07</span>Customer stories</div><h2 class="h2">Proof from teams like yours.</h2></div>
@@ -804,7 +804,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 12 pricingTeaser (banner) -->
 <section class="railed" style="padding-bottom:176px">
-  <div class="note"><h6>11 · Pricing (banner)</h6><dl><dt>About</dt><dd>One line on how pricing works, the four things your price depends on, and a link to the Pricing page.</dd><dt>Why it matters</dt><dd>Pricing is your second most visited page, so the intent is there. Full details stay on /pricing.</dd><dt>Blockers</dt><dd><p class="none">None</p></dd></dl></div>
+  <div class="note"><h6>11 · Pricing (banner)</h6><dl><dt>About</dt><dd>How pricing works, with a link to /pricing.</dd><dt>Why it matters</dt><dd>Pricing is your second most visited page.</dd><dt>Blockers</dt><dd><p class="none">None</p></dd></dl></div>
   <div class="rails">
     <div class="pbanner">
       <div><p class="t">Priced on your scope, quoted on a 20-minute call.</p>
@@ -816,7 +816,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 13 faq -->
 <section class="sec railed" style="padding-top:0">
-  <div class="note"><h6>12 · FAQ</h6><dl><dt>About</dt><dd>Today's 7 questions plus two new ones (price, and switching from another tool). Five are visible, the rest open with “Show all”.</dd><dt>Why it matters</dt><dd>Answers the last questions before someone books a call, and keeps your FAQ visible to Google.</dd><dt>Blockers</dt><dd><p class="none">None</p></dd></dl></div>
+  <div class="note"><h6>12 · FAQ</h6><dl><dt>About</dt><dd>Today's 7 questions, plus price and switching.</dd><dt>Why it matters</dt><dd>Handles the last objections and keeps your FAQ visible to Google.</dd><dt>Blockers</dt><dd><p class="none">None</p></dd></dl></div>
   <div class="rails">
     <div class="faq">
       <div class="l"><div class="eyebrow" style="margin-bottom:24px"><span class="sq"></span><span class="idx">08</span>FAQ</div><h2 class="h2">Questions, answered.</h2></div>
@@ -835,7 +835,7 @@ html.js .reveal.in{opacity:1;transform:none}
 <!-- 14 ctaBand -->
 <section class="final">
   <div class="gridlines"></div>
-  <div class="note"><h6>13 · Final call to action</h6><dl><dt>About</dt><dd>One closing line, the main button and three reassurances.</dd><dt>Why it matters</dt><dd>Closes the page on one clear next step and removes the last hesitation.</dd><dt>Blockers</dt><dd><ul><li>Same as the hero: which button is the main action?</li><li>After the call: is the quote emailed, or is the exact price given on the call?</li></ul></dd></dl></div>
+  <div class="note"><h6>13 · Final call to action</h6><dl><dt>About</dt><dd>One closing line, the main button and three reassurances.</dd><dt>Why it matters</dt><dd>Ends the page on one clear next step.</dd><dt>Blockers</dt><dd><ul><li>Main button (same as the hero).</li><li>After the call: is the quote emailed, or is the price given on the call?</li></ul></dd></dl></div>
   <div class="rails">
     <h2 class="display">Comp AI never sleeps,<br><span>so your team can.</span></h2>
     <div class="ctas"><a class="btn btn-light" href="#">Book a demo →</a><div class="meta"><span>20-minute call</span><span>Quote emailed after</span><span>No contract</span></div></div>
@@ -844,7 +844,7 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <!-- 15 footer -->
 <footer class="foot">
-  <div class="note" style="top:24px"><h6>14 · Footer</h6><dl><dt>About</dt><dd>The same five link columns as today, plus offices, social links and system status.</dd><dt>Why it matters</dt><dd>Keeps every guide, comparison and legal page linked, so they keep their place in search.</dd><dt>Blockers</dt><dd><p class="none">None</p></dd></dl></div>
+  <div class="note" style="top:24px"><h6>14 · Footer</h6><dl><dt>About</dt><dd>Today's five link columns, offices, socials and status.</dd><dt>Why it matters</dt><dd>Keeps every guide, comparison and legal page linked for search.</dd><dt>Blockers</dt><dd><p class="none">None</p></dd></dl></div>
   <div class="rails">
     <div class="top">
       <div class="brand"><a class="logo" href="#" style="color:#fff"><span class="mk" style="background:#fff"></span>Comp AI</a><p>AI-native compliance and security. Miami HQ · New York.</p><span class="sysok"><i></i>All systems normal</span><div class="soc"><span>GH</span><span>X</span><span>in</span><span>YT</span></div></div>
