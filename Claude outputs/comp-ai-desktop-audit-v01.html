@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI · Audyt desktop przed spotkaniem dev + brand</title>
+<style>
+:root{--ink:#161616;--mute:#666;--line:#e2e2de;--bg:#fff;--alt:#f5f5f2;--amb:#f6e7c1;--ambb:#d9a640;--ambt:#7a5410;--ok:#e3f1e6;--okt:#2d6a3e;--red:#fbe4df;--redt:#8a2c19;--blue:#e8eef9;--bluet:#2a4f8f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--alt)}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 32px 96px}
+header{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:40px 44px;margin-bottom:28px}
+.kick{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:10px}
+h1{font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-.01em;margin-bottom:14px}
+h2{font-size:24px;font-weight:600;margin-bottom:6px}
+h3{font-size:16px;font-weight:600;margin:18px 0 8px}
+.lead{font-size:18px;color:#333;max-width:820px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.toc a{font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--alt)}
+section{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:32px 36px;margin-bottom:20px}
+.sub{color:var(--mute);margin-bottom:18px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--mute);font-weight:600;background:var(--alt)}
+td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
+ul{padding-left:20px}li{margin:4px 0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
+.stat{background:var(--alt);border-radius:12px;padding:16px}
+.stat b{display:block;font-size:22px;font-weight:600}
+.stat span{font-size:13px;color:var(--mute)}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.t-ok{background:var(--ok);color:var(--okt)}.t-fix{background:var(--blue);color:var(--bluet)}.t-q{background:var(--amb);color:var(--ambt)}.t-r{background:var(--red);color:var(--redt)}
+.box{border-left:3px solid var(--ambb);background:var(--amb);border-radius:8px;padding:14px 18px;margin-top:14px;color:#4a3608}
+.cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:6px}
+.col{background:var(--alt);border-radius:12px;padding:18px}
+.col h3{margin-top:0}
+code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--alt);border-radius:4px;padding:1px 5px}
+@media (max-width:760px){.grid,.cols{grid-template-columns:1fr 1fr}.wrap{padding:24px 16px}h1{font-size:30px}}
+</style></head><body><div class="wrap">
+
+<header>
+<p class="kick">Comp AI · web design · audyt desktop · 19.10.2026</p>
+<h1>Desktop gotowy do przeglądu: co się zgadza, co poprawione, co do ustalenia</h1>
+<p class="lead">Przegląd całości przed spotkaniem wewnętrznym z dev (Arek) i brand (Olga). Zakres: 4 strony, desktop 1440. Bez szablonu pojedynczej historii (<code>/case-studies/&lt;slug&gt;</code>), mobile czeka na akceptację desktopu. Źródła: kontrakt v0.7 (C18–C39), wireframe’y HTML w folderze <code>web/wireframes/</code>, Figma (dev, Comp AI team, instructions).</p>
+<nav class="toc"><a href="#scope">Zakres i długość</a><a href="#audit">Wyniki audytu</a><a href="#dev">Dla deva</a><a href="#brand">Dla brandu</a><a href="#decisions">Decyzje na spotkanie</a><a href="#files">Gdzie co leży</a></nav>
+</header>
+
+<section id="scope">
+<h2>Zakres i długość stron</h2>
+<p class="sub">Każda strona istnieje w trzech wersjach: wireframe dla deva (pola i limity), makieta dla zespołu Comp AI (draft copy) i instrukcja dla klienta.</p>
+<div class="grid">
+<div class="stat"><b>~9 050 px</b><span>Homepage · 10 sekcji + baner · dziś ~12 000 px</span></div>
+<div class="stat"><b>~5 100 px</b><span>Book a demo · 7 bloków · formularz na 1. ekranie</span></div>
+<div class="stat"><b>~4 700 px</b><span>Pricing · 8 bloków · dziś ~3 770 px (dochodzą logotypy i historie)</span></div>
+<div class="stat"><b>~3 500 px</b><span>Case studies · 5 bloków · dziś ~4 520 px</span></div>
+</div>
+<p style="margin-top:14px;font-size:14px;color:var(--mute)">Długości z makiet w Figmie na 1440, z odstępami lo-fi (112 px na sekcję). Odstępy ostateczne ustalimy na hi-fi, więc liczby będą niższe.</p>
+</section>
+
+<section id="audit">
+<h2>Wyniki audytu</h2>
+<p class="sub">Sprawdzone: spójność między stronami, zgodność kontraktu, Figmy i HTML, elementy spoza kontraktu.</p>
+<table>
+<tr><th>Obszar</th><th>Wynik</th><th>Stan</th></tr>
+<tr><td>Struktura stron</td><td>Kolejność bloków na 4 stronach = §9 kontraktu. Nazwy ramek zgodne z §5. Notatki dla każdej sekcji. Jeden H1 na stronę. Ciemne sekcje w trybie Dark.</td><td><span class="tag t-ok">zgodne</span></td></tr>
+<tr><td>Wspólne sekcje</td><td>Pasek, nawigacja, stopka, logotypy, Security i integracje są identyczne na wszystkich stronach, które ich używają. FAQ wszędzie „Questions, answered”.</td><td><span class="tag t-ok">zgodne</span></td></tr>
+<tr><td>Placeholdery w makietach klienckich</td><td>Brak pozostałości (≤, lorem, nazw pól) w 4 makietach i przykładzie /demo/soc2.</td><td><span class="tag t-ok">zgodne</span></td></tr>
+<tr><td>C35 · frameworki na krótkich kartach</td><td>Brakowało ich w HTML homepage (dev + klient) i /pricing (dev + klient) oraz w szkicach instrukcji homepage i /pricing.</td><td><span class="tag t-fix">poprawione</span></td></tr>
+<tr><td>Format czasu callu</td><td>„20-min call” w formularzu /demo zmienione na „20-minute call” (HTML, Figma: makieta i instrukcja). Nagłówki typu „20 minutes away” zostają. Zapisane w kontrakcie jako konwencja copy (C39).</td><td><span class="tag t-fix">poprawione</span></td></tr>
+<tr><td>Jak klient dostaje cenę</td><td>/demo i homepage: „Quote emailed after”. /pricing: „Exact price on the call”. Dwa różne calle, ale komunikat może brzmieć sprzecznie.</td><td><span class="tag t-q">pytanie do klienta</span></td></tr>
+<tr><td>Obietnice w copy</td><td>„Money-back guarantee” tylko na /pricing (pytanie w instrukcji). „No contract” na 4 stronach (z obecnej /demo). „audit-ready in days” trzy razy w hero homepage (do copywritera).</td><td><span class="tag t-q">pytanie do klienta</span></td></tr>
+<tr><td>Puste pola w kopiach sekcji</td><td>Opcjonalne pola zostawione puste w instancjach (np. link w PointCard) na homepage i /demo: 11 pustych tekstów. Nic nie widać, ale na hi-fi lepiej je ukryć niż zostawić puste.</td><td><span class="tag t-fix">na hi-fi</span></td></tr>
+<tr><td>Elementy spoza kontraktu</td><td>3 lokalne komponenty w makiecie homepage dla klienta: <code>_Client/ComparePanel</code>, <code>_Client/SlackThread</code>, <code>_Client/PricingBanner</code>. Zapisane w kontrakcie (C38) jako komponenty renderujące istniejące pola, bez nowych bloków ani pól w CMS. W Figmie zostają jako <code>_Client/*</code> do przeniesienia do biblioteki dev na hi-fi.</td><td><span class="tag t-fix">zapisane (C38)</span></td></tr>
+<tr><td>Font w Figmie</td><td>Style <code>Type/Desktop/*</code> są tymczasowo w Inter (PP Formula niedostępna dla połączenia MCP). HTML jest w PP Formula.</td><td><span class="tag t-q">do przełączenia</span></td></tr>
+</table>
+<div class="box"><b>Rekomendacja dla 3 komponentów spoza kontraktu:</b> żaden nie wymaga nowego typu bloku. <code>ComparePanel</code> to sposób pokazania pola <code>steps.beforeAfter</code>. <code>SlackThread</code> to treść slotu <code>featureHighlight.media</code> (MediaSlot w trybie <code>uiSnippet</code> albo obraz). <code>PricingBanner</code> to rendering istniejącego wariantu <code>pricingTeaser.banner</code>. Proponuję zapisać to w kontrakcie jako sposób renderowania tych pól i przenieść je do biblioteki lo-fi albo usunąć po hi-fi. Wireframe dla deva pokazuje <code>beforeAfter</code> jako dwie karty obok siebie, a makieta klienta jako jeden panel. Układ do ujednolicenia na hi-fi.</div>
+</section>
+
+<section id="dev">
+<h2>Dla deva: co budujemy</h2>
+<p class="sub">Wszystko opisane w kontrakcie v0.7. Edytor składa strony z bloków; nowy typ bloku wymaga deva.</p>
+<h3>Bloki (17 typów + 3 globalne)</h3>
+<table>
+<tr><th>Blok</th><th>Warianty w użyciu</th><th>Strony</th></tr>
+<tr><td>announcementBar · navigation · footer</td><td>singletony</td><td>wszystkie (też ~100 stron legacy)</td></tr>
+<tr><td>hero</td><td>default · centered (C34)</td><td>HP · Case studies</td></tr>
+<tr><td>bookingEmbed <span class="tag t-q">nowy</span></td><td>demo · pricing (C19)</td><td>Book a demo · Pricing</td></tr>
+<tr><td>logoBand</td><td>withStats · logosOnly</td><td>HP · Demo · Pricing · Case studies</td></tr>
+<tr><td>steps · featureGrid · featureHighlight · audiencePaths</td><td>—</td><td>HP</td></tr>
+<tr><td>integrations · proofPoints</td><td>—</td><td>HP · Demo</td></tr>
+<tr><td>caseStudies</td><td>featuredPlusList · grid</td><td>HP · Pricing · Case studies (dwa bloki)</td></tr>
+<tr><td>pricingTeaser</td><td>banner · section (C29)</td><td>HP · Pricing</td></tr>
+<tr><td>testimonials <span class="tag t-q">nowy</span></td><td>grid (3)</td><td>Demo</td></tr>
+<tr><td>frameworkList</td><td>— (+ moreNote, C33)</td><td>Pricing</td></tr>
+<tr><td>linkDirectory <span class="tag t-q">nowy na page</span></td><td>chips (C30)</td><td>Pricing</td></tr>
+<tr><td>faq · ctaBand</td><td>—</td><td>HP · Demo · Pricing (faq) · wszystkie (ctaBand)</td></tr>
+</table>
+<h3>Komponenty</h3>
+<p style="font-size:14px">SectionHeader, Button, Card, FeatureCard, StepCard (+ <code>meta</code>, C24), PointCard, PathCard, StoryCard (featured · compact z frameworkami, C35), FrameworkCard, <b>QuoteCard (nowy, C23)</b>, LogoGrid, StatRow, Chip, LinkList, Accordion, MediaSlot. Renderujące istniejące pola (C38): ComparePanel, SlackThread, PricingBanner.</p>
+<h3>Dane i zachowania w kodzie</h3>
+<ul style="font-size:14px">
+<li><b>Dokumenty:</b> productModule, framework (+ <code>demoTitle</code>, <code>demoIntro</code>, <code>demoFormTitle</code>, C22), customerLogo, integration, caseStudy (cytat przez ref <code>testimonial</code>, C20), faq, pricingFactor (opis ≤ 160), <b>testimonial (nowy)</b>.</li>
+<li><b>Akcje przycisków (R6):</b> <code>bookDemo</code>, <b><code>bookPricing</code> (nowa, C28)</b>, signIn, internalLink, externalLink. Eventy trackingu bez zmian.</li>
+<li><b>RevenueHero:</b> dwa routery (demo i wycena), wybierane po wariancie <code>bookingEmbed</code>. Licznik „Step 1 of 3” to część widgetu.</li>
+<li><b>/demo/[framework]:</b> ten sam dokument /demo, podmiana H1, leadu i tytułu formularza z dokumentu framework. Bez 4 kopii strony.</li>
+<li><b>Na /demo:</b> „Book a demo” w nawigacji przewija do formularza (C18); linki wychodzące z Security i integracji w nowej karcie (C26).</li>
+<li><b>Na /pricing:</b> „Book a demo” w nawigacji prowadzi na /demo (osobny call); CTA na dole przewija do formularza wyceny.</li>
+</ul>
+</section>
+
+<section id="brand">
+<h2>Dla brandu: co czeka na hi-fi</h2>
+<p class="sub">Makiety są celowo szare. Poniżej miejsca, które brand musi wypełnić, i ustalenia, które go dotyczą.</p>
+<table>
+<tr><th>Element</th><th>Gdzie</th><th>Proporcje / liczba</th></tr>
+<tr><td>Wizual produktu w hero</td><td>HP</td><td class="n">4:3 · 1</td></tr>
+<tr><td>Wizualizacje kroków</td><td>HP · How it works</td><td class="n">4:3 · 4</td></tr>
+<tr><td>Ekrany modułów</td><td>HP · Platform</td><td class="n">16:10 · 3–8</td></tr>
+<tr><td>Wizual sekcji Security (ciemna)</td><td>HP · Demo</td><td class="n">4:5 · 1</td></tr>
+<tr><td>Rozmowa na Slacku (uiSnippet)</td><td>HP · Experts on Slack</td><td class="n">4:3 · 1</td></tr>
+<tr><td>Logotypy klientów</td><td>wszystkie 4 strony + karty historii</td><td class="n">6–12 na pas</td></tr>
+<tr><td>Logotypy integracji</td><td>HP · Demo</td><td class="n">8–20</td></tr>
+<tr><td>Awatary i logo w cytatach</td><td>Demo</td><td class="n">3</td></tr>
+<tr><td>Formularz RevenueHero</td><td>Demo · Pricing</td><td>stylowanie widgetu</td></tr>
+</table>
+<ul style="font-size:14px;margin-top:14px">
+<li><b>Ciemne sekcje (ton „AI / techniczny”):</b> pasek ogłoszeń, Security, końcowe CTA. Jasne = „human / support” (R2).</li>
+<li><b>Typografia:</b> 8 stylów desktop (display, h1, h2, h3, eyebrow, body-lg, body, caption). PP Formula w wersji „Free for personal use”: <b>do sprawdzenia licencja komercyjna</b> przed hi-fi i wdrożeniem.</li>
+<li><b>Ikony i ilustracje:</b> wstrzymane do decyzji o brandzie. Makiety nie zakładają ikon.</li>
+<li><b>Twarde „nie” klienta:</b> zielony tekst na zielonym, tekst na gradiencie bez kontrastu, tarcze, kłódki, checkmarki, neonowe siatki.</li>
+</ul>
+</section>
+
+<section id="decisions">
+<h2>Decyzje na spotkanie</h2>
+<div class="cols">
+<div class="col"><h3>Wewnętrznie (tonik)</h3><ul style="font-size:14px">
+<li>Strony produktowe (jeden szablon) były w założeniach z 16.10, a nie są zaprojektowane. Potwierdzić, że są poza zakresem.</li>
+<li>Kolejność oddawania do dev (§12) dla 4 stron.</li></ul></div>
+<div class="col"><h3>Z devem (Arek)</h3><ul style="font-size:14px">
+<li>D11: dokument <code>testimonial</code> (rekomendacja C20).</li>
+<li>Dwa routery RevenueHero i akcja <code>bookPricing</code>.</li>
+<li>Routing /demo/[framework].</li>
+<li>D6 breakpointy, D7 eksport tokenów, D8 nazwy eventów.</li>
+<li>D13: strony legacy (tylko nav + footer?).</li>
+<li>Budżet: 80 h a 17 typów bloków + 3 globalne.</li></ul></div>
+<div class="col"><h3>Z brandem (Olga)</h3><ul style="font-size:14px">
+<li>Licencja i przełączenie na PP Formula.</li>
+<li>Inwentarz wizuali (tabela wyżej): kto i kiedy.</li>
+<li>Ton light / dark w praktyce.</li>
+<li>Ikony i ilustracje: tak / nie.</li></ul></div>
+</div>
+<h3>Otwarte po stronie klienta (w instrukcjach)</h3>
+<ul style="font-size:14px">
+<li><b>D1</b> główny przycisk (Book a demo vs Get started) · <b>D2</b> lista modułów · <b>D3</b> zakres stron · <b>D4</b> claimy security · <b>D5</b> odbiorca homepage.</li>
+<li>Logotypy do użycia, zgoda na cytaty, wybór i kolejność historii, lista frameworków, „Money-back guarantee”, wycena na callu czy mailem.</li>
+<li>Claudio: zwycięski wariant testu <code>home_acquisition_redesign_v1</code> na / i /demo.</li>
+</ul>
+</section>
+
+<section id="files">
+<h2>Gdzie co leży</h2>
+<table>
+<tr><th>Co</th><th>Gdzie</th></tr>
+<tr><td>Kontrakt (źródło prawdy)</td><td><code>skills/comp-ai-section-contract/comp-ai-section-contract-spec.md</code> · v0.7 · C18–C39</td></tr>
+<tr><td>Wireframe’y dla deva (HTML)</td><td><code>web/wireframes/dev/</code> · homepage v04, demo, pricing, case-studies v01</td></tr>
+<tr><td>Makiety i instrukcje dla klienta (HTML)</td><td><code>web/wireframes/client/</code> · 4 makiety + 4 instrukcje</td></tr>
+<tr><td>Figma</td><td>„Wireframe || dev” · „Wireframe || Comp AI team” · „Wireframe || instructions”. Każda strona w sekcjach: Homepage → Book a demo → Pricing → Case studies → Library.</td></tr>
+<tr><td>Stan prac</td><td>Projekt Claude „Comp AI” → <code>claude/comp-ai-handoff-status.md</code></td></tr>
+</table>
+</section>
+
+</div></body></html>

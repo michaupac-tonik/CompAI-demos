@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit Loom Script</title>
+<style>
+  :root {
+    --bg: #fafaf8; --surface: #ffffff; --text: #1a1a1a; --muted: #6b6b6b;
+    --line: #e6e4df; --accent: #1f7a5a; --accent-soft: #e8f3ee; --note: #8a6d1f; --note-soft: #fbf4e2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141414; --surface: #1d1d1d; --text: #ececec; --muted: #9a9a9a;
+      --line: #2e2e2e; --accent: #5cc79b; --accent-soft: #1b2b24; --note: #e0c070; --note-soft: #2a2516;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 80px; }
+  header { margin-bottom: 36px; }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 10px; }
+  .meta { color: var(--muted); font-size: 15px; margin: 0; }
+  h2 { font-size: 20px; margin: 48px 0 16px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .block { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin-bottom: 14px; }
+  .block-head { display: flex; gap: 12px; align-items: baseline; margin-bottom: 8px; }
+  .time { font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 600; color: var(--accent);
+    background: var(--accent-soft); padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+  .block h3 { font-size: 17px; margin: 0; }
+  .say { margin: 0 0 10px; }
+  .say:last-child { margin-bottom: 0; }
+  .direction { font-size: 15px; color: var(--note); background: var(--note-soft); border-radius: 8px; padding: 8px 12px; margin: 10px 0 0; }
+  ol { margin: 8px 0 12px; padding-left: 22px; }
+  ol li { margin-bottom: 8px; }
+  .questions li { margin-bottom: 14px; }
+  .questions strong { display: block; }
+  @media print {
+    body { background: #fff; color: #000; font-size: 13pt; }
+    .block { break-inside: avoid; border-color: #ccc; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Comp AI · Web design</p>
+    <h1>Current website audit: Loom script</h1>
+    <p class="meta">Michał Pac, tonik · Target length: 8 min max</p>
+  </header>
+
+  <section>
+    <div class="block">
+      <div class="block-head"><span class="time">0:00–0:45</span><h3>Intro</h3></div>
+      <p class="say">"Hi everyone, I'm Michał, the web designer at tonik working on the new Comp AI website. In this short video I'll take you through the first step of the web design phase: an audit of the current site."</p>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="time">0:45–1:45</span><h3>Why we start here</h3></div>
+      <p class="say">"Before we design anything new, we want to understand what's already there: what works, what doesn't, and how the pages connect. The audit feeds straight into the sitemap and structure of the new site. That way the homepage and subpages are built on a structure we've agreed together, not on guesses. It's also the step that doesn't depend on the final brand, so we can move it forward right now."</p>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="time">1:45–2:30</span><h3>How to use the Figma file</h3></div>
+      <p class="say">"Everything is in a shared Figma file. Each page from the current site is there as a screenshot, with my comments right next to the sections they're about. For now, you don't need to reply to each comment. It's mainly there so you can see what the audit found. If something stands out, feel free to leave a Figma comment. The only things I need answers to right now are the five questions at the end of this video."</p>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="time">2:30–3:30</span><h3>File overview</h3></div>
+      <p class="say">"A quick look at how it's organised: [describe the layout, e.g. one column per page, in nav order]. At the top of the file you'll find general comments that apply to the whole site. Below that, we go page by page and section by section. Comments marked as <strong>issues</strong> are the things I think should change or at least be discussed."</p>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="time">3:30–6:00</span><h3>Section-by-section walkthrough</h3></div>
+      <p class="say">"Let's go through the pages."</p>
+      <p class="direction">Scroll through each page. For every page: one sentence on its role, then 1–2 key comments. Don't read every comment out loud, since they're in the file.</p>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="time">6:00–7:30</span><h3>Priorities</h3></div>
+      <p class="say">"All the issues are worth discussing at some point. To keep the work moving, though, there are five I'd like to settle first:</p>
+      <ol>
+        <li><strong>Pricing.</strong> Do we keep the current flow, with the form and a booked call? Pricing is the second most visited page, and from a customer's point of view an estimator or calculator would be a real plus.</li>
+        <li><strong>Product pages.</strong> Every product in the nav leads to the same subpage. On the new site, should the structure stay shared while the content differs per product?</li>
+        <li><strong>CTAs.</strong> 'Book a demo' and 'Get started' both lead to scheduling a call, but they say different things. 'Book a demo' says you'll talk to a consultant first. 'Get started' says you're stepping into the process, with the decision already made. Which one should be the primary action? And should one of them lead somewhere different, like a product demo?</li>
+        <li><strong>Integrations.</strong> Right now we say '580+ integrations', but visitors can't explore them. Do we want to expand on that?</li>
+        <li><strong>Audience.</strong> Who does the homepage speak to first: the founder or the security lead? That sets the hero and the section on who Comp is for."</li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="time">7:30–8:00</span><h3>Wrap-up</h3></div>
+      <p class="say">"I've put those five questions in a short list next to this video. Answers to those are all I need for now. They'll let us lock the sitemap and keep going with the homepage. Thanks for watching."</p>
+    </div>
+  </section>
+
+  <h2>Priority 1: To confirm (paste next to the Loom)</h2>
+  <div class="block">
+    <ol class="questions">
+      <li><strong>Pricing</strong>Keep the current flow (form plus booked call), or add an estimator or calculator? Pricing is the second most visited page, so a tool that gives visitors a sense of cost could improve conversion.</li>
+      <li><strong>Product pages</strong>All products in the nav currently lead to the same subpage. On the new site, should they share one structure with different content for each product?</li>
+      <li><strong>CTAs</strong>"Book a demo" and "Get started" both lead to scheduling a call, but they communicate different things: "Book a demo" means talking to a consultant first, "Get started" means stepping into the process with the decision already made. Which one is the primary action? Should one of them lead somewhere else (for example a self-serve product demo)?</li>
+      <li><strong>Integrations</strong>We mention "580+ integrations" but there's nowhere to explore them. Should we add an integrations section or page?</li>
+      <li><strong>Audience</strong>Who does the homepage speak to first: the founder or the security lead? It sets the hero and the section on who Comp is for.</li>
+    </ol>
+  </div>
+</main>
+</body>
+</html>

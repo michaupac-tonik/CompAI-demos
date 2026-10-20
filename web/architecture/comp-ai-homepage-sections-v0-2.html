@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI: Homepage sections (v0.2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e9e7e2; font-family: 'Inter', sans-serif; padding: 40px 0; }
+  .board { width: 1424px; margin: 0 auto; background: #f4f3f0; border-radius: 16px; padding: 64px; display: flex; flex-direction: column; gap: 20px; }
+  .title h1 { font-size: 40px; font-weight: 600; line-height: 1.15; color: #161616; }
+  .title p { margin-top: 12px; font-size: 18px; line-height: 1.6; color: #424240; max-width: 1100px; }
+  .section { background: #fff; border: 1px solid #e5e3de; border-radius: 12px; padding: 36px 48px; display: flex; flex-direction: column; gap: 16px; }
+  .approach { background: #f8f7f4; }
+  .head { display: flex; align-items: baseline; gap: 16px; }
+  .num { font-family: 'Geist Mono', monospace; font-size: 13px; color: #8f8c87; }
+  .name { font-size: 28px; font-weight: 600; line-height: 1.2; color: #161616; }
+  .tag { font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: #8f8c87; text-transform: uppercase; }
+  .row { display: grid; grid-template-columns: 180px 1fr; gap: 24px; }
+  .k { font-family: 'Geist Mono', monospace; font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #8f8c87; padding-top: 4px; line-height: 1.5; }
+  .v { font-size: 17px; line-height: 1.55; color: #424240; max-width: 900px; }
+  .today, .none { color: #8f8c87; }
+  ul.v, ul.rec { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+  ul.rec { margin-top: 8px; color: #161616; }
+  ul.blk { color: #A3341C; }
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="title">
+    <h1>Comp AI: Homepage sections (v0.2)</h1>
+    <p>The order of sections on the new homepage, before any copy, with our recommended solution for each. Each block says what the section is about, what&#x27;s there today, why it matters and what we recommend, and lists blockers only where a decision stops us from moving on. Findings on the current page are in the separate audit.</p>
+  </div>
+
+  <div class="section approach">
+    <div class="head"><p class="name">Our approach</p></div>
+    <ul class="v"><li>One primary action: Book a demo, everywhere.</li><li>One home per topic: How it works is the process, Platform is the modules, Security is why Comp makes you safer and how you can verify it.</li><li>Proof close to the claims, with the strongest numbers near the top.</li><li>Explain the product first, then prove it, on a shorter page.</li><li>Reusable sections that carry over to the Book a demo page and the pages that inherit the new nav and footer.</li></ul>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">01</p><p class="name">Nav + top bar</p><p class="tag">Global</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Global navigation shared by the homepage and the ~100 existing pages that inherit it on 13.11.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">Series A bar · Product ▾ (10 modules) · Frameworks ▾ (9) · Customers · Pricing · Sign in · Book Demo</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>It&#x27;s the entry point to every page, and it has to stay flexible while new pages are decided.</p><ul class="rec"><li>Keep Product, Frameworks, Customers, Pricing and Sign in, with Book a demo as the only button.</li><li>Add Resources (Compliance Hub, Guides, Tools &amp; Templates, Compare), so the pages that bring organic traffic are one click away.</li><li>Product menu lists the same modules, with the same names, as the page or the Product overview.</li><li>Leave a slot for About / Company.</li><li>Keep the Series A bar until launch, then reuse it for launch news.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><ul class="v blk"><li>Official product module list and names.</li><li>Which new pages are in scope (Product overview, About). This sets the final nav.</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">02</p><p class="name">Hero</p><p class="tag">Exists today</p></div>
+    <div class="row"><p class="k">About</p><p class="v">What Comp AI is, who it&#x27;s for and the one primary action, above the fold.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">&#x27;Compliance that helps you close deals.&#x27; · G2 4.9/5 · email field + Get Started · four framework badges</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>It decides in seconds whether a founder or a security lead keeps reading, and it carries the main conversion: the demo call.</p><ul class="rec"><li>One line on what Comp does and the outcome, with a number for speed.</li><li>Book a demo as the only button.</li><li>A real product moment as the visual.</li><li>Keep the G2 rating next to the headline.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><ul class="v blk"><li>Primary action: Book a demo, or the &#x27;Get Started&#x27; email form (self-serve)? It decides every CTA on the page.</li><li>Which claims we can make: is the audit included, and is it ~10 or 14 days to audit-ready?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">03</p><p class="name">Proof band</p><p class="tag">Exists today · add numbers</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Customer logos and a few hard numbers directly under the hero.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">&#x27;Trusted by 1,000+ companies from startups to enterprise&#x27; · scrolling logo strip</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>The quickest credibility signal, and the first support for the mid-market story.</p><ul class="rec"><li>One band: logos plus 3–4 numbers (customers, G2 rating, days to audit-ready, Slack response time).</li><li>Lead with logos that signal bigger companies.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">04</p><p class="name">How it works</p><p class="tag">Exists today · shorten</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The process from connecting tools to being audit-ready.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">5 steps, one per screen: Pick your frameworks · Tailored to your business · Continuous evidence collection · 1:1 Slack support · Share a live trust center</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Explains the product in one picture and gives the sceptical security lead &#x27;a bit less magic&#x27;.</p><ul class="rec"><li>Open with a short before/after: the work compliance used to take vs what it takes now.</li><li>3–4 process steps on one screen, ending with the outcome: the audit.</li><li>Slack support and the trust center move to their own sections.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">05</p><p class="name">Integrations</p><p class="tag">Exists today · kept</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The tools Comp AI connects to.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">&#x27;Connect with your existing stack&#x27; · 580+ · logo tiles</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>&#x27;Does it work with our stack?&#x27; is a real buying question, and it&#x27;s where the evidence comes from.</p><ul class="rec"><li>A compact logo grid led by the stacks buyers look for (AWS, GCP, GitHub, Okta, Google Workspace).</li><li>The 580+ number and a link to the full list.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">06</p><p class="name">Platform</p><p class="tag">Exists today · provisional</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The product Comp AI sells today (the app at app.trycomp.ai), shown as its modules.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">&#x27;The AI-first compliance platform&#x27; · 5 modules · anchor for Product in the nav</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Shows what customers actually get, and is where the nav&#x27;s Product link lands.</p><ul class="rec"><li>A grid of the modules, with names that match the nav.</li><li>Built so it can shrink to a teaser that links to a Product overview page.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><ul class="v blk"><li>Official product module list and names (same as Nav).</li><li>Is the Product overview page in scope? It decides full section or teaser.</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">07</p><p class="name">Security</p><p class="tag">Exists today · tighten</p></div>
+    <div class="row"><p class="k">About</p><p class="v">How Comp AI makes a company more secure, not just certified, and how anyone can verify it.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">&#x27;Compliance that actually improves your security&#x27; · 6 points, text only</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>The client wants security and compliance to carry equal weight, and &#x27;verify, don&#x27;t trust&#x27; is Comp&#x27;s most distinctive argument. It also speaks to developers and AI agents.</p><ul class="rec"><li>Keep &#x27;verify, don&#x27;t trust&#x27; at the core.</li><li>3–4 points only security has: open source, real evidence, tests you write yourself, a live trust center.</li><li>Link to GitHub and the trust center.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><ul class="v blk"><li>Which security claims are live today, and which are the continuous-security vision?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">08</p><p class="name">Frameworks</p><p class="tag">New as a section</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The frameworks Comp AI covers, and how customers add more over time.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">Only in the nav (links to demo pages) and the step 1 card</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Frameworks are how buyers search and decide, and they carry the &#x27;grows with you&#x27; story.</p><ul class="rec"><li>A compact list, with the main four first.</li><li>Each links to its demo page for now, and to framework pages if they come later.</li><li>One message: start with one framework, add the next without starting over.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">09</p><p class="name">Experts on Slack</p><p class="tag">Exists today as a step · own section</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The 1:1 Slack channel with in-house experts.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">&#x27;1:1 Slack support with real experts&#x27; as step 4, with a Slack thread visual</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>The founders&#x27; main differentiator and the human side of the brand.</p><ul class="rec"><li>Its own section, with a real (anonymised) Slack thread and the response time.</li><li>Frame it as software that does the work, and people who&#x27;ve done it before.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">10</p><p class="name">Who it&#x27;s for</p><p class="tag">Exists today as &#x27;every stage of growth&#x27;</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Paths for different buyers.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">Accordion: Startup, Mid-Market, Enterprise</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Carries the &#x27;we grow with you&#x27; message the mid-market push needs.</p><ul class="rec"><li>All paths visible side by side, no accordion.</li><li>Combine stage and role: Startup speaks to the founder (speed), Mid-Market and Enterprise to the security lead (control, evidence).</li><li>Each path with its own proof, such as a matching customer story.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><ul class="v blk"><li>Who does the homepage speak to first: the founder or the security lead? It sets this section and the hero.</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">11</p><p class="name">Customer stories</p><p class="tag">Exists today as testimonials</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Proof from companies like the visitor.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">Six testimonial quotes</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Stories with numbers are the strongest proof Comp has.</p><ul class="rec"><li>One featured story with numbers (e.g. Persona AI, switched from Vanta), plus 2–3 supporting ones.</li><li>The same card as /case-studies, with a link to all stories.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">12</p><p class="name">Pricing teaser</p><p class="tag">New</p></div>
+    <div class="row"><p class="k">About</p><p class="v">How pricing works, and a route to a quote.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">Not on the page</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Pricing is the second most visited page, so the intent is there.</p><ul class="rec"><li>A short block: the four factors that set the price, a quote on a 20-minute call, and a link to /pricing.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">13</p><p class="name">FAQ</p><p class="tag">Exists today</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The questions visitors ask before booking.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">7 questions in 3 tabs, with FAQ structured data</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Handles the last objections and keeps the structured data for search.</p><ul class="rec"><li>Keep today&#x27;s questions and the structured data.</li><li>Add pricing and switching from Vanta or Drata.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">14</p><p class="name">Final CTA</p><p class="tag">Exists today</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The last ask for a demo.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">&#x27;Don&#x27;t let compliance slow down your pipeline&#x27; · email + Get Started</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Closes the page on the one primary action.</p><ul class="rec"><li>Book a demo with reassurance: 20-minute call, quote emailed after, no contract.</li><li>Reusable at the bottom of Pricing, Customers and the pages that inherit the new footer.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><ul class="v blk"><li>Same as Hero: the primary action.</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">15</p><p class="name">Footer</p><p class="tag">Global · same columns as today</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Links to the whole site.</p></div>
+    <div class="row"><p class="k">Today</p><p class="v today">Product · Resources · Guides · Compare · Legal · offices · socials · status</p></div>
+    <div class="row"><p class="k">Why it matters &amp; what we recommend</p><div class="v"><p>Keeps every legacy page linked, so guides, comparisons and legal pages keep their weight in search.</p><ul class="rec"><li>Same columns and links as today.</li><li>Product column aligned with the nav.</li><li>A Frameworks column once framework pages exist.</li></ul></div></div>
+    <div class="row"><p class="k">Blockers</p><p class="v none">None</p></div>
+  </div>
+
+</div>
+</body>
+</html>

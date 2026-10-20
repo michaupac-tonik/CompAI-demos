@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI: Homepage structure (v1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e9e7e2; font-family: 'Inter', sans-serif; padding: 40px 0; }
+  .board { width: 1424px; margin: 0 auto; background: #f4f3f0; border-radius: 16px; padding: 64px; display: flex; flex-direction: column; gap: 20px; }
+  .title h1 { font-size: 40px; font-weight: 600; line-height: 1.15; color: #161616; }
+  .title p { margin-top: 12px; font-size: 18px; line-height: 1.6; color: #424240; }
+  .legend { margin-top: 16px; font-family: 'Geist Mono', monospace; font-size: 13px; line-height: 1.65; color: #8f8c87; }
+
+  .section { background: #fff; border: 1px solid #e5e3de; border-radius: 12px; padding: 44px 48px; display: flex; gap: 40px; align-items: flex-start; }
+  .content { width: 820px; flex-shrink: 0; display: flex; flex-direction: column; gap: 18px; }
+  .comment { width: 340px; flex-shrink: 0; background: #f8f7f4; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 10px; font-family: 'Geist Mono', monospace; font-size: 13px; line-height: 1.65; color: #52524d; }
+  .comment b { font-weight: 500; color: #2e2e2b; }
+
+  .label { font-family: 'Geist Mono', monospace; font-weight: 500; font-size: 12px; letter-spacing: 0.08em; line-height: 1.4; color: #8f8c87; text-transform: uppercase; }
+  .sublabel { font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.08em; line-height: 1.4; color: #8f8c87; text-transform: uppercase; }
+  .eyebrow { font-size: 15px; font-weight: 500; line-height: 1.4; color: #424240; }
+  .h1 { font-size: 52px; font-weight: 600; line-height: 1.1; color: #161616; }
+  .h2 { font-size: 40px; font-weight: 600; line-height: 1.15; color: #161616; }
+  .h3 { font-size: 24px; font-weight: 600; line-height: 1.3; color: #161616; }
+  .lead { font-size: 18px; line-height: 1.55; color: #424240; }
+  .hero-lead { font-size: 20px; line-height: 1.55; color: #424240; }
+  .nav-line { font-size: 17px; font-weight: 500; line-height: 1.4; color: #161616; }
+  .cta { font-size: 17px; font-weight: 500; line-height: 1.4; color: #161616; }
+  .small { font-size: 15px; line-height: 1.5; color: #8f8c87; }
+  .note { font-size: 15px; font-style: italic; line-height: 1.5; color: #8f8c87; }
+
+  .items { display: flex; flex-direction: column; gap: 14px; }
+  .item p { font-size: 18px; line-height: 1.55; color: #424240; }
+  .item p:first-child { font-weight: 600; color: #161616; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 32px; }
+  .cols3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px 24px; }
+  ol.list { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  ol.list li { font-size: 18px; line-height: 1.55; color: #424240; }
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- ============ TITLE ============ -->
+  <div class="title">
+    <h1>Comp AI: Homepage structure (v1)</h1>
+    <p>Concept: the homepage is a sales page for the 20-minute demo, which closes at around 40%. It says what Comp AI does in one line, then proves it instead of claiming it: the work disappears (policies, evidence, audit), it plugs into the stack you already have (580+ integrations), it makes you more secure rather than just certified (with proof you can verify), and real people sit behind the software (experts in your Slack). The page answers two buyers in order: a founder who needs SOC 2 for the next deal, and a security lead who needs control and evidence. One primary action everywhere: Book a demo.</p>
+    <p class="legend">Block: = proposed Sanity section type · Job: = what the section has to do · Say: = how we present it to the client · Open: = needs an answer · Discuss: = our proposal or assumption, not in the architecture until agreed. Source: = where a fact or line comes from. Facts not marked come from trycomp.ai (checked 14.10) or the onboarding brief. Copy is draft copy, close to real, written to the brief and ready to be replaced once the comms framework v2 lands.</p>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Nav</p>
+      <p class="nav-line">Logo · Product ▾ · Frameworks ▾ · Customers · Pricing · Resources ▾ · Log in · Get started · [Book a demo]</p>
+      <p class="note">[Product ▾: Automated evidence collection · Vendor &amp; risk monitoring · Device agents · Penetration testing · Cloud monitoring (the current platform modules, labels unchanged; each anchors to the Platform section until product pages exist). Frameworks: anchors to the Frameworks section, as today. Resources ▾ (new): Compliance Hub · Guides · Tools &amp; Templates · Compare · Documentation · Trust Center (existing pages, labels from today's footer).]</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> get anywhere on the site in one click, including the ~100 existing pages that inherit this nav on 13.11.</p>
+      <p><b>Say:</b> Product, Frameworks, Customers and Pricing stay as they are today, with the same labels. Two additions:</p>
+      <p>1. Resources is new. Most of your organic traffic lands on the Hub, guides, templates and comparison pages, and today they're only reachable from the footer. Giving them a proper entry point in the nav keeps that traffic moving through the site instead of bouncing.</p>
+      <p>2. Book a demo becomes the one button, since the demo call is where deals close. Get started stays as a text link.</p>
+      <p><b>Block:</b> navigation (global, edited in Sanity).</p>
+      <p><b>Open:</b> how do returning customers get into the app today? Do you want Log in in the nav, and how often is it used?</p>
+      <p><b>Open:</b> what does "Get started" do? If it's self-serve signup it stays as a quiet text link next to Log in. If not, we drop it and keep one button.</p>
+    </div>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Hero</p>
+      <p class="eyebrow">SOC 2 · ISO 27001 · HIPAA · GDPR, and the security behind them</p>
+      <p class="h1">The compliance work, done. The proof, yours to check.</p>
+      <p class="hero-lead">Comp AI writes your policies, collects evidence from the 580+ tools you already use and gets you audit-ready in days, with real experts answering in your Slack.</p>
+      <p class="cta">[Book a demo] · Get started</p>
+      <p class="small">4.9/5 from customers · 1,000+ companies · $34M Series A</p>
+      <p class="note">[Block content: the product doing the work. One real moment from app.trycomp.ai, e.g. a policy drafted and waiting for approval, or evidence arriving from an integration with a status attached (evidence collected / monitored / verified).]</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> say what it is in one line, show that it's real in the next, one button.</p>
+      <p><b>Say:</b> the headline sells what AI makes possible (the work disappears) and answers the question the category is asking right now: can I verify it? Security and compliance both appear above the fold, so we're not boxed into "compliance automation".</p>
+      <p>Alternatives to test against the framework routes:<br>1. "Do the work. Keep pace with the business." (route I)<br>2. "Magic you can trust." as eyebrow, with a plain H1 (route III)<br>We avoid route II ("Cut the theater"), which Oneleet already owns.</p>
+      <p><b>Block:</b> hero (eyebrow, H1, lead, 2 CTAs, proof line, media slot).</p>
+      <p><b>Source:</b> 580+ integrations, "audit-ready in days", 4.9/5 and 1,000+ companies are on today's homepage. $34M Series A is public (TechCrunch).</p>
+      <p><b>Open:</b> needs to be made precise: is the audit included? The sources disagree. (1) Homepage meta description (also og: and twitter: description): "…with audit and pentest included." (2) Visible homepage copy only says "audit-ready" (hero, Startup card, Penetration testing card, footer). (3) /pricing, factor "Audit and security needs": "Whether you need the audit itself, penetration testing, or a trust center changes what's included", and FAQ "How much does Comp AI cost?": "…whether you need audits or penetration testing included." (4) Homepage FAQ "Can I bring my own auditor?" and "Does Comp AI generate the audit report?": answers to check. Until confirmed, the copy says "audit-ready", not "audit included".</p>
+      <p><b>Discuss:</b> the H1 is our proposal. It builds on your own line from the site: "You don't take our word for it, you verify it."</p>
+      <p><b>Discuss:</b> today's hero sells revenue: "Compliance that helps you close deals." Ours leans on verifiable work. Do we lead with deals, with verifiability, or keep deals in the subline? Persona AI's "$400,000+ ARR unlocked" is the proof for the deal angle.</p>
+    </div>
+  </div>
+
+  <!-- ============ PROOF BAND ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Proof band</p>
+      <p class="lead">Trusted by 1,000+ companies, from startups to enterprise.</p>
+      <p class="small">[Customer logos: 8–12]</p>
+      <div class="cols3">
+        <div class="item"><p>580+</p><p>integrations</p></div>
+        <div class="item"><p>&lt; 3 min</p><p>for an answer from our in-house experts on Slack</p></div>
+        <div class="item"><p>X days</p><p>to audit-ready (placeholder)</p></div>
+      </div>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> instant credibility right under the hero, especially for the security lead scrolling for proof.</p>
+      <p><b>Say:</b> today's homepage has no logo wall. This is the cheapest upmarket signal we can add, and the numbers do the "trust us" work so the copy doesn't have to.</p>
+      <p><b>Block:</b> logo-wall (with optional metrics row).</p>
+      <p><b>Source:</b> "1,000+ companies from startups to enterprise", 580+ and "under 3 minutes" are on today's site.</p>
+      <p><b>Open:</b> which logos can we use? Is there one "days to audit-ready" number you can stand behind publicly? The site says "in days", and the case studies range from 6 days to a month.</p>
+    </div>
+  </div>
+
+  <!-- ============ BEFORE / AFTER ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Before / after</p>
+      <p class="h2">Months of screenshots. Or a few days.</p>
+      <p class="lead">Getting compliant used to mean writing dozens of policies, screenshotting settings and chasing colleagues for evidence. That work still has to happen. You just don't have to do it.</p>
+      <div class="cols">
+        <div class="items">
+          <p class="sublabel">The usual way</p>
+          <div class="item"><p>Policies</p><p>Templates, edited by hand, out of date by the audit.</p></div>
+          <div class="item"><p>Evidence</p><p>Screenshots in a shared folder, collected the week before.</p></div>
+          <div class="item"><p>Audit</p><p>A separate firm, a separate contract, a separate timeline.</p></div>
+        </div>
+        <div class="items">
+          <p class="sublabel">With Comp AI</p>
+          <div class="item"><p>Policies</p><p>Drafted from a short questionnaire about your company. You review and approve.</p></div>
+          <div class="item"><p>Evidence</p><p>Pulled continuously from 580+ integrations, so it reflects reality, not last quarter.</p></div>
+          <div class="item"><p>Audit</p><p>Audit-ready in days. Whether the audit itself is part of your plan: to be confirmed.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> make the "magic" concrete as time-to-value: the work disappears, readiness shows up faster.</p>
+      <p><b>Say:</b> we dramatise the work, not the fear. No "you'll fail your audit" copy, just the honest before and after. "Compliance doesn't have to be hard" lives here as the idea, even if not word for word.</p>
+      <p><b>Block:</b> comparison (two columns, 3 rows).</p>
+      <p><b>Source:</b> the evidence row reuses your "Evidence that's never stale" copy from the site.</p>
+      <p><b>Discuss:</b> "You review and approve" assumes policies need a human sign-off in the product. Is that how it works?</p>
+      <p><b>Open:</b> the audit row needs to be made precise: is the audit included for everyone, or an option priced by scope? See the hero note for where the sources disagree.</p>
+    </div>
+  </div>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">How it works</p>
+      <p class="h2">The agents do the work. You stay in charge.</p>
+      <p class="lead">Connect your stack once. Comp AI maps it to your framework, drafts what's missing and keeps collecting evidence after the audit is done.</p>
+      <div class="items">
+        <div class="item"><p>01. Connect.</p><p>AWS, GitHub, Google Workspace and 580+ other tools, in a few clicks.</p></div>
+        <div class="item"><p>02. Draft.</p><p>Policies and controls written for your company, not from a generic template.</p></div>
+        <div class="item"><p>03. Approve.</p><p>Nothing goes live without a person signing off. Every change has an owner and a history.</p></div>
+        <div class="item"><p>04. Prove it, continuously.</p><p>Evidence keeps arriving, the audit happens, and your Trust Center shows buyers where you stand today.</p></div>
+      </div>
+      <p class="note">[Block content: four steps, each paired with one real product moment. Step 03 shows the human approval explicitly.]</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> explain the product in one picture and give the sceptical security lead "a bit less magic".</p>
+      <p><b>Say:</b> today's site has five steps (Pick your frameworks · Tailored to your business · Continuous evidence collection · 1:1 Slack support with real experts · Share a live trust center). We cut it to four, moved Slack support into its own section and made approval its own step. That's the line between "AI does it" and "AI does it and you can trust it".</p>
+      <p><b>Discuss:</b> step 03 is our assumption. Does the product require a person to approve policies and changes, and does it keep an owner and history for each?</p>
+      <p><b>Block:</b> steps (3–5 items, media per step).</p>
+      <p><b>Open:</b> can we show stylised product screens in the new brand before the in-product rebrand ships, or must they match the current app?</p>
+    </div>
+  </div>
+
+  <!-- ============ INTEGRATIONS ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Integrations</p>
+      <p class="h2">Works with the stack you already have.</p>
+      <p class="lead">Connect AWS, GitHub, Google Workspace and 580+ other tools in a few clicks. That's where your evidence comes from, so you don't have to collect it.</p>
+      <p class="small">[Integration logos: the 12–24 most common in your customers' stacks]</p>
+      <p class="cta">[See all integrations]</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> answer "does it work with our stack?" and back the automation claim with something concrete.</p>
+      <p><b>Say:</b> this keeps your "Connect with your existing stack" section. 580+ is one of your strongest assets, and for a CTO or security lead the logos they recognise do more than any claim.</p>
+      <p><b>Source:</b> 580+ integrations is on today's site. AWS, GitHub and Google Workspace come from the kick-off.</p>
+      <p><b>Block:</b> logo-grid (logos + optional link).</p>
+      <p><b>Open:</b> which integrations should lead, and is there an integrations page or list to link to?</p>
+    </div>
+  </div>
+
+  <!-- ============ PLATFORM ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Platform</p>
+      <p class="h2">Compliance and security, on one platform.</p>
+      <p class="lead">Everything an auditor asks for and everything a buyer's security team checks, in one place.</p>
+      <div class="cols">
+        <div class="item"><p>Automated evidence collection</p><p>Agents pull evidence from your tools and flag what's missing.</p></div>
+        <div class="item"><p>Vendor &amp; risk monitoring</p><p>Every vendor and risk tracked, reviewed and monitored.</p></div>
+        <div class="item"><p>Device agents</p><p>Open source, on every laptop, checking what the controls require.</p></div>
+        <div class="item"><p>Penetration testing</p><p>Scoped, run and fed back into your controls.</p></div>
+        <div class="item"><p>Cloud monitoring</p><p>Your cloud setup checked against your controls, continuously.</p></div>
+      </div>
+      <p class="small">Each item carries a status: Live · In beta · Coming soon</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> the product overview the site doesn't have yet. Anchor for Product in the nav.</p>
+      <p><b>Say:</b> every module is tagged with what works today and what's coming, as Teresa asked. This is also the natural home for the symbol system working as statuses.</p>
+      <p><b>Discuss:</b> the one-line descriptions are our draft, to check against the product. The status labels (Live · In beta · Coming soon) are our proposal.</p>
+      <p><b>Block:</b> feature-grid (4–8 items, status tag, optional link).</p>
+      <p><b>Say:</b> the five modules and their names are the ones on today's site, so the nav dropdown and this grid match what customers already know.</p>
+      <p><b>Open:</b> confirm the status of each module. When the Product Overview page is quoted and built, items link out to it.</p>
+    </div>
+  </div>
+
+  <!-- ============ SECURITY ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Security</p>
+      <p class="h2">Compliance that actually improves your security.</p>
+      <p class="lead">Passing the audit is the start, not the goal. Comp AI keeps checking your systems, your devices and your vendors after the auditor leaves, and everything it does is open for you to inspect.</p>
+      <div class="items">
+        <div class="item"><p>Evidence that's never stale.</p><p>Pulled continuously from 580+ integrations, so your posture reflects reality, not last quarter.</p></div>
+        <div class="item"><p>Policies written for your business, not a template.</p><p>Built from how your company actually works.</p></div>
+        <div class="item"><p>A device agent that never sleeps.</p><p>Checks every laptop against your controls, all the time.</p></div>
+        <div class="item"><p>Automated tests you can write yourself.</p><p>Add your own checks on top of the built-in ones.</p></div>
+        <div class="item"><p>Trust portals that reflect reality.</p><p>Buyers see live status, not a PDF from last year.</p></div>
+        <div class="item"><p>Open source and verifiable.</p><p>Every agent, every integration, every check is on GitHub. You don't take our word for it, you verify it. [View on GitHub]</p></div>
+      </div>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> give security equal weight to compliance, and show Comp makes a company safer, not just certified.</p>
+      <p><b>Say:</b> this keeps your section and its headline. Verifiability is now one part of the security story rather than a section of its own: after the Delve case, "fast" alone reads as a risk, and open source is something competitors can't copy overnight. This is also the section that speaks to developers and AI agents.</p>
+      <p><b>Source:</b> the headline and the six points are from today's site. The first and last descriptions use your copy.</p>
+      <p><b>Discuss:</b> the four middle descriptions are our draft, to check against the product.</p>
+      <p><b>Block:</b> proof-points (3–6 items, optional link each).</p>
+      <p><b>Open:</b> which security claims are live today, and which are the continuous-security vision? How far do we lean into verifiability, and do we name competitors?</p>
+    </div>
+  </div>
+
+  <!-- ============ FRAMEWORKS ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Frameworks</p>
+      <p class="h2">Start with SOC 2. Add the next one without starting over.</p>
+      <p class="lead">Controls and evidence carry across frameworks, so your second certification is a fraction of the work of the first.</p>
+      <p class="nav-line">SOC 2 · ISO 27001 · HIPAA · GDPR · PCI DSS · SOC 1 · NIST · ISO 42001 · ISO 9001 · CCPA · NEN 7510 · FedRAMP · [and more]</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> anchor for Frameworks in the nav, and the upmarket argument: one platform as you grow.</p>
+      <p><b>Say:</b> part of the growth story: one platform as you add frameworks. Whether today's stage section stays is discussed under "Who it's for".</p>
+      <p><b>Block:</b> framework-list (chips with links).</p>
+      <p><b>Source:</b> the list is the one on /pricing today.</p>
+      <p><b>Open:</b> is that list complete and current? Which four or five should lead?</p>
+      <p><b>Discuss:</b> the "carries across frameworks" claim is our assumption. Is it accurate as written?</p>
+    </div>
+  </div>
+
+  <!-- ============ EXPERTS ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Experts on Slack</p>
+      <p class="h2">Software that does the work. People who've done it before.</p>
+      <p class="lead">Every customer gets a shared Slack channel with Comp AI's in-house compliance experts. Ask anything, at any stage, and get an answer in minutes, not tickets.</p>
+      <p class="small">Under 3 minutes to an answer · ~1,000 customer channels · In-house experts</p>
+      <p class="note">[Block content: a real (anonymised) Slack thread: a customer question, an expert answer, a timestamp.]</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> the human side of the brand and the differentiator the founders care about most.</p>
+      <p><b>Say:</b> this is where "we free up your team's time" lives. The software takes the busywork, the people help with the judgement calls. Nobody is being replaced.</p>
+      <p><b>Block:</b> feature-highlight (headline, lead, stats, media).</p>
+      <p><b>Source:</b> "Our in-house experts respond in under 3 minutes" is on today's site. ~1,000 channels comes from the kick-off.</p>
+      <p><b>Open:</b> can we show a real thread with permission, and is the channel count public?</p>
+    </div>
+  </div>
+
+  <!-- ============ AUDIENCE FORK ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Who it's for</p>
+      <p class="note">[Two options to discuss. A: by role (below). B: by company stage, as today: Startup · Mid-Market · Enterprise.]</p>
+      <p class="h2">Built for the deal you need to close, and the program you need to run.</p>
+      <div class="cols">
+        <div class="item"><p>Founders and CTOs</p><p>Your first enterprise customer asked for SOC 2. Get audit-ready in days, without hiring for it. [See how Persona AI did it]</p></div>
+        <div class="item"><p>Security and GRC leads</p><p>Multiple frameworks, continuous monitoring and evidence your auditor can check. Less spreadsheet, more control. [See the platform]</p></div>
+      </div>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> answer both buyers on one page without writing a hero that pleases neither.</p>
+      <p><b>Say:</b> a visible fork by role. The founder gets speed, the security lead gets control, and each path lands on proof, not on a feature list. Mid-market leads, SMB isn't neglected.</p>
+      <p><b>Block:</b> audience-split (2–3 cards with link).</p>
+      <p><b>Discuss:</b> today's homepage has "Compliance for every stage of growth" (Startup / Mid-Market / Enterprise). Splitting by role is our proposal; the two personas come from the workshop. The stage version carries "we grow with you", which matters for mid-market. Keep stages, switch to roles, or combine (role cards that mention company size)?</p>
+      <p><b>Open:</b> do we add a third card for partners (VCs and auditors)?</p>
+    </div>
+  </div>
+
+  <!-- ============ CUSTOMER STORIES ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Customer stories</p>
+      <p class="h2">Ask the teams who've done it.</p>
+      <div class="items">
+        <div class="item"><p>Persona AI · switched from Vanta</p><p>$400,000+ ARR unlocked · 6 days to audit-ready · 85 hours saved. "Comp AI got us audit-ready in days and cleared the path for our largest enterprise contracts." [Read the story]</p></div>
+        <div class="item"><p>RiskInMind · SOC 2</p><p>SOC 2 passed in 20 days · $100K ARR first large customer. [Read the story]</p></div>
+        <div class="item"><p>Narrative AI · ISO 27001</p><p>ISO 27001 certification in under 2 weeks. [Read the story]</p></div>
+      </div>
+      <p class="cta">[All customer stories]</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> proof from people like the visitor, with numbers.</p>
+      <p><b>Say:</b> one featured story and two supporting ones. The card is the same component as on /case-studies, so every new story you publish in Sanity can show up here.</p>
+      <p><b>Block:</b> case-study-cards (featured + list, pulls from case studies).</p>
+      <p><b>Source:</b> names, numbers and the Persona AI quote are from /case-studies today.</p>
+      <p><b>Discuss:</b> which three to feature is our pick (a switch from Vanta, SOC 2, ISO 27001). Leading each card with a deal outcome ($ ARR unlocked) keeps the "close deals" thread from today's site.</p>
+      <p><b>Open:</b> which stories are strongest for the mid-market push? Any newer, bigger names we can feature?</p>
+    </div>
+  </div>
+
+  <!-- ============ PRICING TEASER ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Pricing</p>
+      <p class="h2">Priced on your scope. Quoted in one call.</p>
+      <p class="lead">Your price depends on four things: frameworks in scope, company size, timeline, and audit and security needs. We'll give you a number on a 20-minute call.</p>
+      <p class="cta">[Get your quote] · See pricing</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> catch the visitors heading to pricing (your second most visited page) and turn the question into a call.</p>
+      <p><b>Say:</b> honest about how pricing works instead of hiding it.</p>
+      <p><b>Source:</b> the four factors and the 20-minute call are from /pricing today.</p>
+      <p><b>Block:</b> cta-split (text + factors + 2 CTAs).</p>
+      <p><b>Open:</b> any chance of a "from $X" anchor? Oneleet is the only one in the category showing prices, and it's a real opening.</p>
+    </div>
+  </div>
+
+  <!-- ============ FAQ ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">FAQ</p>
+      <p class="h2">Questions, answered.</p>
+      <div class="items">
+        <div class="item"><p>What is Comp AI?</p></div>
+        <div class="item"><p>Is Comp AI open source?</p></div>
+        <div class="item"><p>How does evidence collection work?</p></div>
+        <div class="item"><p>How are policies generated?</p></div>
+        <div class="item"><p>How long does it take to get audit-ready?</p></div>
+        <div class="item"><p>Can I bring my own auditor?</p></div>
+        <div class="item"><p>Does Comp AI generate the audit report?</p></div>
+        <div class="item"><p>[To discuss] We already use Vanta or Drata. How does switching work?</p></div>
+        <div class="item"><p>[To discuss] How much does it cost?</p></div>
+      </div>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> handle the last objections and keep FAQ structured data for search.</p>
+      <p><b>Say:</b> the seven questions from today's FAQ stay, so the structured data keeps working. Answers get rewritten in the new voice.</p>
+      <p><b>Discuss:</b> two questions we'd add: switching from Vanta or Drata (Persona AI did it), and cost (sends people to pricing).</p>
+      <p><b>Block:</b> faq (accordion, structured data).</p>
+    </div>
+  </div>
+
+  <!-- ============ FINAL CTA ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Final CTA</p>
+      <p class="h1">Comp AI never sleeps. Your compliance doesn't have to keep you up.</p>
+      <p class="lead">See it in a 20-minute demo.</p>
+      <p class="cta">[Book a demo]</p>
+      <p class="small">20 minutes · No contract</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> close the loop and ask once more.</p>
+      <p><b>Say:</b> "Comp AI never sleeps" is one of your lines we're keeping.</p>
+      <p><b>Source:</b> "20 minutes" and "no contract" are from /demo today.</p>
+      <p><b>Discuss:</b> framing the demo around the visitor's own stack and frameworks ("see it on your stack"). Is that what the call covers?</p>
+      <p><b>Discuss:</b> today's final CTA is about pipeline: "Don't let compliance slow down your pipeline." Keep a deal angle here instead?</p>
+      <p><b>Block:</b> cta-band (reused at the bottom of Pricing, Customers and legacy pages).</p>
+    </div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Footer</p>
+      <div class="cols3">
+        <div class="item"><p>Product</p><p>How it works · Platform · Book a Demo</p></div>
+        <div class="item"><p>Resources</p><p>Case Studies · Compliance Hub · Tools &amp; Templates · Documentation · Trust Center · Security · GitHub · Press · Careers · Partnerships</p></div>
+        <div class="item"><p>Guides</p><p>SOC 2 Cost · SOC 2 Checklist · SOC 2 for Startups · SOC 1 vs SOC 2 · ISO 42001 · GRC Automation</p></div>
+        <div class="item"><p>Compare</p><p>Vanta Pricing · Drata Pricing · Secureframe Pricing · Drata vs Vanta · Vanta Competitors · Drata Competitors</p></div>
+        <div class="item"><p>Legal</p><p>Legal Overview · Terms · Privacy · Cookies · DPA · SLA · Subprocessors</p></div>
+      </div>
+      <p class="small">Logo · GitHub · X · LinkedIn · YouTube · All Systems Normal (status) · © 2026 Comp AI</p>
+      <p class="note">[To discuss, not in the architecture yet: (1) a Frameworks column linking to framework pages; (2) an About / Company page, which depends on the About Us quote.]</p>
+    </div>
+    <div class="comment">
+      <p><b>Job:</b> links, SEO and a map of the whole site, including the legacy pages.</p>
+      <p><b>Say:</b> the columns, links and labels are the same as today's footer, so every guide, comparison and legal page keeps its link and its weight in search. Nothing is renamed or removed.</p>
+      <p><b>Discuss:</b> a Frameworks column, once framework pages exist.</p>
+      <p><b>Discuss:</b> an About page. It's not in this scope; it goes into the footer and nav only if you decide to build it.</p>
+      <p><b>Block:</b> footer (global, edited in Sanity).</p>
+    </div>
+  </div>
+
+  <!-- ============ OPEN QUESTIONS ============ -->
+  <div class="section">
+    <div class="content">
+      <p class="label">Notes for review</p>
+      <p class="h2">Decisions we need from you</p>
+      <ol class="list">
+        <li>1. CTA hierarchy: is "Book a demo" the one primary action, and what does "Get started" do?</li>
+        <li>2. Who the homepage speaks to first: founder or security lead? This draft leads with the founder in the hero and turns to the security lead from "How it works" onward.</li>
+        <li>3. Lead message: "close deals" (today) or "verifiable"? And how much weight does security get next to compliance?</li>
+        <li>4. Pricing: stay quote-only, or add a "from" anchor? And is the audit included for every customer, or priced by scope?</li>
+        <li>5. Status labels for modules: what is live, in beta and coming.</li>
+        <li>6. Growth stages (today) or roles in "Who it's for"?</li>
+        <li>7. Henrick: anywhere on the homepage, or not?</li>
+      </ol>
+      <p class="h3">Assets we'd love from you</p>
+      <ol class="list">
+        <li>1. Public metrics: customers, rating, days to audit-ready, Slack response time.</li>
+        <li>2. Customer logos you have permission to use (8–12).</li>
+        <li>3. Product screens or access for the four steps and the platform grid.</li>
+        <li>4. One real Slack thread we can show, anonymised.</li>
+        <li>5. Two or three case studies to feature, with a quote and one headline number each.</li>
+        <li>6. The full list of supported frameworks.</li>
+        <li>7. The integrations that should lead, and a link to the full list.</li>
+      </ol>
+    </div>
+    <div class="comment">
+      <p><b>Say:</b> the open decisions and the asset list in one place, so the next round can move fast. Not page content.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

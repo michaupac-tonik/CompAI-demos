@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI — Homepage v0 (HTML experiment)</title>
+<meta name="description" content="Comp AI writes your policies, collects evidence from the 580+ tools you already use and gets you audit-ready in days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Stand-ins: Archivo (width axis) for PP Formula, Geist Mono for tags. Swap once brand type is final (16.10). -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0a0d;          /* neutral 100 */
+  --ink-2:#17161a;
+  --ink-3:#232227;
+  --paper:#f7f6f1;        /* off-white base */
+  --paper-2:#efede6;
+  --card:#ffffff;
+  --line:#e2dfd6;
+  --line-dark:#2c2b30;
+  --muted:#5d5a55;
+  --muted-dark:#9b98a0;
+  --green:#34cf2f;        /* green 050 */
+  --green-deep:#0f5e12;
+  --lime:#cdf58f;
+  --coral:#fe8c25;        /* coral 050 */
+  --red:#f0330a;
+  --cream:#ffe9b8;
+  --radius:20px;
+  --radius-s:12px;
+  --max:1240px;
+  --display:"Archivo",system-ui,sans-serif;
+  --mono:"Geist Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-weight:350;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 32px}
+@media (max-width:720px){.wrap{padding:0 16px}}
+
+/* ---------- type ---------- */
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:10px}
+.eyebrow .tick{width:8px;height:8px;border-radius:2px;background:var(--green)}
+.dark .eyebrow{color:var(--muted-dark)}
+h1,h2,h3{font-weight:300;letter-spacing:-.035em;line-height:1}
+h1{font-size:clamp(44px,6vw,86px);font-stretch:88%}
+h2{font-size:clamp(36px,4.8vw,68px);font-stretch:90%}
+h3{font-size:24px;font-weight:450;letter-spacing:-.02em;line-height:1.15;font-stretch:95%}
+h1 b,h2 b{font-weight:550}
+.lead{font-size:clamp(18px,1.6vw,21px);line-height:1.45;color:var(--muted);max-width:620px}
+.dark .lead{color:var(--muted-dark)}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:end;margin-bottom:56px}
+.sec-head .eyebrow{grid-column:1/-1;margin-bottom:-8px}
+@media (max-width:900px){.sec-head{grid-template-columns:1fr;gap:20px;margin-bottom:40px}}
+.inline-chip{display:inline-flex;align-items:center;gap:.3em;vertical-align:.12em;font-family:var(--mono);font-size:.26em;letter-spacing:.06em;text-transform:uppercase;font-weight:500;background:var(--ink);color:#fff;padding:.55em .9em;border-radius:999px;font-stretch:100%}
+.inline-chip i{width:.8em;height:.8em;border-radius:50%;border:2px solid var(--lime);display:inline-block}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;padding:15px 22px;border-radius:999px;border:1px solid transparent;transition:transform .15s ease,background .15s ease;white-space:nowrap}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:#000}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{background:var(--paper-2)}
+.dark .btn-primary{background:var(--lime);color:var(--ink)}
+.dark .btn-ghost{border-color:var(--line-dark);color:#fff}
+.dark .btn-ghost:hover{background:var(--ink-3)}
+.arrow{font-family:var(--display)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .2s}
+.nav.scrolled{border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;height:72px;gap:36px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:550;font-size:23px;letter-spacing:-.03em;font-stretch:80%}
+.nav-links{display:flex;gap:28px;font-size:15px;font-weight:400}
+.nav-links a{display:flex;align-items:center;gap:5px;color:#2a2830}
+.nav-links a:hover{color:var(--ink)}
+.caret{width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-3px);opacity:.5}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:22px;font-size:15px}
+.nav-right .btn{padding:12px 18px}
+.menu-btn{display:none;margin-left:auto;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:none;align-items:center;justify-content:center}
+@media (max-width:1020px){.nav-links,.nav-right .txt{display:none}}
+@media (max-width:560px){.nav-right{display:none}.menu-btn{display:flex}}
+
+/* ---------- hero ---------- */
+.hero{padding:72px 0 56px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+@media (max-width:1020px){.hero-grid{grid-template-columns:1fr;gap:48px}}
+.hero h1{margin:22px 0 28px}
+.hero h1 .soft{color:#8b877f}
+.hero .lead{margin-bottom:36px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.proof-line{margin-top:36px;display:flex;flex-wrap:wrap;gap:10px 26px;font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.proof-line span{display:flex;align-items:center;gap:8px}
+.stars{color:var(--coral);letter-spacing:1px}
+
+/* hero media: product moment on a gradient capsule */
+.stage{position:relative;aspect-ratio:1/1.02;border-radius:28px;overflow:hidden;background:var(--ink)}
+.stage::before{content:"";position:absolute;inset:-20% -40% 20% 10%;background:
+  radial-gradient(60% 55% at 78% 22%,rgba(240,51,10,.95),transparent 60%),
+  radial-gradient(55% 60% at 60% 40%,rgba(254,140,37,.9),transparent 62%),
+  radial-gradient(70% 70% at 35% 70%,rgba(52,207,47,.95),transparent 65%);
+  filter:blur(30px);animation:drift 16s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(-6%,4%) rotate(8deg)}}
+.stage .grain{position:absolute;inset:0;opacity:.18;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.panel{position:absolute;background:rgba(255,255,255,.97);border-radius:18px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.04)}
+.panel-policy{left:7%;right:16%;top:9%;padding:22px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;padding:4px 9px;border-radius:999px;background:var(--paper-2);color:var(--muted);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.tag.live{background:#e1f8cf;color:#1d5a12}
+.tag.beta{background:#ffe9cf;color:#8a4200}
+.tag.soon{background:#efede6;color:#6a675f}
+.tag.wait{background:#fff1d6;color:#8a4a00}
+.tag .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.pulse .dot{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.panel-policy h4{font-weight:500;font-size:19px;letter-spacing:-.02em;margin-bottom:10px}
+.skel{height:8px;border-radius:4px;background:#ecebe5;margin:8px 0}
+.panel-policy .meta{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.mini-btn{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:#fff;padding:8px 12px;border-radius:999px}
+.panel-feed{left:22%;right:6%;bottom:8%;padding:16px 16px 10px;background:var(--ink-2);color:#fff;box-shadow:0 30px 60px -20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)}
+.panel-feed .panel-head{margin-bottom:8px}
+.feed-title{display:flex;align-items:center;gap:10px;font-size:15px}
+.feed{list-style:none;display:flex;flex-direction:column;gap:6px}
+.feed li{display:flex;align-items:center;gap:10px;background:#fff;color:var(--ink);border-radius:10px;padding:8px 10px;font-size:14px;animation:slidein .6s both}
+.feed li .src{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.feed li .pass{font-family:var(--mono);font-size:10.5px;font-weight:500;background:var(--lime);padding:3px 7px;border-radius:5px}
+@keyframes slidein{from{opacity:0;transform:translateY(8px)}}
+
+/* ---------- symbols (stand-ins for C.2 symbol family) ---------- */
+.sym{width:28px;height:28px;border-radius:8px;background:#f0efe9;display:grid;place-items:center;flex:none}
+.sym svg{width:18px;height:18px}
+.dark .sym{background:#26252b}
+
+/* ---------- proof band ---------- */
+.proof{padding:40px 0 96px}
+.logos{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.logos div{height:96px;display:grid;place-items:center;font-weight:600;font-size:21px;letter-spacing:-.03em;color:#3a3833;opacity:.75;border-right:1px solid var(--line);font-stretch:85%}
+.logos div:last-child{border-right:0}
+.logos div:nth-child(2){font-family:var(--mono);font-weight:500;font-size:16px;letter-spacing:0}
+.logos div:nth-child(4){font-weight:300;font-size:24px;font-stretch:115%}
+.logos div:nth-child(5){font-style:italic}
+@media (max-width:900px){.logos{grid-template-columns:repeat(3,1fr)}.logos div:nth-child(3){border-right:0}.logos div:nth-child(-n+3){border-bottom:1px solid var(--line)}}
+.proof-caption{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:16px;flex-wrap:wrap}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.metric{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.metric .n{font-size:clamp(48px,5vw,72px);font-weight:300;letter-spacing:-.05em;line-height:1;font-stretch:85%}
+.metric .n small{font-size:.45em;letter-spacing:-.02em;margin-left:4px}
+.metric p{margin-top:14px;color:var(--muted);font-size:15px;max-width:260px}
+.ph{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#a0570b;background:#fff1d6;border-radius:4px;padding:2px 6px;vertical-align:middle;margin-left:6px}
+@media (max-width:720px){.metrics{grid-template-columns:1fr}}
+
+/* ---------- before / after ---------- */
+.ba{padding:96px 0}
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ba-col{border-radius:var(--radius);padding:12px}
+.ba-col.old{background:var(--paper-2)}
+.ba-col.new{background:var(--ink);color:#fff}
+.ba-col .col-h{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 20px}
+.ba-row{border-radius:14px;padding:22px;display:grid;grid-template-columns:110px 1fr;gap:16px;margin-top:8px}
+.old .ba-row{background:#e7e4db;color:#5a5750}
+.old .ba-row p{text-decoration:line-through;text-decoration-color:rgba(90,87,80,.35)}
+.new .ba-row{background:var(--ink-3)}
+.ba-row .k{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
+.new .ba-row .k{color:var(--lime)}
+.new .ba-row p{color:#e9e8ec}
+.ba-row .note{display:block;margin-top:8px;font-size:13px;color:var(--muted-dark)}
+@media (max-width:900px){.ba-grid{grid-template-columns:1fr}.ba-row{grid-template-columns:1fr;gap:6px}}
+
+/* ---------- how it works ---------- */
+.how{padding:96px 0}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column}
+.step .num{font-family:var(--mono);font-size:11px;letter-spacing:.06em;background:var(--paper-2);border-radius:6px;padding:4px 8px;align-self:flex-start;color:var(--muted)}
+.step .vis{height:210px;margin:22px 0;border-radius:14px;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:16px;min-height:150px}
+.step h3{margin-bottom:8px}
+.step p{color:var(--muted);font-size:15px}
+.step.human{background:var(--ink);color:#fff;border-color:var(--ink)}
+.step.human .num{background:var(--ink-3);color:var(--lime)}
+.step.human .vis{background:var(--ink-3)}
+.step.human p{color:var(--muted-dark)}
+.chips-cloud{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.chip{font-size:13px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 11px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.chip .d{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.doc{width:100%;max-width:200px;background:#fff;border-radius:10px;padding:14px;box-shadow:0 10px 30px -12px rgba(0,0,0,.18)}
+.doc .t{font-size:12px;font-weight:500;margin-bottom:8px}
+.cursor{display:inline-block;width:7px;height:12px;background:var(--green);vertical-align:-1px;animation:pulse 1s steps(1) infinite}
+.approve{width:100%;max-width:210px;font-size:13px}
+.approve .row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line-dark)}
+.approve .row:last-child{border:0}
+.approve .who{display:flex;align-items:center;gap:8px;color:#d9d8de}
+.av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--red));display:grid;place-items:center;font-size:10px;font-weight:600;color:#fff}
+.trust{width:100%;max-width:210px;background:#fff;border-radius:12px;padding:14px;font-size:13px;box-shadow:0 10px 30px -12px rgba(0,0,0,.18)}
+.trust .row{display:flex;align-items:center;justify-content:space-between;padding:6px 0}
+@media (max-width:1020px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.steps{grid-template-columns:1fr}.step{min-height:0}}
+
+/* ---------- integrations ---------- */
+.integr{padding:96px 0;overflow:hidden}
+.marquee{display:flex;flex-direction:column;gap:12px;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.track{display:flex;gap:12px;width:max-content;animation:scroll 50s linear infinite}
+.track.rev{animation-direction:reverse;animation-duration:60s}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.tool{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 22px 14px 14px;font-size:17px;font-weight:450;letter-spacing:-.01em}
+.tool .mk{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-family:var(--mono);font-size:13px;font-weight:500;color:#fff}
+.integr .foot{display:flex;justify-content:space-between;align-items:center;margin-top:40px;gap:16px;flex-wrap:wrap}
+.big-n{font-size:clamp(64px,8vw,120px);font-weight:250;letter-spacing:-.06em;line-height:.9;font-stretch:80%}
+@media (prefers-reduced-motion:reduce){.track,.stage::before{animation:none}}
+
+/* ---------- platform ---------- */
+.platform{padding:96px 0}
+.mods{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.mod{grid-column:span 2;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:14px;min-height:240px}
+.mod.wide{grid-column:span 3}
+.mod .top{display:flex;justify-content:space-between;align-items:flex-start}
+.mod .ico{width:52px;height:52px;border-radius:14px;background:var(--ink);display:grid;place-items:center}
+.mod .ico svg{width:28px;height:28px}
+.mod h3{margin-top:auto}
+.mod p{color:var(--muted);font-size:15px}
+.mod .agent{background:var(--ink);border-radius:14px;padding:10px;margin-top:4px}
+.mod .agent .r{display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:7px 9px;margin-top:5px;font-size:13px}
+.mod .agent .r:first-child{margin-top:0}
+.mod .agent .r .pass{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:500;background:var(--lime);padding:3px 7px;border-radius:5px}
+@media (max-width:1020px){.mods{grid-template-columns:1fr 1fr}.mod,.mod.wide{grid-column:span 1}}
+@media (max-width:600px){.mods{grid-template-columns:1fr}}
+
+.evlist{display:flex;flex-direction:column;gap:8px;background:var(--paper);border-radius:14px;padding:14px}
+.ev{display:grid;grid-template-columns:140px 1fr 44px;align-items:center;gap:12px;font-size:13px}
+.ev b{font-family:var(--mono);font-weight:500;font-size:11.5px;text-align:right}
+.ev .bar{height:6px;border-radius:3px;background:#e4e1d8;overflow:hidden}
+.ev .bar i{display:block;height:100%;background:var(--green);border-radius:3px}
+.ev.miss{display:flex;justify-content:space-between;border-top:1px dashed var(--line);padding-top:8px;color:var(--muted)}
+@media (max-width:600px){.ev{grid-template-columns:110px 1fr 40px}}
+/* ---------- dark sections ---------- */
+.dark{background:var(--ink);color:#fff}
+.security{padding:120px 0;position:relative;overflow:hidden}
+.security h2 .accent{color:var(--lime)}
+.sec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line-dark);border:1px solid var(--line-dark);border-radius:var(--radius);overflow:hidden}
+.sec-item{background:var(--ink);padding:28px;min-height:200px;display:flex;flex-direction:column;gap:12px}
+.sec-item h3{font-size:21px}
+.sec-item p{color:var(--muted-dark);font-size:15px}
+.sec-item .sym{width:36px;height:36px;border-radius:10px;border:1px solid #38363d;background:#141317}
+@media (max-width:900px){.sec-grid{grid-template-columns:1fr}}
+.verify{margin-top:16px;display:grid;grid-template-columns:1fr 1.1fr;gap:16px}
+.verify-copy{border:1px solid var(--line-dark);border-radius:var(--radius);padding:36px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+.verify-copy blockquote{font-size:clamp(26px,2.6vw,36px);font-weight:300;letter-spacing:-.03em;line-height:1.1;font-stretch:92%}
+.verify-copy blockquote b{font-weight:500;color:var(--lime)}
+.term{background:#050407;border:1px solid var(--line-dark);border-radius:var(--radius);font-family:var(--mono);font-size:13px;line-height:1.75;overflow:hidden}
+.term .bar{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line-dark);color:var(--muted-dark);font-size:12px}
+.term .bar i{width:10px;height:10px;border-radius:50%;background:#2e2d33}
+.term .bar span{margin-left:10px}
+.term pre{padding:20px;white-space:pre-wrap;color:#cfcdd4}
+.term .c{color:#6e6b75}.term .g{color:var(--lime)}.term .o{color:var(--coral)}
+@media (max-width:900px){.verify{grid-template-columns:1fr}}
+
+/* ---------- frameworks ---------- */
+.frameworks{padding:96px 0}
+.fw{display:flex;flex-wrap:wrap;gap:10px}
+.fw a{display:inline-flex;align-items:center;gap:10px;font-size:clamp(18px,1.9vw,26px);font-weight:400;letter-spacing:-.02em;padding:12px 22px 12px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);transition:background .15s}
+.fw a:hover{background:var(--paper-2)}
+.fw a.lead-fw{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fw a.lead-fw .sym{background:#26252b}
+.fw a.more{background:transparent;border-style:dashed;color:var(--muted);padding-left:22px}
+
+/* ---------- slack ---------- */
+.experts{padding:96px 0}
+.ex-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+.ex-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:40px;border-top:1px solid var(--line)}
+.ex-stats div{padding:18px 16px 0 0}
+.ex-stats .n{font-size:40px;font-weight:300;letter-spacing:-.04em;font-stretch:85%}
+.ex-stats p{font-size:14px;color:var(--muted)}
+.slack{background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(30,20,0,.25)}
+.slack .sh{display:flex;align-items:center;gap:10px;padding:16px 22px;border-bottom:1px solid var(--line);font-weight:500;font-size:15px}
+.slack .sh .ch{color:var(--muted);font-weight:400}
+.msg{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:16px 22px}
+.msg .pic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-weight:600;font-size:14px;color:#fff}
+.msg .author{font-weight:600;font-size:15px}
+.msg .author time{font-weight:400;color:var(--muted);font-size:12px;margin-left:8px;font-family:var(--mono)}
+.msg .author .badge{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:#e1f8cf;color:#1d5a12;padding:2px 6px;border-radius:4px;margin-left:6px;vertical-align:2px}
+.msg p{font-size:15px;color:#2b2a2e;margin-top:2px}
+.msg .att{margin-top:10px;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:8px;padding:10px 12px;font-size:13px;display:flex;align-items:center;gap:10px}
+.react{display:flex;gap:6px;margin-top:8px}
+.react span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-family:var(--mono)}
+.timer{display:flex;justify-content:center;padding:4px 0}
+.timer span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#1d5a12;background:#e1f8cf;border-radius:999px;padding:4px 10px}
+@media (max-width:1020px){.ex-grid{grid-template-columns:1fr}}
+
+/* ---------- who it's for ---------- */
+.who{padding:96px 0}
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.persona{border-radius:24px;padding:40px;min-height:420px;display:flex;flex-direction:column;gap:18px;position:relative;overflow:hidden}
+.persona.light{background:var(--card);border:1px solid var(--line)}
+.persona.darkp{background:var(--ink);color:#fff}
+.persona h3{font-size:clamp(28px,2.8vw,40px);font-weight:300;letter-spacing:-.035em;line-height:1.05;font-stretch:90%;margin-top:auto}
+.persona p{max-width:420px;color:var(--muted)}
+.persona.darkp p{color:var(--muted-dark)}
+.persona ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.persona li{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.persona.darkp li{border-color:var(--line-dark);color:#cfcdd4}
+.persona .link{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;gap:8px;border-bottom:1px solid currentColor;align-self:flex-start;padding-bottom:3px}
+@media (max-width:900px){.who-grid{grid-template-columns:1fr}.persona{min-height:0}}
+
+/* ---------- stories ---------- */
+.stories{padding:96px 0}
+.st-grid{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:auto auto;gap:16px}
+.story{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px}
+.story.feat{grid-row:span 2;padding:40px;background:linear-gradient(180deg,#fff, #fff 60%,#fbf7ee)}
+.story .co{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.story .co b{font-weight:600;font-size:20px;letter-spacing:-.03em;font-stretch:85%}
+.story .big{font-size:clamp(52px,6vw,88px);font-weight:250;letter-spacing:-.06em;line-height:.9;font-stretch:80%}
+.story.feat q{font-size:clamp(22px,2.1vw,28px);font-weight:300;letter-spacing:-.025em;line-height:1.2;quotes:"“" "”"}
+.story .stats{display:flex;gap:28px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px;margin-top:auto}
+.story .stats div{font-size:14px;color:var(--muted)}
+.story .stats b{display:block;font-size:26px;font-weight:400;color:var(--ink);letter-spacing:-.03em}
+.story .mid{font-size:clamp(30px,3vw,42px);font-weight:300;letter-spacing:-.04em;line-height:1;font-stretch:88%}
+.story .read{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:auto}
+@media (max-width:900px){.st-grid{grid-template-columns:1fr}.story.feat{grid-row:auto}}
+
+/* ---------- pricing ---------- */
+.pricing{padding:96px 0}
+.pr{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:48px;display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.factors{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.factor{background:var(--paper);border-radius:14px;padding:18px}
+.factor .k{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.factor p{margin-top:28px;font-size:18px;font-weight:450;letter-spacing:-.015em;line-height:1.2}
+@media (max-width:900px){.pr{grid-template-columns:1fr;padding:28px}.factors{grid-template-columns:1fr}}
+
+/* ---------- faq ---------- */
+.faq{padding:96px 0}
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}
+details{border-top:1px solid var(--line)}
+details:last-child{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;font-size:20px;font-weight:400;letter-spacing:-.02em}
+summary::-webkit-details-marker{display:none}
+summary .pm{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);flex:none;position:relative}
+summary .pm::before,summary .pm::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:1.5px;background:var(--ink);transform:translate(-50%,-50%)}
+summary .pm::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .2s}
+details[open] summary .pm::after{transform:translate(-50%,-50%) rotate(0)}
+details p{padding:0 48px 24px 0;color:var(--muted);max-width:640px}
+details .new-q{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#a0570b;background:#fff1d6;border-radius:4px;padding:2px 6px;margin-left:10px;vertical-align:3px}
+@media (max-width:900px){.faq-grid{grid-template-columns:1fr;gap:24px}}
+
+/* ---------- final CTA ---------- */
+.final{position:relative;overflow:hidden;padding:150px 0 140px}
+.final .beam{position:absolute;right:-4%;top:50%;width:62%;height:130%;transform:translateY(-50%);background:
+  radial-gradient(40% 45% at 100% 50%,var(--red),transparent 70%),
+  radial-gradient(45% 55% at 82% 50%,rgba(254,140,37,.95),transparent 72%),
+  radial-gradient(60% 70% at 55% 50%,rgba(52,207,47,.95),transparent 80%);
+  clip-path:polygon(0 50%,100% 0,100% 100%);filter:blur(40px);opacity:.95}
+.final .wrap{position:relative}
+.final h2{font-size:clamp(42px,5.6vw,84px);max-width:860px;font-stretch:86%}
+.final h2 .soft{color:#8a8791}
+.final .lead{margin:28px 0 40px;max-width:440px}
+.final .fine{margin-top:20px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-dark)}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:#d7d5dc;border-top:1px solid var(--line-dark);padding:72px 0 32px;font-size:14px}
+.f-grid{display:grid;grid-template-columns:1.3fr repeat(5,1fr);gap:32px}
+.f-grid h5{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7c7984;font-weight:400;margin-bottom:16px}
+.f-grid ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.f-grid a:hover{color:#fff}
+.f-brand p{color:#8e8b95;margin-top:16px;max-width:240px}
+.f-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:64px;padding-top:24px;border-top:1px solid var(--line-dark);flex-wrap:wrap;font-size:13px;color:#8e8b95}
+.status{display:inline-flex;align-items:center;gap:8px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(52,207,47,.18)}
+.social{display:flex;gap:18px}
+@media (max-width:1020px){.f-grid{grid-template-columns:repeat(3,1fr)}.f-brand{grid-column:1/-1}}
+@media (max-width:560px){.f-grid{grid-template-columns:1fr 1fr}}
+
+.hero-grid>*,.ex-grid>*,.faq-grid>*,.who-grid>*,.st-grid>*,.ba-grid>*,.verify>*,.pr>*{min-width:0}
+.panel-head{flex-wrap:wrap;gap:6px}
+.msg>div{min-width:0}.msg .att{flex-wrap:wrap}
+@media (max-width:560px){.ex-stats .n{font-size:28px}.panel-policy{left:5%;right:5%}.panel-feed{left:5%;right:5%}.feed li .src{display:none}.stage{aspect-ratio:auto;height:460px}}
+/* ---------- utility ---------- */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+.draft-flag{position:fixed;right:16px;bottom:16px;z-index:60;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;box-shadow:0 6px 20px -8px rgba(0,0,0,.2)}
+</style>
+</head>
+<body>
+
+<!-- Inline symbol defs: stand-ins for the C.2 symbol family (glossy, no shields/locks/checkmarks) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gG" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#eaffc8"/><stop offset=".45" stop-color="#5ee34f"/><stop offset="1" stop-color="#169a17"/></radialGradient>
+    <radialGradient id="gO" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff0c4"/><stop offset=".45" stop-color="#ff9a3a"/><stop offset="1" stop-color="#f0330a"/></radialGradient>
+    <radialGradient id="gB" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#e6f1ff"/><stop offset=".5" stop-color="#5aa2ff"/><stop offset="1" stop-color="#1f5fd6"/></radialGradient>
+    <radialGradient id="gP" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#ffe3f0"/><stop offset=".5" stop-color="#ff5fa2"/><stop offset="1" stop-color="#d81b6a"/></radialGradient>
+    <symbol id="s-star" viewBox="0 0 24 24"><path d="M12 1.5c.9 5.6 4.9 9.6 10.5 10.5-5.6.9-9.6 4.9-10.5 10.5C11.1 16.9 7.1 12.9 1.5 12 7.1 11.1 11.1 7.1 12 1.5z"/></symbol>
+    <symbol id="s-hex" viewBox="0 0 24 24"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7z"/></symbol>
+    <symbol id="s-clover" viewBox="0 0 24 24"><path d="M12 2.5a4.5 4.5 0 0 1 4.3 5.8A4.5 4.5 0 1 1 15.7 17 4.5 4.5 0 1 1 8.3 17a4.5 4.5 0 1 1-.6-8.7A4.5 4.5 0 0 1 12 2.5z"/></symbol>
+    <symbol id="s-orbit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="none" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="9.5" ry="3.6" fill="none" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="3.6" ry="9.5" fill="none" stroke-width="1.6"/></symbol>
+    <symbol id="s-pill" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="5"/></symbol>
+  </defs>
+</svg>
+
+<!-- 01 NAV -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#" class="logo" aria-label="Comp AI home">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="M9 3H25L20 10H10L7 14L10 18H20L25 25H9L2 14Z" fill="#0b0a0d"/></svg>
+      Comp AI
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#platform">Product <span class="caret"></span></a>
+      <a href="#frameworks">Frameworks <span class="caret"></span></a>
+      <a href="#customers">Customers</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#">Resources <span class="caret"></span></a>
+    </nav>
+    <div class="nav-right">
+      <a href="#" class="txt">Log in</a>
+      <a href="#" class="txt">Get started</a>
+      <a href="#demo" class="btn btn-primary">Book a demo</a>
+    </div>
+    <button class="menu-btn" aria-label="Open menu"><svg width="16" height="10" viewBox="0 0 16 10"><path d="M0 1h16M0 9h16" stroke="#0b0a0d" stroke-width="1.6"/></svg></button>
+  </div>
+</header>
+
+<main>
+<!-- 02 HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><span class="tick"></span>SOC 2 · ISO 27001 · HIPAA · GDPR, and the security behind them</span>
+      <h1>The compliance work, <b>done.</b><br><span class="soft">The proof, yours to check.</span></h1>
+      <p class="lead">Comp AI writes your policies, collects evidence from the 580+ tools you already use and gets you audit-ready in days, with real experts answering in your Slack.</p>
+      <div class="cta-row">
+        <a href="#demo" class="btn btn-primary">Book a demo <span class="arrow">→</span></a>
+        <a href="#" class="btn btn-ghost">Get started</a>
+      </div>
+      <div class="proof-line">
+        <span><span class="stars">★★★★★</span> 4.9/5 from customers</span>
+        <span>1,000+ companies</span>
+        <span>$34M Series A</span>
+      </div>
+    </div>
+
+    <div class="stage" aria-label="Product moment: a policy awaiting approval and evidence arriving from integrations">
+      <div class="grain"></div>
+      <div class="panel panel-policy">
+        <div class="panel-head">
+          <span class="tag">Policy · Access control</span>
+          <span class="tag wait pulse"><span class="dot"></span>Awaiting approval</span>
+        </div>
+        <h4>Drafted from your onboarding answers</h4>
+        <div class="skel" style="width:92%"></div>
+        <div class="skel" style="width:78%"></div>
+        <div class="skel" style="width:85%"></div>
+        <div class="skel" style="width:40%"></div>
+        <div class="meta"><span>Owner: you · v1 · 2 min ago</span><span class="mini-btn">Review</span></div>
+      </div>
+      <div class="panel panel-feed">
+        <div class="panel-head">
+          <span class="feed-title"><svg width="18" height="18"><use href="#s-orbit" stroke="#cdf58f"/></svg>Evidence, arriving</span>
+          <span class="tag live" style="background:#1f3a14;color:#cdf58f"><span class="dot"></span>Monitored</span>
+        </div>
+        <ul class="feed" id="feed">
+          <li><span class="sym"><svg><use href="#s-hex" fill="url(#gG)"/></svg></span>MFA enforced<span class="src">Google Workspace</span><span class="pass">PASS</span></li>
+          <li style="animation-delay:.15s"><span class="sym"><svg><use href="#s-star" fill="url(#gO)"/></svg></span>Branch protection<span class="src">GitHub</span><span class="pass">PASS</span></li>
+          <li style="animation-delay:.3s"><span class="sym"><svg><use href="#s-clover" fill="url(#gB)"/></svg></span>Encryption at rest<span class="src">AWS</span><span class="pass">PASS</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PROOF BAND -->
+<section class="proof">
+  <div class="wrap">
+    <div class="proof-caption">
+      <span class="eyebrow">Trusted by 1,000+ companies, from startups to enterprise</span>
+      <span class="eyebrow">Logos: placeholders <span class="ph">needs permission</span></span>
+    </div>
+    <div class="logos reveal">
+      <div>Persona AI</div><div>riskinmind</div><div>Narrative</div><div>Zernio</div><div>Luthor AI</div><div>+ 995</div>
+    </div>
+    <div class="metrics">
+      <div class="metric reveal"><div class="n">580<small>+</small></div><p>integrations your evidence comes from</p></div>
+      <div class="metric reveal"><div class="n">&lt;3<small>min</small></div><p>to an answer from our in-house experts on Slack</p></div>
+      <div class="metric reveal"><div class="n">X<small>days</small></div><p>to audit-ready <span class="ph">number tbc</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 BEFORE / AFTER -->
+<section class="ba">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="tick"></span>Before / after</span>
+      <h2>Months of screenshots. <b>Or a few days.</b></h2>
+      <p class="lead">Getting compliant used to mean writing dozens of policies, screenshotting settings and chasing colleagues for evidence. That work still has to happen. You just don't have to do it.</p>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-col old reveal">
+        <div class="col-h"><span class="eyebrow">The usual way</span><span class="tag">~ months</span></div>
+        <div class="ba-row"><span class="k">Policies</span><p>Templates, edited by hand, out of date by the audit.</p></div>
+        <div class="ba-row"><span class="k">Evidence</span><p>Screenshots in a shared folder, collected the week before.</p></div>
+        <div class="ba-row"><span class="k">Audit</span><p>A separate firm, a separate contract, a separate timeline.</p></div>
+      </div>
+      <div class="ba-col new reveal">
+        <div class="col-h"><span class="eyebrow" style="color:#cdf58f">With Comp AI</span><span class="tag live" style="background:#1f3a14;color:#cdf58f"><span class="dot"></span>days</span></div>
+        <div class="ba-row"><span class="k">Policies</span><p>Drafted from a short questionnaire about your company. You review and approve.</p></div>
+        <div class="ba-row"><span class="k">Evidence</span><p>Pulled continuously from 580+ integrations, so it reflects reality, not last quarter.</p></div>
+        <div class="ba-row"><span class="k">Audit</span><p>Audit-ready in days.<span class="note">Whether the audit itself is part of your plan: to be confirmed.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="tick"></span>How it works</span>
+      <h2>The agents do the work. <b>You stay in charge.</b></h2>
+      <p class="lead">Connect your stack once. Comp AI maps it to your framework, drafts what's missing and keeps collecting evidence after the audit is done.</p>
+    </div>
+    <div class="steps">
+      <article class="step reveal">
+        <span class="num">STEP 1/4</span>
+        <div class="vis"><div class="chips-cloud">
+          <span class="chip"><span class="d"></span>AWS</span><span class="chip"><span class="d"></span>GitHub</span><span class="chip"><span class="d"></span>Google Workspace</span><span class="chip"><span class="d" style="background:#d6d3ca"></span>Okta</span><span class="chip"><span class="d" style="background:#d6d3ca"></span>Jira</span><span class="chip">+575</span>
+        </div></div>
+        <h3>Connect</h3>
+        <p>AWS, GitHub, Google Workspace and 580+ other tools, in a few clicks.</p>
+      </article>
+      <article class="step reveal">
+        <span class="num">STEP 2/4</span>
+        <div class="vis"><div class="doc"><div class="t">Incident Response Policy</div><div class="skel" style="width:95%"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:60%;display:inline-block"></div> <span class="cursor"></span></div></div>
+        <h3>Draft</h3>
+        <p>Policies and controls written for your company, not from a generic template.</p>
+      </article>
+      <article class="step human reveal">
+        <span class="num">STEP 3/4</span>
+        <div class="vis"><div class="approve">
+          <div class="row"><span class="who"><span class="av">MF</span>Access control</span><span class="tag live" style="background:#1f3a14;color:#cdf58f">Approved</span></div>
+          <div class="row"><span class="who"><span class="av" style="background:linear-gradient(135deg,#34cf2f,#0f5e12)">TH</span>Vendor policy</span><span class="tag wait">Review</span></div>
+          <div class="row"><span class="who"><span class="av" style="background:linear-gradient(135deg,#5aa2ff,#1f5fd6)">LC</span>Data retention</span><span class="tag" style="background:#26252b;color:#9b98a0">v3 · history</span></div>
+        </div></div>
+        <h3>Approve</h3>
+        <p>Nothing goes live without a person signing off. Every change has an owner and a history.</p>
+      </article>
+      <article class="step reveal">
+        <span class="num">STEP 4/4</span>
+        <div class="vis"><div class="trust">
+          <div class="t" style="font-weight:500;margin-bottom:6px">Trust Center</div>
+          <div class="row"><span>SOC 2 Type II</span><span class="tag live"><span class="dot"></span>Verified</span></div>
+          <div class="row"><span>ISO 27001</span><span class="tag live"><span class="dot"></span>Monitored</span></div>
+          <div class="row"><span>HIPAA</span><span class="tag beta">In progress</span></div>
+        </div></div>
+        <h3>Prove it, continuously</h3>
+        <p>Evidence keeps arriving, the audit happens, and your Trust Center shows buyers where you stand today.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 06 INTEGRATIONS -->
+<section class="integr">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="tick"></span>Integrations</span>
+      <h2>Works with the stack <b>you already have.</b></h2>
+      <p class="lead">Connect AWS, GitHub, Google Workspace and 580+ other tools in a few clicks. That's where your evidence comes from, so you don't have to collect it.</p>
+    </div>
+    <div class="marquee" aria-hidden="true">
+      <div class="track" id="t1"></div>
+      <div class="track rev" id="t2"></div>
+    </div>
+    <div class="foot">
+      <div class="big-n">580+</div>
+      <a href="#" class="btn btn-ghost">See all integrations <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- 07 PLATFORM -->
+<section class="platform" id="platform">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="tick"></span>Platform</span>
+      <h2>Compliance and security, <b>on one platform.</b></h2>
+      <p class="lead">Everything an auditor asks for and everything a buyer's security team checks, in one place. Each module says what works today.</p>
+    </div>
+    <div class="mods">
+      <article class="mod wide reveal">
+        <div class="top"><span class="ico"><svg><use href="#s-orbit" stroke="#cdf58f"/></svg></span><span class="tag live"><span class="dot"></span>Live</span></div>
+        <div class="evlist">
+          <div class="ev"><span>Access control</span><div class="bar"><i style="width:100%"></i></div><b>24/24</b></div>
+          <div class="ev"><span>Change management</span><div class="bar"><i style="width:88%"></i></div><b>15/17</b></div>
+          <div class="ev"><span>Vendor management</span><div class="bar"><i style="width:64%;background:var(--coral)"></i></div><b>7/11</b></div>
+          <div class="ev miss"><span>Missing: pen test report</span><span class="tag wait">Flagged</span></div>
+        </div>
+        <h3>Automated evidence collection</h3>
+        <p>Agents pull evidence from your tools and flag what's missing.</p>
+      </article>
+      <article class="mod wide reveal">
+        <div class="top"><span class="ico"><svg><use href="#s-hex" fill="url(#gG)"/></svg></span><span class="tag live"><span class="dot"></span>Live</span></div>
+        <div class="agent">
+          <div class="r"><span class="sym"><svg><use href="#s-hex" fill="url(#gG)"/></svg></span>Firewall enabled<span class="pass">PASS</span></div>
+          <div class="r"><span class="sym"><svg><use href="#s-clover" fill="url(#gB)"/></svg></span>Screen lock<span class="pass">PASS</span></div>
+          <div class="r"><span class="sym"><svg><use href="#s-star" fill="url(#gO)"/></svg></span>Disk encryption<span class="pass">PASS</span></div>
+        </div>
+        <h3>Device agents</h3>
+        <p>Open source, on every laptop, checking what the controls require.</p>
+      </article>
+      <article class="mod reveal">
+        <div class="top"><span class="ico"><svg><use href="#s-clover" fill="url(#gB)"/></svg></span><span class="tag live"><span class="dot"></span>Live</span></div>
+        <h3>Vendor &amp; risk monitoring</h3>
+        <p>Every vendor and risk tracked, reviewed and monitored.</p>
+      </article>
+      <article class="mod reveal">
+        <div class="top"><span class="ico"><svg><use href="#s-star" fill="url(#gO)"/></svg></span><span class="tag beta"><span class="dot"></span>In beta</span></div>
+        <h3>Penetration testing</h3>
+        <p>Scoped, run and fed back into your controls.</p>
+      </article>
+      <article class="mod reveal">
+        <div class="top"><span class="ico"><svg><use href="#s-pill" fill="url(#gP)"/></svg></span><span class="tag soon">Coming soon</span></div>
+        <h3>Cloud monitoring</h3>
+        <p>Your cloud setup checked against your controls, continuously.</p>
+      </article>
+    </div>
+    <p class="eyebrow" style="margin-top:18px">Status labels are illustrative <span class="ph">confirm per module</span></p>
+  </div>
+</section>
+
+<!-- 08 SECURITY (dark: the technical / developer voice) -->
+<section class="security dark" id="security">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="tick"></span>Security</span>
+      <h2>Compliance that actually <span class="accent">improves your security.</span></h2>
+      <p class="lead">Passing the audit is the start, not the goal. Comp AI keeps checking your systems, your devices and your vendors after the auditor leaves, and everything it does is open for you to inspect.</p>
+    </div>
+    <div class="sec-grid">
+      <div class="sec-item reveal"><span class="sym"><svg><use href="#s-orbit" stroke="#cdf58f"/></svg></span><h3>Evidence that's never stale</h3><p>Pulled continuously from 580+ integrations, so your posture reflects reality, not last quarter.</p></div>
+      <div class="sec-item reveal"><span class="sym"><svg><use href="#s-pill" fill="url(#gO)"/></svg></span><h3>Policies written for your business</h3><p>Built from how your company actually works, not a template.</p></div>
+      <div class="sec-item reveal"><span class="sym"><svg><use href="#s-hex" fill="url(#gG)"/></svg></span><h3>A device agent that never sleeps</h3><p>Checks every laptop against your controls, all the time.</p></div>
+      <div class="sec-item reveal"><span class="sym"><svg><use href="#s-clover" fill="url(#gB)"/></svg></span><h3>Tests you can write yourself</h3><p>Add your own checks on top of the built-in ones.</p></div>
+      <div class="sec-item reveal"><span class="sym"><svg><use href="#s-star" fill="url(#gO)"/></svg></span><h3>Trust portals that reflect reality</h3><p>Buyers see live status, not a PDF from last year.</p></div>
+      <div class="sec-item reveal"><span class="sym"><svg><use href="#s-star" fill="url(#gP)"/></svg></span><h3>Open source and verifiable</h3><p>Every agent, every integration, every check is on GitHub.</p></div>
+    </div>
+    <div class="verify">
+      <div class="verify-copy reveal">
+        <span class="eyebrow">Verifiable by design</span>
+        <blockquote>You don't take our word for it. <b>You verify it.</b></blockquote>
+        <div class="cta-row"><a href="#" class="btn btn-primary">View on GitHub <span class="arrow">↗</span></a><a href="#" class="btn btn-ghost">Read the docs</a></div>
+      </div>
+      <div class="term reveal">
+        <div class="bar"><i></i><i></i><i></i><span>comp-agent — check run</span></div>
+<pre><span class="c"># every check is open source. read it, fork it, add your own.</span>
+<span class="g">$</span> comp-agent run --control CC6.1
+<span class="c">→</span> disk_encryption ........... <span class="g">PASS</span>
+<span class="c">→</span> screen_lock_timeout ....... <span class="g">PASS</span>
+<span class="c">→</span> firewall_enabled .......... <span class="g">PASS</span>
+<span class="c">→</span> os_auto_update ............ <span class="o">REVIEW</span>
+<span class="c">evidence written · 4 checks · signed 14:02:11 ET</span>
+
+<span class="g">$</span> comp-agent test add ./checks/vpn_required.ts
+<span class="c">→</span> custom check registered ... <span class="g">OK</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 FRAMEWORKS -->
+<section class="frameworks" id="frameworks">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="tick"></span>Frameworks</span>
+      <h2>Start with SOC 2. <b>Add the next one</b> without starting over.</h2>
+      <p class="lead">Controls and evidence carry across frameworks, so your second certification is a fraction of the work of the first.</p>
+    </div>
+    <div class="fw reveal">
+      <a href="#" class="lead-fw"><span class="sym"><svg><use href="#s-star" fill="url(#gG)"/></svg></span>SOC 2</a>
+      <a href="#" class="lead-fw"><span class="sym"><svg><use href="#s-hex" fill="url(#gO)"/></svg></span>ISO 27001</a>
+      <a href="#" class="lead-fw"><span class="sym"><svg><use href="#s-clover" fill="url(#gB)"/></svg></span>HIPAA</a>
+      <a href="#" class="lead-fw"><span class="sym"><svg><use href="#s-pill" fill="url(#gP)"/></svg></span>GDPR</a>
+      <a href="#"><span class="sym"><svg><use href="#s-orbit" stroke="#0b0a0d"/></svg></span>PCI DSS</a>
+      <a href="#"><span class="sym"><svg><use href="#s-orbit" stroke="#0b0a0d"/></svg></span>SOC 1</a>
+      <a href="#"><span class="sym"><svg><use href="#s-orbit" stroke="#0b0a0d"/></svg></span>NIST</a>
+      <a href="#"><span class="sym"><svg><use href="#s-orbit" stroke="#0b0a0d"/></svg></span>ISO 42001</a>
+      <a href="#"><span class="sym"><svg><use href="#s-orbit" stroke="#0b0a0d"/></svg></span>ISO 9001</a>
+      <a href="#"><span class="sym"><svg><use href="#s-orbit" stroke="#0b0a0d"/></svg></span>CCPA</a>
+      <a href="#"><span class="sym"><svg><use href="#s-orbit" stroke="#0b0a0d"/></svg></span>NEN 7510</a>
+      <a href="#"><span class="sym"><svg><use href="#s-orbit" stroke="#0b0a0d"/></svg></span>FedRAMP</a>
+      <a href="#" class="more">and more →</a>
+    </div>
+  </div>
+</section>
+
+<!-- 10 EXPERTS ON SLACK (light: the human voice) -->
+<section class="experts">
+  <div class="wrap ex-grid">
+    <div>
+      <span class="eyebrow"><span class="tick"></span>Experts on Slack</span>
+      <h2 style="margin:22px 0 24px">Software that does the work. <b>People who've done it before.</b></h2>
+      <p class="lead">Every customer gets a shared Slack channel with Comp AI's in-house compliance experts. Ask anything, at any stage, and get an answer in minutes, not tickets.</p>
+      <div class="ex-stats">
+        <div><div class="n">&lt;3 min</div><p>to an answer</p></div>
+        <div><div class="n">~1,000</div><p>customer channels</p></div>
+        <div><div class="n">In-house</div><p>experts, not outsourced</p></div>
+      </div>
+    </div>
+    <div class="slack reveal" aria-label="Example Slack thread (illustrative)">
+      <div class="sh"><span style="font-family:var(--mono)">#</span>comp-ai-support <span class="ch">· shared with Comp AI</span></div>
+      <div class="msg">
+        <div class="pic" style="background:linear-gradient(135deg,#5aa2ff,#1f5fd6)">JD</div>
+        <div>
+          <div class="author">Jordan · CTO<time>10:41</time></div>
+          <p>Our auditor wants evidence that terminated employees lose access within 24h. Can Comp pull that from Okta or do we screenshot it?</p>
+        </div>
+      </div>
+      <div class="timer"><span>answered in 2 min 14 s</span></div>
+      <div class="msg">
+        <div class="pic" style="background:var(--ink)"><svg width="18" height="18" viewBox="0 0 28 28"><path d="M9 3H25L20 10H10L7 14L10 18H20L25 25H9L2 14Z" fill="#cdf58f"/></svg></div>
+        <div>
+          <div class="author">Ana · Comp AI<span class="badge">Expert</span><time>10:43</time></div>
+          <p>No screenshots needed. The Okta integration already logs deprovisioning times. I've mapped it to CC6.2 for you, it'll show up as evidence on your next sync.</p>
+          <div class="att"><span class="sym"><svg><use href="#s-hex" fill="url(#gG)"/></svg></span>CC6.2 · Offboarding within 24h <span class="tag live" style="margin-left:auto"><span class="dot"></span>Evidence collected</span></div>
+          <div class="react"><span>🙌 3</span><span>✓ 1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 WHO IT'S FOR -->
+<section class="who">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="tick"></span>Who it's for</span>
+      <h2>Built for the deal you need to close, <b>and the program you need to run.</b></h2>
+    </div>
+    <div class="who-grid">
+      <article class="persona light reveal">
+        <span class="eyebrow">Founders &amp; CTOs</span>
+        <ul><li>Startup</li><li>0–50 people</li><li>First SOC 2</li></ul>
+        <h3>Your first enterprise customer asked for SOC 2.</h3>
+        <p>Get audit-ready in days, without hiring for it.</p>
+        <a href="#customers" class="link">See how Persona AI did it →</a>
+      </article>
+      <article class="persona darkp dark reveal">
+        <span class="eyebrow">Security &amp; GRC leads</span>
+        <ul><li>Mid-market</li><li>Enterprise</li><li>Multi-framework</li></ul>
+        <h3>Multiple frameworks. Continuous monitoring. Evidence your auditor can check.</h3>
+        <p>Less spreadsheet, more control.</p>
+        <a href="#platform" class="link">See the platform →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 12 CUSTOMER STORIES -->
+<section class="stories" id="customers">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="tick"></span>Customer stories</span>
+      <h2>Ask the teams <b>who've done it.</b></h2>
+      <div style="justify-self:end"><a href="#" class="btn btn-ghost">All customer stories <span class="arrow">→</span></a></div>
+    </div>
+    <div class="st-grid">
+      <article class="story feat reveal">
+        <div class="co"><b>Persona AI</b><span class="tag">Switched from Vanta</span></div>
+        <div class="big">$400K+</div>
+        <span class="eyebrow">ARR unlocked</span>
+        <q>Comp AI got us audit-ready in days and cleared the path for our largest enterprise contracts.</q>
+        <div class="stats"><div><b>6 days</b>to audit-ready</div><div><b>85 h</b>saved</div><div><b>SOC 2</b>framework</div></div>
+        <a href="#" class="read">Read the story →</a>
+      </article>
+      <article class="story reveal">
+        <div class="co"><b>RiskInMind</b><span class="tag">SOC 2</span></div>
+        <div class="mid">SOC 2 passed in 20 days</div>
+        <p style="color:var(--muted)">$100K ARR from their first large customer.</p>
+        <a href="#" class="read">Read the story →</a>
+      </article>
+      <article class="story reveal">
+        <div class="co"><b>Narrative AI</b><span class="tag">ISO 27001</span></div>
+        <div class="mid">ISO 27001 in under 2 weeks</div>
+        <a href="#" class="read">Read the story →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 13 PRICING TEASER -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="pr reveal">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <span class="eyebrow"><span class="tick"></span>Pricing</span>
+        <h2>Priced on your scope. <b>Quoted in one call.</b></h2>
+        <p class="lead">Your price depends on four things. We'll give you a number on a 20-minute call.</p>
+        <div class="cta-row" style="margin-top:auto"><a href="#demo" class="btn btn-primary">Get your quote <span class="arrow">→</span></a><a href="#" class="btn btn-ghost">See pricing</a></div>
+      </div>
+      <div class="factors">
+        <div class="factor"><span class="k">01</span><p>Frameworks in scope</p></div>
+        <div class="factor"><span class="k">02</span><p>Company size</p></div>
+        <div class="factor"><span class="k">03</span><p>Timeline</p></div>
+        <div class="factor"><span class="k">04</span><p>Audit and security needs</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 FAQ -->
+<section class="faq">
+  <div class="wrap faq-grid">
+    <div>
+      <span class="eyebrow"><span class="tick"></span>FAQ</span>
+      <h2 style="margin-top:22px">Questions, <b>answered.</b></h2>
+    </div>
+    <div>
+      <details open><summary>What is Comp AI?<span class="pm"></span></summary><p>An AI-native compliance and security platform that does the work: it writes your policies, collects evidence from the tools you use and keeps monitoring after the audit. Real experts back it up in your Slack.</p></details>
+      <details><summary>Is Comp AI open source?<span class="pm"></span></summary><p>Yes. Our agents, integrations and checks are on GitHub, so you can read exactly what runs in your environment.</p></details>
+      <details><summary>How does evidence collection work?<span class="pm"></span></summary><p>You connect your tools once. Agents pull evidence continuously from 580+ integrations and map it to the controls in your framework.</p></details>
+      <details><summary>How are policies generated?<span class="pm"></span></summary><p>From a short questionnaire about how your company works. You review, edit and approve every policy before it goes live.</p></details>
+      <details><summary>How long does it take to get audit-ready?<span class="pm"></span></summary><p>Days, not months. Our customers have gone from zero to audit-ready in as little as six days.</p></details>
+      <details><summary>Can I bring my own auditor?<span class="pm"></span></summary><p>Answer to confirm with Comp AI.</p></details>
+      <details><summary>Does Comp AI generate the audit report?<span class="pm"></span></summary><p>Answer to confirm with Comp AI.</p></details>
+      <details><summary><span>We already use Vanta or Drata. How does switching work?<span class="new-q">proposed</span></span><span class="pm"></span></summary><p>Persona AI switched from Vanta and was audit-ready in six days. Our experts move your controls and evidence across with you.</p></details>
+      <details><summary><span>How much does it cost?<span class="new-q">proposed</span></span><span class="pm"></span></summary><p>It depends on your frameworks, company size, timeline and audit needs. Book a 20-minute call and you'll leave with a number.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- 15 FINAL CTA (dark + the one gradient beam) -->
+<section class="final dark" id="demo">
+  <div class="beam" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="eyebrow"><span class="tick"></span>Book a demo</span>
+    <h2 style="margin-top:22px">Comp AI never sleeps. <span class="soft">Your compliance doesn't have to keep you up.</span></h2>
+    <p class="lead">See it on your own stack and frameworks in a 20-minute demo.</p>
+    <a href="#" class="btn btn-primary">Book a demo <span class="arrow">→</span></a>
+    <div class="fine">20 minutes · No contract</div>
+  </div>
+</section>
+</main>
+
+<!-- 16 FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div class="f-brand">
+        <a href="#" class="logo" style="color:#fff"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="M9 3H25L20 10H10L7 14L10 18H20L25 25H9L2 14Z" fill="#fff"/></svg>Comp AI</a>
+        <p>The compliance work, done. The proof, yours to check.</p>
+      </div>
+      <div><h5>Product</h5><ul><li><a href="#how">How it works</a></li><li><a href="#platform">Platform</a></li><li><a href="#demo">Book a Demo</a></li></ul></div>
+      <div><h5>Resources</h5><ul><li><a href="#">Case Studies</a></li><li><a href="#">Compliance Hub</a></li><li><a href="#">Tools &amp; Templates</a></li><li><a href="#">Documentation</a></li><li><a href="#">Trust Center</a></li><li><a href="#">Security</a></li><li><a href="#">GitHub</a></li><li><a href="#">Press</a></li><li><a href="#">Careers</a></li><li><a href="#">Partnerships</a></li></ul></div>
+      <div><h5>Guides</h5><ul><li><a href="#">SOC 2 Cost</a></li><li><a href="#">SOC 2 Checklist</a></li><li><a href="#">SOC 2 for Startups</a></li><li><a href="#">SOC 1 vs SOC 2</a></li><li><a href="#">ISO 42001</a></li><li><a href="#">GRC Automation</a></li></ul></div>
+      <div><h5>Compare</h5><ul><li><a href="#">Vanta Pricing</a></li><li><a href="#">Drata Pricing</a></li><li><a href="#">Secureframe Pricing</a></li><li><a href="#">Drata vs Vanta</a></li><li><a href="#">Vanta Competitors</a></li><li><a href="#">Drata Competitors</a></li></ul></div>
+      <div><h5>Legal</h5><ul><li><a href="#">Legal Overview</a></li><li><a href="#">Terms</a></li><li><a href="#">Privacy</a></li><li><a href="#">Cookies</a></li><li><a href="#">DPA</a></li><li><a href="#">SLA</a></li><li><a href="#">Subprocessors</a></li></ul></div>
+    </div>
+    <div class="f-bottom">
+      <span>© 2026 Comp AI</span>
+      <span class="status"><i></i>All systems normal</span>
+      <span class="social"><a href="#">GitHub</a><a href="#">X</a><a href="#">LinkedIn</a><a href="#">YouTube</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="draft-flag">Draft v0 · stand-in fonts &amp; logo</div>
+
+<script>
+// sticky nav border
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>8),{passive:true});
+
+// integrations marquee
+const tools=[["AWS","#ff9900"],["GitHub","#0b0a0d"],["Google Workspace","#4285f4"],["Okta","#007dc1"],["Slack","#4a154b"],["Jira","#2684ff"],["Azure","#0078d4"],["GCP","#34a853"],["Cloudflare","#f38020"],["Linear","#5e6ad2"],["Vercel","#0b0a0d"],["Datadog","#632ca6"]];
+const tools2=[["Rippling","#f2b705"],["Gusto","#f45d48"],["HubSpot","#ff7a59"],["Notion","#0b0a0d"],["1Password","#0572ec"],["Kandji","#1f2937"],["Jamf","#6b7280"],["CrowdStrike","#e01e1e"],["GitLab","#fc6d26"],["Snowflake","#29b5e8"],["Microsoft 365","#d83b01"],["BambooHR","#73c41d"]];
+const fill=(el,list)=>{const html=list.map(([n,c])=>`<span class="tool"><span class="mk" style="background:${c}">${n.slice(0,2)}</span>${n}</span>`).join('');el.innerHTML=html+html;};
+fill(document.getElementById('t1'),tools);fill(document.getElementById('t2'),tools2);
+
+// hero evidence feed: rotate new items in
+const pool=[["Access review completed","Okta","s-clover","gB"],["Vendor reviewed","Comp AI","s-star","gO"],["Laptop disk encrypted","Device agent","s-hex","gG"],["Backups verified","AWS","s-clover","gB"],["Branch protection","GitHub","s-star","gO"],["MFA enforced","Google Workspace","s-hex","gG"]];
+let i=0;const feed=document.getElementById('feed');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!reduce) setInterval(()=>{const [t,s,sym,g]=pool[i++%pool.length];const li=document.createElement('li');li.innerHTML=`<span class="sym"><svg><use href="#${sym}" fill="url(#${g})"/></svg></span>${t}<span class="src">${s}</span><span class="pass">PASS</span>`;feed.prepend(li);if(feed.children.length>3)feed.lastElementChild.remove();},2600);
+
+// reveal on scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,k)=>{el.style.transitionDelay=(k%4)*60+'ms';io.observe(el)});
+</script>
+</body>
+</html>

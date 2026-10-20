@@ -1,0 +1,442 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Checklista kickoff Comp AI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style id="css">
+/* Layout: one narrow column of meeting checklists, groups as small labels, a save bar pinned to the bottom. */
+:root{
+  --bg:#f6f6f3; --surface:#ffffff; --ink:#17191b; --ink-2:#474c52; --ink-3:#7a7f85;
+  --rule:#e1e2dd; --rule-2:#ececE8; --accent:#2c6a4e; --accent-ink:#ffffff;
+  --tag-bg:#e4eee8; --tag-tx:#2a5640; --danger:#a23b2c; --focus:#2c6a4e;
+  --f-sans:"Geist",ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --f-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121413; --surface:#1a1c1b; --ink:#e9eae7; --ink-2:#b9bcb7; --ink-3:#8b8f8a;
+  --rule:#2c2f2d; --rule-2:#232624; --accent:#5fb48a; --accent-ink:#0e1a14;
+  --tag-bg:#1f3329; --tag-tx:#a9d6bd; --danger:#e48a7b; --focus:#5fb48a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121413; --surface:#1a1c1b; --ink:#e9eae7; --ink-2:#b9bcb7; --ink-3:#8b8f8a;
+  --rule:#2c2f2d; --rule-2:#232624; --accent:#5fb48a; --accent-ink:#0e1a14;
+  --tag-bg:#1f3329; --tag-tx:#a9d6bd; --danger:#e48a7b; --focus:#5fb48a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:15.5px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.page{max-width:46rem;margin:0 auto;padding-block:2.5rem 8rem}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+button{font:inherit;color:inherit;cursor:pointer}
+
+header.top{display:grid;gap:.4rem;padding-bottom:1.5rem;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+h1{margin:0;font-size:2rem;line-height:1.1;font-weight:600;letter-spacing:-.02em;text-wrap:balance}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin-top:.5rem;font-size:.8125rem;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+
+section.meeting{margin-top:2.5rem}
+.mhead{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+h2{margin:0;font-size:1.3rem;font-weight:600;letter-spacing:-.01em}
+.msub{margin:.2rem 0 0;color:var(--ink-3);font-size:.875rem}
+.count{font-family:var(--f-mono);font-size:.8125rem;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:3px;background:var(--rule-2);border-radius:2px;margin-top:.75rem;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s ease-out}
+
+.group{margin-top:1.6rem}
+h3{margin:0 0 .35rem;font-size:.75rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+ul.items{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-2)}
+li.item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.25rem .75rem;align-items:start;padding:.6rem 0;border-bottom:1px solid var(--rule-2)}
+.cb{appearance:none;-webkit-appearance:none;width:1.15rem;height:1.15rem;margin:.18rem 0 0;border:1.5px solid var(--ink-3);border-radius:4px;
+  background:var(--surface);display:grid;place-items:center;cursor:pointer}
+.cb:checked{background:var(--accent);border-color:var(--accent)}
+.cb:checked::after{content:"";width:.32rem;height:.6rem;border:solid var(--accent-ink);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.txt{min-width:0;overflow-wrap:anywhere;cursor:text}
+.done .txt{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--rule)}
+.tag{display:inline-block;margin-left:.4rem;padding:.05rem .4rem;border-radius:4px;background:var(--tag-bg);color:var(--tag-tx);
+  font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.02em;vertical-align:.1em;white-space:nowrap}
+.acts{display:flex;gap:.1rem;opacity:0;transition:opacity .15s}
+li.item:hover .acts,li.item:focus-within .acts{opacity:1}
+@media (hover:none){.acts{opacity:1}}
+.ib{display:grid;place-items:center;width:2rem;height:2rem;border:0;border-radius:6px;background:none;color:var(--ink-3)}
+.ib:hover{background:var(--rule-2);color:var(--ink)}
+.ib.del:hover{color:var(--danger)}
+.ib svg{width:1rem;height:1rem}
+.note{grid-column:2 / 4;display:flex}
+.note input{flex:1;min-width:0}
+.notetxt{grid-column:2 / 4;font-size:.875rem;color:var(--ink-2);cursor:text}
+.notetxt::before{content:"→ ";color:var(--ink-3)}
+
+input.field{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:.35rem .55rem;width:100%}
+input.field:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 20%,transparent)}
+.edit{grid-column:2 / 4;display:flex;gap:.4rem;flex-wrap:wrap}
+.edit input{flex:1 1 16rem;min-width:0}
+.btn{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:.35rem .75rem;font-size:.875rem}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:500}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn[disabled]{opacity:.55;cursor:default}
+
+form.add{display:flex;gap:.5rem;margin-top:.6rem}
+form.add input{flex:1;min-width:0;border-style:dashed;background:transparent}
+form.add input:focus{border-style:solid;background:var(--surface)}
+
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:10;
+  padding:.75rem max(16px,env(safe-area-inset-right,0px)) calc(.75rem + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--rule)}
+.savebar .in{max-width:46rem;margin:0 auto;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.savebar .msg{flex:1;min-width:12rem;font-size:.875rem;color:var(--ink-2)}
+.savebar .msg b{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<div id="root" class="page"></div>
+<script type="application/json" id="state">{
+ "meetings": [
+  {
+   "id": "m1",
+   "title": "Spotkanie wewnętrzne",
+   "sub": "Wiktor, Olga, Jacek, Mimi, Arek, szyna · czw 15.10",
+   "groups": [
+    {
+     "id": "g1",
+     "title": "Branding",
+     "items": [
+      {
+       "id": "q1",
+       "text": "C.2 wybrany 09.10. Jak klient przyjął brand proposal z 14.10?",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "q2",
+       "text": "Co będzie finalne 16.10 (logo, fonty, paleta, light/dark, symbole), a co jeszcze się zmieni?",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "q3",
+       "text": "Jakie są następne kroki i deliverables po stronie brandu?",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "q4",
+       "text": "Na czym startuję do 16.10: szare wireframe’y czy wstępne tokeny z brand proposal (co będzie lepsze w przypadku tego klienta?)",
+       "added": true,
+       "done": false,
+       "note": ""
+      }
+     ]
+    },
+    {
+     "id": "g2",
+     "title": "Copy",
+     "items": [
+      {
+       "id": "q6",
+       "text": "Na jakim etapie jest framework komunikacji (v2) i kiedy będzie gotowy?",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "q7",
+       "text": "Czy jest już input do struktury HP: pozycjonowanie, ścieżka narracyjna do hero, kluczowe claimy?",
+       "added": false,
+       "done": false,
+       "note": ""
+      }
+     ]
+    },
+    {
+     "id": "g3",
+     "title": "Dyrekcja artystyczna",
+     "items": [
+      {
+       "id": "q9",
+       "text": "Jak ma wyglądać współpraca z Nervym (3D) i Antonem (motion)? Kto prowadzi kierunek?",
+       "added": false,
+       "done": false,
+       "note": ""
+      }
+     ]
+    },
+    {
+     "id": "g4",
+     "title": "Kickoff z klientem",
+     "items": [
+      {
+       "id": "q12",
+       "text": "Kiedy planujemy kickoff web designu z klientem?",
+       "added": false,
+       "done": false,
+       "note": ""
+      }
+     ]
+    },
+    {
+     "id": "g5",
+     "title": "Proces z devem",
+     "items": [
+      {
+       "id": "q16",
+       "text": "Inwentaryzacja sekcji – sync z developmentem",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "q18",
+       "text": "Format dla deva: Figma (Dev Mode) vs HTML?",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "q20",
+       "text": "Nav i footer muszą być gotowe na 13.11 (jedna flaga przełącza całą stronę). Kiedy je projektuję?",
+       "added": true,
+       "done": false,
+       "note": ""
+      }
+     ]
+    },
+    {
+     "id": "g6",
+     "title": "Klient i vibe",
+     "items": [
+      {
+       "id": "q22",
+       "text": "Na co się przygotować? Jaki jest vibe Teresy, Claudia i founderów?",
+       "added": false,
+       "done": false,
+       "note": ""
+      }
+     ]
+    },
+    {
+     "id": "g7",
+     "title": "Insights z brand designu",
+     "items": [
+      {
+       "id": "q24",
+       "text": "Czego już nie pytać klienta? Gusta, anty-referencje, zasady dla gradientów?",
+       "added": false,
+       "done": false,
+       "note": ""
+      }
+     ]
+    },
+    {
+     "id": "g8",
+     "title": "Dostępy",
+     "items": [
+      {
+       "id": "q26",
+       "text": "Brand proposal i Supercuty, Notion Framework, wideo z feedbackiem Teresy, seat na Vercelu, repo i Sanity, edycja w Figmie",
+       "added": true,
+       "done": false,
+       "note": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2",
+   "title": "1:1 z Wiktorem",
+   "sub": "PM · po spotkaniu wewnętrznym",
+   "groups": [
+    {
+     "id": "g9",
+     "title": "Organizacja",
+     "items": [
+      {
+       "id": "q27",
+       "text": "Update’y dla klienta: czy klient oczekuje stałych godzin? Jaki kanał i forma?",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "q28",
+       "text": "Urlop: potwierdzenie terminu",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "q29",
+       "text": "ClickUp: logowanie czasu w tasku czy w subtaskach (research, IA, HP, podstrony)?",
+       "added": false,
+       "done": false,
+       "note": ""
+      },
+      {
+       "id": "qmv99i49khqrg",
+       "text": "Proces: daily updates + spotkania z klientem",
+       "added": false,
+       "done": false,
+       "note": ""
+      }
+     ]
+    },
+    {
+     "id": "g10",
+     "title": "Scope i proces",
+     "items": []
+    }
+   ]
+  }
+ ]
+}</script>
+<script id="app">
+(function(){
+  var KEY='comp-kickoff-draft';
+  var RESET=':root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}';
+  var FONTS='<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">';
+  var root=document.getElementById('root');
+  var baseRaw=document.getElementById('state').textContent;
+  var base=hash(baseRaw);
+  var state=JSON.parse(baseRaw);
+  var dirty=0, editing=null, noteEdit=null, undo=null, undoTimer=null;
+  var mode='idle'; // idle | saving | readonly | unavailable | error | conflict
+  var artifact=null;
+
+  try{var d=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(d&&d.base===base&&d.state){state=d.state;dirty=d.dirty||1}}catch(e){}
+
+  function hash(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0}return String(h)}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function uid(){return 'q'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+  function find(id){var r=null;state.meetings.forEach(function(m){m.groups.forEach(function(g){g.items.forEach(function(it,i){if(it.id===id)r={g:g,it:it,i:i}})})});return r}
+  function findGroup(id){var r=null;state.meetings.forEach(function(m){m.groups.forEach(function(g){if(g.id===id)r=g})});return r}
+  function changed(){dirty++;try{localStorage.setItem(KEY,JSON.stringify({base:base,state:state,dirty:dirty}))}catch(e){}}
+
+  var I={
+    edit:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2.5l3 3L6 13H3v-3z"/></svg>',
+    note:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 4h10M3 8h10M3 12h6"/></svg>',
+    del:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>'
+  };
+
+  function itemHTML(it){
+    var h='<li class="item'+(it.done?' done':'')+'" data-id="'+it.id+'">';
+    h+='<input type="checkbox" class="cb" id="cb-'+it.id+'" data-act="toggle" aria-label="Zrobione"'+(it.done?' checked':'')+'>';
+    if(editing===it.id){
+      h+='<form class="edit" data-act="save-edit"><input class="field" id="ed-'+it.id+'" value="'+esc(it.text)+'" aria-label="Treść pytania"><button class="btn primary" type="submit">OK</button><button class="btn" type="button" data-act="cancel-edit">Anuluj</button></form>';
+    } else {
+      h+='<span class="txt" data-act="start-edit" title="Kliknij, aby edytować">'+esc(it.text)+(it.added?'<span class="tag">dopisane</span>':'')+'</span>';
+      h+='<span class="acts"><button class="ib" type="button" data-act="start-edit" aria-label="Edytuj">'+I.edit+'</button>'+
+         '<button class="ib" type="button" data-act="start-note" aria-label="Notatka">'+I.note+'</button>'+
+         '<button class="ib del" type="button" data-act="delete" aria-label="Usuń">'+I.del+'</button></span>';
+    }
+    if(noteEdit===it.id){
+      h+='<form class="note" data-act="save-note"><input class="field" id="nt-'+it.id+'" value="'+esc(it.note||'')+'" placeholder="Odpowiedź / notatka… (Enter zapisuje)" aria-label="Notatka"></form>';
+    } else if(it.note){
+      h+='<span class="notetxt" data-act="start-note">'+esc(it.note)+'</span>';
+    }
+    return h+'</li>';
+  }
+
+  function render(){
+    var h='<header class="top"><span class="eyebrow">Comp AI · web design · 15.10.2026</span><h1>Checklista kickoff</h1>'+
+      '<div class="legend"><span>Kliknij pytanie, żeby je edytować</span><span><span class="tag">dopisane</span> zaproponowane przez Claude</span></div></header>';
+    state.meetings.forEach(function(m){
+      var tot=0,done=0;m.groups.forEach(function(g){g.items.forEach(function(it){tot++;if(it.done)done++})});
+      h+='<section class="meeting" aria-labelledby="h-'+m.id+'"><div class="mhead"><div><h2 id="h-'+m.id+'">'+esc(m.title)+'</h2><p class="msub">'+esc(m.sub)+'</p></div>'+
+        '<span class="count">'+done+' / '+tot+'</span></div><div class="bar"><i style="width:'+(tot?Math.round(done/tot*100):0)+'%"></i></div>';
+      m.groups.forEach(function(g){
+        h+='<div class="group" data-gid="'+g.id+'"><h3>'+esc(g.title)+'</h3><ul class="items">'+g.items.map(itemHTML).join('')+'</ul>'+
+          '<form class="add" data-act="add"><input class="field" id="add-'+g.id+'" placeholder="+ Dodaj pytanie" aria-label="Dodaj pytanie do: '+esc(g.title)+'"></form></div>';
+      });
+      h+='</section>';
+    });
+    h+=barHTML();
+    root.innerHTML=h;
+  }
+
+  function barHTML(){
+    var msg='',btns='';
+    if(undo){msg='Usunięto: <b>'+esc(undo.it.text.slice(0,48))+(undo.it.text.length>48?'…':'')+'</b>';btns+='<button class="btn" type="button" data-act="undo">Cofnij</button>'}
+    else if(mode==='saving'){msg='Zapisuję…'}
+    else if(mode==='readonly'){msg='Ten widok jest tylko do odczytu. Zmiany zostają w tej przeglądarce.'}
+    else if(mode==='unavailable'&&dirty){msg='Zapis do artefaktu nie działa w tym widoku. Zmiany są zachowane w tej przeglądarce.'}
+    else if(mode==='conflict'){msg='Ktoś zapisał nowszą wersję. Wczytuję ją…'}
+    else if(mode==='error'){msg='Nie udało się zapisać. Spróbuj ponownie za chwilę.'}
+    else if(dirty){msg='<b>Niezapisane zmiany</b> · zapis odświeży stronę'}
+    if(dirty&&!undo&&mode!=='saving'&&mode!=='readonly'&&mode!=='unavailable'){
+      btns+='<button class="btn" type="button" data-act="discard">Odrzuć</button><button class="btn primary" type="button" data-act="publish"'+(artifact?'':' disabled')+'>Zapisz</button>';
+    }
+    if(!msg)return '';
+    return '<div class="savebar" role="status"><div class="in"><span class="msg">'+msg+'</span>'+btns+'</div></div>';
+  }
+
+  function focusSoon(id){var el=document.getElementById(id);if(el){el.focus();if(el.setSelectionRange){var n=el.value.length;el.setSelectionRange(n,n)}}}
+
+  root.addEventListener('change',function(e){
+    if(e.target.dataset.act!=='toggle')return;
+    var f=find(e.target.closest('li').dataset.id);f.it.done=e.target.checked;changed();render();
+  });
+
+  root.addEventListener('click',function(e){
+    var t=e.target.closest('[data-act]');if(!t||t.tagName==='FORM'||t.tagName==='INPUT')return;
+    var act=t.dataset.act, li=t.closest('li'), id=li&&li.dataset.id;
+    if(act==='start-edit'){editing=id;noteEdit=null;render();focusSoon('ed-'+id)}
+    else if(act==='cancel-edit'){editing=null;render()}
+    else if(act==='start-note'){noteEdit=id;editing=null;render();focusSoon('nt-'+id)}
+    else if(act==='delete'){
+      var f=find(id);f.g.items.splice(f.i,1);undo={gid:f.g.id,it:f.it,i:f.i};changed();render();
+      clearTimeout(undoTimer);undoTimer=setTimeout(function(){undo=null;render()},7000);
+    }
+    else if(act==='undo'&&undo){var g=findGroup(undo.gid);if(g){g.items.splice(Math.min(undo.i,g.items.length),0,undo.it);changed()}undo=null;clearTimeout(undoTimer);render()}
+    else if(act==='discard'){try{localStorage.removeItem(KEY)}catch(_){}state=JSON.parse(baseRaw);dirty=0;editing=noteEdit=null;mode=artifact?'idle':mode;render()}
+    else if(act==='publish'){publish()}
+  });
+
+  root.addEventListener('submit',function(e){
+    e.preventDefault();var f=e.target, act=f.dataset.act, inp=f.querySelector('input');
+    if(act==='add'){
+      var v=inp.value.trim();if(!v)return;var gid=f.closest('.group').dataset.gid;
+      findGroup(gid).items.push({id:uid(),text:v,added:false,done:false,note:''});changed();render();focusSoon('add-'+gid);
+    } else if(act==='save-edit'){
+      var id=f.closest('li').dataset.id, v2=inp.value.trim();var x=find(id);
+      if(v2&&v2!==x.it.text){x.it.text=v2;changed()}editing=null;render();
+    } else if(act==='save-note'){
+      var nid=f.closest('li').dataset.id, y=find(nid), v3=inp.value.trim();
+      if(v3!==(y.it.note||'')){y.it.note=v3;changed()}noteEdit=null;render();
+    }
+  });
+
+  root.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&(editing||noteEdit)){editing=noteEdit=null;render()}
+  });
+
+  function buildDoc(){
+    var json=JSON.stringify(state,null,1).replace(/</g,'\\u003c');
+    var S='<'+'script', E='<'+'/script>';
+    return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+RESET+'</style></head><body>'+
+      '<title>'+esc(document.title)+'</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n'+FONTS+'\n'+
+      '<style id="css">'+document.getElementById('css').textContent+'</style>\n<div id="root" class="page"></div>\n'+
+      S+' type="application/json" id="state">'+json+E+'\n'+S+' id="app">'+document.getElementById('app').textContent+E+'\n</body></html>';
+  }
+
+  function publish(){
+    if(!artifact)return;
+    mode='saving';editing=noteEdit=null;render();
+    artifact.publish(buildDoc()).then(function(){try{localStorage.removeItem(KEY)}catch(_){}})
+    .catch(function(err){
+      var c=err&&err.code;
+      if(c==='conflict'){mode='conflict'}
+      else if(c==='not_writer'||c==='not_granted'||c==='consent_required'||c==='not_declared'||c==='capability_disabled'||c==='capability_removed'){mode='readonly';artifact=null}
+      else{mode='error'}
+      render();
+    });
+  }
+
+  render();
+  if(window.claude&&window.claude.use){
+    window.claude.use('artifact').then(function(a){artifact=a;if(!a)mode='unavailable';render()},function(){mode='unavailable';render()});
+  } else {mode='unavailable';render()}
+})();
+</script>
+</body></html>

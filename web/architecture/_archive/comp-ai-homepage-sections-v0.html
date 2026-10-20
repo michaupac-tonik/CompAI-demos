@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI: Homepage sections (v0)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e9e7e2; font-family: 'Inter', sans-serif; padding: 40px 0; }
+  .board { width: 1424px; margin: 0 auto; background: #f4f3f0; border-radius: 16px; padding: 64px; display: flex; flex-direction: column; gap: 20px; }
+  .title h1 { font-size: 40px; font-weight: 600; line-height: 1.15; color: #161616; }
+  .title p { margin-top: 12px; font-size: 18px; line-height: 1.6; color: #424240; max-width: 1100px; }
+  .section { background: #fff; border: 1px solid #e5e3de; border-radius: 12px; padding: 36px 48px; display: flex; flex-direction: column; gap: 16px; }
+  .head { display: flex; align-items: baseline; gap: 16px; }
+  .num { font-family: 'Geist Mono', monospace; font-size: 13px; color: #8f8c87; }
+  .name { font-size: 28px; font-weight: 600; line-height: 1.2; color: #161616; }
+  .tag { font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: #8f8c87; text-transform: uppercase; }
+  .row { display: grid; grid-template-columns: 180px 1fr; gap: 24px; }
+  .k { font-family: 'Geist Mono', monospace; font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #8f8c87; padding-top: 4px; }
+  .v { font-size: 17px; line-height: 1.55; color: #424240; max-width: 900px; }
+  ul.v { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="title">
+    <h1>Comp AI: Homepage sections (v0)</h1>
+    <p>The order of sections on the new homepage, before any copy. Each block says what the section is about, why it's on the page, and what we need to agree with the client. The page is a sales page for the 20-minute demo; every section either explains the product, proves it or moves the visitor towards that call. It keeps the messages today's site carries: compliance, security, integrations, support and growth.</p>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">01</p><p class="name">Nav</p><p class="tag">Global · today: Product · Frameworks · Customers · Pricing</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Global navigation shared by the new homepage and the ~100 existing pages that inherit it on 13.11.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">It&#x27;s the entry point to every page on the site, and most organic traffic lands on resource pages (Hub, guides, templates, comparisons) that today are only reachable from the footer.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Add Resources as a new entry point for the organic-traffic pages.</li><li>Confirm the official product module names (site and onboarding brief differ).</li><li>CTA hierarchy: is Book a demo the one primary action, and what does Get started do?</li><li>Log in: how do returning customers reach the app today, and does it belong in the nav?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">02</p><p class="name">Hero</p><p class="tag">Exists today</p></div>
+    <div class="row"><p class="k">About</p><p class="v">What Comp AI is, who it&#x27;s for and the one primary action, above the fold.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">It decides in seconds whether a founder or security lead keeps reading, and it carries the main conversion: the demo call.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Which narrative route leads (I, II or III from the comms framework)?</li><li>Which proof can sit next to the headline (rating, customer count, Series A)?</li><li>Audit included needs to be made precise: the homepage meta description says &#x27;audit and pentest included&#x27;, while /pricing says it depends on scope.</li><li>Lead angle: today&#x27;s hero sells closing deals. Do we keep that, or lead with something else, such as verifiability (our suggestion, after the Delve case)?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">03</p><p class="name">Proof band</p><p class="tag">New</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Customer logos and a few hard numbers directly under the hero.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">The current homepage has no logo wall. It&#x27;s the quickest credibility signal for the upmarket push, and lets the copy show trust instead of claiming it.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Which customer logos have permission?</li><li>Which numbers are public, and is there one &#x27;days to audit-ready&#x27; figure to stand behind?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">04</p><p class="name">Before / after</p><p class="tag">New</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The work compliance used to take, next to what it takes with Comp AI.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Makes time-to-value (the &#x27;magic&#x27;) concrete without fear-based messaging.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Is this a section of its own, or folded into How it works?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">05</p><p class="name">How it works</p><p class="tag">Exists today (5 steps) · restructured</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The process from connecting tools to being audit-ready, in a few steps.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Explains the product in one picture and gives the sceptical security lead &#x27;a bit less magic&#x27;.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>How many steps, and does the product have a human approval step worth showing?</li><li>Can we show product screens in the new brand before the product rebrand ships?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">06</p><p class="name">Integrations</p><p class="tag">Exists today (&#x27;Connect with your existing stack&#x27;) · kept</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The tools Comp AI connects to (580+), shown as recognisable logos.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">&#x27;Does it work with our stack?&#x27; is a real buying question for CTOs and security leads, and 580+ integrations is one of Comp&#x27;s strongest assets. It&#x27;s also where evidence comes from, so it backs the automation claim.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Which integrations lead (the most common stacks of your customers)?</li><li>Is there an integrations page or list to link to?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">07</p><p class="name">Platform</p><p class="tag">Exists today · anchor for Product in the nav</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The product Comp AI sells today (the app at app.trycomp.ai), shown as its modules.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Shows what customers actually get. It also stands in for the Product Overview page, which doesn&#x27;t exist yet, and is where the nav&#x27;s Product link lands.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Official module list and names (the site and the onboarding brief differ).</li><li>Is every module live today? Anything in beta or planned should be labelled as such, not shown as live.</li><li>Product Overview page is an upsell: link out later or not.</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">08</p><p class="name">Security</p><p class="tag">Exists today (&#x27;Compliance that actually improves your security&#x27;) · expanded</p></div>
+    <div class="row"><p class="k">About</p><p class="v">How Comp AI makes a company more secure, not just certified: continuous evidence, device agents, pentests, cloud monitoring, tests you write yourself, and open source you can verify.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">The client wants security and compliance to carry equal weight, and continuous security is where the company is heading. After the Delve case, &#x27;fast&#x27; alone reads as a risk, so verifiability (open source, real evidence) belongs here as one part of the security story. It&#x27;s also the section that speaks to developers and AI agents.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>How much weight does security get next to compliance?</li><li>Which security claims are live today, and which are the continuous-security vision?</li><li>Can customers bring their own auditor?</li><li>Name competitors or not?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">09</p><p class="name">Frameworks</p><p class="tag">Exists today as anchor</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Supported frameworks and how customers add more over time.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Anchor for Frameworks in the nav, and part of the growth story: one platform as you add frameworks.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Is the list on /pricing complete? Which frameworks lead?</li><li>Can we claim controls and evidence carry across frameworks?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">10</p><p class="name">Experts on Slack</p><p class="tag">Exists today as a step · promoted to its own section</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The 1:1 Slack channel with in-house experts.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">The founders&#x27; main differentiator and the human side of the brand.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Can we show a real (anonymised) Slack thread?</li><li>Which support numbers are public?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">11</p><p class="name">Who it&#x27;s for</p><p class="tag">Exists today as &#x27;every stage of growth&#x27; · to discuss</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Paths for different buyers: by company stage (Startup / Mid-Market / Enterprise, as today) or by role (founder vs security lead).</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">One page has to serve two buyers with different needs, and the &#x27;we grow with you from startup to enterprise&#x27; message matters for the mid-market push.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Keep the stages, split by role, or combine both?</li><li>Add a third path for partners (VCs, auditors)?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">12</p><p class="name">Customer stories</p><p class="tag">Exists today as testimonials · reuses the /case-studies card</p></div>
+    <div class="row"><p class="k">About</p><p class="v">A featured case study plus a few supporting ones.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Proof from companies like the visitor, with numbers. The same card feeds /case-studies through Sanity.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Which stories are strongest for the mid-market push?</li><li>Lead with deal outcomes ($ ARR unlocked) to keep the &#x27;close deals&#x27; thread?</li><li>Any newer or larger customers we can feature?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">13</p><p class="name">Pricing teaser</p><p class="tag">New</p></div>
+    <div class="row"><p class="k">About</p><p class="v">How pricing works and a route to a quote.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Pricing is the second most visited page. This catches that intent on the homepage and turns it into a call.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Do prices stay hidden, or is a &#x27;from&#x27; anchor possible?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">14</p><p class="name">FAQ</p><p class="tag">Exists today</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The questions visitors ask before booking.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Handles the last objections and keeps FAQ structured data for search.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Keep today&#x27;s seven questions?</li><li>Add switching from Vanta/Drata and cost?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">15</p><p class="name">Final CTA</p><p class="tag">Exists today</p></div>
+    <div class="row"><p class="k">About</p><p class="v">The last ask for a demo.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Closes the page on the one primary action, and the same block can close Pricing, Customers and legacy pages.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Same CTA as the hero, or a different angle?</li><li>Today&#x27;s final CTA is about pipeline (&#x27;Don&#x27;t let compliance slow down your pipeline&#x27;). Keep a deal angle here?</li></ul></div>
+  </div>
+
+  <div class="section">
+    <div class="head"><p class="num">16</p><p class="name">Footer</p><p class="tag">Global · same columns as today</p></div>
+    <div class="row"><p class="k">About</p><p class="v">Links to the whole site: Product, Resources, Guides, Compare, Legal.</p></div>
+    <div class="row"><p class="k">Why it matters</p><p class="v">Keeps every legacy page linked so guides, comparisons and legal pages keep their weight in search.</p></div>
+    <div class="row"><p class="k">To discuss</p><ul class="v"><li>Add a Frameworks column once framework pages exist?</li><li>About page: an upsell; it goes in only if the client decides to build it.</li></ul></div>
+  </div>
+
+</div>
+</body>
+</html>
