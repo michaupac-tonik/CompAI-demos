@@ -1,0 +1,1973 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Comp AI · Kontrakt sekcji (draft v0.13)</title><style>
+:root{--bg:#F6F6F4;--card:#fff;--ink:#1A1A1A;--mute:#6f6f6c;--line:#E2E2DE}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px;max-width:1280px;margin:0 auto;padding:40px 24px}
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13px;max-height:calc(100vh - 48px);overflow:auto}
+nav.toc .tt{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:8px}
+nav.toc ul{list-style:none;padding:0;margin:0} nav.toc li{margin:0 0 6px} nav.toc a{color:var(--ink);text-decoration:none} nav.toc a:hover{text-decoration:underline}
+article{min-width:0}
+article h1{font-size:32px;line-height:1.2;letter-spacing:-.015em;margin:32px 0 8px}
+article h2{font-size:22px;margin:48px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+article h3{font-size:17px;margin:28px 0 8px}
+article blockquote{margin:0 0 16px;padding:10px 16px;background:var(--card);border-left:3px solid var(--ink);border-radius:4px;color:var(--mute)}
+article blockquote p{margin:2px 0}
+.tablewrap{overflow-x:auto;margin:12px 0 20px}
+table{border-collapse:collapse;background:var(--card);font-size:13px;line-height:1.45;min-width:100%}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#efefeb;font-weight:600}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;background:#ececE8;border-radius:4px;padding:0 4px}
+pre{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;overflow-x:auto;font-size:13px} pre code{background:none;padding:0}
+a{color:var(--ink)}
+.howto{background:#fff;border:1px solid #1a1a1a;border-radius:10px;padding:18px 22px;font-size:14px;line-height:1.5}
+.howto summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none;display:flex;gap:10px;align-items:center}
+.howto summary::-webkit-details-marker{display:none}
+.howto .htag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;background:#1a1a1a;color:#fff;border-radius:4px;padding:2px 6px}
+.howto .tg{margin-left:auto;font-size:11px;font-weight:500;color:#8a8a85}
+.howto .cols{display:grid;grid-template-columns:1fr 1.3fr;gap:28px;margin-top:14px}
+.howto h4{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8a8a85;margin:0 0 6px}
+.howto p{margin:0 0 8px} .howto ol,.howto ul{margin:0;padding-left:18px} .howto li{margin:0 0 5px}
+.howto .meta{margin-top:12px;padding-top:10px;border-top:1px solid #e2e2de;color:#8a8a85;font-size:12px}
+.back{font-size:13px;color:var(--mute)}
+@media (max-width:900px){.layout{grid-template-columns:1fr}nav.toc{position:static;max-height:none}.howto .cols{grid-template-columns:1fr}}
+</style></head>
+<body><div class="layout"><nav class="toc"><div class="tt">Spis treści</div><div class="toc">
+<ul>
+<li><a href="#0-po-co-ten-plik-i-jak-go-uzywac">0. Po co ten plik i jak go używać</a></li>
+<li><a href="#1-kontekst-wdrozenia-fakty-stan-1610">1. Kontekst wdrożenia (fakty, stan 16.10)</a></li>
+<li><a href="#2-zasady-modelowania-twarde-reguy">2. Zasady modelowania (twarde reguły)</a></li>
+<li><a href="#3-pipeline-i-bramki-jakosci">3. Pipeline i bramki jakości</a></li>
+<li><a href="#4-sownik-pojec">4. Słownik pojęć</a></li>
+<li><a href="#5-nazewnictwo-jedna-nazwa-na-wszystkich-etapach">5. Nazewnictwo (jedna nazwa na wszystkich etapach)</a></li>
+<li><a href="#6-tokeny-figma-variables-globalscss">6. Tokeny (Figma Variables ↔ globals.css)</a></li>
+<li><a href="#7-komponenty-wspodzielone-wewnatrz-sekcji">7. Komponenty współdzielone (wewnątrz sekcji)</a></li>
+<li><a href="#8-katalog-sekcji-paszporty">8. Katalog sekcji: paszporty</a></li>
+<li><a href="#9-typy-stron-i-dozwolone-bloki">9. Typy stron i dozwolone bloki</a></li>
+<li><a href="#10-responsywnosc-dostepnosc-motion">10. Responsywność, dostępność, motion</a></li>
+<li><a href="#11-seo-i-tracking-nie-do-ruszenia">11. SEO i tracking (nie do ruszenia)</a></li>
+<li><a href="#12-kolejnosc-oddawania-do-dev-grupy-pr-dla-hp">12. Kolejność oddawania do dev (grupy PR dla HP)</a></li>
+<li><a href="#13-otwarte-decyzje-blokery-kontraktu">13. Otwarte decyzje (blokery kontraktu)</a></li>
+<li><a href="#14-changelog">14. Changelog</a></li>
+<li><a href="#15-narzedzia-z-githuba-sanity-io">15. Narzędzia (z GitHuba sanity-io)</a></li>
+<li><a href="#16-zroda">16. Źródła</a></li>
+</ul>
+</div>
+</nav><article><a class="back" href="index.html">← Dokumentacja dla dev</a>
+<div style="height:16px"></div><details class="howto" open><summary><span class="htag">Dla dev</span>Jak czytać ten plik<span class="tg">kliknij, aby zwinąć</span></summary>
+<div class="cols"><div>
+<h4>Czym jest kontrakt sekcji</h4>
+<p><b>Źródło prawdy dla całej strony</b>: jeden dokument, który opisuje każdą sekcję tak samo na wszystkich etapach, od sitemapy przez wireframe i design po schemat Sanity i komponent. Makiety (lo-fi i hi-fi) są z nim zgodne, a przy rozbieżności rozstrzyga kontrakt.</p>
+<h4>Status</h4>
+<ul><li><b>Draft (v0.13)</b>, przygotowany przez design. <b>Nie był jeszcze uzgadniany z dev</b>: nazwy pól, walidacje i podział na bloki to propozycja do wspólnego przeglądu.</li><li>Copy w przykładach to placeholder. Tokeny i krój nie są finalne.</li></ul>
+</div><div>
+<h4>Od czego zacząć</h4>
+<ol><li><b>§2 Reguły R1–R15</b>: zasady modelowania (znaczenie zamiast wyglądu, jedyne pole wizualne <code>tone</code>, maks. 2 warianty na blok, referencje tylko dla treści współdzielonych).</li>
+<li><b>§5 Nazewnictwo</b>: jedna nazwa <code>_type</code> w Sanity, w Figmie i w kodzie.</li>
+<li><b>§8 Paszporty sekcji</b>: pola z typami, liczności, warianty, komponenty i blockery dla każdego bloku. <b>§8e</b>: limity znaków (<code>warning</code> / <code>error</code>), które mają pierwszeństwo przed liczbami w paszportach.</li>
+<li><b>§9 Typy stron</b> i dozwolone bloki, <b>§11</b> SEO i tracking (bez zmian względem obecnej strony), <b>§13</b> otwarte decyzje.</li>
+<li><b>§14 Changelog</b>: każda zmiana ma numer (C1–C53), do którego odwołują się makiety.</li></ol>
+</div></div>
+<div class="meta">Ten sam dokument jako Markdown (np. dla Claude Code): <a href="comp-ai-section-contract-draft-v0.13.md">comp-ai-section-contract-draft-v0.13.md</a>. Kontakt: Michał Pac (design).</div>
+</details><h1 id="comp-ai-kontrakt-sekcji-section-spec">Comp AI: kontrakt sekcji (section spec)</h1>
+<blockquote>
+<p><strong>Wersja:</strong> v0.13 (21.10.2026) · <strong>Właściciel:</strong> Michał Pac (web design)<br><strong>Status:</strong> draft roboczy tonik, jeszcze nieuzgodniony z Arkiem ani z klientem<br><strong>Gdzie leży:</strong> <code>skills/comp-ai-section-contract/comp-ai-section-contract-spec.md</code> (źródło prawdy) + kopia w projekcie Claude „Comp AI”<br><strong>Prompt do weryfikacji w Figmie:</strong> <code>skills/comp-ai-section-contract/comp-ai-figma-wireframe-check-prompt.md</code></p>
+</blockquote>
+<hr />
+<h2 id="0-po-co-ten-plik-i-jak-go-uzywac">0. Po co ten plik i jak go używać</h2>
+<p>Strona Comp AI powstaje jako <strong>page builder w Sanity</strong>: marketing składa strony z gotowych sekcji, a nowy <em>typ</em> sekcji wymaga już developera. Każda sekcja przechodzi więc przez pięć etapów i na każdym musi wyglądać tak samo:</p>
+<pre><code>Sitemap  →  Wireframe  →  Design (Figma)  →  Schemat Sanity  →  Komponent + PR
+(gdzie)     (co i w jakiej    (jak wygląda,    (co edytuje        (jak się renderuje,
+             kolejności)       tokeny, stany)   marketing)         preview, tracking)
+</code></pre>
+<p>Ten plik jest <strong>kontraktem</strong>: jedna sekcja ma jeden paszport (§8) i jedną nazwę (§5) na wszystkich etapach. Zasady:</p>
+<ol>
+<li><strong>Najpierw kontrakt, potem ekran.</strong> Nowa sekcja albo nowe pole w designie trafia najpierw tutaj (do §8 i do changelogu w §14), dopiero potem do Figmy.</li>
+<li><strong>Figma nie może zawierać niczego, czego nie ma w kontrakcie.</strong> Dotyczy to pól, wariantów, sekcji i tokenów. Prompt weryfikacyjny sprawdza to automatycznie.</li>
+<li><strong>Kontrakt nie może obiecywać niczego, czego nie da się wyklikać w Sanity.</strong> Jeśli element designu nie ma pola, to albo jest stały w kodzie (i tak go opisujemy), albo dostaje pole.</li>
+<li><strong>Zmiana po zatwierdzeniu designu</strong> to wpis w changelogu i ping do Arka. Bez cichych zmian.</li>
+</ol>
+<hr />
+<h2 id="1-kontekst-wdrozenia-fakty-stan-1610">1. Kontekst wdrożenia (fakty, stan 16.10)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Temat</th>
+<th>Ustalenie</th>
+<th>Źródło</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repo</td>
+<td><code>comp-web-v3</code>, Next.js monorepo (<code>apps/web</code>), Tailwind, hosting Vercel</td>
+<td>Teresa, wątek implementation process</td>
+</tr>
+<tr>
+<td>CMS</td>
+<td>Sanity. Dziś obsługuje tylko <code>/hub</code>. WordPress wycofany.</td>
+<td>Teresa</td>
+</tr>
+<tr>
+<td>Studio</td>
+<td>Embed pod <code>/studio</code> w repo + dataset staging</td>
+<td>Claudio, 16.10</td>
+</tr>
+<tr>
+<td>Page builder</td>
+<td>Schematy: pages, sections, navigation, footer, pricing plans, case studies. Draft preview + webhook publikacji.</td>
+<td>Plan Arka, 12.10</td>
+</tr>
+<tr>
+<td>Migracja</td>
+<td>Pricing i case studies są dziś zahardkodowane w repo. Przejdą do Sanity przez testowane skrypty migracji.</td>
+<td>Plan Arka</td>
+</tr>
+<tr>
+<td>Edycja bez deva</td>
+<td>Copy, obrazy, plany cenowe, case studies, linki nav/footer, <strong>nowe strony złożone z istniejących sekcji</strong>. Nowy typ sekcji wymaga deva.</td>
+<td>Plan Arka (odpowiedź dla Teresy)</td>
+</tr>
+<tr>
+<td>Tokeny</td>
+<td>Wspólne tokeny w <code>packages/ui/globals.css</code> + <code>design.md</code> z konwencjami. Na start sama podstawa.</td>
+<td>Plan Arka, Goszczu</td>
+</tr>
+<tr>
+<td>Wspólne klocki</td>
+<td>Button, section wrapper, typografia: osobny PR w fazie Foundation</td>
+<td>Plan Arka</td>
+</tr>
+<tr>
+<td>Preview</td>
+<td>Osobna domena preview (Vercel Auth, noindex). <code>proxy.ts</code> wybiera wersję po hoście.</td>
+<td>Plan Arka</td>
+</tr>
+<tr>
+<td>Launch</td>
+<td>Jedna flaga (env/Edge Config, nie PostHog). Rollback przez przełączenie flagi. Strony statyczne.</td>
+<td>Plan Arka</td>
+</tr>
+<tr>
+<td>Kolejność PR</td>
+<td>Foundation → Sanity → HP (2–3 PR-y grupami sekcji) → Pricing → Customers (<code>/case-studies</code>) → Demo (<code>/demo</code>) → Nav + Footer → tracking → QA → flip flagi → PR sprzątający</td>
+<td>Plan Arka</td>
+</tr>
+<tr>
+<td>Review</td>
+<td>Claudio jest DRI od review i merge. Michał robi review na preview razem z klientem. Michał potrzebuje seata na Vercelu.</td>
+<td>Teresa, plan Arka</td>
+</tr>
+<tr>
+<td>Nav + footer</td>
+<td>Osobne komponenty CMS. <strong>Stare strony (~100 poza /hub) dostają nowy nav i footer</strong> przez tę samą flagę.</td>
+<td>Teresa, plan Arka</td>
+</tr>
+<tr>
+<td>SEO</td>
+<td>Każda strona zachowuje URL, metadane, structured data i OG image. Domena zostaje <code>trycomp.ai</code>.</td>
+<td>Plan Arka, Teresa</td>
+</tr>
+<tr>
+<td>Tracking</td>
+<td>HubSpot forms, RevenueHero, PostHog, gtag, HubSpot webhook, CAPI. <strong>Nazwy eventów bez zmian.</strong> Test end-to-end na preview.</td>
+<td>Plan Arka</td>
+</tr>
+<tr>
+<td>Eksperyment</td>
+<td><code>home_acquisition_redesign_v1</code> (/ i /demo) zostanie zakończony, a zwycięzca promowany</td>
+<td>Claudio, 16.10</td>
+</tr>
+<tr>
+<td>/hub</td>
+<td>Klient chce wygasić. Decyzja Teresy. Outrank nieaktywny od miesięcy.</td>
+<td>Claudio, 16.10</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Konsekwencja dla designu:</strong> HP oddaję do dev <strong>grupami sekcji</strong>, w kolejności PR-ów (§12), a nie jako jedną makietę na końcu.</p>
+<hr />
+<h2 id="2-zasady-modelowania-twarde-reguy">2. Zasady modelowania (twarde reguły)</h2>
+<p>Zasady wynikają z dokumentacji Sanity (page building, content modeling) i z ustaleń projektu. Numery służą do odwoływania się w review („łamie R3”).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Reguła</th>
+<th>Dlaczego</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>R1</strong></td>
+<td><strong>Modelujemy znaczenie, nie wygląd.</strong> W schemacie nie ma pól typu kolor, wyrównanie, rozmiar, układ kolumn czy odstęp. Wygląd wynika z typu bloku i tokenów.</td>
+<td>Treść przetrwa redesign, a marketing nie zepsuje designu.</td>
+</tr>
+<tr>
+<td><strong>R2</strong></td>
+<td><strong>Jedyny wyjątek to <code>tone: light \| dark</code></strong> na poziomie sekcji. Wyraża „dwa głosy marki”: light jest human/support, dark jest AI/agent/techniczny. Domyślny <code>tone</code> każdego bloku jest zapisany w §8.</td>
+<td>Light/dark to decyzja narracyjna, nie dekoracja.</td>
+</tr>
+<tr>
+<td><strong>R3</strong></td>
+<td><strong>Maks. 2 warianty układu na blok</strong> (np. <code>layout: default \| compact</code>). Trzeci wariant oznacza osobny blok. Wariant musi mieć własną miniaturę.</td>
+<td>Zalecenie Sanity: jedna miniatura nie pokaże wielu wariantów, a edytor się gubi.</td>
+</tr>
+<tr>
+<td><strong>R4</strong></td>
+<td><strong>Domyślnie obiekt, referencja tylko dla treści współdzielonej:</strong> case study, FAQ, moduł produktu, framework, logo klienta, ustawienia CTA.</td>
+<td>Obiekty łatwiej odpytać. Referencje dają jedno źródło prawdy tam, gdzie treść się powtarza.</td>
+</tr>
+<tr>
+<td><strong>R5</strong></td>
+<td><strong>Moduły produktu to jeden typ dokumentu (<code>productModule</code>)</strong>, który zasila nav (Product ▾), sekcję Platform, stopkę i strony produktowe.</td>
+<td>Nazwy modułów mają być identyczne wszędzie (bloker w sections v0.2).</td>
+</tr>
+<tr>
+<td><strong>R6</strong></td>
+<td><strong>CTA to obiekt <code>cta</code></strong> z polami <code>label</code> i <code>action: bookDemo \| bookPricing \| signIn \| internalLink \| externalLink</code> (<code>bookPricing</code> od C28) oraz <code>href</code> dla linków. Event trackingu wynika z <code>action</code> w kodzie, a edytor go nie wpisuje.</td>
+<td>Etykieta głównego CTA jest nierozstrzygnięta (Book a demo vs Get started), więc zmienia się ją w CMS, a tracking zostaje nietknięty.</td>
+</tr>
+<tr>
+<td><strong>R7</strong></td>
+<td><strong>Formularze i booking jako typ, nie jako kod:</strong> <code>form: hubspotDemo \| hubspotContact</code>, <code>booking: revenueHero</code>. Frontend wie, jak je wyrenderować.</td>
+<td>Zalecenie Sanity. Integracje i eventy zostają w kodzie.</td>
+</tr>
+<tr>
+<td><strong>R8</strong></td>
+<td><strong>Poziom nagłówka ustala frontend z pozycji sekcji:</strong> pierwszy blok na stronie dostaje <code>h1</code>, reszta <code>h2</code>. Edytor tego nie wybiera.</td>
+<td>Jedno <code>h1</code> na stronę, poprawne SEO i a11y.</td>
+</tr>
+<tr>
+<td><strong>R9</strong></td>
+<td><strong>Każdy obraz ma wymagane <code>alt</code></strong> (walidacja). Wyjątek: dekoracja oznaczona <code>decorative: true</code>.</td>
+<td>Dostępność.</td>
+</tr>
+<tr>
+<td><strong>R10</strong></td>
+<td><strong>Limity długości tekstu</strong> wynikają z <strong>pojemności komponentu w makiecie hi-fi</strong> (ile znaków mieści się w liniach zaprojektowanych dla pola) i z zasad czytelności, a nie z lo-fi. Każde pole ma dwa poziomy: <strong>zalecany</strong> (<code>warning</code>, można opublikować) i <strong>maksymalny</strong> (<code>error</code>, blokuje publikację). Wartości i metoda: §8e (C49).</td>
+<td>Design nie rozjedzie się po zmianie copy, a edytor nie jest blokowany bez powodu.</td>
+</tr>
+<tr>
+<td><strong>R11</strong></td>
+<td><strong>Każdy typ strony ma ograniczoną listę dozwolonych bloków</strong> (§9).</td>
+<td>Mniej wyboru to mniej błędów. Zalecenie Sanity.</td>
+</tr>
+<tr>
+<td><strong>R12</strong></td>
+<td><strong>Każdy blok ma podgląd w Studio</strong> (<code>preview</code>: tytuł = nagłówek, podtytuł = nazwa bloku, ikona) i <strong>miniaturę 600×400 PNG</strong> w insert menu.</td>
+<td>Edytor odróżnia bloki. Miniatury eksportuję z Figmy (§5).</td>
+</tr>
+<tr>
+<td><strong>R13</strong></td>
+<td><strong>Nieznany blok renderuje widoczny placeholder</strong> w preview i nic na produkcji.</td>
+<td>Bezpieczne dodawanie nowych typów.</td>
+</tr>
+<tr>
+<td><strong>R14</strong></td>
+<td><strong>Pola tylko „wyświetlane”, ale stałe</strong> (np. etykieta „Live” na karcie modułu) opisuję w §8 jako <code>stała w kodzie</code> albo dostają pole. Nic pomiędzy.</td>
+<td>R3 kontraktu z §0.</td>
+</tr>
+<tr>
+<td><strong>R15</strong></td>
+<td><strong>Copy na makietach to placeholder</strong> do czasu domknięcia messagingu (analyst deck 24.10). Struktura pól nie zależy od treści.</td>
+<td>Messaging się zmienia.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="3-pipeline-i-bramki-jakosci">3. Pipeline i bramki jakości</h2>
+<p>Każdy etap kończy się bramką. Sekcja nie przechodzi dalej, dopóki checklista nie jest zielona.</p>
+<h3 id="g1-sitemap-architektura">G1 · Sitemap / architektura</h3>
+<ul>
+<li>[ ] Strona ma typ (§9), URL (stary URL zachowany) i właściciela treści.</li>
+<li>[ ] Lista sekcji to wyłącznie bloki z katalogu §8 (albo nowy blok dopisany do §8 z dopiskiem <code>proponowany</code>).</li>
+<li>[ ] Zaznaczone, które bloki są współdzielone z innymi stronami (np. <code>ctaBand</code>, <code>logoBand</code>).</li>
+</ul>
+<h3 id="g2-wireframe-lo-fi-greyscale">G2 · Wireframe (lo-fi, greyscale)</h3>
+<ul>
+<li>[ ] Ramka sekcji nazywa się <code>Section/&lt;_type&gt;</code> (§5).</li>
+<li>[ ] Każdy widoczny element tekstowy lub obrazowy odpowiada polu z paszportu albo jest oznaczony jako stały w kodzie.</li>
+<li>[ ] Listy (karty, logotypy, kroki) pokazują <strong>maks. liczbę elementów</strong> z paszportu, a min. jest w notatce przy liście.</li>
+<li>[ ] Oznaczony domyślny <code>tone</code>.</li>
+<li>[ ] Brak brandu: szarości, PP Formula, placeholder copy.</li>
+</ul>
+<h3 id="g3-design-hi-fi">G3 · Design (hi-fi)</h3>
+<ul>
+<li>[ ] <strong>Każdy kolor, typ, odstęp i radius to zmienna (Figma Variables)</strong>, bez wartości wpisanych na sztywno.</li>
+<li>[ ] Sekcja istnieje w <strong>obu tonach</strong>, jeśli paszport mówi <code>tone: light | dark</code>. Ton przełącza tryb kolekcji <code>Semantic</code>, a nie ręczne przemalowanie.</li>
+<li>[ ] Elementy to <strong>instancje komponentów z biblioteki</strong> (§7), a nie odłączone kopie.</li>
+<li>[ ] Właściwości komponentów (Figma component properties) mają te same nazwy co propsy i pola w Sanity (<code>title</code>, <code>intro</code>, <code>primaryCta</code>…).</li>
+<li>[ ] Breakpointy: desktop 1440 + mobile 320 (tablet do ustalenia z Arkiem, §10).</li>
+<li>[ ] Stany: hover/focus/active dla interaktywnych, pusty/skrajny stan treści (najdłuższy tytuł, 1 vs maks. elementów).</li>
+<li>[ ] Kontrast WCAG AA. Żadnego zielonego tekstu na zielonym tle ani tekstu na gradiencie bez sprawdzonego kontrastu.</li>
+<li>[ ] Wyeksportowana miniatura <code>block-previews/&lt;_type&gt;.png</code> (600×400).</li>
+</ul>
+<h3 id="g4-schemat-sanity-arek-review-micha">G4 · Schemat Sanity (Arek, review: Michał)</h3>
+<ul>
+<li>[ ] Nazwa typu = <code>_type</code> z paszportu. Pola i walidacje jak w paszporcie.</li>
+<li>[ ] <code>preview</code> + miniatura + grupa w insert menu.</li>
+<li>[ ] Blok dopuszczony tylko w typach stron z §9.</li>
+<li>[ ] TypeGen wygenerowany (typy propsów komponentu wynikają ze schematu).</li>
+</ul>
+<h3 id="g5-komponent-pr-arek-review-micha-klient-na-preview">G5 · Komponent + PR (Arek, review: Michał + klient na preview)</h3>
+<ul>
+<li>[ ] Komponent <code>&lt;PascalCase&gt;</code> w <code>sections/</code> używa wyłącznie tokenów z <code>globals.css</code>.</li>
+<li>[ ] Preview na domenie preview zgadza się z Figmą na 1440 i 320 (porównanie zrzutów).</li>
+<li>[ ] Visual Editing działa (klik w tekst otwiera pole w Studio, drag &amp; drop sekcji).</li>
+<li>[ ] CTA i formularze odpalają <strong>istniejące</strong> nazwy eventów.</li>
+<li>[ ] Metadane, structured data (np. FAQPage) i OG zachowane.</li>
+<li>[ ] Lighthouse / a11y bez regresji względem obecnej strony.</li>
+</ul>
+<hr />
+<h3 id="odozone-do-etapu-ui-c48-2110">Odłożone do etapu UI (C48, 21.10)</h3>
+<p>Elementy obecne w makietach hi-fi, które celowo nie są jeszcze rozstrzygnięte w kontrakcie. Na etapie UI każdy dostaje decyzję i, jeśli trzeba, wpis w changelogu.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Temat</th>
+<th>Stan w makietach hi-fi</th>
+<th>Decyzja na etapie UI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ikony i elementy UI (np. glyphy statusu jako punktory list, strzałki)</td>
+<td>Używane roboczo</td>
+<td>Zakres i miejsca użycia ikon; czy glyphy statusu mogą być ozdobnikiem</td>
+</tr>
+<tr>
+<td>Typy przycisków</td>
+<td><code>Button</code>: primary / secondary + warianty roboczo (light, ghost, glass, small); strzałki w etykietach</td>
+<td>Finalne typy przycisków; ikona jako część komponentu, nie etykiety (R6)</td>
+</tr>
+<tr>
+<td>Dwukolorowe tytuły (szara część tytułu) i łamanie linii</td>
+<td>Szara część i ręczne łamanie w HTML; pola tytułów to <code>string</code></td>
+<td>Czy zostaje, a jeśli tak: jak edytor oznacza wyróżnienie (znacznik w tytule albo osobne pole)</td>
+</tr>
+<tr>
+<td>Krój i typescale</td>
+<td>Lausanne, rozmiary z HP v08 (C47)</td>
+<td>Finalny krój, typescale, guidelines</td>
+</tr>
+<tr>
+<td>Dostępność (kontrast szarości, stany focus)</td>
+<td>Niesprawdzana w hi-fi</td>
+<td>Audyt WCAG AA na UI (G3)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="4-sownik-pojec">4. Słownik pojęć</h2>
+<ul>
+<li><strong>Blok / sekcja:</strong> jeden element tablicy <code>content</code> strony w Sanity, a w Figmie jedna ramka <code>Section/&lt;_type&gt;</code>. Na całej szerokości strony.</li>
+<li><strong>Komponent:</strong> mniejszy klocek używany <em>wewnątrz</em> sekcji (Button, Card, StatRow…). Nie jest wybierany przez edytora.</li>
+<li><strong>Dokument współdzielony:</strong> osobny dokument w Sanity (case study, FAQ, moduł…), do którego sekcje się odwołują.</li>
+<li><strong>Tone:</strong> <code>light</code> albo <code>dark</code>, czyli jedyne pole „wizualne” (R2).</li>
+<li><strong>Wariant:</strong> maks. 2 układy bloku (R3).</li>
+</ul>
+<hr />
+<h2 id="5-nazewnictwo-jedna-nazwa-na-wszystkich-etapach">5. Nazewnictwo (jedna nazwa na wszystkich etapach)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Etap</th>
+<th>Konwencja</th>
+<th>Przykład</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sanity <code>_type</code> (źródło nazwy)</td>
+<td>camelCase, rzeczownik, bez słowa „section”</td>
+<td><code>featureGrid</code></td>
+</tr>
+<tr>
+<td>Figma: ramka sekcji</td>
+<td><code>Section/&lt;_type&gt;</code> + <code>/&lt;tone&gt;</code> + <code>/&lt;breakpoint&gt;</code></td>
+<td><code>Section/featureGrid/light/1440</code></td>
+</tr>
+<tr>
+<td>Figma: komponent</td>
+<td><code>Component/&lt;PascalCase&gt;</code> + właściwości = propsy</td>
+<td><code>Component/FeatureCard</code> (<code>title</code>, <code>body</code>, <code>status</code>, <code>href</code>)</td>
+</tr>
+<tr>
+<td>React</td>
+<td>PascalCase, plik kebab-case</td>
+<td><code>FeatureGrid</code> w <code>sections/feature-grid.tsx</code></td>
+</tr>
+<tr>
+<td>Miniatura w Studio</td>
+<td><code>public/block-previews/&lt;_type&gt;.png</code>, 600×400</td>
+<td><code>block-previews/featureGrid.png</code></td>
+</tr>
+<tr>
+<td>Zmienne Figma ↔ CSS</td>
+<td><code>kolekcja/grupa/nazwa</code> ↔ <code>--grupa-nazwa</code></td>
+<td><code>color/bg/surface</code> ↔ <code>--color-bg-surface</code></td>
+</tr>
+<tr>
+<td>Pliki w folderze</td>
+<td><code>comp-ai-&lt;temat&gt;[-vN].*</code></td>
+<td><code>comp-ai-section-contract-spec.md</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="6-tokeny-figma-variables-globalscss">6. Tokeny (Figma Variables ↔ <code>globals.css</code>)</h2>
+<p>Wartości dostarczy finalny brand (cel 21.10). Do tego czasu ustalam <strong>strukturę i nazwy</strong>, a wartości w wireframe są szare. Struktura zgodna z trójwarstwowym modelem tokenów i standardem W3C DTCG 2025.10. W Tailwind v4 tokeny trafiają do <code>@theme</code> w <code>globals.css</code>.</p>
+<p><strong>Kolekcje w Figmie:</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Kolekcja</th>
+<th>Tryby</th>
+<th>Zawartość</th>
+<th>Kto używa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Primitives</code></td>
+<td>—</td>
+<td>surowa paleta (<code>green/500</code>, <code>coral/400</code>, <code>neutral/0…1000</code>), skala spacingu, promienie, rodziny fontów</td>
+<td>tylko inne zmienne, <strong>nigdy warstwy w designie</strong></td>
+</tr>
+<tr>
+<td><code>Semantic</code></td>
+<td><strong>Light, Dark</strong></td>
+<td>role: <code>color/bg/page</code>, <code>bg/surface</code>, <code>bg/inverse</code>, <code>text/primary</code>, <code>text/secondary</code>, <code>text/on-accent</code>, <code>border/subtle</code>, <code>accent/primary</code>, <code>accent/secondary</code>, <code>status/monitored</code>, <code>status/verified</code>, <code>status/evidence</code>, <code>focus/ring</code></td>
+<td>wszystkie warstwy designu</td>
+</tr>
+<tr>
+<td><code>Layout</code></td>
+<td>Desktop, Mobile</td>
+<td><code>space/section-y</code>, <code>space/stack-*</code>, <code>grid/columns</code>, <code>grid/gutter</code>, <code>container/max</code></td>
+<td>ramki sekcji</td>
+</tr>
+<tr>
+<td><code>Type</code></td>
+<td>Desktop, Mobile</td>
+<td><code>display</code>, <code>h1</code>, <code>h2</code>, <code>h3</code>, <code>eyebrow</code>, <code>body-lg</code>, <code>body</code>, <code>caption</code> (rozmiar, interlinia, tracking)</td>
+<td>style tekstu</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Zasady:</strong>
+- <code>tone</code> sekcji = tryb kolekcji <code>Semantic</code> ustawiony na ramce sekcji. W kodzie odpowiada mu <code>data-tone="dark"</code> na wrapperze, który podmienia zmienne CSS.
+- Hierarchia H1/H2/H3/eyebrow ma być wyraźnie różna (feedback klienta: „żeby nie były wymienne”).
+- <strong>Krój (C44, zmienione C47):</strong> makiety hi-fi (HTML) używają Lausanne (decyzja 20.10); Figma używa Inter do czasu instalacji Lausanne. Wireframe’y lo-fi zostają w Inter. <strong>Finalny krój wybieramy na etapie UI.</strong>
+- <strong>Skala typograficzna (C40, do weryfikacji z brandem):</strong> ratio 1,272, baza 16 px, wartości zaokrąglone do pełnych px: 10 · 13 · 16 · 20 · 26 · 33 · 42 · 53 · 68 · 86 · 110. Każdy rozmiar tekstu w designie to stopień tej skali. Desktop (style <code>Type/Desktop/*</code>): <code>display</code> 86 · <code>h1</code> 53 · <code>h2</code> 42 · <code>h3</code> 20 · <code>body-lg</code> 20 · <code>body</code> 16 · <code>caption</code> 13 · <code>eyebrow</code> 13 (uppercase, tracking 8%). Rozróżnienie <code>h3</code>/<code>body-lg</code> i <code>caption</code>/<code>eyebrow</code> wagą i stylem, nie rozmiarem. Mobile: do ustalenia po akceptacji desktopu.
+- <strong>Rozmiary w hi-fi (C47):</strong> do etapu UI makiety hi-fi trzymają się rozmiarów z HP hi-fi v08 (h1 68, h2 42, h3 26 i rozmiary pomocnicze z v08); każda nowa strona używa tylko rozmiarów, które już są na HP. <strong>Finalny typescale i guidelines powstają na etapie UI</strong> i zastąpią skalę C40.
+- Statusy <code>monitored / verified / evidence</code> to tokeny od razu, bo system symboli C.2 ma działać jako statusy w sekcjach produktu.
+- Eksport: Figma Variables → JSON (DTCG) → <code>globals.css</code>. Narzędzie (Tokens Studio, Style Dictionary albo ręcznie na start) uzgodnić z Arkiem.</p>
+<hr />
+<h2 id="7-komponenty-wspodzielone-wewnatrz-sekcji">7. Komponenty współdzielone (wewnątrz sekcji)</h2>
+<p>Z wireframe v01. Właściwości w Figmie = propsy w kodzie.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Komponent</th>
+<th>Właściwości (propsy)</th>
+<th>Uwagi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SectionHeader</code></td>
+<td><code>eyebrow? (≤ 30)</code>, <code>title (≤ 70)</code>, <code>intro? (≤ 120, C43)</code>, <code>cta?</code></td>
+<td>Poziom nagłówka z R8. Limity obowiązują we wszystkich sekcjach z <code>header</code></td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>label</code>, <code>action</code>, <code>href?</code>, <code>variant: primary \| secondary</code>, <code>size: md \| lg</code></td>
+<td>Jeden primary na ekran. Wyjątek: <code>navigation.primaryCta</code> (globalny, zawsze widoczny)</td>
+</tr>
+<tr>
+<td><code>Card</code></td>
+<td><code>title</code>, <code>body?</code>, <code>media?</code>, <code>href?</code></td>
+<td>Baza dla kart poniżej. <strong>C42:</strong> karta z <code>href</code> jest klikalna w całości i ma ikonę strzałki (stała w kodzie), bez etykiety typu „Learn more” / „Read the story” / „See a demo”. Dotyczy <code>FeatureCard</code>, <code>StoryCard</code> (<code>compact</code>), <code>FrameworkCard</code>. Etykiety zostają tylko przy linkach poza kartą (np. „All customer stories →”) i przy <code>StoryCard</code> <code>featured</code></td>
+</tr>
+<tr>
+<td><code>FeatureCard</code></td>
+<td><code>title</code>, <code>body</code>, <code>status</code>, <code>media</code>, <code>href</code></td>
+<td><code>status</code> z tokenów statusu</td>
+</tr>
+<tr>
+<td><code>StepCard</code></td>
+<td><code>index</code>, <code>title</code>, <code>body</code>, <code>media?</code>, <code>meta?</code> (≤ 12)</td>
+<td><code>meta</code> = krótka etykieta obok numeru, np. czas trwania w agendzie <code>bookingEmbed</code> (C24). Na HP nieużywane</td>
+</tr>
+<tr>
+<td><code>PointCard</code></td>
+<td><code>title</code>, <code>body</code>, <code>link?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PathCard</code></td>
+<td><code>segment</code>, <code>audience</code>, <code>need</code>, <code>proofPoints[]</code>, <code>story</code> (ref)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>QuoteCard</code></td>
+<td><code>quote (≤ 200)</code>, <code>person</code>, <code>role (≤ 40)</code>, <code>company</code>, <code>logo?</code>, <code>photo?</code> (z dokumentu <code>testimonial</code>)</td>
+<td>Karta cytatu w <code>testimonials</code> (<code>grid</code> i <code>single</code>) (C23). <strong>C46:</strong> avatar = <code>photo</code> (edytowalne w CMS); gdy puste, inicjały z <code>person</code> (stała w kodzie)</td>
+</tr>
+<tr>
+<td><code>StoryCard</code></td>
+<td><code>variant: featured \| compact</code>, ref <code>caseStudy</code></td>
+<td>Ten sam na HP, /pricing i <code>/case-studies</code>. <code>compact</code> pokazuje logo, <code>metrics[0]</code>, etykiety <code>frameworks[]</code> (C35) i link, <strong>bez <code>summary</code></strong> (C51; jak w hi-fi HP v08 i /pricing). <code>summary</code> zostaje w karcie w <code>audiencePaths</code>, w <code>featured</code> i na <code>/case-studies/&lt;slug&gt;</code>; siatka na <code>/case-studies</code> do decyzji przy jej hi-fi</td>
+</tr>
+<tr>
+<td><code>FrameworkCard</code></td>
+<td>ref <code>framework</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>LogoGrid</code></td>
+<td><code>logos[]</code> (ref <code>customerLogo</code> / <code>integration</code>), <code>columns</code> stałe w kodzie</td>
+<td></td>
+</tr>
+<tr>
+<td><code>StatRow</code></td>
+<td><code>stats[]</code>: <code>value</code>, <code>label</code></td>
+<td>3–4 elementy</td>
+</tr>
+<tr>
+<td><code>Chip</code></td>
+<td><code>label</code>, <code>href?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>LinkList</code></td>
+<td><code>title?</code>, <code>links[]</code></td>
+<td>Nav, footer</td>
+</tr>
+<tr>
+<td><code>Accordion</code></td>
+<td><code>items[]</code></td>
+<td>FAQ</td>
+</tr>
+<tr>
+<td><code>MediaSlot</code></td>
+<td><code>image</code> + <code>alt</code> / <code>video</code> / <code>uiSnippet</code></td>
+<td>Ilustracje i 3D na hold do brandu</td>
+</tr>
+<tr>
+<td><code>ComparePanel</code></td>
+<td><code>before</code>, <code>after</code> (z <code>steps.beforeAfter</code>)</td>
+<td>Renderowanie istniejącego pola, bez nowych pól w CMS. Etykiety „Before” / „After” stałe w kodzie (C38). W Figmie dziś <code>_Client/ComparePanel</code></td>
+</tr>
+<tr>
+<td><code>SlackThread</code></td>
+<td><code>messages[]</code> (z <code>MediaSlot.uiSnippet</code>)</td>
+<td>Wizual <code>featureHighlight.media</code> jako <code>uiSnippet</code>: anonimizowany wątek, treść w kodzie lub jako obraz, bez nowych pól w CMS (C38). W Figmie dziś <code>_Client/SlackThread</code></td>
+</tr>
+<tr>
+<td><code>PricingBanner</code></td>
+<td>z <code>pricingTeaser</code> (<code>banner</code>)</td>
+<td>Wariant <code>banner</code> istniejącego bloku (C17), nie nowy blok (C38). W Figmie dziś <code>_Client/PricingBanner</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="8-katalog-sekcji-paszporty">8. Katalog sekcji: paszporty</h2>
+<p><strong>Szablon paszportu</strong> (dla każdej nowej sekcji):</p>
+<pre><code>### &lt;nr&gt; · &lt;_type&gt;  — &lt;nazwa ludzka&gt;
+Cel: jedno zdanie, po co ta sekcja.
+Strony: gdzie dozwolona (§9).
+Tone: domyślny | dozwolone.
+Warianty: brak | a / b (maks. 2).
+Pola: nazwa: typ (walidacja, limit znaków) — co to jest.
+Stałe w kodzie: co widać, ale nie jest edytowalne.
+Komponenty: z §7.
+Dane współdzielone: referencje.
+Tracking/SEO: eventy, structured data.
+Media: proporcje każdego MediaSlot (np. 4:3).
+Responsywność: zachowanie 1440 → 768 → 320 (np. „grid 4 → 2 → 1”).
+Status: gotowe do wireframe | do designu | zablokowane (czym).
+</code></pre>
+<p><strong>Limity znaków (C49):</strong> obowiązują wartości z §8e (pomiar hi-fi). Liczby w paszportach poniżej pochodzą z lo-fi i zostaną zsynchronizowane z §8e przy handoffie dla dev; do tego czasu, przy rozbieżności, rozstrzyga §8e.</p>
+<h3 id="01-announcementbar-top-bar-globalny">01 · <code>announcementBar</code> — Top bar (globalny)</h3>
+<ul>
+<li><strong>Cel:</strong> jedna linijka newsa (dziś Series A, po launchu news o launchu).</li>
+<li><strong>Strony:</strong> globalnie, dokument singleton. <strong>Tone:</strong> dark. <strong>Warianty:</strong> brak.</li>
+<li><strong>Pola:</strong> <code>enabled: boolean</code> · <code>text: string (≤ 90)</code> · <code>link: cta?</code></li>
+<li><strong>Responsywność:</strong> na 320 tekst w 2 liniach, link pod tekstem.</li>
+<li><strong>Status:</strong> do designu.</li>
+</ul>
+<h3 id="01b-navigation-nawigacja-globalna-dokument-singleton">01b · <code>navigation</code> — Nawigacja (globalna, dokument singleton)</h3>
+<ul>
+<li><strong>Cel:</strong> wejście na każdą stronę, także ~100 starych.</li>
+<li><strong>Pola:</strong> <code>items[]</code>: <code>label (≤ 16)</code>, <code>type: link | menu</code>, <code>href?</code>, <code>menu?</code> (<code>source: productModules | frameworks | manual</code>, <code>links[]</code>) · <code>secondaryLink: cta</code> (Sign in) · <code>primaryCta: cta</code> (Book a demo).</li>
+<li><strong>Stałe w kodzie:</strong> logo, zachowanie mobile (drawer), sticky.</li>
+<li><strong>Responsywność:</strong> poniżej 1024 drawer z <code>items[]</code>; <code>primaryCta</code> zostaje widoczny w pasku.</li>
+<li><strong>Dane współdzielone:</strong> Product ▾ = <code>productModule[]</code> (R5), Frameworks ▾ = <code>framework[]</code>.</li>
+<li><strong>Uwaga:</strong> musi wyglądać dobrze nad starymi szablonami (policy, porównania, checklisty, kalkulatory).</li>
+<li><strong>/demo (C18, D9 zamknięte):</strong> ta sama nawigacja co na wszystkich stronach, bez osobnego wariantu. <code>primaryCta</code> z <code>action: bookDemo</code> na /demo i /demo/[framework] przewija do formularza <code>bookingEmbed</code> (zachowanie w kodzie, bez pola w CMS).</li>
+<li><strong>Status:</strong> zablokowane: oficjalna lista modułów, finalny zestaw stron (Product overview, About).</li>
+</ul>
+<h3 id="02-hero">02 · <code>hero</code></h3>
+<ul>
+<li><strong>Cel:</strong> co robi Comp AI, dla kogo, jedna główna akcja.</li>
+<li><strong>Strony:</strong> home, page, productPage. <strong>Tone:</strong> light (dark opcjonalnie). <strong>Warianty:</strong> <code>default</code> (media obok) / <code>centered</code> (zatwierdzony C34: wyśrodkowany tekst, bez media; np. /case-studies).</li>
+<li><strong>Pola:</strong> <code>eyebrow?: string (≤ 40)</code> · <code>title: string (≤ 55)</code> · <code>intro: text (≤ 120, C43)</code> · <code>primaryCta: cta</code> · <code>secondaryCta?: cta</code> · <code>rating?: boolean</code> (G2 4.9/5, wartość z <code>siteSettings</code>) · <code>badges[]: ref framework (≤ 4)</code> · <code>media: MediaSlot</code> (wymagane w <code>default</code>, opcjonalne w <code>centered</code>, C34)</li>
+<li><strong>Media:</strong> <code>media</code> 4:3.</li>
+<li><strong>Responsywność:</strong> 2 kolumny → media pod tekstem; na 320 CTA na pełną szerokość, jeden pod drugim.</li>
+<li><strong>Status:</strong> do wireframe. Zablokowane w treści: etykieta głównego CTA, odbiorca, claimy (audit included, ~10 vs 14 dni). Struktura gotowa dzięki R6.</li>
+</ul>
+<h3 id="03-logoband-proof-band">03 · <code>logoBand</code> — Proof band</h3>
+<ul>
+<li><strong>Cel:</strong> logotypy i 3–4 twarde liczby tuż pod hero.</li>
+<li><strong>Strony:</strong> home, page (Demo, Pricing). <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>withStats</code> / <code>logosOnly</code>. <strong>Na <code>home</code> od C41: <code>logosOnly</code></strong> (liczby powtarzały hero i tytuł pasa; „&lt; 3 min” jest w <code>featureHighlight.stats</code>). <code>withStats</code> zostaje w schemacie.</li>
+<li><strong>Pola:</strong> <code>title?: string (≤ 70)</code> · <code>logos[]: ref customerLogo (6–12)</code> · <code>stats[]: { value (≤ 8), label (≤ 40) } (0–4)</code></li>
+<li><strong>Responsywność:</strong> logotypy 6 → 4 → 3 kolumny; liczby 4 → 2×2.</li>
+<li><strong>Status:</strong> do designu (liczba „X dni” do potwierdzenia).</li>
+</ul>
+<h3 id="04-steps-how-it-works">04 · <code>steps</code> — How it works</h3>
+<ul>
+<li><strong>Cel:</strong> proces od podłączenia narzędzi do audytu, na jednym ekranie.</li>
+<li><strong>Strony:</strong> home, productPage. <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>withBeforeAfter</code> / <code>stepsOnly</code>.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>beforeAfter?: { before: {title (≤ 40), body (≤ 60)}, after: {title (≤ 40), body (≤ 60)} }</code> · <code>steps[]: { title (≤ 40), body (≤ 60), media? } (3–4)</code> (C43)</li>
+<li><strong>Stałe w kodzie:</strong> numeracja.</li>
+<li><strong>Media:</strong> <code>steps[].media</code> 4:3.</li>
+<li><strong>Komponenty:</strong> <code>StepCard</code>, <code>ComparePanel</code> (renderuje <code>beforeAfter</code>, C38).</li>
+<li><strong>Responsywność:</strong> kroki 4 → 2 → 1; before/after 2 → 1.</li>
+<li><strong>Status:</strong> do designu.</li>
+</ul>
+<h3 id="05-integrations">05 · <code>integrations</code></h3>
+<ul>
+<li><strong>Cel:</strong> „Czy działa z naszym stackiem?”.</li>
+<li><strong>Strony:</strong> home, productPage. <strong>Tone:</strong> light. <strong>Warianty:</strong> brak.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>count: string (≤ 6)</code> („580+”) · <code>featured[]: ref integration (8–20)</code> · <code>cta: cta</code> (pełna lista)</li>
+<li><strong>Responsywność:</strong> 2 kolumny → nagłówek nad siatką; logotypy 5 → 4 kolumny.</li>
+<li><strong>Status:</strong> do designu.</li>
+</ul>
+<h3 id="06-featuregrid-platform">06 · <code>featureGrid</code> — Platform</h3>
+<ul>
+<li><strong>Cel:</strong> moduły produktu, każdy prowadzi do swojej strony produktowej.</li>
+<li><strong>Strony:</strong> home, productPage. <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>full</code> / <code>teaser</code> (gdy powstanie Product overview).</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>modules[]: ref productModule (3–8)</code>. Karta bierze z modułu <code>name</code>, <code>summary (≤ 60, C43)</code>, <code>status</code>, <code>media</code>, <code>slug</code>.</li>
+<li><strong>Stałe w kodzie:</strong> etykieta statusu (<code>Live</code> itd.) mapowana z <code>productModule.status</code>.</li>
+<li><strong>Media:</strong> <code>productModule.media</code> 16:10.</li>
+<li><strong>Responsywność:</strong> karty 4 → 2 → 1.</li>
+<li><strong>Status:</strong> zablokowane: oficjalna lista i nazwy modułów.</li>
+</ul>
+<h3 id="07-proofpoints-security">07 · <code>proofPoints</code> — Security</h3>
+<ul>
+<li><strong>Cel:</strong> „verify, don't trust”: open source, prawdziwe dowody, testy, trust center.</li>
+<li><strong>Strony:</strong> home, productPage. <strong>Tone:</strong> <strong>dark</strong> (domyślnie), light dozwolony. <strong>Warianty:</strong> brak.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>points[]: { title (≤ 40), body (≤ 60, C43), link?: cta } (3–4)</code> · <code>links[]: cta (≤ 2)</code> (GitHub, Trust center) · <code>media?: MediaSlot</code></li>
+<li><strong>Media:</strong> <code>media</code> 4:5.</li>
+<li><strong>Responsywność:</strong> 2 kolumny → media pod treścią; punkty 2 → 1.</li>
+<li><strong>Status:</strong> do designu. Treść: tylko claimy z obecnej strony.</li>
+</ul>
+<h3 id="08-frameworklist-frameworks">08 · <code>frameworkList</code> — Frameworks</h3>
+<ul>
+<li><strong>Cel:</strong> „zacznij od jednego, dodaj kolejny bez zaczynania od nowa”.</li>
+<li><strong>Strony:</strong> page (np. /pricing). <strong>Na <code>home</code> nie od C17:</strong> frameworki są w hero (<code>badges</code>) i w nav, a przekaz „dodaj kolejny” niesie intro <code>audiencePaths</code>. <strong>Tone:</strong> light. <strong>Warianty:</strong> brak.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>featured[]: ref framework (4)</code> · <code>more[]: ref framework (0–12)</code> · <code>moreNote?: string (≤ 30)</code> (dopisek za chipami, np. „and more on request”, C33). Link frameworka = <code>framework.demoHref</code> (na razie strona demo).</li>
+<li><strong>Responsywność:</strong> <code>featured</code> 4 → 2 → 1; <code>more</code> jako zawijane chipy.</li>
+<li><strong>Status:</strong> do designu.</li>
+</ul>
+<h3 id="09-featurehighlight-experts-on-slack">09 · <code>featureHighlight</code> — Experts on Slack</h3>
+<ul>
+<li><strong>Cel:</strong> support 1:1 na Slacku, ludzka strona marki.</li>
+<li><strong>Strony:</strong> home, page, productPage. <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>mediaRight</code> / <code>mediaLeft</code>.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>stats[]: { value (≤ 8), label (≤ 40) } (1–3)</code> · <code>media: MediaSlot</code> (anonimizowany wątek Slack: <code>uiSnippet</code> renderowany przez <code>SlackThread</code>, C38)</li>
+<li><strong>Uwaga:</strong> blok uniwersalny („jedna rzecz + dowód + wizual”), nadaje się też na strony produktowe.</li>
+<li><strong>Media:</strong> <code>media</code> 4:3.</li>
+<li><strong>Responsywność:</strong> 2 kolumny → media pod tekstem.</li>
+<li><strong>Status:</strong> do designu.</li>
+</ul>
+<h3 id="10-audiencepaths-who-its-for">10 · <code>audiencePaths</code> — Who it's for</h3>
+<ul>
+<li><strong>Cel:</strong> ścieżki Startup / Mid-Market / Enterprise obok siebie.</li>
+<li><strong>Strony:</strong> home. <strong>Tone:</strong> light. <strong>Warianty:</strong> brak.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>paths[]: { segment (≤ 30), audience (≤ 40), need (≤ 60, C43), proofPoints[] (≤ 3 × 60), story: ref caseStudy } (3)</code></li>
+<li><strong>Responsywność:</strong> karty 3 → 1.</li>
+<li><strong>Status:</strong> do wireframe (persony to założenie z warsztatu).</li>
+</ul>
+<h3 id="11-casestudies-customer-stories">11 · <code>caseStudies</code> — Customer stories</h3>
+<ul>
+<li><strong>Cel:</strong> dowód od podobnych firm.</li>
+<li><strong>Strony:</strong> home, page, productPage. Na <code>/case-studies</code> jako pełny grid. <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>featuredPlusList</code> / <code>grid</code>.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>featured?: ref caseStudy</code> · <code>items[]: ref caseStudy</code> (<code>featuredPlusList</code>: 0–3, <code>grid</code>: 0–24) · <code>cta: cta</code></li>
+<li><strong>Dane współdzielone:</strong> <code>caseStudy</code> (<code>company</code>, <code>logo</code>, <code>summary</code>, <code>metrics[]</code>, <code>quote</code>, <code>person</code>, <code>frameworks[]</code>, <code>slug</code>), migrowane z repo.</li>
+<li><strong>Responsywność:</strong> <code>items</code> 3 → 2 → 1; <code>featured</code> zawsze na pełną szerokość.</li>
+<li><strong>Karty <code>compact</code> (C35):</strong> pokazują etykiety <code>frameworks[]</code> (wszędzie: HP, /pricing, /case-studies).</li>
+<li><strong>/case-studies (C36):</strong> dwa bloki jeden pod drugim: <code>featuredPlusList</code> tylko z <code>featured</code> (items 0) i <code>grid</code> z pozostałymi historiami (edytor wybiera ręcznie, bez wyróżnionej). Filtr po frameworku: nie na start; wraca, gdy historii będzie więcej niż ok. 15.</li>
+<li><strong>Status:</strong> do designu.</li>
+</ul>
+<h3 id="12-pricingteaser">12 · <code>pricingTeaser</code></h3>
+<ul>
+<li><strong>Cel:</strong> jak powstaje cena, wycena na 20-minutowym callu.</li>
+<li><strong>Strony:</strong> home, productPage, page (/pricing, C29). <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>section</code> (pełna sekcja) / <code>banner</code> (lekki pas między sekcjami; <strong>na <code>home</code> od C17</strong>).</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>factors[]: ref pricingFactor (4)</code> · <code>primaryCta?: cta</code> · <code>secondaryCta?: cta</code> (→ /pricing). <strong>C29:</strong> przyciski opcjonalne; na /pricing bez przycisków (formularz jest nad sekcją).</li>
+<li><strong>Wariant <code>banner</code>:</strong> wyświetla tylko <code>header.title</code> (≤ 60, ostrzeżenie powyżej), <code>factors[].title</code> jako chipy i <code>secondaryCta</code> (→ /pricing). Nie wyświetla <code>header.eyebrow</code>, <code>header.intro</code>, <code>factors[].body</code> ani <code>primaryCta</code> (jeden primary na widok, a za banerem jest <code>ctaBand</code>). Tło pasa: stała w kodzie (<code>bg/surface</code>). Komponent: <code>PricingBanner</code> (C38).</li>
+<li><strong>Dane współdzielone:</strong> <code>pricingFactor</code>, te same co na /pricing.</li>
+<li><strong>Responsywność:</strong> <code>section</code>: czynniki 4 → 2 → 1, CTA na 320 jeden pod drugim. <code>banner</code>: tytuł + chipy po lewej, CTA po prawej → na 320 jedno pod drugim, CTA na pełną szerokość.</li>
+<li><strong>Status:</strong> do designu.</li>
+</ul>
+<h3 id="13-faq">13 · <code>faq</code></h3>
+<ul>
+<li><strong>Cel:</strong> ostatnie obiekcje przed bookingiem.</li>
+<li><strong>Strony:</strong> home, page, productPage. <strong>Tone:</strong> light. <strong>Warianty:</strong> brak.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>items[]: ref faq (3–12)</code></li>
+<li><strong>SEO:</strong> generuje structured data <strong>FAQPage</strong> (zachowana z obecnej strony).</li>
+<li><strong>Responsywność:</strong> 2 kolumny → nagłówek nad listą.</li>
+<li><strong>Status:</strong> do designu.</li>
+</ul>
+<h3 id="14-ctaband-final-cta">14 · <code>ctaBand</code> — Final CTA</h3>
+<ul>
+<li><strong>Cel:</strong> zamknięcie strony jedną akcją.</li>
+<li><strong>Strony:</strong> wszystkie typy. <strong>Tone:</strong> dark (domyślnie), light dozwolony. <strong>Warianty:</strong> brak.</li>
+<li><strong>Pola:</strong> <code>title: string (≤ 60)</code> · <code>primaryCta: cta</code> · <code>reassurance[]: string (≤ 3 × 30)</code> („20-minute call · Quote emailed after · No contract”). Czas zawsze w formie „20-minute call” (C39)</li>
+<li><strong>Responsywność:</strong> na 320 CTA na pełną szerokość.</li>
+<li><strong>Status:</strong> do designu. Etykieta CTA w CMS (R6).</li>
+</ul>
+<h3 id="15-footer-globalny-dokument-singleton">15 · <code>footer</code> (globalny, dokument singleton)</h3>
+<ul>
+<li><strong>Cel:</strong> linkuje całą stronę (SEO starych podstron).</li>
+<li><strong>Pola:</strong> <code>columns[]: { title, links[] (label ≤ 30) }</code> (Product z <code>productModule[]</code>) · <code>offices[]</code> · <code>socials[]</code> · <code>legalLinks[]</code> · <code>statusLink</code></li>
+<li><strong>Stałe w kodzie:</strong> logo, copyright, badge zgodności, wskaźnik statusu.</li>
+<li><strong>Responsywność:</strong> 5 kolumn (Product, Resources, Guides, Compare, Legal; Status to <code>statusLink</code>, nie kolumna) → 3 → 2 kolumny (bez akordeonu, żeby linki SEO były widoczne).</li>
+<li><strong>Status:</strong> do designu. Kolumny i linki jak dziś.</li>
+</ul>
+<h3 id="8b-dokumenty-wspodzielone-r4-r5">8b · Dokumenty współdzielone (R4, R5)</h3>
+<p>Pola i limity dokumentów, do których odwołują się sekcje. Limity to propozycja z wireframe v02 (R10).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Dokument</th>
+<th>Pola</th>
+<th>Używają</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>productModule</code></td>
+<td><code>name: string (≤ 40)</code> · <code>slug</code> · <code>summary: string (≤ 60, C43)</code> · <code>status: live \| beta \| soon</code> · <code>media: MediaSlot (16:10)</code> · <code>order: number</code></td>
+<td>navigation, featureGrid, footer, productPage</td>
+</tr>
+<tr>
+<td><code>framework</code></td>
+<td><code>name: string (≤ 20)</code> · <code>slug</code> · <code>demoHref: url</code> · <code>order: number</code> · <code>demoTitle?: string (≤ 55)</code> · <code>demoIntro?: text (≤ 180)</code> · <code>demoFormTitle?: string (≤ 40)</code> (C22: podmiany na /demo/[framework]; puste = teksty z /demo)</td>
+<td>hero (badges), frameworkList, navigation, bookingEmbed</td>
+</tr>
+<tr>
+<td><code>customerLogo</code></td>
+<td><code>company: string</code> · <code>logo: image</code> · <code>alt</code> (R9)</td>
+<td>logoBand</td>
+</tr>
+<tr>
+<td><code>integration</code></td>
+<td><code>name: string</code> · <code>logo: image</code> · <code>alt</code> (R9)</td>
+<td>integrations</td>
+</tr>
+<tr>
+<td><code>caseStudy</code></td>
+<td><code>company</code>, <code>logo</code>, <code>summary (≤ 120)</code>, <code>metrics[]: { value (≤ 8), label (≤ 40) } (1–3)</code>, <code>testimonial?: ref testimonial</code> (C20, zamiast <code>quote</code> + <code>person</code>), <code>frameworks[]</code>, <code>slug</code></td>
+<td>caseStudies, audiencePaths, <code>/case-studies</code></td>
+</tr>
+<tr>
+<td><code>faq</code></td>
+<td><code>question: string (≤ 90)</code> · <code>answer: portable text</code> · <code>group?</code></td>
+<td>faq (FAQPage)</td>
+</tr>
+<tr>
+<td><code>pricingFactor</code></td>
+<td><code>title: string (≤ 30)</code> · <code>body: string (≤ 80)</code> (C43; wcześniej ≤ 160 z C29)</td>
+<td>pricingTeaser, pricingFactors</td>
+</tr>
+<tr>
+<td><code>testimonial</code> <em>(proponowany, C20)</em></td>
+<td><code>quote: string (≤ 200)</code> · <code>person</code> · <code>role (≤ 40)</code> · <code>company</code> · <code>logo?</code> · <code>photo?: image</code> + <code>alt</code> (R9, C46; 1:1)</td>
+<td>testimonials, caseStudy (karta featured na HP, <code>/case-studies/&lt;slug&gt;</code>) · D11: rekomendacja, do potwierdzenia z Arkiem</td>
+</tr>
+<tr>
+<td><code>post</code> <em>(istnieje, /hub)</em></td>
+<td>bez zmian</td>
+<td>postGrid, articleHeader</td>
+</tr>
+<tr>
+<td><code>job</code> <em>(proponowany)</em></td>
+<td><code>title (≤ 60)</code> · <code>team</code> · <code>location</code> · <code>type</code> · <code>slug</code> · <code>body: portable text</code></td>
+<td>jobList, articleHeader</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8c-bloki-proponowane-z-mapy-obecnej-strony">8c · Bloki proponowane z mapy obecnej strony</h3>
+<p>Źródło: <code>web/architecture/comp-ai-sitemap-current-v03.html</code>, czyli mapa trycomp.ai z 16.10: 29 szablonów, 264 URL (v02 z 21.10: /pricing zweryfikowane na żywej stronie, dopisane <code>steps</code>, <code>frameworkList</code>, <code>linkDirectory</code>). Te bloki powtarzają się na obecnej stronie, a katalog §8 ich nie pokrywa. Wszystkie mają status <strong><code>proponowany</code></strong> (G1) do czasu uzgodnienia z Arkiem.</p>
+<p><strong>Priorytet.</strong> W zakresie redesignu (HP, Pricing, Case Studies, Demo, strony produktowe) potrzebne są od razu <code>testimonials</code> (/demo, case study; na HP nie, C15) i <code>articleHeader</code> (<code>/case-studies/&lt;slug&gt;</code>). <code>cardGrid</code> i <code>comparisonTable</code> przydadzą się na stronach produktowych i przy migracji guides/compare. <code>postGrid</code>, <code>linkDirectory</code>, <code>toolEmbed</code> i <code>jobList</code> dotyczą stron legacy, więc rozpisujemy je dopiero wtedy, gdy te strony przejdą do CMS (D13).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th><code>_type</code></th>
+<th>Szablony / URL dziś</th>
+<th>Gdzie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cardGrid</code></td>
+<td>12 / 67</td>
+<td>guides, compare, tools, careers, partnerships, /legal</td>
+</tr>
+<tr>
+<td><code>comparisonTable</code></td>
+<td>6 / 11</td>
+<td>compare, guides</td>
+</tr>
+<tr>
+<td><code>testimonials</code></td>
+<td>4 / 17</td>
+<td>HP, /demo, /demo/[framework], case study</td>
+</tr>
+<tr>
+<td><code>articleHeader</code></td>
+<td>6 / 178</td>
+<td>case study, hub, press, oferta pracy, legal, archiwa huba</td>
+</tr>
+<tr>
+<td><code>postGrid</code></td>
+<td>4 / 159</td>
+<td>/hub, kategorie i tagi, /press, „Keep reading”</td>
+</tr>
+<tr>
+<td><code>linkDirectory</code></td>
+<td>3 / 169</td>
+<td>/tools, strony narzędzi, archiwa huba</td>
+</tr>
+<tr>
+<td><code>toolEmbed</code></td>
+<td>1 / 53</td>
+<td>generatory polityk, checklisty, kalkulatory</td>
+</tr>
+<tr>
+<td><code>jobList</code></td>
+<td>1 / 1</td>
+<td>/careers</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="16-cardgrid-karty">16 · <code>cardGrid</code> — Karty</h3>
+<ul>
+<li><strong>Cel:</strong> N równorzędnych punktów w jednej siatce (powody, korzyści, koszty, odbiorcy, konkurenci). Najczęstszy wzorzec poza HP.</li>
+<li><strong>Strony:</strong> page, productPage. <strong>Tone:</strong> light (dark dozwolony). <strong>Warianty:</strong> <code>grid</code> / <code>stacked</code> (karty na pełną szerokość jedna pod drugą, np. lista konkurentów z plusami i minusami).</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>cards[]: { eyebrow? (≤ 20), title (≤ 50), body? (≤ 160), bullets[]? (≤ 6 × 80), link?: cta, media?: MediaSlot } (2–8)</code></li>
+<li><strong>Stałe w kodzie:</strong> liczba kolumn wynika z liczby kart (2 → 2, 3 → 3, 4 → 4, 6 → 3). Edytor jej nie wybiera (R1).</li>
+<li><strong>Komponenty:</strong> <code>Card</code>, <code>PointCard</code>.</li>
+<li><strong>Media:</strong> <code>cards[].media</code> 1:1 (ikona, na hold do brandu).</li>
+<li><strong>Responsywność:</strong> <code>grid</code> 4 → 2 → 1. <code>stacked</code> bez zmian.</li>
+<li><strong>Uwaga:</strong> <code>proofPoints</code> i <code>pricingFactors</code> zostają osobnymi blokami, bo mają inne dane i domyślny ton.</li>
+<li><strong>Status:</strong> proponowany.</li>
+</ul>
+<h3 id="17-comparisontable-porownanie">17 · <code>comparisonTable</code> — Porównanie</h3>
+<ul>
+<li><strong>Cel:</strong> Comp AI kontra inni albo opcja A kontra B (SOC 1 vs SOC 2, Type I vs Type II).</li>
+<li><strong>Strony:</strong> page, productPage. <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>table</code> (macierz wierszy i kolumn) / <code>columns</code> (2–3 kolumny z listami).</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>columns[]: { label (≤ 24), highlight: boolean, items[]? (≤ 8 × 80) } (2–4)</code> · <code>rows[]: { label (≤ 40), cells[]: { value? (≤ 60), state?: yes | no | partial } } (3–20)</code> (tylko <code>table</code>) · <code>footnote?: string (≤ 200)</code> · <code>cta?: cta</code></li>
+<li><strong>Stałe w kodzie:</strong> symbole <code>state</code> z systemu statusów C.2 (§6), a nie checkmarki (twarde „nie” klienta, §10).</li>
+<li><strong>SEO:</strong> renderuje się jako semantyczna <code>&lt;table&gt;</code>.</li>
+<li><strong>Dane współdzielone:</strong> brak. Do rozważenia dokument <code>competitor</code> (nazwa, ceny), gdy strony compare przejdą do CMS.</li>
+<li><strong>Responsywność:</strong> <code>table</code> na 320 zamienia się w karty per kolumna, bez poziomego scrolla. <code>columns</code> 3 → 1.</li>
+<li><strong>Status:</strong> proponowany.</li>
+</ul>
+<h3 id="18-testimonials-cytaty-klientow">18 · <code>testimonials</code> — Cytaty klientów</h3>
+<ul>
+<li><strong>Cel:</strong> krótki dowód społeczny bez pełnego case study („Trusted by teams who ship fast”).</li>
+<li><strong>Strony:</strong> page, productPage (na <code>home</code> niedozwolony, C15). <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>grid</code> / <code>single</code> (jeden duży cytat, np. w case study).</li>
+<li><strong>Pola:</strong> <code>header?: SectionHeader</code> · <code>items[]: ref testimonial (1–6)</code></li>
+<li><strong>Komponenty:</strong> <code>SectionHeader</code>, <code>QuoteCard</code> (C23).</li>
+<li><strong>Dane współdzielone:</strong> <code>testimonial</code> (§8b, D11).</li>
+<li><strong>Responsywność:</strong> <code>grid</code> 3 → 2 → 1.</li>
+<li><strong>/demo (C20):</strong> wariant <code>grid</code>, 3 cytaty w jednym rzędzie, pierwszy Persona AI.</li>
+<li><strong>Status:</strong> do designu (C27: dozwolony w <code>page</code>; na <code>productPage</code> nadal proponowany). Potrzebny na /demo i w <code>/case-studies/&lt;slug&gt;</code>. <strong>Na HP nie na start (C15):</strong> dowód społeczny na HP daje <code>caseStudies</code> (cytat w karcie featured). Powrót na HP = dopisanie bloku do listy <code>home</code> w §9, bez nowego typu.</li>
+</ul>
+<h3 id="19-articleheader-nagowek-strony-tresciowej">19 · <code>articleHeader</code> — Nagłówek strony treściowej</h3>
+<ul>
+<li><strong>Cel:</strong> otwarcie strony-dokumentu zamiast <code>hero</code>: case study, artykuł, press, oferta pracy, dokument prawny, archiwum.</li>
+<li><strong>Strony:</strong> caseStudy, page, legacy. <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>default</code> / <code>withStats</code> (case study: metryki i cytat).</li>
+<li><strong>Pola:</strong> <code>eyebrow?: string (≤ 30)</code> (kategoria albo „firma · miasto”) · <code>title: string (≤ 110)</code> · <code>intro?: text (≤ 200)</code> · <code>date?</code> · <code>updated?</code> · <code>author?</code> · <code>media?: MediaSlot</code> · <code>stats[]?: { value (≤ 8), label (≤ 40) } (0–3)</code></li>
+<li><strong>Stałe w kodzie:</strong> czas czytania (liczony z treści), breadcrumbs.</li>
+<li><strong>Dane współdzielone:</strong> na <code>/case-studies/&lt;slug&gt;</code> pola pochodzą z dokumentu <code>caseStudy</code> i nie są wpisywane drugi raz.</li>
+<li><strong>SEO:</strong> zawsze <code>h1</code> (R8). Naprawia brak <code>H1</code> na /press, /legal, /legal/* i w archiwach huba.</li>
+<li><strong>Media:</strong> <code>media</code> 16:9.</li>
+<li><strong>Responsywność:</strong> media pod tytułem.</li>
+<li><strong>Status:</strong> proponowany. Potrzebny przy <code>/case-studies/&lt;slug&gt;</code>.</li>
+</ul>
+<h3 id="20-postgrid-lista-wpisow">20 · <code>postGrid</code> — Lista wpisów</h3>
+<ul>
+<li><strong>Cel:</strong> lista artykułów albo informacji prasowych.</li>
+<li><strong>Strony:</strong> page, legacy. <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>grid</code> / <code>list</code> (press).</li>
+<li><strong>Pola:</strong> <code>header?: SectionHeader</code> · <code>source: latest | category | tag | manual</code> · <code>filter?: ref category | tag</code> · <code>items[]?: ref post</code> (tylko <code>manual</code>) · <code>limit: number (3–24)</code></li>
+<li><strong>Stałe w kodzie:</strong> paginacja, zakładki kategorii na /hub.</li>
+<li><strong>Dane współdzielone:</strong> <code>post</code> (już w Sanity dla /hub).</li>
+<li><strong>Responsywność:</strong> 3 → 2 → 1.</li>
+<li><strong>Status:</strong> proponowany. Zależy od decyzji o wygaszeniu /hub (§1).</li>
+</ul>
+<h3 id="21-linkdirectory-katalog-linkow">21 · <code>linkDirectory</code> — Katalog linków</h3>
+<ul>
+<li><strong>Cel:</strong> pogrupowane linki wewnętrzne (szablony polityk, kategorie i tagi). Głównie dla SEO.</li>
+<li><strong>Strony:</strong> page, legacy. <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>grouped</code> / <code>chips</code>.</li>
+<li><strong>Pola:</strong> <code>header?: SectionHeader</code> · <code>source: manual | toolPages | hubCategories | hubTags</code> · <code>groups[]?: { title? (≤ 30), links[]: { label (≤ 50), href } (≤ 40) } (1–10)</code> (tylko <code>manual</code>)</li>
+<li><strong>Uwaga:</strong> dzisiejsze „More Resources” (sam nagłówek) i „Policy Templates” łączymy w jeden blok.</li>
+<li><strong>Responsywność:</strong> <code>grouped</code> 4 → 2 → 1 kolumn. <code>chips</code> zawijane.</li>
+<li><strong>/pricing (C30):</strong> wariant <code>chips</code>, <code>source: manual</code>, jedna grupa: cenniki Vanty, Draty, Secureframe i przewodnik o koszcie SOC 2. Linki wewnętrzne (strony compare/guides), otwierane w tej samej karcie.</li>
+<li><strong>Status:</strong> do designu na /pricing (C30); dla stron legacy nadal proponowany.</li>
+</ul>
+<h3 id="22-toolembed-narzedzie">22 · <code>toolEmbed</code> — Narzędzie</h3>
+<ul>
+<li><strong>Cel:</strong> interaktywne narzędzie lead-gen (generator polityki, checklista, kalkulator, assessment).</li>
+<li><strong>Strony:</strong> legacy (strony narzędzi). <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>wizard</code> (wiele kroków) / <code>calculator</code> (jeden ekran).</li>
+<li><strong>Pola:</strong> <code>tool: enum</code> (lista narzędzi z kodu) · <code>form?: hubspotLead</code>. Logika i pytania zostają w kodzie (R7).</li>
+<li><strong>Tracking:</strong> obecne eventy narzędzi bez zmian (§11).</li>
+<li><strong>Status:</strong> proponowany. Potrzebny dopiero, gdy strony narzędzi przejdą do CMS.</li>
+</ul>
+<h3 id="23-joblist-oferty-pracy">23 · <code>jobList</code> — Oferty pracy</h3>
+<ul>
+<li><strong>Cel:</strong> lista otwartych ról na /careers.</li>
+<li><strong>Strony:</strong> page. <strong>Tone:</strong> light. <strong>Warianty:</strong> brak.</li>
+<li><strong>Pola:</strong> <code>header: SectionHeader</code> · <code>jobs[]: ref job</code></li>
+<li><strong>Stałe w kodzie:</strong> filtry (zespół, lokalizacja).</li>
+<li><strong>Dane współdzielone:</strong> <code>job</code> (§8b).</li>
+<li><strong>Status:</strong> proponowany. Niski priorytet (dziś 3 oferty).</li>
+</ul>
+<h3 id="24-bookingembed-rezerwacja-pierwszy-ekran-demo-i-pricing-c19">24 · <code>bookingEmbed</code> — Rezerwacja (pierwszy ekran /demo i /pricing) (C19)</h3>
+<ul>
+<li><strong>Cel:</strong> pierwszy ekran strony konwersji: nagłówek strony, argumenty i formularz rezerwacji obok siebie, a w wariancie <code>demo</code> także agenda rozmowy. Zastępuje <code>hero</code> na /demo, więc <code>hero</code> nie dostaje trzeciego wariantu (R3).</li>
+<li><strong>Strony:</strong> page (/demo, /demo/[framework], /pricing). <strong>Tone:</strong> light. <strong>Warianty:</strong> <code>demo</code> (z agendą) / <code>pricing</code> (bez agendy).</li>
+<li><strong>Pola:</strong> <code>eyebrow?: string (≤ 30)</code> · <code>title: string (≤ 55)</code> (h1, R8) · <code>intro: text (≤ 120, C43)</code> · <code>highlights[]: string (3–4 × ≤ 50)</code> · <code>booking: revenueHero</code> (R7) · <code>formTitle: string (≤ 40)</code> · <code>formIntro?: text (≤ 120)</code> · <code>reassurance[]: string (3 × ≤ 24)</code> (czas w formie „20-minute call”, C39) · <code>agendaTitle: string (≤ 40)</code> (tylko <code>demo</code>, C25) · <code>agenda[]: { title (≤ 40), duration (≤ 8), body (≤ 60, C43) } (3)</code> (tylko <code>demo</code>) · <code>framework?: ref framework</code> · <code>badges[]: ref framework (≤ 4)</code> (C45, jak <code>hero.badges</code>)</li>
+<li><strong>Stałe w kodzie:</strong> ocena G2 (z <code>siteSettings</code>), widget RevenueHero i jego kroki, zgoda z linkami Terms i Privacy, link „Interested in partnering?”. W wariancie <code>pricing</code> <code>highlights[]</code> mają numerację 01–03 (kroki do ceny) zamiast znaczników statusu (C50).</li>
+<li><strong>Komponenty:</strong> <code>Chip</code> (ocena i <code>badges</code>, ten sam co w <code>hero</code>, C45), <code>StepCard</code> (agenda, bez media; <code>duration</code> → <code>StepCard.meta</code>, C24), slot formularza (<code>codeBox</code> w wireframe).</li>
+<li><strong>Dane współdzielone:</strong> <code>framework</code> (C22): na /demo/[framework] <code>title</code>, <code>intro</code> i <code>formTitle</code> biorą się z <code>framework.demoTitle</code>, <code>demoIntro</code>, <code>demoFormTitle</code>; puste pola = teksty z /demo.</li>
+<li><strong>Tracking:</strong> eventy RevenueHero i HubSpot bez zmian (§11). Anchor formularza = cel <code>bookDemo</code> (wariant <code>demo</code>, C18) albo <code>bookPricing</code> (wariant <code>pricing</code>, C28). Formularz RevenueHero (demo / wycena) wybiera kod na podstawie wariantu, bez pola w CMS (C28).</li>
+<li><strong>Media:</strong> brak. Formularz zajmuje prawą kolumnę.</li>
+<li><strong>Responsywność:</strong> 2 kolumny (tekst | formularz) → formularz pod argumentami; agenda 3 → 1.</li>
+<li><strong>Status:</strong> do wireframe (/demo v01). Limity to propozycja (R10).</li>
+</ul>
+<h3 id="bloki-przewidziane-dla-pozostaych-stron-do-rozpisania-przy-ich-wireframe">Bloki przewidziane dla pozostałych stron (do rozpisania przy ich wireframe)</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th><code>_type</code></th>
+<th>Strona</th>
+<th>Uwagi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>~~<code>pricingFactors</code>~~</td>
+<td>/pricing</td>
+<td><strong>Niepotrzebny (C29):</strong> /pricing używa <code>pricingTeaser</code> (<code>section</code>). Formularz wyceny = <code>bookingEmbed</code> (<code>pricing</code>)</td>
+</tr>
+<tr>
+<td>~~<code>bookingEmbed</code>~~</td>
+<td>/demo, /pricing</td>
+<td><strong>Rozpisany:</strong> paszport 24 (C19)</td>
+</tr>
+<tr>
+<td>~~<code>caseStudyGrid</code>~~</td>
+<td>/case-studies</td>
+<td><strong>Niepotrzebny.</strong> Mapa z 16.10 pokazuje, że /case-studies to <code>hero</code> + <code>caseStudies</code> (<code>grid</code>) + <code>ctaBand</code></td>
+</tr>
+<tr>
+<td><code>richText</code></td>
+<td>strony produktowe</td>
+<td>jeśli potrzebny dłuższy opis</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8e-limity-znakow-pomiar-hi-fi-i-poziomy-walidacji-c49-2110">8e · Limity znaków: pomiar hi-fi i poziomy walidacji (C49, 21.10)</h3>
+<p><strong>Źródło liczb.</strong> Makieta hi-fi, nie lo-fi (lo-fi to wynik audytu i propozycja struktury). Pomiar: HP hi-fi v08, /demo hi-fi v01 i /pricing hi-fi v01 (C50), 1440 px, krój Lausanne, rozmiary z hi-fi. Dla każdego pola: rzeczywista szerokość elementu i styl tekstu, przykładowy angielski tekst marketingowy, liczba znaków mieszcząca się w liniach zaprojektowanych dla pola. Dokładność ok. ±10% (zależy od długości słów). Skrypt: <code>web/tools/comp-ai-char-capacity.js</code> (do ponownego uruchomienia po zmianach UI).</p>
+<p><strong>Co mówi Sanity.</strong> Sanity daje mechanizm, nie wartości: <code>Rule.max()</code> / <code>min()</code>; przekroczenie domyślnie jest błędem i blokuje publikację, <code>.warning()</code> pozwala opublikować. W oficjalnych szablonach i w agent-toolkit długość tekstu to zawsze <code>warning</code> z komunikatem, a pole ma <code>description</code> z zaleceniem (np. SEO: meta title <code>max(60).warning(...)</code>, meta description <code>max(160).warning(...)</code>; excerpt <code>max(200).warning(...)</code>). Błąd: pola wymagane, minimalna liczba elementów, format (URL, slug).</p>
+<p><strong>Poziomy (do schematu):</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Poziom</th>
+<th>Walidacja Sanity</th>
+<th>Kiedy</th>
+<th>Komunikat dla edytora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zalecany</td>
+<td><code>max(n).warning(...)</code> + liczba w <code>description</code> pola</td>
+<td>Tekst przekracza liczbę linii zaprojektowaną w hi-fi; układ się trzyma, ale wygląda inaczej niż w designie</td>
+<td>„Recommended: up to n characters (fits X lines in the design).”</td>
+</tr>
+<tr>
+<td>Maksymalny</td>
+<td><code>max(n).error(...)</code></td>
+<td>Tekst wychodzi o więcej niż 1 linię poza projekt albo łamie element jednoliniowy (pasek, liczba, rząd reassurance); układ się psuje</td>
+<td>„Too long for this section: max n characters.”</td>
+</tr>
+<tr>
+<td>Struktura</td>
+<td><code>min()/max()</code> na listach, <code>required()</code></td>
+<td>Liczba elementów i pola wymagane z paszportów (bez zmian)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Reguła liczenia: zalecany = pojemność na liniach z hi-fi (zaokrąglona w dół do 5); maksymalny = pojemność na liniach z hi-fi + 1 (w dół do 5). Elementy jednoliniowe: maksymalny = pojemność 1 linii. Sufit czytelności tylko tam, gdzie pojemność jest nieproporcjonalnie duża (oznaczone „czyt.”).</p>
+<p><strong>Wartości (desktop 1440):</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Pole</th>
+<th>Gdzie zmierzone</th>
+<th>Linie w hi-fi</th>
+<th>Zalecany (<code>warning</code>)</th>
+<th>Maks. (<code>error</code>)</th>
+<th>Lo-fi (było)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>announcementBar.text</code></td>
+<td>pasek, 13,5 px, ~1080 px</td>
+<td>1</td>
+<td>90 (czyt.: czytane jednym rzutem oka)</td>
+<td>170</td>
+<td>90</td>
+</tr>
+<tr>
+<td><code>hero.title</code></td>
+<td>h1 68 px, 560 px</td>
+<td>3</td>
+<td>55</td>
+<td>75</td>
+<td>55</td>
+</tr>
+<tr>
+<td><code>hero.intro</code></td>
+<td>20 px, 440 px</td>
+<td>3</td>
+<td>140</td>
+<td>185</td>
+<td>120</td>
+</tr>
+<tr>
+<td><code>logoBand.title</code></td>
+<td>20 px, 287 px</td>
+<td>3</td>
+<td>85</td>
+<td>115</td>
+<td>70</td>
+</tr>
+<tr>
+<td><code>SectionHeader.title</code> (domyślnie, 7 kol.)</td>
+<td>h2 42 px, 736 px</td>
+<td>2</td>
+<td>75</td>
+<td>110</td>
+<td>70</td>
+</tr>
+<tr>
+<td><code>SectionHeader.title</code> w <code>featureHighlight</code> (5 kol.)</td>
+<td>h2 42 px, 495 px</td>
+<td>3</td>
+<td>75</td>
+<td>100</td>
+<td>70</td>
+</tr>
+<tr>
+<td><code>SectionHeader.title</code> w <code>faq</code> (4 kol.)</td>
+<td>h2 42 px, 410 px</td>
+<td>2</td>
+<td>35</td>
+<td>60</td>
+<td>70</td>
+</tr>
+<tr>
+<td><code>SectionHeader.intro</code> (najwęższe użycie: <code>integrations</code>)</td>
+<td>16 px, 400 px</td>
+<td>2</td>
+<td>105</td>
+<td>150</td>
+<td>120</td>
+</tr>
+<tr>
+<td><code>steps.beforeAfter.*.body</code></td>
+<td>16 px, ~545 px (pół rzędu)</td>
+<td>1 (jednoliniowy)</td>
+<td>70</td>
+<td>70</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>steps[].title</code></td>
+<td>20 px, 266 px</td>
+<td>2</td>
+<td>55</td>
+<td>80</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>steps[].body</code></td>
+<td>14 px, 266 px</td>
+<td>2</td>
+<td>75</td>
+<td>110</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>productModule.name</code></td>
+<td>26 px, 358 px (najwęższa karta)</td>
+<td>2</td>
+<td>50</td>
+<td>75</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>productModule.summary</code></td>
+<td>15 px, 358 px</td>
+<td>2</td>
+<td>95</td>
+<td>145</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>integrations.count</code></td>
+<td>86 px</td>
+<td>1 (jednoliniowy)</td>
+<td>10</td>
+<td>10</td>
+<td>6</td>
+</tr>
+<tr>
+<td><code>proofPoints.points[].title</code></td>
+<td>20 px, 437 px</td>
+<td>1</td>
+<td>45</td>
+<td>95</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>proofPoints.points[].body</code></td>
+<td>16 px, 360 px</td>
+<td>2</td>
+<td>95</td>
+<td>145</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>audiencePaths.paths[].need</code></td>
+<td>33 px, 600 px</td>
+<td>2</td>
+<td>85</td>
+<td>130</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>audiencePaths.paths[].proofPoints[]</code></td>
+<td>16 px, ~630 px</td>
+<td>1</td>
+<td>85</td>
+<td>165</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>caseStudy.summary</code></td>
+<td>14 px, 426 px (karta w <code>audiencePaths</code>)</td>
+<td>3</td>
+<td>190</td>
+<td>255</td>
+<td>120</td>
+</tr>
+<tr>
+<td><code>caseStudy.metrics[].value</code></td>
+<td>68 px, 322 px</td>
+<td>1 (jednoliniowy)</td>
+<td>10</td>
+<td>10</td>
+<td>8</td>
+</tr>
+<tr>
+<td><code>caseStudy.metrics[].label</code></td>
+<td>15 px, 322 px</td>
+<td>2</td>
+<td>85</td>
+<td>135</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>testimonial.quote</code> (najwęższe użycie: <code>QuoteCard</code>)</td>
+<td>26 px, 358 px</td>
+<td>5</td>
+<td>145</td>
+<td>170</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>testimonial.role</code> + <code>company</code> (jedna linia w <code>QuoteCard</code>)</td>
+<td>14 px, 306 px</td>
+<td>1</td>
+<td>45 łącznie</td>
+<td>95 łącznie</td>
+<td>role 40</td>
+</tr>
+<tr>
+<td><code>pricingTeaser.header.title</code> (<code>banner</code>)</td>
+<td>26 px, 554 px</td>
+<td>1</td>
+<td>50</td>
+<td>95</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>faq.question</code></td>
+<td>20 px, 685 px</td>
+<td>1</td>
+<td>75</td>
+<td>145</td>
+<td>90</td>
+</tr>
+<tr>
+<td><code>ctaBand.title</code></td>
+<td>68 px, 860 px</td>
+<td>2</td>
+<td>60</td>
+<td>85</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>ctaBand.reassurance[]</code></td>
+<td>14 px, ~340 px (⅓ rzędu)</td>
+<td>1 (jednoliniowy)</td>
+<td>30 (czyt.: krótka fraza)</td>
+<td>50</td>
+<td>30</td>
+</tr>
+<tr>
+<td><code>footer.columns[].links[].label</code></td>
+<td>14 px, 165 px</td>
+<td>1</td>
+<td>20</td>
+<td>45</td>
+<td>30</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.title</code></td>
+<td>h1 68 px, 560 px</td>
+<td>3</td>
+<td>55</td>
+<td>75</td>
+<td>55</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.intro</code></td>
+<td>20 px, 460 px</td>
+<td>3</td>
+<td>145</td>
+<td>190</td>
+<td>120</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.highlights[]</code> (najwęższe użycie: wariant <code>pricing</code>, numerowane, C50)</td>
+<td>16 px, 518 px</td>
+<td>1</td>
+<td>65</td>
+<td>130</td>
+<td>50</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.formTitle</code></td>
+<td>26 px, 486 px</td>
+<td>1</td>
+<td>40</td>
+<td>80</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.formIntro</code></td>
+<td>16 px, 486 px</td>
+<td>2</td>
+<td>125</td>
+<td>190</td>
+<td>120</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.reassurance[]</code> (3 frazy w jednym rzędzie karty, C51)</td>
+<td>13,5 px, rząd 486 px</td>
+<td>1 (jednoliniowy)</td>
+<td>łącznie 55</td>
+<td>łącznie 60 (przy równych frazach ~21 na frazę)</td>
+<td>24</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.agendaTitle</code></td>
+<td>26 px, 320 px</td>
+<td>2</td>
+<td>50</td>
+<td>75</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.agenda[].title</code></td>
+<td>20 px, 232 px</td>
+<td>1</td>
+<td>20</td>
+<td>45</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>bookingEmbed.agenda[].body</code></td>
+<td>15 px, 232 px</td>
+<td>2</td>
+<td>65</td>
+<td>95</td>
+<td>60</td>
+</tr>
+<tr>
+<td><code>pricingFactor.title</code> (karta w <code>pricingTeaser</code> <code>section</code>)</td>
+<td>26 px, 266 px</td>
+<td>2</td>
+<td>30 (czyt.: ten sam tekst to chip w banerze na HP)</td>
+<td>65</td>
+<td>30</td>
+</tr>
+<tr>
+<td><code>pricingFactor.body</code></td>
+<td>15 px, 250 px</td>
+<td>2</td>
+<td>65</td>
+<td>95</td>
+<td>80</td>
+</tr>
+<tr>
+<td><code>framework.name</code> (<code>FrameworkCard</code> we <code>frameworkList</code>)</td>
+<td>33 px, 254 px</td>
+<td>1</td>
+<td>15</td>
+<td>30</td>
+<td>20</td>
+</tr>
+<tr>
+<td><code>frameworkList.moreNote</code></td>
+<td>14 px, za chipami <code>more[]</code></td>
+<td>1</td>
+<td>30 (zasada)</td>
+<td>30</td>
+<td>30</td>
+</tr>
+<tr>
+<td><code>linkDirectory.header.title</code> (<code>chips</code>, pas na /pricing)</td>
+<td>20 px, ~570 px obok 4 chipów</td>
+<td>1 (jednoliniowy)</td>
+<td>30 (czyt.: krótkie pytanie)</td>
+<td>60</td>
+<td>75</td>
+</tr>
+<tr>
+<td><code>linkDirectory.groups[].links[].label</code> (<code>chips</code>)</td>
+<td>13,5 px, chip</td>
+<td>1</td>
+<td>30 (czyt.)</td>
+<td>50</td>
+<td>50</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Bez zmian (zasada, nie pomiar):</strong> wszystkie <code>eyebrow</code> (etykieta 1–3 słowa: 30/40), <code>agenda[].duration</code> (format „12 min”: 8), pola SEO dokumentów (meta title 60 i meta description 160 jako <code>warning</code>, wzorzec z szablonów Sanity), liczności list.</p>
+<p><strong>Sprawdzone na /pricing bez zmian (C50):</strong> <code>SectionHeader.title</code> (7 kol., <code>caseStudies</code>, <code>faq</code>), <code>SectionHeader.intro</code> (na /pricing pojemność 160/215, ale wiąże najwęższe użycie: <code>integrations</code>), <code>faq.question</code>, <code>caseStudy.metrics[]</code> (karta w siatce szersza niż na HP; wiąże HP), <code>ctaBand</code>, <code>bookingEmbed.reassurance[]</code>.</p>
+<p><strong>Jeszcze nie zmierzone:</strong> bloki bez makiety hi-fi (/case-studies, <code>cardGrid</code>, <code>comparisonTable</code>, <code>articleHeader</code>, <code>postGrid</code>, <code>linkDirectory</code> <code>grouped</code>, <code>jobList</code>) — mierzymy przy ich hi-fi tym samym skryptem. Statystyki w <code>featureHighlight</code> (karty o szerokości wg treści) i etykiety chipów/tabów (<code>audiencePaths.segment</code>, <code>audience</code>) — limit z czytelności do ustalenia na UI.</p>
+<p><strong>Zastrzeżenia.</strong> (1) Tylko desktop 1440; mobile 320 sprawdzić po jego zaprojektowaniu (tam pojemność linii jest mniejsza, więc limity mogą spaść). (2) Po etapie UI (typescale, krój) i po treściach z TOV pomiar powtarzamy. (3) <code>steps.beforeAfter.*.title</code> nie jest wyświetlany w hi-fi (etykiety Before/After są stałe) — do decyzji, czy pole zostaje.</p>
+<hr />
+<h2 id="9-typy-stron-i-dozwolone-bloki">9. Typy stron i dozwolone bloki</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Typ (Sanity)</th>
+<th>Strony</th>
+<th>Dozwolone bloki</th>
+<th>Uwagi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>siteSettings</code> (singleton)</td>
+<td>—</td>
+<td>—</td>
+<td><code>homePage</code> (ref), G2 rating, domyślne SEO/OG, <code>announcementBar</code></td>
+</tr>
+<tr>
+<td><code>home</code> (przez <code>siteSettings.homePage</code>)</td>
+<td><code>/</code></td>
+<td>hero, logoBand, steps, featureGrid, integrations, proofPoints, featureHighlight, audiencePaths, caseStudies, pricingTeaser, faq, ctaBand</td>
+<td><strong>Kolejność na HP (C17):</strong> jak na liście. <code>pricingTeaser</code> w wariancie <code>banner</code>. 10 sekcji + baner. Uzasadnienie: <code>claude/comp-ai-homepage-length-research.md</code></td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td><code>/pricing</code>, <code>/case-studies</code>, <code>/demo</code>, przyszłe</td>
+<td>hero, logoBand, steps, integrations, proofPoints, frameworkList, featureHighlight, audiencePaths, caseStudies, faq, ctaBand, pricingFactors, bookingEmbed, testimonials (C27), pricingTeaser (C29), linkDirectory (C30) · <em>proponowane:</em> cardGrid, comparisonTable</td>
+<td><strong>/demo (C21):</strong> <code>bookingEmbed</code> (<code>demo</code>) · <code>logoBand</code> (<code>logosOnly</code>) · <code>testimonials</code> (<code>grid</code>, 3) · <code>proofPoints</code> · <code>integrations</code> · <code>faq</code> · <code>ctaBand</code> (7 bloków; <code>audiencePaths</code> dozwolony w <code>page</code>, ale na /demo nie używany). Nav bez zmian (C18). Linki wychodzące w <code>proofPoints</code> i <code>integrations</code> na /demo otwierają się w nowej karcie (kod, bez pola w CMS, C26; od C52 zasada dla wszystkich stron konwersji). <strong>/demo/[framework] (C22):</strong> ten sam dokument /demo z podmianami z <code>framework</code>, bez osobnych dokumentów <code>page</code>. <strong>/pricing (C31):</strong> <code>bookingEmbed</code> (<code>pricing</code>) · <code>logoBand</code> (<code>logosOnly</code>) · <code>pricingTeaser</code> (<code>section</code>, bez przycisków) · <code>frameworkList</code> · <code>caseStudies</code> (<code>grid</code>, 3 krótkie karty, bez wyróżnionej, C32) · <code>linkDirectory</code> (<code>chips</code>, wąski pas) · <code>faq</code> · <code>ctaBand</code> (<code>bookPricing</code>) (8 bloków, ~4 250 px na 1440 przy realnej treści; dziś ~3 770 px). Nav bez zmian: <code>primaryCta</code> „Book a demo” prowadzi na /demo (osobny call, C28). Linki zewnętrzne w sekcjach w nowej karcie (C52). <strong>/case-studies (C36):</strong> <code>hero</code> (<code>centered</code>, bez media) · <code>logoBand</code> (<code>logosOnly</code>) · <code>caseStudies</code> (<code>featuredPlusList</code>, tylko <code>featured</code>) · <code>caseStudies</code> (<code>grid</code>, 9, C37) · <code>ctaBand</code> (5 bloków; ~4 300 px w makiecie lo-fi, dziś ~4 520).</td>
+</tr>
+<tr>
+<td><code>productPage</code> <em>(założenie)</em></td>
+<td><code>/product/&lt;slug&gt;</code>?</td>
+<td>hero, steps, integrations, featureHighlight, proofPoints, caseStudies, pricingTeaser, faq, ctaBand · <em>proponowane:</em> testimonials, cardGrid, comparisonTable</td>
+<td>Jeden szablon, różne copy. URL do ustalenia.</td>
+</tr>
+<tr>
+<td><code>caseStudy</code></td>
+<td><code>/case-studies/&lt;slug&gt;</code></td>
+<td>— (dokument strukturalny)</td>
+<td>Istniejące URL zostają. Renderowany jako <code>articleHeader</code> (<code>withStats</code>) + <code>richText</code> + <code>testimonials</code> (<code>single</code>) + <code>ctaBand</code></td>
+</tr>
+<tr>
+<td>strony legacy</td>
+<td>~100 stron w kodzie</td>
+<td>—</td>
+<td>Dostają tylko nowy <code>navigation</code> + <code>footer</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Globalne singletony <code>announcementBar</code>, <code>navigation</code> i <code>footer</code> renderują się na każdym typie strony (także legacy) poza tablicą <code>content</code>, więc nie ma ich na listach dozwolonych bloków.</p>
+<p>Każdy dokument strony ma też pola SEO: <code>title</code>, <code>description</code>, <code>ogImage</code>, <code>slug</code> (zachowujemy obecne wartości).</p>
+<hr />
+<h2 id="10-responsywnosc-dostepnosc-motion">10. Responsywność, dostępność, motion</h2>
+<ul>
+<li><strong>Breakpointy (propozycja do potwierdzenia z Arkiem):</strong> projektuję 1440 i 320. Tablet 768/1024 jako zachowanie pośrednie opisane w paszporcie (np. „grid 4 → 2 → 1”). Breakpointy w kodzie = domyślne Tailwind, chyba że ustalimy inaczej.</li>
+<li><strong>Kontener i grid:</strong> zmienne <code>Layout</code> (§6). Sekcje pełnej szerokości, treść w kontenerze.</li>
+<li><strong>WCAG 2.1 AA</strong> od wireframe: kontrast tekstu, focus visible, cele dotyku ≥ 44 px na mobile, kolejność nagłówków (R8), alt (R9).</li>
+<li><strong>Twarde „nie” klienta:</strong> zielony tekst na zielonym, tekst na gradiencie bez kontrastu, tarcze, kłódki, checkmarki, neonowe siatki.</li>
+<li><strong>Motion (Anton, 22.10–19.11):</strong> w paszporcie tylko informacja, <em>czy</em> sekcja ma animację i jaką (wejście, pętla). Zawsze <code>prefers-reduced-motion</code>. Animacje nie mogą psuć statycznego renderu.</li>
+<li><strong>Ilustracje i 3D (Nervy):</strong> <code>MediaSlot</code> z proporcjami zdefiniowanymi w paszporcie. Treść na hold do brandu.</li>
+</ul>
+<hr />
+<h2 id="11-seo-i-tracking-nie-do-ruszenia">11. SEO i tracking (nie do ruszenia)</h2>
+<ul>
+<li>URL, <code>&lt;title&gt;</code>, description, structured data (FAQPage i inne obecne), OG image: <strong>jak dziś</strong>.</li>
+<li>Nazwy eventów: <strong>jak dziś</strong>. Lista do spisania z Arkiem z obecnego kodu i wklejenia tutaj (TODO). Event przypisany do <code>cta.action</code> w kodzie (R6), nie w CMS.</li>
+<li>Formularze: HubSpot. Booking: RevenueHero. Analityka: PostHog, gtag, CAPI, wewnętrzne narzędzie klienta.</li>
+<li>Nowa sekcja z CTA musi przejść test konwersji end-to-end na preview przed launchem.</li>
+</ul>
+<hr />
+<h2 id="12-kolejnosc-oddawania-do-dev-grupy-pr-dla-hp">12. Kolejność oddawania do dev (grupy PR dla HP)</h2>
+<p>Propozycja podziału HP na 3 PR-y, do potwierdzenia z Arkiem:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>PR</th>
+<th>Sekcje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Foundation</td>
+<td>tokeny, <code>Button</code>, <code>SectionHeader</code>, wrapper sekcji z <code>tone</code>, typografia</td>
+</tr>
+<tr>
+<td>HP-1 „nad zgięciem”</td>
+<td>announcementBar, hero, logoBand, steps, integrations</td>
+</tr>
+<tr>
+<td>HP-2 „produkt i dowody”</td>
+<td>featureGrid, proofPoints, featureHighlight</td>
+</tr>
+<tr>
+<td>HP-3 „decyzja”</td>
+<td>audiencePaths, caseStudies, pricingTeaser (<code>banner</code>), faq, ctaBand</td>
+</tr>
+<tr>
+<td>Nav + Footer</td>
+<td>navigation, footer</td>
+</tr>
+<tr>
+<td>Pricing → Customers → Demo</td>
+<td>wg §8 + bloki stron</td>
+</tr>
+</tbody>
+</table></div>
+<p>Grupy PR nie muszą odpowiadać kolejności na stronie (kolejność ustawia CMS). <code>featureGrid</code> celowo nie jest w HP-1, bo czeka na D2.</p>
+<hr />
+<h2 id="13-otwarte-decyzje-blokery-kontraktu">13. Otwarte decyzje (blokery kontraktu)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decyzja</th>
+<th>Wpływa na</th>
+<th>Kto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td>Etykieta i typ głównego CTA (Book a demo vs Get started / self-serve)</td>
+<td>hero, ctaBand, nav, R6</td>
+<td>Klient (Teresa)</td>
+</tr>
+<tr>
+<td>D2</td>
+<td>Oficjalna lista i nazwy modułów produktu</td>
+<td>navigation, featureGrid, footer, productPage</td>
+<td>Klient</td>
+</tr>
+<tr>
+<td>D3</td>
+<td>Zakres stron (Product overview, About, strony produktowe)</td>
+<td>§9, navigation, wariant <code>featureGrid</code></td>
+<td>Wiktor + klient</td>
+</tr>
+<tr>
+<td>D4</td>
+<td>Które claimy security są live</td>
+<td>proofPoints</td>
+<td>Klient</td>
+</tr>
+<tr>
+<td>D5</td>
+<td>Odbiorca pierwszy na HP (founder vs security lead)</td>
+<td>hero, audiencePaths</td>
+<td>Klient</td>
+</tr>
+<tr>
+<td>D6</td>
+<td>Breakpointy i tablet</td>
+<td>§10, wszystkie paszporty</td>
+<td>Michał + Arek</td>
+</tr>
+<tr>
+<td>D7</td>
+<td>Narzędzie eksportu tokenów (Tokens Studio / Style Dictionary / ręcznie)</td>
+<td>§6</td>
+<td>Michał + Arek</td>
+</tr>
+<tr>
+<td>D8</td>
+<td>Lista nazw eventów z obecnego kodu</td>
+<td>§11</td>
+<td>Arek</td>
+</tr>
+<tr>
+<td>~~D9~~</td>
+<td>~~Wariant nav dla /demo~~ <strong>Zamknięte 19.10 (C18):</strong> nav bez zmian</td>
+<td>navigation</td>
+<td>Michał</td>
+</tr>
+<tr>
+<td>D10</td>
+<td>Kto edytuje treści po stronie klienta</td>
+<td>szkolenie Studio</td>
+<td>Klient</td>
+</tr>
+<tr>
+<td>D11</td>
+<td>Cytaty jako osobny dokument <code>testimonial</code> czy pole <code>caseStudy.quote</code> (nie każdy cytat ma case study) · <strong>Rekomendacja 19.10 (C20): dokument <code>testimonial</code>, <code>caseStudy.testimonial</code> jako ref.</strong> Do potwierdzenia z Arkiem</td>
+<td>testimonials, caseStudies</td>
+<td>Michał + Arek</td>
+</tr>
+<tr>
+<td>D12</td>
+<td>/security ma 9 punktów, a <code>proofPoints</code> pozwala na 3–4: podnieść limit czy użyć <code>cardGrid</code></td>
+<td>proofPoints, /security</td>
+<td>Michał</td>
+</tr>
+<tr>
+<td>D13</td>
+<td>Czy strony legacy (guides, compare, narzędzia, hub) przechodzą do CMS, czy dostają tylko nav i footer</td>
+<td>§8c, §9</td>
+<td>Teresa + Arek</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="14-changelog">14. Changelog</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Wersja</th>
+<th>Zmiana</th>
+<th>Kto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>16.10.2026</td>
+<td>v0.1</td>
+<td>Pierwsza wersja z sections v0.2, wireframe v01, planu Arka i odpowiedzi Claudia</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C1</strong> §7 <code>SectionHeader</code>: <code>eyebrow ≤ 30</code>, <code>title ≤ 70</code>, <code>intro ≤ 180</code>. <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C2</strong> §8 <code>caseStudies.items[]</code>: <code>featuredPlusList</code> 0–3, <code>grid</code> 0–24 (było 0–12; przy 12 sekcja miała 2 761 px na 1440). <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C3</strong> §8 <code>hero.title</code>: ≤ 55 (było ≤ 70; 70 znaków = 5 linii h1 na 1440 i 375). <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C4</strong> Szablon paszportu: pole „Media”. Proporcje: hero 4:3, steps 4:3, featureGrid 16:10, proofPoints 4:5, featureHighlight 4:3.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C5</strong> Brakujące limity: <code>steps.beforeAfter</code> (40/120), <code>featureHighlight.stats</code> (8/40), <code>integrations.count</code> (6), <code>navigation.items[].label</code> (16), linki w stopce (30). <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C6</strong> Nowa sekcja §8b „Dokumenty współdzielone” z polami i limitami. <code>framework.demoHref</code> zastępuje opis „link frameworka = strona demo”. <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C7</strong> §8 <code>ctaBand</code>: domyślny ton <code>dark</code>, <code>light</code> dozwolony. <em>Schemat (initialValue).</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C8</strong> §7 <code>Button</code>: <code>navigation.primaryCta</code> jest wyjątkiem od zasady „jeden primary na ekran”.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C9</strong> Szablon paszportu: pole „Responsywność” (1440 → 768 → 375), wypełnione dla wszystkich sekcji. G2: maks. liczność narysowana, min. w notatce.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.2</td>
+<td><strong>C10</strong> §9: <code>announcementBar</code>, <code>navigation</code>, <code>footer</code> to globalne singletony poza <code>content</code>.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.3</td>
+<td><strong>C11</strong> Nowa sekcja §8c: 8 bloków <code>proponowany</code> z mapy obecnej strony (<code>cardGrid</code>, <code>comparisonTable</code>, <code>testimonials</code>, <code>articleHeader</code>, <code>postGrid</code>, <code>linkDirectory</code>, <code>toolEmbed</code>, <code>jobList</code>). <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.3</td>
+<td><strong>C12</strong> §8b: dokumenty <code>testimonial</code> i <code>job</code> (proponowane), <code>post</code> (istnieje). <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.3</td>
+<td><strong>C13</strong> §9 <code>page</code>: dopuszczone <code>steps</code>, <code>integrations</code>, <code>proofPoints</code>, <code>audiencePaths</code>, bo /demo ich dziś używa. <code>caseStudy</code> renderowany z bloków §8c. <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.3</td>
+<td><strong>C14</strong> <code>caseStudyGrid</code> usunięty (wystarcza <code>caseStudies</code> <code>grid</code>). Nowe decyzje D11–D13.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.4</td>
+<td><strong>C15</strong> <code>testimonials</code> <strong>nie trafia na HP</strong> (opcja B): §8c i §18 poprawione, §9 <code>home</code> bez zmian. Uwaga: obecna HP ma sekcję „Trusted by teams who ship fast”, więc to świadome ograniczenie, do pokazania klientowi. Rozwiązuje sprzeczność §8c ↔ §9 z audytu v02.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>16.10.2026</td>
+<td>v0.4</td>
+<td><strong>C16</strong> §8 <code>footer</code>: 5 kolumn, nie 6 (Status to <code>statusLink</code>). Zgodne z obecną stopką i wireframe v02. Wireframe v03: karta featured w <code>caseStudies</code> z <code>company</code>, <code>summary</code>, <code>frameworks[]</code>; <code>items[].metric</code> → <code>items[].metrics[0]</code>.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.5</td>
+<td><strong>C17</strong> HP: 10 sekcji + baner (było 13). Nowa kolejność §9 (<code>featureGrid</code> przed <code>integrations</code>). <code>frameworkList</code> usunięty z <code>home</code> (zostaje dla <code>page</code>). <code>pricingTeaser</code> dostaje wariant <code>banner</code> i stoi między <code>caseStudies</code> a <code>faq</code>. §12 HP-2 bez <code>frameworkList</code>. Uzasadnienie (konkurencja 11–16 sekcji, NN/g: 74% uwagi na 2 pierwszych ekranach): <code>claude/comp-ai-homepage-length-research.md</code>. Wireframe v04. <em>Schemat (wariant <code>banner</code>).</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C18</strong> D9 zamknięte: /demo ma tę samą nawigację co reszta strony. <code>primaryCta</code> (<code>bookDemo</code>) na /demo przewija do formularza (kod).</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C19</strong> Nowy paszport 24 <code>bookingEmbed</code> (warianty <code>demo</code> / <code>pricing</code>): pierwszy ekran /demo i /pricing zamiast <code>hero</code> (R3). Pola, limity i stałe w kodzie w paszporcie.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C20</strong> D11: rekomendacja dokumentu <code>testimonial</code> (do potwierdzenia z Arkiem). <code>caseStudy.quote</code> + <code>person</code> → <code>caseStudy.testimonial: ref</code>; <code>testimonial.caseStudy</code> usunięte. <code>testimonials</code> na /demo: <code>grid</code>, 3 cytaty.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C21</strong> §9: kolejność bloków /demo (7): bookingEmbed · logoBand · testimonials · proofPoints · integrations · faq · ctaBand. <code>audiencePaths</code> nie na /demo.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C22</strong> §8b <code>framework</code>: <code>demoTitle?</code>, <code>demoIntro?</code>, <code>demoFormTitle?</code>. /demo/[framework] renderuje dokument /demo z tymi podmianami (bez 4 kopii <code>page</code>).</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C25</strong> Paszport 24 <code>bookingEmbed</code>: nowe pole <code>agendaTitle (≤ 40)</code> w wariancie <code>demo</code> (nagłówek agendy, np. „What happens on your 20-minute demo”; pole, a nie stała w kodzie, bo długość demo może się zmienić). Z rewizji copy wersji dla klienta.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C26</strong> §9 /demo: linki wychodzące w <code>proofPoints</code> i <code>integrations</code> otwierają się w nowej karcie, żeby nie wyprowadzać ze strony konwersji. Zachowanie w kodzie, bez pola w CMS.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C23</strong> §7: nowy komponent <code>QuoteCard</code> (<code>quote</code>, <code>person</code>, <code>role</code>, <code>company</code>, <code>logo?</code>) dla <code>testimonials</code> (<code>grid</code> i <code>single</code>). Z audytu /demo.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C24</strong> §7: <code>StepCard.meta?</code> (≤ 12), krótka etykieta obok numeru; w <code>bookingEmbed</code> wyświetla <code>agenda[].duration</code>. Na HP nieużywane. Z audytu /demo.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C27</strong> §9 <code>page</code>: <code>testimonials</code> przeniesiony z „proponowane” do dozwolonych bloków (ma paszport, komponent <code>QuoteCard</code> i jest użyty na /demo). Status paszportu 18 → do designu. Z audytu /demo.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C28</strong> Dwa osobne calle: demo i wycena. R6: nowa akcja <code>bookPricing</code> (na /pricing przewija do formularza wyceny, gdzie indziej → /pricing#book; event jak dziś). <code>bookingEmbed</code>: formularz RevenueHero wybiera kod po wariancie. Nav na /pricing bez zmian (→ /demo).</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C29</strong> <code>pricingTeaser</code> dozwolony w <code>page</code> (/pricing, wariant <code>section</code>); <code>primaryCta</code> i <code>secondaryCta</code> opcjonalne; <code>pricingFactor.body</code> ≤ 160 (było ≤ 100). <code>pricingFactors</code> jako osobny blok niepotrzebny.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C30</strong> <code>linkDirectory</code> (<code>chips</code>) dozwolony w <code>page</code> dla linków do porównań na /pricing; status do designu.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C31</strong> §9: kolejność 8 bloków /pricing.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C32</strong> §9 /pricing: <code>caseStudies</code> w wariancie <code>grid</code> z 3 kartami (było <code>featuredPlusList</code>), żeby skrócić stronę o ~550 px; <code>linkDirectory</code> jako wąski pas (odstępy na hi-fi).</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C33</strong> <code>frameworkList</code>: nowe pole <code>moreNote?</code> (≤ 30), zwykły tekst za chipami (np. „and more on request”) zamiast chipa „+ more”, który wyglądał jak przycisk. Z rewizji copy /pricing.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C34</strong> <code>hero</code>: wariant <code>centered</code> zatwierdzony (bez media); <code>media</code> opcjonalne w <code>centered</code>, wymagane w <code>default</code>. Z /case-studies.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C35</strong> <code>StoryCard</code> <code>compact</code> pokazuje etykiety <code>frameworks[]</code> (HP, /pricing, /case-studies).</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C36</strong> §9 /case-studies: 5 bloków, dwa bloki <code>caseStudies</code> (wyróżniona + siatka 10); filtr po frameworku odłożony do &gt; ~15 historii.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.6</td>
+<td><strong>C37</strong> §9 /case-studies: siatka ma 9 historii (3 równe rzędy) zamiast 10; dziesiąta (docdocjob) tylko na swojej podstronie. Z rewizji copy.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.7</td>
+<td><strong>C38</strong> §7: <code>ComparePanel</code>, <code>SlackThread</code>, <code>PricingBanner</code> to komponenty renderujące istniejące pola (<code>steps.beforeAfter</code>, <code>featureHighlight.media</code> jako <code>uiSnippet</code>, <code>pricingTeaser</code> w wariancie <code>banner</code>), nie nowe typy bloków ani pola w CMS. W Figmie zostają jako <code>_Client/*</code> do przeniesienia do biblioteki dev na hi-fi. Z audytu desktop.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.7</td>
+<td><strong>C39</strong> Konwencja copy: długość calla zawsze „20-minute call” (w <code>reassurance[]</code> <code>bookingEmbed</code> i <code>ctaBand</code>, w tekstach o wycenie). Nagłówki mogą mówić „20 minutes away” / „20-minute demo”. Usunięte „20-min call”. Z audytu desktop.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.8</td>
+<td><strong>C40</strong> §6: skala typograficzna 1,272 (baza 16, zaokrąglona). <code>Type/Desktop/*</code>: display 88→86, h1 56→53, h2 40→42, body-lg 19→20, eyebrow 12→13 (h3, body, caption bez zmian). HTML (dev i klient): każdy rozmiar przyciągnięty do najbliższego stopnia; adnotacje, instrukcje i mobile bez zmian. Kopie sprzed zmiany: <code>web/wireframes/*/_archive/pre-typescale-1272/</code>.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.9</td>
+<td><strong>C41</strong> <code>logoBand</code> na <code>home</code>: <code>logosOnly</code> (było <code>withStats</code>). Liczby powtarzały hero (G2, „days”) i tytuł pasa („1,000+”); „&lt; 3 min” przeniesione do <code>featureHighlight.stats</code>. Z rewizji tekstów.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.9</td>
+<td><strong>C42</strong> §7: karty z <code>href</code> (<code>FeatureCard</code>, <code>StoryCard</code> <code>compact</code>, <code>FrameworkCard</code>) klikalne w całości, ze strzałką; bez etykiet „Learn more” / „Read the story” / „See a demo”. Z rewizji tekstów.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.9</td>
+<td><strong>C43</strong> Krótsze limity (R10): <code>SectionHeader.intro</code>, <code>hero.intro</code>, <code>bookingEmbed.intro</code> 180 → 120 · <code>steps.body</code>, <code>beforeAfter.*.body</code> 120 → 60 · <code>productModule.summary</code> 100 → 60 · <code>proofPoints.points[].body</code> 140 → 60 · <code>audiencePaths.need</code> 80 → 60 · <code>bookingEmbed.agenda[].body</code> 140 → 60 · <code>pricingFactor.body</code> 160 → 80. <code>caseStudy.summary</code> bez zmian (120). Placeholdery w wireframe dev skrócone. Z rewizji tekstów (makiety klienta v02: −11 do −22% słów).</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>19.10.2026</td>
+<td>v0.9</td>
+<td><strong>C44</strong> §6: Inter jako jedyny krój w wireframe’ach (HTML i Figma, także adnotacje) do odwołania.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.10</td>
+<td><strong>C45</strong> Paszport 24 <code>bookingEmbed</code>: nowe pole <code>badges[]: ref framework (≤ 4)</code>, renderowane tym samym <code>Chip</code> co <code>hero.badges</code>. Z audytu /demo hi-fi v01. <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.10</td>
+<td><strong>C46</strong> <code>QuoteCard</code> / <code>testimonial</code>: <code>photo?: image</code> (+ <code>alt</code>, 1:1), edytowalne w CMS; bez zdjęcia inicjały z <code>person</code> (stała w kodzie). Z audytu /demo. <em>Schemat.</em></td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.10</td>
+<td><strong>C47</strong> §6: hi-fi w Lausanne (C44 dotyczy już tylko lo-fi i Figmy do instalacji fontu); rozmiary tekstu w hi-fi spójne z HP v08; finalny krój i typescale na etapie UI.</td>
+<td>Michał</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.10</td>
+<td><strong>C48</strong> §3: lista tematów odłożonych do etapu UI (ikony, typy przycisków, dwukolorowe tytuły, krój i typescale, dostępność). Z audytu /demo.</td>
+<td>Michał</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.11</td>
+<td><strong>C49</strong> R10 i nowa §8e: limity znaków liczone z pojemności komponentów w hi-fi (HP v08, /demo v01, 1440), nie z lo-fi; dwa poziomy walidacji: zalecany (<code>warning</code>) i maksymalny (<code>error</code>), zgodnie z konwencją Sanity (długość = <code>warning</code>, błąd tylko gdy psuje układ). Liczby w paszportach do synchronizacji przy handoffie dla dev. Oznaczenie „<em>Schemat</em>” w changelogu zastępuje „<em>Schemat Arka</em>” (brak wytycznych dev na tym etapie).</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.12</td>
+<td><strong>C50</strong> /pricing hi-fi v01 (8 bloków wg C31). <code>bookingEmbed</code> <code>pricing</code>: układ jak /demo bez agendy, <code>highlights[]</code> numerowane (stała w kodzie), kroki formularza wyceny jak w /demo do potwierdzenia z klientem. <code>pricingTeaser</code> <code>section</code>: 4 karty w jednym pasie z „+” między nimi (stała w kodzie), bez przycisków (C29). <code>frameworkList</code>: <code>FrameworkCard</code> = <code>name</code> + strzałka (C42), bez ikony; <code>more[]</code> jako chipy bez linków + <code>moreNote</code>. <code>caseStudies</code> <code>grid</code>: 3 karty <code>StoryCard</code> <code>compact</code> jak na HP. <code>linkDirectory</code> <code>chips</code>: tytuł i chipy w jednym pasie, chipy ze strzałką, ta sama karta. §8e: nowe pola zmierzone (<code>pricingFactor</code>, <code>framework.name</code>, <code>moreNote</code>, <code>linkDirectory</code>), <code>bookingEmbed.highlights[]</code> 70/135 → 65/130.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.12</td>
+<td><strong>C51</strong> Z audytu architektury /pricing (<code>claude/comp-ai-architecture-audit-pricing-2026-10-21.md</code>). (1) §7 <code>StoryCard</code> <code>compact</code> bez <code>summary</code> (HP, /pricing; <code>/case-studies</code> do decyzji przy hi-fi); lo-fi HP v06 i /pricing v04 poprawione. (2) §8e <code>bookingEmbed.reassurance[]</code>: limit łączny rzędu 55 / 60 zamiast 19 na frazę (pomiar: rząd mieści 3 × ~21 znaków; dzisiejsze „20-minute call · Pick your own time · Money-back guarantee” = 52); w schemacie walidacja na tablicy (custom rule). Lo-fi /demo v03 i /pricing v04. (3) Stałe w kodzie na /pricing: etykieta „Also quoted” przed chipami <code>frameworkList.more[]</code> i numery 01–04 kart <code>pricingTeaser</code> <code>section</code>. (4) Na /pricing <code>navigation.primaryCta</code> → /demo (C28) poprawione w hi-fi v01.</td>
+<td>Michał + Claude</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.12</td>
+<td><strong>C52</strong> C26 rozszerzone: na stronach konwersji (/demo, /demo/[framework], /pricing) linki <strong>zewnętrzne</strong> w sekcjach (poza domenę trycomp.ai, np. GitHub, Trust Center, docs) otwierają się w nowej karcie, żeby nie zamykać formularza. Linki wewnętrzne (porównania, historie, /demo/[framework]) w tej samej karcie (C30). Nav i stopka bez zmian (globalne). Zachowanie w kodzie na podstawie typu strony i domeny linku, bez pola w CMS. Mapa obecnej strony: v02.</td>
+<td>Michał</td>
+</tr>
+<tr>
+<td>21.10.2026</td>
+<td>v0.13</td>
+<td><strong>C53</strong> Mobile projektujemy na <strong>320 px</strong> (zamiast 375) we wszystkich makietach, paszportach i bramkach (§3 G3/G5, §8 „Responsywność”, §8e, §10). Desktop bez zmian (1440). Makiety lo-fi dla dev (HP v07 i inne) mają jeszcze widok 375 jako wcześniejsze założenie; przy kolejnej wersji → 320. Limity §8e do ponownego pomiaru na 320.</td>
+<td>Michał</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="15-narzedzia-z-githuba-sanity-io">15. Narzędzia (z GitHuba sanity-io)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Narzędzie</th>
+<th>Co daje</th>
+<th>Kto i kiedy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/sanity-io/agent-toolkit"><code>agent-toolkit</code></a>: skille <code>sanity-best-practices</code> (m.in. przewodniki <code>page-builder</code>, <code>schema</code>, <code>visual-editing</code>, <code>typegen</code>, <code>migration</code>, <code>seo</code>) i <code>content-modeling-best-practices</code></td>
+<td>Oficjalne reguły Sanity w formie, którą agent czyta przed pisaniem schematów</td>
+<td>Arek w Claude Code: <code>/plugin install sanity@claude-plugins-official</code> (MCP + skille + <code>/sanity-review</code>, <code>/typegen</code>, <code>/deploy-schema</code>) albo <code>npx skills add sanity-io/agent-toolkit</code></td>
+</tr>
+<tr>
+<td>Sanity MCP (<code>https://mcp.sanity.io</code>)</td>
+<td>Agent widzi schemat i treść projektu (<code>query_documents</code>, <code>deploy_schema</code>, <code>create_release</code>…)</td>
+<td><strong>G4:</strong> porównanie wdrożonego schematu z paszportami z §8 (nazwy pól, walidacje, dozwolone bloki). Dostęp tylko do datasetu <strong>staging</strong>.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/sanity-io/next-sanity"><code>next-sanity</code></a> + <a href="https://github.com/sanity-io/visual-editing"><code>visual-editing</code></a></td>
+<td><code>defineLive</code>, draft mode, Presentation, overlaye click-to-edit, drag &amp; drop sekcji</td>
+<td>Arek, faza Sanity. Kryterium G5 („Visual Editing działa”).</td>
+</tr>
+<tr>
+<td><code>seo-aeo-best-practices</code> (agent-toolkit)</td>
+<td>Structured data (JSON-LD), techniczne SEO</td>
+<td>Weryfikacja §11 przed launchem</td>
+</tr>
+<tr>
+<td><code>content-experimentation-best-practices</code> (agent-toolkit)</td>
+<td>Metodyka A/B</td>
+<td>Gdyby klient chciał mierzyć nowy HP (eksperyment PostHog na dziś kończą)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Repo <code>sanity-io/ui</code> to design system samego Studio, więc nie dotyczy designu strony.</p>
+<hr />
+<h2 id="16-zroda">16. Źródła</h2>
+<p><strong>Projekt</strong>
+- Plan wdrożenia Arka, 12.10, i odpowiedzi Claudia, 16.10 (#p_comp-ai, wątek „implementation process”)
+- Flow Goszcza, 06.10 (#p_comp-ai_int)
+- <code>web/architecture/comp-ai-sitemap-current-v03.html</code> (mapa trycomp.ai, 16.10; /pricing zweryfikowane 21.10; v01 w <code>_archive/</code>)
+- <code>web/architecture/comp-ai-homepage-sections-v0-2.html</code>, <code>web/tests/_archive/comp-ai-homepage-wireframe-v01.html</code>, <code>web/wireframes/dev/_archive/comp-ai-homepage-wireframe-v02.html</code> (audyt G2, 16.10), <code>web/wireframes/dev/_archive/comp-ai-homepage-wireframe-v03.html</code>, <code>web/wireframes/dev/comp-ai-homepage-wireframe-v04.html</code> (aktualny, zgodny z v0.5)
+- Onboarding web design (projekt Claude), notatki robocze z 14–16.10</p>
+<p><strong>Dobre praktyki</strong>
+- Sanity: <a href="https://www.sanity.io/docs/developer-guides/how-to-use-structured-content-for-page-building">How to use structured content for page building</a>
+- Sanity Learn: <a href="https://www.sanity.io/learn/course/page-building">Build landing pages with Next.js</a> (schematy bloków, insert menu z miniaturami, PageBuilder, drag &amp; drop, pułapki skalowania)
+- Sanity: <a href="https://www.sanity.io/docs/nextjs/visual-editing-with-next-js-app-router">Visual Editing with Next.js App Router</a>
+- Sanity: <a href="https://www.sanity.io/docs/apis-and-sdks/sanity-typegen">TypeGen</a> · <a href="https://npmjs.com/package/next-sanity">next-sanity</a>
+- Sanity agent toolkit: <a href="https://tessl.io/registry/skills/github/sanity-io/agent-toolkit/content-modeling-best-practices">Content modeling best practices</a>
+- W3C DTCG: <a href="https://www.w3.org/community/reports/design-tokens/CG-FINAL-format-20251028/">Design Tokens Format Module 2025.10</a>
+- Tailwind v4: <a href="https://tailwindcss.com/docs/theme">Theme variables (<code>@theme</code>)</a>
+- DESIGN.md (konwencja dla agentów AI): <a href="https://ossinsight.io/blog/design-md-protocol-2026">przegląd</a></p></article></div></body></html>

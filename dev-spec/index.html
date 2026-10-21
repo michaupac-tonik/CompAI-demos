@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Comp AI · Dev spec</title>
+<style>
+:root{--bg:#F6F6F4;--card:#fff;--ink:#1A1A1A;--mute:#6f6f6c;--line:#E2E2DE}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;padding:56px 16px}
+main{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:36px}
+.eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
+h1{font-size:34px;letter-spacing:-.015em;line-height:1.15;margin:6px 0 12px}
+h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:12px}
+p{max-width:720px}
+.lead{font-size:17px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.card h3{font-size:18px}
+.card .file{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--mute)}
+.card ol{padding-left:18px;font-size:14px}
+.card li{margin-bottom:4px}
+.btn{margin-top:auto;align-self:flex-start;background:var(--ink);color:#fff;text-decoration:none;font-weight:600;font-size:14px;border-radius:999px;padding:9px 18px}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);font-weight:600}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font-size:11px;font-weight:600;border-radius:99px;padding:1px 8px;border:1px solid var(--ink);white-space:nowrap}
+.pill.done{background:var(--ink);color:#fff}
+ul{padding-left:18px} li{margin-bottom:4px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:#ececE8;border-radius:4px;padding:0 4px}
+a{color:var(--ink)}
+.file,code,p,li,td{overflow-wrap:anywhere}
+footer{color:var(--mute);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:720px){body{padding:40px 16px}th,td{padding:8px 10px}.cards{grid-template-columns:1fr}h1{font-size:28px}th:nth-child(3),td:nth-child(3){display:none}}
+</style></head>
+<body><main>
+
+<header>
+<div class="eyebrow">Comp AI · redesign trycomp.ai · tonik</div>
+<h1>Dokumentacja dla dev: wstępna paczka</h1>
+<p class="lead">Stan na 21.10.2026. Trzy materiały na start wdrożenia page buildera w Sanity: draft kontraktu sekcji (źródło prawdy), mapa obecnej strony (co istnieje dziś) i lo-fi strony głównej jako przykład przyjętego procesu. Każdy plik ma u góry ramkę „Jak czytać ten plik”.</p>
+</header>
+
+<section>
+<h2>Kontrakt sekcji: źródło prawdy</h2>
+<p>Strona powstaje jako page builder: marketing składa strony z gotowych sekcji, a nowy <i>typ</i> sekcji wymaga dev. Kontrakt sekcji to jeden dokument, który opisuje każdą sekcję <b>tak samo na wszystkich etapach</b>: sitemap → wireframe → design → schemat Sanity → komponent. Dla każdego bloku ma „paszport” (nazwa <code>_type</code>, pola z typami, liczności, warianty, komponenty, limity znaków, blockery), a do tego reguły modelowania, nazewnictwo, typy stron z dozwolonymi blokami i changelog decyzji (C1–C53).</p>
+<p style="margin-top:8px">Zasada: <b>najpierw kontrakt, potem ekran</b>. Makiety są z nim zgodne, a przy rozbieżności rozstrzyga kontrakt. To <b>draft</b>, który nie był jeszcze uzgadniany z dev. Nazwy pól, walidacje i podział na bloki traktujemy jako propozycję do wspólnego przeglądu.</p>
+</section>
+
+
+<section>
+<h2>Pliki</h2>
+<div class="cards">
+<article class="card">
+<h3>Kontrakt sekcji (draft v0.13)</h3>
+<div class="file">comp-ai-section-contract-draft-v0.13.html · .md</div>
+<p>Pełny kontrakt w wersji do czytania (ze spisem treści) i jako Markdown, np. do pracy z Claude Code.</p>
+<ol><li>Zacznij od §2 (reguły R1–R15) i §5 (nazewnictwo).</li><li>§8: paszporty sekcji. §8e: limity znaków (mają pierwszeństwo przed paszportami).</li><li>§9 typy stron, §11 SEO i tracking, §13 otwarte decyzje.</li></ol>
+<a class="btn" href="comp-ai-section-contract-draft-v0.13.html">Otwórz kontrakt →</a>
+</article>
+<article class="card">
+<h3>Mapa obecnej strony</h3>
+<div class="file">comp-ai-sitemap-current-v03.html</div>
+<p>Stan AS-IS trycomp.ai: 29 szablonów i 264 URL rozpisane na sekcje, każda przypisana do modułu (bloku Sanity) z kontraktu sekcji. Pokazuje skalę (ile szablonów i URL na moduł) oraz to, co poza redesignem dostaje tylko nowy nav i stopkę.</p>
+<ol><li>Góra: elementy globalne i legenda (moduł · szablony · URL).</li><li>Chip z przerywaną ramką = moduł proponowany, jeszcze bez paszportu w kontrakcie.</li><li>Karta = szablon, <code>×N</code> = liczba stron. Wiersze = sekcje od góry: nagłówek z żywej strony + moduł.</li><li>Plik jest szeroki, więc przewijaj w poziomie albo pomniejsz widok.</li></ol>
+<a class="btn" href="comp-ai-sitemap-current-v03.html">Otwórz mapę →</a>
+</article>
+<article class="card">
+<h3>Homepage: lo-fi (przykład procesu)</h3>
+<div class="file">comp-ai-homepage-wireframe-v07.html</div>
+<p><b>Przykładowe podejście</b> do rozpisania struktury strony z kontraktu: każda ramka to jeden <code>_type</code> z polami, komponentami, limitami znaków, statusem i blockerami. Obecnie testuję je, przekładając na makiety hi-fi, więc szczegóły mogą się jeszcze zmienić. Struktura, nie wygląd.</p>
+<ol><li>Ramka <code>Section/&lt;_type&gt;/&lt;tone&gt;/&lt;breakpoint&gt;</code> = typ w schemacie i komponent.</li><li>Niebieska notatka: pola, komponenty, dane współdzielone, blockery.</li><li><code>≤ N · max M</code> = walidacja <code>warning</code> · <code>error</code>.</li><li>Przyciski: 1440 / 375, Notes, Field names. Widok 375 to wcześniejsze założenie; mobile projektujemy na 320 px.</li></ol>
+<a class="btn" href="comp-ai-homepage-wireframe-v07.html">Otwórz makietę →</a>
+</article>
+</div>
+</section>
+
+<section>
+<h2>Postęp prac (design)</h2>
+<table>
+<thead><tr><th>Strona</th><th>Status</th><th>Uwagi</th></tr></thead>
+<tbody>
+<tr><td>Homepage</td><td><span class="pill">hi-fi u klienta</span></td><td>Hi-fi v08 czeka na feedback klienta. Od niego zależy kierunek pozostałych stron.</td></tr>
+<tr><td>/demo</td><td><span class="pill done">hi-fi gotowe</span></td><td>Makieta gotowa po stronie design. Wyślemy klientowi po feedbacku do makiety homepage.</td></tr>
+<tr><td>/pricing</td><td><span class="pill done">hi-fi gotowe</span></td><td>Makieta gotowa po stronie design. Wyślemy klientowi po feedbacku do makiety homepage.</td></tr>
+<tr><td>/case-studies</td><td><span class="pill">w trakcie</span></td><td>Makieta w trakcie przygotowania.</td></tr>
+<tr><td>Nav + stopka</td><td><span class="pill">w hi-fi HP</span></td><td>Trafią też na ok. 100 stron legacy (mapa pokazuje które).</td></tr>
+</tbody></table>
+<p style="margin-top:10px;font-size:13px;color:var(--mute)">Zakres: 4 strony na desktop (1440). Mobile (320 px) po akceptacji desktopu.</p>
+</section>
+
+<section>
+<h2>Warto wiedzieć przed startem</h2>
+<ul>
+<li><b>Źródło prawdy</b> to kontrakt sekcji (draft v0.13, w tej paczce). Przy rozbieżności z makietą rozstrzyga kontrakt.</li>
+<li><b>Breakpointy w designie:</b> desktop 1440, mobile 320 px. Tablet do ustalenia z dev.</li>
+<li><b>Copy to placeholder.</b> Docelowe teksty powstaną według tone of voice, w limitach §8e.</li>
+<li><b>Tokeny i krój nie są finalne</b> (brand w toku), dlatego lo-fi jest w szarościach.</li>
+<li><b>Otwarte decyzje</b> po stronie klienta (m.in. etykieta głównego CTA, lista modułów produktu, claimy security, 30 vs 20 min calla) są oznaczone w makiecie jako blockery i nie blokują struktury schematu.</li>
+<li><b>Do sprawdzenia technicznie:</b> czy RevenueHero da się osadzić inline (kalendarz w karcie formularza zamiast modala) na /demo i /pricing.</li>
+</ul>
+</section>
+
+<section>
+<h2>Czego celowo nie ma w paczce</h2>
+<ul><li>Makiet hi-fi oraz lo-fi pozostałych podstron (/demo, /pricing, /case-studies). Homepage lo-fi pokazuje proces i logikę, a reszta dojdzie po feedbacku klienta.</li></ul>
+</section>
+
+<footer>Kontakt: Michał Pac (web design, tonik). Strona robocza, nieindeksowana.</footer>
+</main></body></html>
