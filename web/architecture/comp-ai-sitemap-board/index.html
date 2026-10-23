@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Comp AI · Sitemap board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F6F4;--dot:#DCDCD7;--card:#FFFFFF;--ink:#1A1A1A;--mute:#8A8A85;--line:#E2E2DE;--soft:#F1F1EE;
+  --todo:#8A8A85;--todo-bg:#EFEFEC;
+  --wip:#2F6FDB;--wip-bg:#E8F0FD;
+  --review:#A86A00;--review-bg:#FBF0DA;
+  --blocked:#C2361D;--blocked-bg:#FCE8E4;
+  --hold:#7A4FC2;--hold-bg:#F1EBFB;
+  --ready:#1F7A43;--ready-bg:#E2F4E9;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.35;overflow:hidden;-webkit-font-smoothing:antialiased}
+button,select{font:inherit;color:inherit}
+button{cursor:pointer}
+
+/* ---------- top bar (fixed, not zoomed) ---------- */
+.bar{position:fixed;inset:12px 12px auto 12px;z-index:20;display:flex;gap:10px;align-items:center;pointer-events:none}
+.bar>*{pointer-events:auto}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.brand{display:flex;flex-direction:column;gap:1px;padding:8px 14px}
+.brand b{font-size:14px;font-weight:600}
+.brand span{color:var(--mute);font-size:11px}
+.spacer{flex:1}
+.dl{border:1px solid var(--line);padding:8px 12px;font-size:11px;font-weight:600}
+.dl:hover{border-color:var(--ink)}
+.dl[hidden]{display:none}
+.sync{display:flex;align-items:center;gap:7px;padding:8px 12px;font-size:11px;color:var(--mute);white-space:nowrap}
+.sync:empty{display:none}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--todo);display:block}
+.sync.ok i{background:var(--ready)} .sync.err i{background:var(--blocked)} .sync.busy i{background:var(--wip)}
+.sync.err{color:var(--blocked)}
+
+/* zoom control */
+.zoom{position:fixed;right:12px;bottom:12px;z-index:20;display:flex;align-items:center;gap:2px;padding:4px}
+.zoom button{border:0;background:transparent;border-radius:6px;padding:5px 9px;font-weight:500}
+.zoom button:hover{background:var(--soft)}
+.zoom .pct{min-width:48px;text-align:center;font-variant-numeric:tabular-nums}
+.hint{position:fixed;left:12px;bottom:12px;z-index:20;color:var(--mute);font-size:11px;padding:7px 10px}
+kbd{font-family:ui-monospace,Menlo,monospace;font-size:10px;background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+
+/* ---------- board ---------- */
+#viewport{position:fixed;inset:0;cursor:grab;touch-action:none;
+  background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:24px 24px}
+#viewport.panning{cursor:grabbing}
+#world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;display:flex;flex-direction:column;gap:40px;padding:120px 80px 80px;width:max-content}
+
+
+.groups{display:flex;gap:40px;align-items:flex-start}
+.group{display:flex;flex-direction:column;gap:12px;min-width:300px}
+.ghead{display:flex;align-items:baseline;gap:8px}
+.gt{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
+.gsum{font-size:11px;color:var(--mute)}
+.cards{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:14px;color:var(--mute);width:300px;background:rgba(255,255,255,.5)}
+
+/* ---------- card ---------- */
+.card{width:300px;background:var(--card);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;overflow:hidden;cursor:auto}
+.ch{padding:12px 14px;border-bottom:1px solid var(--line)}
+.cn{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px}
+.cs{display:block;color:var(--mute);font-size:11px;margin-top:3px;min-height:14px}
+.ed{border-radius:4px;outline:none;cursor:text}
+.ed:hover{background:var(--soft)}
+.ed[contenteditable="true"],.ed[contenteditable="plaintext-only"]{background:#fff;box-shadow:0 0 0 1px var(--ink);padding:0 3px;margin:0 -3px}
+.ed.ph::before{content:attr(data-ph);color:#C4C4BF}
+.ed.ph{opacity:0}
+.card:hover .ed.ph{opacity:1}
+.ed-name{min-width:20px}
+.cn .type{margin-left:auto;font-size:10px;font-weight:600;color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.fields{display:flex;flex-direction:column}
+.f{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line)}
+.f:last-child{border-bottom:0}
+.f.stack{grid-template-columns:1fr;gap:8px;padding-bottom:10px}
+.fl{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;justify-self:start}
+.seg button{border:0;background:transparent;padding:4px 10px;font-size:11px;font-weight:500;color:var(--mute)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--ink);color:#fff}
+.seg button.on.no{background:var(--soft);color:var(--ink)}
+
+.status{justify-self:start;appearance:none;-webkit-appearance:none;border:1px solid transparent;border-radius:99px;padding:3px 24px 3px 10px;font-size:11px;font-weight:600;cursor:pointer;
+  background-repeat:no-repeat;background-position:right 8px center;background-size:8px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%231A1A1A' opacity='.5'/%3E%3C/svg%3E")}
+.card{transition:border-color .2s,box-shadow .2s}
+.card[data-st="wip"]{--c:var(--wip)} .card[data-st="review"]{--c:var(--review)} .card[data-st="hold"]{--c:var(--hold)} .card[data-st="ready"]{--c:var(--ready)}
+.card[data-st]:not([data-st="todo"]){border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 0 18px 2px color-mix(in srgb,var(--c) 35%,transparent)}
+.status[data-v="todo"]{background-color:var(--todo-bg);color:var(--todo)}
+.status[data-v="wip"]{background-color:var(--wip-bg);color:var(--wip)}
+.status[data-v="review"]{background-color:var(--review-bg);color:var(--review)}
+.status[data-v="hold"]{background-color:var(--hold-bg);color:var(--hold)}
+.status[data-v="ready"]{background-color:var(--ready-bg);color:var(--ready)}
+
+.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.stages button{border:0;background:transparent;padding:0;text-align:left;display:flex;flex-direction:column;gap:4px;font-size:10px;color:var(--mute);font-weight:500;min-width:0}
+.stages button i{display:block;height:4px;border-radius:2px;background:var(--soft)}
+.stages button.done i{background:#BDBDB7}
+.stages button.cur i{background:var(--ink)}
+.stages button.cur{color:var(--ink);font-weight:600}
+.stages button:hover i{outline:1px solid var(--ink)}
+.locked .seg,.locked .status,.locked .stages{pointer-events:none;opacity:.5}
+
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:30;background:var(--ink);color:#fff;border-radius:8px;padding:8px 12px;font-size:12px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:760px){.hint{display:none}}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="panel brand"><b>Comp AI · Sitemap</b><span>new website · pages and progress</span></div>
+  <div class="spacer"></div>
+  <div class="panel sync" id="sync"></div>
+  <button class="panel dl" id="dl" hidden title="Local preview only: saves a JSON file with the state of every card">Download state</button>
+</div>
+
+<div id="viewport" aria-label="Sitemap board. Drag the background to move; Ctrl or Cmd + scroll to zoom.">
+  <div id="world">
+    <div class="groups" id="groups"></div>
+  </div>
+</div>
+
+<div class="panel hint">Drag to move · <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + scroll to zoom</div>
+<div class="panel zoom">
+  <button id="zOut" aria-label="Zoom out">−</button>
+  <button class="pct" id="zPct" title="100%">100%</button>
+  <button id="zIn" aria-label="Zoom in">+</button>
+  <button id="zFit" title="Zoom to fit (Shift+1)">Fit</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   1. STRUCTURE (edited in code, not by users)
+   ========================================================= */
+const GROUPS = [
+  { id: 'main',      name: 'Main navigation' },
+  { id: 'products',  name: 'Products' },
+  { id: 'company',   name: 'Company' },
+  { id: 'resources', name: 'Resources' },
+  { id: 'guides',    name: 'Guides' },
+  { id: 'compare',   name: 'Compare' },
+  { id: 'legal',     name: 'Legal' },
+];
+/* type: page = single page · template = template for many pages
+   sub (optional) = subtitle under the name · init (optional) = starting values
+   never change an id: the saved state (scope, status, stage, texts) is keyed by it */
+const PAGES = [
+  // Main navigation
+  { id: 'home', group: 'main', name: 'Homepage', type: 'page', init: { scope: 'scope', status: 'review', stage: 'wireframe' } },
+  { id: 'demo', group: 'main', name: 'Book a demo', type: 'page', init: { scope: 'scope', status: 'wip', stage: 'wireframe' } },
+  { id: 'demo-framework', group: 'main', name: 'Demo per framework', type: 'template', sub: 'use as a template (current state: 9 subpages)' },
+  { id: 'pricing', group: 'main', name: 'Pricing', type: 'page', sub: '+ calculator feature', init: { status: 'hold' } },
+  { id: 'case-studies', group: 'main', name: 'Customers', type: 'page', sub: 'case study listing', init: { scope: 'scope', status: 'wip', stage: 'wireframe' } },
+  { id: 'case-study', group: 'main', name: 'Case study', type: 'template', sub: 'use as a template (current state: 11 stories)' },
+  // Products
+  { id: 'products', group: 'products', name: 'Products', type: 'page', sub: 'navigation page (estimate: 200 subpages)' },
+  { id: 'product-template-a', group: 'products', name: 'Product · template A', type: 'template', sub: 'use as a template' },
+  { id: 'product-template-b', group: 'products', name: 'Product · template B', type: 'template', sub: 'use as a template' },
+  { id: 'product-template-c', group: 'products', name: 'Product · template C', type: 'template', sub: 'use as a template' },
+  { id: 'product-template-d', group: 'products', name: 'Product · template D', type: 'template', sub: 'use as a template' },
+  // Company
+  { id: 'about', group: 'company', name: 'About', type: 'page', sub: 'new page', init: { scope: 'scope', status: 'wip', stage: 'wireframe' } },
+  { id: 'security', group: 'company', name: 'Security', type: 'page' },
+  { id: 'careers', group: 'company', name: 'Careers', type: 'page' },
+  { id: 'careers-job', group: 'company', name: 'Careers · job post', type: 'template', sub: 'use as a template (current state: 3 job posts)' },
+  { id: 'partnerships', group: 'company', name: 'Partnerships', type: 'page' },
+  { id: 'press', group: 'company', name: 'Press', type: 'page' },
+  { id: 'press-article', group: 'company', name: 'Press · article', type: 'template', sub: 'use as a template' },
+  // Resources
+  { id: 'hub', group: 'resources', name: 'Compliance Hub', type: 'page' },
+  { id: 'hub-article', group: 'resources', name: 'Hub · article', type: 'template', sub: 'use as a template (current state: 42 articles)' },
+  { id: 'hub-archive', group: 'resources', name: 'Hub · category / tag', type: 'template', sub: 'use as a template (current state: 115 pages)' },
+  { id: 'tools', group: 'resources', name: 'Tools & Templates', type: 'page' },
+  { id: 'tool', group: 'resources', name: 'Tool / policy template', type: 'template', sub: 'use as a template (current state: 53 pages)' },
+  // Guides
+  { id: 'soc-2-cost', group: 'guides', name: 'SOC 2 Cost', type: 'page' },
+  { id: 'soc-2-checklist', group: 'guides', name: 'SOC 2 Checklist', type: 'page' },
+  { id: 'soc-2-for-startups', group: 'guides', name: 'SOC 2 for Startups', type: 'page' },
+  { id: 'soc-1-vs-soc-2', group: 'guides', name: 'SOC 1 vs SOC 2', type: 'page' },
+  { id: 'iso-42001', group: 'guides', name: 'ISO 42001', type: 'page' },
+  { id: 'grc-automation', group: 'guides', name: 'GRC Automation', type: 'page' },
+  // Compare
+  { id: 'vendor-pricing', group: 'compare', name: 'Vendor pricing', type: 'template', sub: 'use as a template' },
+  { id: 'drata-vs-vanta', group: 'compare', name: 'Drata vs Vanta', type: 'page' },
+  { id: 'vendor-competitors', group: 'compare', name: 'Vendor competitors', type: 'template', sub: 'use as a template' },
+  { id: 'vendor-alternative', group: 'compare', name: 'Vendor alternative', type: 'template', sub: 'use as a template (6 pages, not in footer)' },
+  // Legal
+  { id: 'legal', group: 'legal', name: 'Legal Overview', type: 'page' },
+  { id: 'legal-doc', group: 'legal', name: 'Legal document', type: 'template', sub: 'use as a template · 6 documents' },
+];
+
+/* Field values (keys are stored in JSON) and starting values */
+const SCOPE  = [ ['scope','scope'], ['no-scope','no-scope'] ];
+const STATUS = [ ['todo','to do'], ['wip','work in progress'], ['review','in review'], ['hold','on hold'], ['ready','ready to dev'] ];
+const STAGE  = [ ['wireframe','wireframe'], ['design','design'], ['development','development'] ];
+const DEFAULTS = { scope: 'no-scope', status: 'todo', stage: '' };   // stage '' = nothing selected
+const LEGACY = { status: { blocked: 'hold' } };
+const TEXT_MAX = { name: 60, sub: 80 };
+
+/* =========================================================
+   2. STORAGE: /api/state (Vercel function → JSON file in a GitHub repo)
+   Local preview (file://, localhost) saves in the browser.
+   ========================================================= */
+const API = 'api/state';
+/* Production host (Vercel). Anywhere else without /api = preview that saves in the browser. */
+const PROD_HOSTS = [/\.vercel\.app$/];
+const PREVIEW = !PROD_HOSTS.some(r => r.test(location.hostname));
+const LS_STATE = 'compai-sitemap-state-v2', LS_VIEW = 'compai-sitemap-view';
+const ls = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+             set(k,v){ try { localStorage.setItem(k,v); } catch(e){} } };
+let mode = 'shared';          // 'shared' | 'preview' | 'offline'
+let state = { version: 2, pages: {} };
+
+function pageState(id){
+  const p = PAGES.find(x => x.id === id) || {}, i = p.init || {}, s = state.pages[id] || {};
+  const pick = (f, list) => { let v = s[f] ?? i[f] ?? DEFAULTS[f]; v = (LEGACY[f] && LEGACY[f][v]) || v; return list.some(x => x[0] === v) ? v : DEFAULTS[f]; };
+  return { scope: pick('scope', SCOPE), status: pick('status', STATUS), stage: pick('stage', STAGE),
+           name: s.name || p.name, sub: s.sub !== undefined ? s.sub : (p.sub || '') };
+}
+/* Same logic as in api/state.js (server) */
+function applyOp(st, op){
+  const p = st.pages[op.page] = st.pages[op.page] || {};
+  p[op.field] = op.value; p.updatedAt = new Date().toISOString();
+  return st;
+}
+
+async function load(){
+  try {
+    const r = await fetch(API, { cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    state = (await r.json()).state || state; mode = 'shared'; setSync('ok');
+  } catch (e) {
+    if (PREVIEW) { mode = 'preview'; document.getElementById('dl').hidden = false; const raw = ls.get(LS_STATE); if (raw) { try { state = JSON.parse(raw); } catch(_){} } setSync(''); }
+    else { mode = 'offline'; setSync('err', 'Cannot reach storage · editing disabled'); }
+  }
+  render();
+}
+let saving = 0;
+async function send(op){
+  if (mode === 'offline') return;
+  applyOp(state, op); render();                                   // optimistic
+  if (mode === 'preview') { ls.set(LS_STATE, JSON.stringify(state)); return; }
+  saving++; setSync('busy', 'Saving…');
+  try {
+    const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(op) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || r.status);
+    state = j.state; saving--; if (!saving) setSync('ok'); render();
+  } catch (e) {
+    saving--; setSync('err', 'Not saved · please try again'); toast('Could not save the change.');
+    refresh(true);
+  }
+}
+async function refresh(force){
+  if (mode !== 'shared' || saving) return;
+  if (!force && document.activeElement && (document.activeElement.tagName === 'SELECT' || document.activeElement.isContentEditable)) return;
+  try { const r = await fetch(API, { cache: 'no-store' }); if (r.ok) { state = (await r.json()).state; render(); setSync('ok'); } } catch(e){}
+}
+setInterval(() => { if (!document.hidden) refresh(); }, 20000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+
+function setSync(kind, msg){
+  const el = document.getElementById('sync');
+  if (!kind) { el.replaceChildren(); return; }
+  el.className = 'panel sync ' + kind;
+  el.replaceChildren(document.createElement('i'), document.createTextNode(msg || 'Saved · visible to everyone with the link'));
+}
+
+/* =========================================================
+   3. RENDER
+   ========================================================= */
+const $ = (tag, attrs = {}, ...kids) => {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') el.className = v; else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const k of kids.flat()) if (k != null) el.append(k.nodeType ? k : document.createTextNode(k));
+  return el;
+};
+
+function render(){
+  document.getElementById('groups').replaceChildren(...GROUPS.map(g => {
+    const pages = PAGES.filter(p => p.group === g.id);
+    const inScope = pages.filter(p => pageState(p.id).scope === 'scope').length;
+    return $('section', { class: 'group' },
+      $('div', { class: 'ghead' }, $('span', { class: 'gt' }, g.name),
+        $('span', { class: 'gsum' }, pages.length ? `${pages.length} · ${inScope} in scope` : '')),
+      $('div', { class: 'cards' }, pages.map(card)));
+  }));
+}
+
+/* Title and subtitle: click the text, Enter saves, Esc cancels. Empty subtitle = none. */
+function editable(page, field, value, placeholder){
+  const el = $('span', { class: 'ed ' + (field === 'name' ? 'ed-name' : 'cs') + (value ? '' : ' ph'), 'data-ph': placeholder, title: 'Click to edit' }, value);
+  if (mode === 'offline') return el;
+  el.addEventListener('click', () => {
+    if (el.isContentEditable) return;
+    el.contentEditable = 'plaintext-only'; if (el.contentEditable !== 'plaintext-only') el.contentEditable = 'true';
+    el.classList.remove('ph'); el.focus();
+    const r = document.createRange(); r.selectNodeContents(el); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  });
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+    else if (e.key === 'Escape') { el.textContent = value; el.blur(); }
+    else if (el.textContent.length >= TEXT_MAX[field] && e.key.length === 1 && !e.metaKey && !e.ctrlKey) e.preventDefault();
+  });
+  el.addEventListener('paste', e => { e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData.getData('text') || '').replace(/\s+/g, ' ')); });
+  el.addEventListener('blur', () => {
+    el.contentEditable = 'false';
+    const v = el.textContent.replace(/\s+/g, ' ').trim().slice(0, TEXT_MAX[field]);
+    if (field === 'name' && !v) { el.textContent = value; return; }
+    if (v !== value) send({ type: 'set', page, field, value: v }); else render();
+  });
+  return el;
+}
+
+function card(p){
+  const s = pageState(p.id);
+  const stIdx = STAGE.findIndex(x => x[0] === s.stage);
+  const set = (field, value) => s[field] !== value && send({ type: 'set', page: p.id, field, value });
+
+  const scopeSeg = $('div', { class: 'seg', role: 'group', 'aria-label': 'Scope' },
+    SCOPE.map(([k, l]) => $('button', { class: (s.scope === k ? 'on' : '') + (k === 'no-scope' ? ' no' : ''), 'aria-pressed': s.scope === k,
+      onclick: () => set('scope', k) }, l)));
+  const status = $('select', { class: 'status', 'data-v': s.status, 'aria-label': 'Status', onchange: e => set('status', e.target.value) },
+    STATUS.map(([k, l]) => $('option', { value: k, selected: s.status === k }, l)));
+  const stages = $('div', { class: 'stages', role: 'group', 'aria-label': 'Design stage' },
+    STAGE.map(([k, l], i) => $('button', { class: i < stIdx ? 'done' : i === stIdx ? 'cur' : '', 'aria-pressed': i === stIdx, title: l,
+      onclick: () => set('stage', s.stage === k ? '' : k) }, $('i'), l)));   // click the current stage again to clear it
+
+  return $('article', { class: 'card' + (mode === 'offline' ? ' locked' : ''), 'data-id': p.id, 'data-st': s.status },
+    $('header', { class: 'ch' }, $('div', { class: 'cn' }, editable(p.id, 'name', s.name, ''), $('span', { class: 'type' }, p.type)),
+      editable(p.id, 'sub', s.sub, '+ subtitle')),
+    $('div', { class: 'fields' },
+      $('div', { class: 'f' }, $('span', { class: 'fl' }, 'Scope'), scopeSeg),
+      $('div', { class: 'f' }, $('span', { class: 'fl' }, 'Status'), status),
+      $('div', { class: 'f stack' }, $('span', { class: 'fl' }, 'Stage'), stages)));
+}
+
+/* Download state (local preview only): JSON for reviewing changes */
+document.getElementById('dl').onclick = () => {
+  const now = new Date();
+  const out = { exportedAt: now.toISOString(), defaults: DEFAULTS,
+    pages: PAGES.map(p => { const s = pageState(p.id); return { id: p.id, group: p.group, name: s.name, sub: s.sub, type: p.type, scope: s.scope, status: s.status, stage: s.stage,
+      changed: !!state.pages[p.id] }; }) };
+  const stamp = now.toISOString().slice(0, 16).replace(/[-:]/g, '').replace('T', '-');
+  const a = $('a', { href: URL.createObjectURL(new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' })), download: `comp-ai-sitemap-state-${stamp}.json` });
+  document.body.append(a); a.click(); a.remove(); toast('State downloaded');
+};
+let tt; function toast(m){ const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2200); }
+
+/* =========================================================
+   4. BOARD: pan and zoom
+   ========================================================= */
+const vp = document.getElementById('viewport'), world = document.getElementById('world');
+let view = { x: 0, y: 0, k: 1 };
+try { const v = JSON.parse(ls.get(LS_VIEW)); if (v && isFinite(v.k)) view = v; } catch(e){}
+const MIN = 0.2, MAX = 2;
+function apply(){
+  world.style.transform = `translate(${view.x}px,${view.y}px) scale(${view.k})`;
+  vp.style.backgroundPosition = `${view.x}px ${view.y}px`;
+  vp.style.backgroundSize = `${24 * view.k}px ${24 * view.k}px`;
+  document.getElementById('zPct').textContent = Math.round(view.k * 100) + '%';
+  clearTimeout(apply.t); apply.t = setTimeout(() => ls.set(LS_VIEW, JSON.stringify(view)), 300);
+}
+function zoomAt(k, cx, cy){
+  k = Math.min(MAX, Math.max(MIN, k));
+  view.x = cx - (cx - view.x) * (k / view.k); view.y = cy - (cy - view.y) * (k / view.k); view.k = k; apply();
+}
+function fit(){
+  const w = world.offsetWidth, h = world.offsetHeight, W = innerWidth, H = innerHeight;
+  const k = Math.min(1, Math.max(MIN, Math.min((W - 40) / w, (H - 40) / h)));
+  view = { k, x: (W - w * k) / 2, y: Math.max(0, (H - h * k) / 2) }; apply();
+}
+const isUI = t => t.closest('button,select,a,.ed');
+
+/* drag: background always; on a card with Space, middle button or touch */
+let space = false, drag = null; const ptrs = new Map(); let pinch = null;
+addEventListener('keydown', e => {
+  if (document.activeElement && (document.activeElement.tagName === 'SELECT' || document.activeElement.isContentEditable)) return;
+  if (e.code === 'Space') { space = true; e.preventDefault(); }
+  if (e.shiftKey && e.code === 'Digit1') { e.preventDefault(); fit(); }
+  else if (e.key === '+' || e.key === '=') zoomAt(view.k * 1.2, innerWidth / 2, innerHeight / 2);
+  else if (e.key === '-') zoomAt(view.k / 1.2, innerWidth / 2, innerHeight / 2);
+  else if (e.key === '0' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); zoomAt(1, innerWidth / 2, innerHeight / 2); }
+});
+addEventListener('keyup', e => { if (e.code === 'Space') space = false; });
+vp.addEventListener('pointerdown', e => {
+  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), k: view.k }; drag = null; return; }
+  const onCard = e.target.closest('.card');
+  if (e.button === 1 || space || (!isUI(e.target) && (!onCard || e.pointerType === 'touch'))) {
+    drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
+    vp.setPointerCapture(e.pointerId); vp.classList.add('panning'); e.preventDefault();
+  }
+});
+vp.addEventListener('pointermove', e => {
+  if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pinch && ptrs.size === 2) { const [a, b] = [...ptrs.values()];
+    zoomAt(pinch.k * Math.hypot(a.x - b.x, a.y - b.y) / pinch.d, (a.x + b.x) / 2, (a.y + b.y) / 2); return; }
+  if (!drag) return;
+  view.x = drag.vx + e.clientX - drag.x; view.y = drag.vy + e.clientY - drag.y; apply();
+});
+const end = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; drag = null; vp.classList.remove('panning'); };
+vp.addEventListener('pointerup', end); vp.addEventListener('pointercancel', end);
+vp.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (e.ctrlKey || e.metaKey) zoomAt(view.k * Math.exp(-e.deltaY * 0.0025), e.clientX, e.clientY);
+  else { view.x -= e.deltaX; view.y -= e.deltaY; apply(); }
+}, { passive: false });
+document.getElementById('zIn').onclick = () => zoomAt(view.k * 1.2, innerWidth / 2, innerHeight / 2);
+document.getElementById('zOut').onclick = () => zoomAt(view.k / 1.2, innerWidth / 2, innerHeight / 2);
+document.getElementById('zPct').onclick = () => zoomAt(1, innerWidth / 2, innerHeight / 2);
+document.getElementById('zFit').onclick = fit;
+
+apply();
+load();
+</script>
+</body>
+</html>
