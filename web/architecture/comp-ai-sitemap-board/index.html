@@ -56,7 +56,22 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-size:10px;background:var(--sof
 #world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;display:flex;flex-direction:column;gap:40px;padding:120px 80px 80px;width:max-content}
 
 
-.groups{display:flex;gap:40px;align-items:flex-start}
+.groups{display:flex;gap:48px;align-items:flex-start}
+.band{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.55);overflow:hidden}
+.band.primary{border:2px solid var(--ink)}
+.bhead{display:flex;align-items:baseline;gap:14px;padding:16px 28px;background:var(--soft);border-bottom:1px solid var(--line)}
+.band.primary .bhead{background:var(--ink);color:#fff;border-bottom:0}
+.bt{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.bsum{font-size:12px;color:var(--mute)} .band.primary .bsum{color:#B9B9B4}
+.bnote{font-size:12px;color:var(--mute);margin-left:auto} .band.primary .bnote{color:#B9B9B4}
+.bcols{display:flex;gap:32px;align-items:flex-start;padding:24px 28px 32px}
+.col{display:flex;flex-direction:column;gap:12px}
+.chead{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:2px solid var(--ink);min-height:30px}
+.cname{font-size:15px;font-weight:600}
+.cbadge{font-size:10px;font-weight:600;border-radius:5px;padding:1px 6px;background:var(--ink);color:#fff}
+.subcols{display:flex;gap:20px;align-items:flex-start}
+.subcol{display:flex;flex-direction:column;gap:12px}
+.st{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);padding-top:2px}
 .group{display:flex;flex-direction:column;gap:12px;min-width:300px}
 .ghead{display:flex;align-items:baseline;gap:8px}
 .gt{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
@@ -76,7 +91,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-size:10px;background:var(--sof
 .ed.ph{opacity:0}
 .card:hover .ed.ph{opacity:1}
 .ed-name{min-width:20px}
-.cn .type{margin-left:auto;font-size:10px;font-weight:600;color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.cn .type{white-space:nowrap;flex-shrink:0;margin-left:auto;font-size:10px;font-weight:600;color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
 .fields{display:flex;flex-direction:column}
 .f{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line)}
 .f:last-child{border-bottom:0}
@@ -120,7 +135,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-size:10px;background:var(--sof
 <body>
 
 <div class="bar">
-  <div class="panel brand"><b>Comp AI · Sitemap</b><span>new website · pages and progress</span></div>
+  <div class="panel brand"><b>Comp AI · Sitemap</b><span>new website · page = one fixed page · template = repeated, count not set yet</span></div>
   <div class="spacer"></div>
   <div class="panel sync" id="sync"></div>
   <button class="panel dl" id="dl" hidden title="Local preview only: saves a JSON file with the state of every card">Download state</button>
@@ -200,6 +215,27 @@ const PAGES = [
   // Legal
   { id: 'legal', group: 'legal', name: 'Legal Overview', type: 'page' },
   { id: 'legal-doc', group: 'legal', name: 'Legal document', type: 'template', sub: 'use as a template · 6 documents' },
+];
+
+/* Layout = the site menu. Bands: top navigation (left to right as in the menu) and footer-only pages.
+   A column can hold pages or sub-columns (dropdown sections). Every page id appears once. */
+const G = id => PAGES.filter(p => p.group === id).map(p => p.id);
+const LAYOUT = [
+  { name: 'Main navigation', primary: true, note: 'top menu, left to right', cols: [
+    { name: 'Home', pages: ['home'] },
+    { name: 'Product ▾', pages: G('products') },
+    { name: 'Frameworks ▾', pages: ['demo-framework'] },
+    { name: 'Customers', pages: ['case-studies', 'case-study'] },
+    { name: 'Pricing', pages: ['pricing'] },
+    { name: 'About', pages: ['about'] },
+    { name: 'Resources ▾', sub: [
+      { name: 'Hub & tools', pages: G('resources') },
+      { name: 'Guides', pages: G('guides') },
+      { name: 'Compare', pages: G('compare') } ] },
+    { name: 'Book a demo', badge: 'CTA', pages: ['demo'] } ] },
+  { name: 'Footer only', note: 'pages not in the top menu', cols: [
+    { name: 'Company', pages: G('company').filter(id => id !== 'about') },
+    { name: 'Legal', pages: G('legal') } ] },
 ];
 
 /* Field values (keys are stored in JSON) and starting values */
@@ -293,13 +329,23 @@ const $ = (tag, attrs = {}, ...kids) => {
 };
 
 function render(){
-  document.getElementById('groups').replaceChildren(...GROUPS.map(g => {
-    const pages = PAGES.filter(p => p.group === g.id);
-    const inScope = pages.filter(p => pageState(p.id).scope === 'scope').length;
-    return $('section', { class: 'group' },
-      $('div', { class: 'ghead' }, $('span', { class: 'gt' }, g.name),
-        $('span', { class: 'gsum' }, pages.length ? `${pages.length} · ${inScope} in scope` : '')),
-      $('div', { class: 'cards' }, pages.map(card)));
+  const byId = id => PAGES.find(p => p.id === id);
+  /* No live-page totals: only fixed pages are known; templates (products, articles, stories…) have no final count yet. */
+  const count = (ids, short) => {
+    const pg = ids.filter(id => byId(id).type === 'page').length, tp = ids.length - pg, sc = ids.filter(id => pageState(id).scope === 'scope').length;
+    const parts = [pg && `${pg} ${pg === 1 ? 'page' : 'pages'}`, tp && `${tp} ${tp === 1 ? 'template' : 'templates'}`].filter(Boolean).join(' + ');
+    return parts + (short ? '' : ` · ${sc} in scope`); };
+  const idsOf = c => c.sub ? c.sub.flatMap(x => x.pages) : c.pages;
+  document.getElementById('groups').replaceChildren(...LAYOUT.map(b => {
+    const all = b.cols.flatMap(idsOf);
+    return $('section', { class: 'band' + (b.primary ? ' primary' : '') },
+      $('div', { class: 'bhead' }, $('span', { class: 'bt' }, b.name), $('span', { class: 'bsum' }, count(all)), b.note ? $('span', { class: 'bnote' }, b.note) : null),
+      $('div', { class: 'bcols' }, b.cols.map(c => $('div', { class: 'col' },
+        $('div', { class: 'chead' }, $('span', { class: 'cname' }, c.name), c.badge ? $('span', { class: 'cbadge' }, c.badge) : null,
+          $('span', { class: 'gsum' }, count(idsOf(c), true))),
+        c.sub
+          ? $('div', { class: 'subcols' }, c.sub.map(x => $('div', { class: 'subcol' }, $('span', { class: 'st' }, x.name), x.pages.map(id => card(byId(id))))))
+          : $('div', { class: 'cards' }, c.pages.map(id => card(byId(id))))))));
   }));
 }
 
@@ -343,7 +389,7 @@ function card(p){
       onclick: () => set('stage', s.stage === k ? '' : k) }, $('i'), l)));   // click the current stage again to clear it
 
   return $('article', { class: 'card' + (mode === 'offline' ? ' locked' : ''), 'data-id': p.id, 'data-st': s.status },
-    $('header', { class: 'ch' }, $('div', { class: 'cn' }, editable(p.id, 'name', s.name, ''), $('span', { class: 'type' }, p.type)),
+    $('header', { class: 'ch' }, $('div', { class: 'cn' }, editable(p.id, 'name', s.name, ''), $('span', { class: 'type', title: p.type === 'page' ? 'One fixed page' : 'Repeated for many pages; final number not set yet' }, p.type)),
       editable(p.id, 'sub', s.sub, '+ subtitle')),
     $('div', { class: 'fields' },
       $('div', { class: 'f' }, $('span', { class: 'fl' }, 'Scope'), scopeSeg),
