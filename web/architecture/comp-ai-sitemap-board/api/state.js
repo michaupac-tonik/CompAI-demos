@@ -9,7 +9,7 @@
 //   GITHUB_PATH    optional, default "sitemap-state.json"
 // The token never reaches the browser.
 
-const SCOPE = ['scope', 'no-scope'];
+const SCOPE = ['scope', 'no-scope', 'estimate'];
 const STATUS = ['todo', 'wip', 'review', 'hold', 'ready'];
 const STAGE = ['', 'wireframe', 'design', 'development'];   // '' = no stage selected
 const TEXT_MAX = { name: 60, sub: 80 };

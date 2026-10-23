@@ -88,6 +88,8 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-size:10px;background:var(--sof
 .seg button+button{border-left:1px solid var(--line)}
 .seg button.on{background:var(--ink);color:#fff}
 .seg button.on.no{background:var(--soft);color:var(--ink)}
+.seg button.on.est{background:var(--review-bg);color:var(--review)}
+.seg button{white-space:nowrap}
 
 .status{justify-self:start;appearance:none;-webkit-appearance:none;border:1px solid transparent;border-radius:99px;padding:3px 24px 3px 10px;font-size:11px;font-weight:600;cursor:pointer;
   background-repeat:no-repeat;background-position:right 8px center;background-size:8px;
@@ -201,7 +203,7 @@ const PAGES = [
 ];
 
 /* Field values (keys are stored in JSON) and starting values */
-const SCOPE  = [ ['scope','scope'], ['no-scope','no-scope'] ];
+const SCOPE  = [ ['scope','scope'], ['no-scope','no-scope'], ['estimate','to estimate'] ];
 const STATUS = [ ['todo','to do'], ['wip','work in progress'], ['review','in review'], ['hold','on hold'], ['ready','ready to dev'] ];
 const STAGE  = [ ['wireframe','wireframe'], ['design','design'], ['development','development'] ];
 const DEFAULTS = { scope: 'no-scope', status: 'todo', stage: '' };   // stage '' = nothing selected
@@ -332,7 +334,7 @@ function card(p){
   const set = (field, value) => s[field] !== value && send({ type: 'set', page: p.id, field, value });
 
   const scopeSeg = $('div', { class: 'seg', role: 'group', 'aria-label': 'Scope' },
-    SCOPE.map(([k, l]) => $('button', { class: (s.scope === k ? 'on' : '') + (k === 'no-scope' ? ' no' : ''), 'aria-pressed': s.scope === k,
+    SCOPE.map(([k, l]) => $('button', { class: (s.scope === k ? 'on' : '') + (k === 'no-scope' ? ' no' : k === 'estimate' ? ' est' : ''), 'aria-pressed': s.scope === k,
       onclick: () => set('scope', k) }, l)));
   const status = $('select', { class: 'status', 'data-v': s.status, 'aria-label': 'Status', onchange: e => set('status', e.target.value) },
     STATUS.map(([k, l]) => $('option', { value: k, selected: s.status === k }, l)));
