@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Comp AI · Homepage lo-fi wireframe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Lo-fi wireframe. Basic design language follows HP hi-fi v08 (background, grid lines, light headlines,
+   two-tone titles, numbered eyebrows, pill buttons, paper cards, dark sections). Inter only (C44).
+   Type scale 1.272 (C40): 13 · 16 · 20 · 26 · 33 · 42 · 53 · 68 · 86 */
+:root{
+  --bg:#F3F3F2;--paper:#FAFAFA;--white:#fff;--ink:#111;--ink-2:#4F4F4F;--ink-3:#8A8A8A;--ink-4:#B5B5B5;
+  --line:#E1E1E1;--line-2:#CBCBCB;--fill:#ECECEC;--fill-2:#E4E4E4;
+  --dark:#121212;--dark-2:#1A1A1A;--dark-3:#242424;--dark-line:#2D2D2D;--on-dark:#F2F2F2;--on-dark-2:#A1A1A1;
+  --col:1280px;--r-s:8px;--r-m:14px;--r-l:22px}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.page{position:relative;overflow:hidden}
+.guides{position:absolute;inset:0;pointer-events:none;z-index:3}
+.guides::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:var(--col);transform:translateX(-50%);border-left:1px solid rgba(0,0,0,.06);border-right:1px solid rgba(0,0,0,.06)}
+.w{max-width:var(--col);margin:0 auto;padding:0 32px;position:relative;z-index:2}
+section{padding:128px 0;position:relative}
+
+/* type */
+.t86{font-size:86px;font-weight:300;letter-spacing:-.05em;line-height:.98}
+.t68{font-size:68px;font-weight:300;letter-spacing:-.045em;line-height:1.02}
+.t53{font-size:53px;font-weight:300;letter-spacing:-.04em;line-height:1.05}
+.t42{font-size:42px;font-weight:300;letter-spacing:-.03em;line-height:1.1}
+.t33{font-size:33px;font-weight:300;letter-spacing:-.025em;line-height:1.15}
+.t26{font-size:26px;font-weight:400;letter-spacing:-.02em;line-height:1.2}
+.t20{font-size:20px;font-weight:400;letter-spacing:-.01em;line-height:1.3}
+.t13{font-size:13px}
+.g{color:var(--ink-4)}
+.intro{color:var(--ink-2);max-width:420px}
+.eb{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-bottom:24px}
+.eb::before{content:'';width:8px;height:8px;background:var(--ink)}
+.eb b{font-weight:400;color:var(--ink-3)}
+
+/* placeholders */
+.ln{display:flex;flex-direction:column;gap:10px;margin-top:20px;max-width:420px}
+.ln i{display:block;height:9px;border-radius:5px;background:var(--line-2);opacity:.55}
+.ln i:last-child{width:64%}
+.ln.s{gap:8px;margin-top:12px}.ln.s i{height:7px}
+.ph{background:var(--fill);border-radius:var(--r-m);display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:13px;text-align:center;padding:16px;position:relative}
+.ph::after{content:'';position:absolute;inset:12px;border:1px dashed var(--line-2);border-radius:10px;pointer-events:none}
+
+/* ui */
+.btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;background:var(--ink);color:#fff;font-size:14px;white-space:nowrap}
+.btn.gh{background:var(--white);color:var(--ink);border:1px solid var(--line)}
+.btn.sm{height:36px;padding:0 16px;font-size:13px}
+.pill{display:inline-flex;align-items:center;height:30px;padding:0 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--ink-2);background:var(--white)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:28px}
+.lbl{font-size:13px;color:var(--ink-3)}
+.arrow{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink-2);background:var(--white)}
+.head{display:grid;grid-template-columns:8fr 4fr;gap:48px;align-items:end}
+.head .intro{justify-self:end}
+.mt8{margin-top:8px}.mt16{margin-top:16px}.mt24{margin-top:24px}.mt32{margin-top:32px}.mt48{margin-top:48px}.mt64{margin-top:64px}
+
+/* 00 nav */
+nav{height:72px;border-bottom:1px solid var(--line);position:relative;z-index:4;background:var(--bg)}
+nav .w{height:100%;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-size:20px;letter-spacing:-.02em}
+.brand i{width:22px;height:22px;border-radius:6px;background:var(--ink)}
+.menu{display:flex;gap:28px;font-size:14px;color:var(--ink-2)}
+.menu .dd::after{content:' ⌄';color:var(--ink-3)}
+.right{display:flex;gap:20px;align-items:center;font-size:14px;color:var(--ink-2)}
+
+/* 01 hero */
+.hero{padding:96px 0 112px}
+.hero .w{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:center}
+.hero .ph{height:560px;background:var(--fill)}
+
+/* 02 shift */
+.vs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--paper)}
+.vs>div{padding:32px 32px 36px}
+.vs>div+div{border-left:1px solid var(--line);background:var(--white)}
+.vs .tag{display:inline-flex;height:24px;padding:0 10px;border-radius:999px;font-size:12px;align-items:center;background:var(--fill-2);color:var(--ink-2)}
+.vs>div+div .tag{background:var(--ink);color:#fff}
+.vs .it{display:flex;gap:12px;align-items:center;margin-top:18px}
+.vs .it span{width:8px;height:8px;border-radius:50%;border:1px solid var(--ink-3);flex:none}
+.vs>div+div .it span{background:var(--ink);border-color:var(--ink)}
+.vs .it i{display:block;height:9px;border-radius:5px;background:var(--line-2);opacity:.55}
+.statement{margin:96px auto 0;max-width:900px;text-align:center}
+
+/* 03 what it does */
+.acc .r{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding:20px 0}
+.acc .r:last-child{border-bottom:1px solid var(--line)}
+.acc .r .ic{width:10px;height:10px;border-radius:50%;border:1px solid var(--ink-3);flex:none}
+.acc .r .tx{flex:1}
+.acc .r .pm{width:20px;height:20px;border-radius:50%;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink-3)}
+.acc .r.on .ic{background:var(--ink);border-color:var(--ink)}
+.acc .r.on .pm{background:var(--ink);color:#fff;border-color:var(--ink)}
+.acc .r:not(.on) .t20{color:var(--ink-2)}
+.split{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:center}
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--white)}
+.tiles>div{height:96px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.tiles>div:nth-child(6n){border-right:0}
+.tiles>div:nth-last-child(-n+6){border-bottom:0}
+.tiles>div i{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--paper)}
+.tiles>div b{display:block;width:44px;height:6px;border-radius:3px;background:var(--line-2);opacity:.5}
+.tiles>div.all{background:var(--ink);color:#fff;font-size:14px}
+.integr{display:grid;grid-template-columns:4fr 8fr;gap:56px;align-items:center;margin-top:112px}
+
+/* 04 people */
+.win{background:var(--white);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.12)}
+.win .bar{height:44px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;padding:0 16px}
+.win .bar i{width:8px;height:8px;border-radius:50%;background:var(--line-2)}
+.win .bar b{margin-left:12px;width:140px;height:8px;border-radius:4px;background:var(--fill-2)}
+.win .body{display:grid;grid-template-columns:180px 1fr;min-height:360px}
+.win .side{background:var(--paper);border-right:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:10px}
+.win .side i{display:block;height:8px;border-radius:4px;background:var(--line-2);opacity:.5}
+.win .side i.on{background:var(--ink);opacity:.8;width:80%}
+.thread{padding:20px;display:flex;flex-direction:column;gap:16px}
+.m{display:flex;gap:12px}
+.m .av{width:30px;height:30px;border-radius:8px;background:var(--fill-2);flex:none}
+.m.ex .av{background:var(--ink)}
+.m .who{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.m .who em{font-style:normal;font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin-left:6px;color:var(--ink-3)}
+.m .ln{margin-top:0;width:320px}
+.float{position:absolute;background:var(--white);border:1px solid var(--line);border-radius:var(--r-m);padding:14px 18px;box-shadow:0 16px 32px -16px rgba(0,0,0,.18)}
+.float .ln{margin-top:8px;width:110px}
+
+/* 05 who */
+.tabs{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--white)}
+.tabs span{height:36px;padding:0 16px;border-radius:999px;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2)}
+.tabs span small{font-size:12px;color:var(--ink-3)}
+.tabs span.on{background:var(--ink);color:#fff}.tabs span.on small{color:var(--ink-4)}
+.seg{display:grid;grid-template-columns:7fr 5fr;border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--paper);margin-top:16px}
+.seg>div{padding:36px}
+.seg>div+div{background:var(--white);border-left:1px solid var(--line);display:flex;flex-direction:column}
+.bul{display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);padding:14px 0}
+.bul span{width:8px;height:8px;border-radius:50%;background:var(--ink);flex:none}
+.bul i{display:block;height:8px;border-radius:4px;background:var(--line-2);opacity:.55;width:55%}
+
+/* 06 trust (dark) */
+.dark{background:var(--dark);color:var(--on-dark)}
+.dark .eb{color:var(--on-dark-2)}.dark .eb::before{background:var(--on-dark)}
+.dark .g{color:#5A5A5A}
+.dark .intro{color:var(--on-dark-2)}
+.dark .ln i{background:#3A3A3A;opacity:1}
+.dark .acc .r{border-color:var(--dark-line)}
+.dark .acc .r .ic{border-color:#6A6A6A}
+.dark .acc .r.on .ic{background:var(--on-dark);border-color:var(--on-dark)}
+.dark .acc .r .pm{border-color:#4A4A4A;color:#8A8A8A}
+.dark .acc .r.on .pm{background:var(--on-dark);color:var(--ink);border-color:var(--on-dark)}
+.dark .acc .r:not(.on) .t20{color:var(--on-dark-2)}
+.dark .btn{background:var(--on-dark);color:var(--ink)}
+.dark .btn.gh{background:transparent;color:var(--on-dark);border-color:#3A3A3A}
+.term{background:var(--dark-2);border:1px solid var(--dark-line);border-radius:var(--r-m);overflow:hidden}
+.term .bar{height:44px;border-bottom:1px solid var(--dark-line);display:flex;align-items:center;gap:6px;padding:0 16px}
+.term .bar i{width:8px;height:8px;border-radius:50%;background:#3A3A3A}
+.term .bar b{margin-left:12px;height:22px;width:90px;border-radius:6px;background:var(--dark-3)}
+.term .code{padding:24px;display:flex;flex-direction:column;gap:12px;min-height:240px}
+.term .code i{display:block;height:8px;border-radius:4px;background:#333}
+.term .log{border-top:1px solid var(--dark-line);padding:16px 24px;display:flex;flex-direction:column;gap:12px}
+.term .log div{display:flex;align-items:center;gap:12px}
+.term .log span{width:8px;height:8px;border-radius:50%;border:1px solid #6A6A6A}
+.term .log i{display:block;height:7px;border-radius:4px;background:#333;width:50%}
+.dark .tlbl{font-size:13px;color:#6A6A6A;text-align:center;margin-top:8px}
+
+/* 07 proof */
+.car{display:grid;grid-template-columns:7fr 3.6fr 3.6fr;gap:16px;margin-top:56px;margin-right:-180px}
+.feat{background:var(--ink);color:var(--on-dark);border-radius:var(--r-l);padding:32px;display:grid;grid-template-columns:1fr 220px;gap:24px;min-height:400px}
+.feat .co{display:block;width:110px;height:12px;border-radius:6px;background:#4A4A4A}
+.feat .q{color:#6A6A6A;margin-top:40px}
+.feat .res{display:flex;flex-direction:column;gap:12px}
+.feat .res div{background:var(--dark-3);border-radius:var(--r-m);padding:16px;flex:1;display:flex;flex-direction:column;justify-content:flex-end}
+.feat .res b{display:block;width:70%;height:22px;border-radius:6px;background:#3A3A3A;margin-bottom:10px}
+.feat .res span{font-size:13px;color:#7A7A7A}
+.feat .ln i{background:#333;opacity:1}
+.sc{background:var(--white);border:1px solid var(--line);border-radius:var(--r-l);padding:28px;display:flex;flex-direction:column;min-height:400px}
+.sc .co{display:block;width:90px;height:12px;border-radius:6px;background:var(--fill-2)}
+.sc .bigph{margin-top:auto;height:44px;width:70%;border-radius:8px;background:var(--fill-2)}
+.dots{display:flex;gap:6px;margin-top:24px}.dots i{width:24px;height:2px;background:var(--line-2)}.dots i:first-child{background:var(--ink)}
+.logos{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:72px}
+.logos div{height:96px;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--line)}
+.logos div:last-child{border-right:0}
+.logos i{width:96px;height:14px;border-radius:7px;background:var(--line-2);opacity:.55}
+
+/* 08 next step */
+.price{background:var(--fill);border-radius:var(--r-l);padding:32px 36px;display:flex;justify-content:space-between;align-items:center;gap:32px}
+.faq{display:grid;grid-template-columns:4fr 8fr;gap:56px;margin-top:112px}
+.faq .q{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:22px 0}
+.faq .q:last-of-type{border-bottom:1px solid var(--line)}
+.faq .q i{display:block;height:10px;border-radius:5px;background:var(--line-2);opacity:.6}
+.faq .q span{width:20px;height:20px;border-radius:50%;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink-3)}
+.faq .q.on span{background:var(--ink);color:#fff;border-color:var(--ink)}
+.final{padding:144px 0 120px}
+.final .gridbg{position:absolute;top:0;right:0;bottom:0;width:40%;background-image:linear-gradient(#202020 1px,transparent 1px),linear-gradient(90deg,#202020 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)}
+.reas{display:flex;gap:20px;font-size:13px;color:var(--on-dark-2);align-items:center}
+.reas span::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--on-dark-2);margin-right:8px;vertical-align:middle}
+
+/* 09 footer */
+footer{background:var(--dark);color:var(--on-dark);border-top:1px solid var(--dark-line);padding:80px 0 32px;position:relative;overflow:hidden}
+.fcols{display:grid;grid-template-columns:3fr repeat(5,1.4fr);gap:24px;position:relative;z-index:2}
+.fcols .h{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6A6A6A;margin-bottom:16px}
+.fcols .brand i{display:block;width:22px;height:22px;border-radius:6px;margin:0}
+.fcols div>i{display:block;height:7px;border-radius:4px;background:#333;margin-bottom:14px;width:72%}
+.fcols div>i:nth-child(3n){width:56%}
+.wm{font-size:280px;font-weight:300;letter-spacing:-.06em;line-height:.8;color:#191919;margin-top:96px;white-space:nowrap}
+.fbot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--dark-line);padding-top:20px;font-size:12px;color:#6A6A6A;position:relative;z-index:2}
+.stat{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--dark-line);border-radius:999px;padding:6px 12px;font-size:12px;color:var(--on-dark-2);margin-top:24px}
+.stat::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--on-dark-2)}
+
+.tagline{position:fixed;right:16px;bottom:16px;z-index:10;font-size:12px;color:var(--ink-2);background:var(--white);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+
+@media (max-width:960px){
+  .t86{font-size:53px}.t68{font-size:42px}.t53{font-size:42px}.t42{font-size:33px}.t33{font-size:26px}
+  section{padding:88px 0}.w{padding:0 16px}
+  .hero .w,.split,.head,.integr,.faq,.seg,.vs,.feat{grid-template-columns:1fr}
+  .head .intro{justify-self:start}
+  .hero .ph{height:360px}
+  .menu,.right .si{display:none}
+  .tiles{grid-template-columns:repeat(3,1fr)}.tiles>div:nth-child(6n){border-right:1px solid var(--line)}.tiles>div:nth-child(3n){border-right:0}
+  .car{grid-template-columns:1fr;margin-right:0}.car .sc:last-child{display:none}
+  .logos{grid-template-columns:repeat(3,1fr)}.logos div:nth-child(3){border-right:0}.logos div:nth-child(-n+3){border-bottom:1px solid var(--line)}
+  .vs>div+div,.seg>div+div{border-left:0;border-top:1px solid var(--line)}
+  .win .body{grid-template-columns:1fr}.win .side{display:none}.m .ln{width:200px}
+  .fcols{grid-template-columns:1fr 1fr}.wm{font-size:110px}
+  .price{flex-direction:column;align-items:flex-start}
+  .float{display:none}.tabs small{display:none}.guides{display:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="guides"></div>
+
+<!-- 00 Navigation -->
+<nav>
+  <div class="w">
+    <div class="brand"><i></i>Comp AI</div>
+    <div class="menu"><span class="dd">Product</span><span class="dd">Frameworks</span><span>Customers</span><span>Pricing</span><span>About</span></div>
+    <div class="right"><span class="si">Sign in</span><span class="btn sm">Book a demo</span></div>
+  </div>
+</nav>
+
+<!-- 01 The promise -->
+<section class="hero">
+  <div class="w">
+    <div>
+      <div class="eb"><b>01</b> The promise</div>
+      <h1 class="t68">Watch the work <span class="g">disappear.</span></h1>
+      <div class="ln"><i></i><i></i></div>
+      <div class="row mt32"><span class="btn">Book a demo →</span></div>
+    </div>
+    <div class="ph">Hero visual · the work disappearing (motion)</div>
+  </div>
+</section>
+
+<!-- 02 The shift -->
+<section style="padding-top:64px">
+  <div class="w">
+    <div class="head">
+      <div><div class="eb"><b>02</b> The shift</div><h2 class="t53">Same standards. <span class="g">Different work.</span></h2></div>
+      <div class="intro"><div class="ln" style="margin-top:0"><i></i><i></i></div></div>
+    </div>
+    <div class="vs mt48">
+      <div>
+        <span class="tag">Then</span>
+        <div class="it"><span></span><i style="width:78%"></i></div>
+        <div class="it"><span></span><i style="width:62%"></i></div>
+        <div class="it"><span></span><i style="width:70%"></i></div>
+      </div>
+      <div>
+        <span class="tag">Now</span>
+        <div class="it"><span></span><i style="width:74%"></i></div>
+        <div class="it"><span></span><i style="width:58%"></i></div>
+        <div class="it"><span></span><i style="width:66%"></i></div>
+      </div>
+    </div>
+    <p class="t42 statement">Positioning statement. <span class="g">Agents do the work with your company’s context, experts bring judgment where it matters.</span></p>
+  </div>
+</section>
+
+<!-- 03 What Comp AI does -->
+<section>
+  <div class="w">
+    <div class="head">
+      <div><div class="eb"><b>03</b> What Comp AI does</div><h2 class="t53">Comp AI <span class="g">shows the work.</span></h2></div>
+      <div class="intro"><div class="ln" style="margin-top:0"><i></i><i></i></div></div>
+    </div>
+    <div class="split mt64">
+      <div class="acc">
+        <div class="r on"><span class="ic"></span><div class="tx"><div class="t20">Capability</div><div class="ln s" style="max-width:300px"><i></i><i></i></div></div><span class="pm">−</span></div>
+        <div class="r"><span class="ic"></span><div class="tx t20">Capability</div><span class="pm">+</span></div>
+        <div class="r"><span class="ic"></span><div class="tx t20">Capability</div><span class="pm">+</span></div>
+        <div class="r"><span class="ic"></span><div class="tx t20">Capability</div><span class="pm">+</span></div>
+        <div class="r"><span class="ic"></span><div class="tx t20">More capabilities</div><span class="pm">+</span></div>
+      </div>
+      <div class="ph" style="height:520px;background:var(--fill)">Product in action · the selected capability</div>
+    </div>
+    <div class="integr">
+      <div>
+        <div class="t33">Works with the stack <span class="g">you already have.</span></div>
+        <div class="ln s"><i></i></div>
+        <div class="mt24" style="font-size:14px;border-bottom:1px solid var(--ink);display:inline-block">See all integrations →</div>
+      </div>
+      <div class="tiles">
+        <div><i></i><b></b></div><div><i></i><b></b></div><div><i></i><b></b></div><div><i></i><b></b></div><div><i></i><b></b></div><div><i></i><b></b></div>
+        <div><i></i><b></b></div><div><i></i><b></b></div><div><i></i><b></b></div><div><i></i><b></b></div><div><i></i><b></b></div><div class="all">All integrations →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 The people -->
+<section>
+  <div class="w split">
+    <div>
+      <div class="eb"><b>04</b> The people</div>
+      <h2 class="t53">Experts who’ve <span class="g">done it before.</span></h2>
+      <div class="ln"><i></i><i></i></div>
+    </div>
+    <div style="position:relative;padding:32px 0 32px 32px">
+      <div class="win">
+        <div class="bar"><i></i><i></i><i></i><b></b></div>
+        <div class="body">
+          <div class="side"><i style="width:60%"></i><i></i><i style="width:70%"></i><i class="on"></i><i style="width:50%"></i><i style="width:66%"></i></div>
+          <div class="thread">
+            <div class="m"><span class="av"></span><div><div class="who">Customer</div><div class="ln s"><i></i></div></div></div>
+            <div class="m ex"><span class="av"></span><div><div class="who">Comp AI expert<em>In-house</em></div><div class="ln s"><i></i><i></i><i></i></div></div></div>
+            <div class="m"><span class="av"></span><div><div class="who">Customer</div><div class="ln s"><i style="width:40%"></i></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="float" style="left:0;bottom:0"><div class="lbl">Response time</div><div class="ln s"><i></i></div></div>
+      <div class="float" style="right:-16px;top:0"><div class="lbl">Real experts</div><div class="ln s"><i></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 Who it's for -->
+<section>
+  <div class="w">
+    <div class="head">
+      <div><div class="eb"><b>05</b> Who it’s for</div><h2 class="t53">Ready now. <span class="g">Ready as you grow.</span></h2></div>
+      <div class="intro"><div class="ln" style="margin-top:0"><i></i><i></i></div></div>
+    </div>
+    <div class="mt48 tabs"><span class="on">Startup</span><span>Mid-market</span><span>Enterprise</span></div>
+    <div class="seg">
+      <div>
+        <span class="pill">For this stage</span>
+        <div class="t33 mt24" style="max-width:520px">What this stage needs, <span class="g">in one line.</span></div>
+        <div class="mt32">
+          <div class="bul"><span></span><i></i></div>
+          <div class="bul"><span></span><i style="width:45%"></i></div>
+          <div class="bul"><span></span><i style="width:50%"></i></div>
+        </div>
+        <div class="row mt32"><span class="btn">Book a demo</span></div>
+      </div>
+      <div>
+        <div class="row" style="justify-content:space-between"><span class="lbl">Story from this stage</span><span class="arrow">↗</span></div>
+        <div class="ph mt24" style="flex:1;min-height:200px;background:var(--paper)">Matching customer story</div>
+      </div>
+    </div>
+    <div class="row mt32">
+      <span class="lbl" style="margin-right:4px">Frameworks</span>
+      <span class="pill">Framework</span><span class="pill">Framework</span><span class="pill">Framework</span><span class="pill">Framework</span><span class="pill">Framework</span><span class="pill">All frameworks →</span>
+    </div>
+  </div>
+</section>
+
+<!-- 06 The trust -->
+<section class="dark">
+  <div class="w">
+    <div class="eb"><b>06</b> The trust</div>
+    <h2 class="t53" style="max-width:760px">Don’t trust us. <span class="g">Verify.</span></h2>
+    <div class="ln"><i></i><i></i></div>
+    <div class="split mt64" style="align-items:start">
+      <div>
+        <div class="acc">
+          <div class="r"><span class="ic"></span><div class="tx t20">Open source</div><span class="pm">+</span></div>
+          <div class="r on"><span class="ic"></span><div class="tx"><div class="t20">Proof point</div><div class="ln s" style="max-width:300px"><i></i><i></i></div></div><span class="pm">−</span></div>
+          <div class="r"><span class="ic"></span><div class="tx t20">Proof point</div><span class="pm">+</span></div>
+          <div class="r"><span class="ic"></span><div class="tx t20">A live trust center</div><span class="pm">+</span></div>
+        </div>
+        <div class="row mt32"><span class="btn">View on GitHub ↗</span><span class="btn gh">Trust center ↗</span></div>
+      </div>
+      <div>
+        <div class="term">
+          <div class="bar"><i></i><i></i><i></i><b></b><b style="margin-left:6px;width:70px"></b></div>
+          <div class="code"><i style="width:40%"></i><i style="width:62%"></i><i style="width:55%"></i><i style="width:70%"></i><i style="width:48%"></i><i style="width:30%"></i></div>
+          <div class="log"><div><span></span><i></i></div><div><span></span><i style="width:40%"></i></div><div><span></span><i style="width:35%"></i></div></div>
+        </div>
+        <p class="tlbl">Evidence you can check yourself</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 The proof -->
+<section>
+  <div class="w">
+    <div class="head">
+      <div><div class="eb"><b>07</b> The proof</div><h2 class="t53">Results, <span class="g">not claims.</span></h2></div>
+      <div class="row" style="justify-self:end"><span style="font-size:14px;border-bottom:1px solid var(--ink)">All customer stories →</span><span class="arrow">←</span><span class="arrow" style="background:var(--ink);color:#fff;border-color:var(--ink)">→</span></div>
+    </div>
+    <div class="car">
+      <div class="feat">
+        <div style="display:flex;flex-direction:column">
+          <span class="co"></span>
+          <div class="t26 q">“Customer quote about the result that mattered most.”</div>
+          <div class="ln s" style="margin-top:auto;max-width:200px"><i></i></div>
+        </div>
+        <div class="res"><div><b></b><span>Result</span></div><div><b></b><span>Result</span></div><div><b></b><span>Result</span></div></div>
+      </div>
+      <div class="sc"><div class="row" style="justify-content:space-between"><span class="co"></span><span class="arrow">↗</span></div><div class="bigph"></div><div class="ln s"><i></i></div></div>
+      <div class="sc"><div class="row" style="justify-content:space-between"><span class="co"></span><span class="arrow">↗</span></div><div class="bigph"></div><div class="ln s"><i></i></div></div>
+    </div>
+    <div class="dots"><i></i><i></i><i></i><i></i></div>
+    <div class="logos"><div><i></i></div><div><i></i></div><div><i></i></div><div><i></i></div><div><i></i></div><div><i></i></div></div>
+  </div>
+</section>
+
+<!-- 08 Next step: pricing, FAQ, final call to action -->
+<section style="padding-top:32px">
+  <div class="w">
+    <div class="eb"><b>08</b> Next step</div>
+    <div class="price">
+      <div>
+        <div class="t26">How the price is set, <span class="g">in one line.</span></div>
+        <div class="row mt16"><span class="pill">Price factor</span><span class="pill">Price factor</span><span class="pill">Price factor</span><span class="pill">Price factor</span></div>
+      </div>
+      <span class="btn gh">See pricing →</span>
+    </div>
+    <div class="faq">
+      <div><h2 class="t42">Questions, <span class="g">answered.</span></h2></div>
+      <div>
+        <div class="q on"><i style="width:44%"></i><span>−</span></div>
+        <div class="ln s" style="max-width:520px;margin:-6px 0 22px"><i></i><i></i></div>
+        <div class="q"><i style="width:52%"></i><span>+</span></div>
+        <div class="q"><i style="width:40%"></i><span>+</span></div>
+        <div class="q"><i style="width:47%"></i><span>+</span></div>
+        <div class="q"><i style="width:56%"></i><span>+</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="dark final">
+  <div class="gridbg"></div>
+  <div class="w">
+    <h2 class="t68">See the work done, <span class="g">live.</span></h2>
+    <div class="row mt32" style="gap:24px"><span class="btn">Book a demo →</span><div class="reas"><span>Reassurance</span><span>Reassurance</span><span>Reassurance</span></div></div>
+  </div>
+</section>
+
+<!-- 09 Footer -->
+<footer>
+  <div class="w">
+    <div class="fcols">
+      <div><div class="brand"><i style="background:var(--on-dark)"></i>Comp AI</div><div class="ln s" style="max-width:220px;margin-top:16px"><i style="background:#333;opacity:1"></i></div><span class="stat">Status</span></div>
+      <div><div class="h">Product</div><i></i><i></i><i></i></div>
+      <div><div class="h">Frameworks</div><i></i><i></i><i></i><i></i></div>
+      <div><div class="h">Resources</div><i></i><i></i><i></i><i></i><i></i></div>
+      <div><div class="h">Compare</div><i></i><i></i><i></i></div>
+      <div><div class="h">Company</div><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="wm">Comp AI</div>
+    <div class="fbot"><span>© Comp AI · Legal</span><span>Framework badges</span></div>
+  </div>
+</footer>
+
+</div>
+<div class="tagline">Lo-fi wireframe · draft v02 · tonik</div>
+</body>
+</html>
