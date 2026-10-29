@@ -233,12 +233,11 @@ const LAYOUT = [
     { name: 'Customers', pages: ['case-studies', 'case-study'] },
     { name: 'Pricing', pages: ['pricing'] },
     { name: 'About', pages: ['about'] },
-    { name: 'Resources ▾', note: 'not requested by client · to verify', sub: [
-      { name: 'Hub & tools', pages: G('resources') },
-      { name: 'Guides', pages: G('guides') },
-      { name: 'Compare', pages: G('compare') } ] },
     { name: 'Book a demo', badge: 'CTA', pages: ['demo', 'demo-framework'] } ] },
   { name: 'Footer only', note: 'pages not in the top menu', cols: [
+    { name: 'Resources', note: 'moved from top menu 29.10 · not requested by client', pages: G('resources') },
+    { name: 'Guides', pages: G('guides') },
+    { name: 'Compare', pages: G('compare') },
     { name: 'Company', pages: G('company').filter(id => id !== 'about') },
     { name: 'Legal', pages: G('legal') } ] },
 ];
