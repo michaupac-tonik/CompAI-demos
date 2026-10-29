@@ -68,6 +68,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-size:10px;background:var(--sof
 .col{display:flex;flex-direction:column;gap:12px}
 .chead{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:2px solid var(--ink);min-height:30px}
 .cname{font-size:15px;font-weight:600}
+.cnote{font-size:11px;color:var(--review);font-weight:500}
 .cbadge{font-size:10px;font-weight:600;border-radius:5px;padding:1px 6px;background:var(--ink);color:#fff}
 .subcols{display:flex;gap:20px;align-items:flex-start}
 .subcol{display:flex;flex-direction:column;gap:12px}
@@ -103,6 +104,11 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-size:10px;background:var(--sof
 .seg button+button{border-left:1px solid var(--line)}
 .seg button.on{background:var(--ink);color:#fff}
 .seg button.on.no{background:var(--soft);color:var(--ink)}
+.seg button.on.ph{background:var(--wip);color:#fff}
+.seg button.on.ph.p2{background:var(--wip-bg);color:var(--wip)}
+.tr.t2{background:var(--wip-bg);color:var(--wip)}
+.tr{flex-shrink:0;font-size:10px;font-weight:700;color:#fff;background:var(--wip);border-radius:5px;padding:1px 6px;margin-left:auto}
+.tr+.type{margin-left:0}
 .seg button.on.est{background:var(--review-bg);color:var(--review)}
 .seg button{white-space:nowrap}
 
@@ -174,20 +180,19 @@ const GROUPS = [
    never change an id: the saved state (scope, status, stage, texts) is keyed by it */
 const PAGES = [
   // Main navigation
-  { id: 'home', group: 'main', name: 'Homepage', type: 'page', init: { scope: 'scope', status: 'review', stage: 'wireframe' } },
-  { id: 'demo', group: 'main', name: 'Book a demo', type: 'page', init: { scope: 'scope', status: 'wip', stage: 'wireframe' } },
+  { id: 'home', group: 'main', name: 'Homepage', type: 'page', sub: 'incl. nav + footer', init: { scope: 'scope', status: 'review', stage: 'wireframe', phase: '1' } },
+  { id: 'demo', group: 'main', name: 'Book a demo', type: 'page', sub: 'limited nav + footer', init: { scope: 'scope', status: 'wip', stage: 'wireframe', phase: '1' } },
+  { id: 'framework-overview', group: 'frameworks', name: 'Framework overview', type: 'page', sub: 'custom page', init: { scope: 'estimate' } },
+  { id: 'framework-page', group: 'frameworks', name: 'Framework page', type: 'template', sub: 'use as a template · ~200 frameworks; SOC 2 / top 5 maybe custom', init: { scope: 'estimate' } },
   { id: 'demo-framework', group: 'main', name: 'Demo per framework', type: 'template', sub: 'use as a template (current state: 9 subpages)' },
-  { id: 'pricing', group: 'main', name: 'Pricing', type: 'page', sub: '+ calculator feature', init: { status: 'hold' } },
-  { id: 'case-studies', group: 'main', name: 'Customers', type: 'page', sub: 'case study listing', init: { scope: 'scope', status: 'wip', stage: 'wireframe' } },
-  { id: 'case-study', group: 'main', name: 'Case study', type: 'template', sub: 'use as a template (current state: 11 stories)' },
+  { id: 'pricing', group: 'main', name: 'Pricing', type: 'page', sub: '+ pricing calculator', init: { scope: 'scope', status: 'hold', phase: '2' } },
+  { id: 'case-studies', group: 'main', name: 'Customer stories', type: 'page', sub: 'overview (listing)', init: { scope: 'scope', status: 'wip', stage: 'wireframe', phase: '1' } },
+  { id: 'case-study', group: 'main', name: 'Case study', type: 'template', sub: 'detail template, later · current state: 11 stories', init: { scope: 'estimate' } },
   // Products
-  { id: 'products', group: 'products', name: 'Products', type: 'page', sub: 'navigation page (estimate: 200 subpages)' },
-  { id: 'product-template-a', group: 'products', name: 'Product · template A', type: 'template', sub: 'use as a template' },
-  { id: 'product-template-b', group: 'products', name: 'Product · template B', type: 'template', sub: 'use as a template' },
-  { id: 'product-template-c', group: 'products', name: 'Product · template C', type: 'template', sub: 'use as a template' },
-  { id: 'product-template-d', group: 'products', name: 'Product · template D', type: 'template', sub: 'use as a template' },
+  { id: 'product-overview', group: 'products', name: 'Product overview', type: 'page', sub: '1 platform, being rebuilt (client review 2.11)', init: { scope: 'scope', phase: '2' } },
+  { id: 'product-feature', group: 'products', name: 'Feature page', type: 'template', sub: 'use as a template · features not in top nav', init: { scope: 'estimate' } },
   // Company
-  { id: 'about', group: 'company', name: 'About', type: 'page', sub: 'new page', init: { scope: 'scope', status: 'wip', stage: 'wireframe' } },
+  { id: 'about', group: 'company', name: 'About', type: 'page', sub: 'new page', init: { scope: 'scope', status: 'wip', stage: 'wireframe', phase: '1' } },
   { id: 'security', group: 'company', name: 'Security', type: 'page' },
   { id: 'careers', group: 'company', name: 'Careers', type: 'page' },
   { id: 'careers-job', group: 'company', name: 'Careers · job post', type: 'template', sub: 'use as a template (current state: 3 job posts)' },
@@ -195,23 +200,23 @@ const PAGES = [
   { id: 'press', group: 'company', name: 'Press', type: 'page' },
   { id: 'press-article', group: 'company', name: 'Press · article', type: 'template', sub: 'use as a template' },
   // Resources
-  { id: 'hub', group: 'resources', name: 'Compliance Hub', type: 'page' },
-  { id: 'hub-article', group: 'resources', name: 'Hub · article', type: 'template', sub: 'use as a template (current state: 42 articles)' },
-  { id: 'hub-archive', group: 'resources', name: 'Hub · category / tag', type: 'template', sub: 'use as a template (current state: 115 pages)' },
-  { id: 'tools', group: 'resources', name: 'Tools & Templates', type: 'page' },
-  { id: 'tool', group: 'resources', name: 'Tool / policy template', type: 'template', sub: 'use as a template (current state: 53 pages)' },
+  { id: 'hub', group: 'resources', name: 'Compliance Hub', type: 'page', init: { scope: 'estimate' } },
+  { id: 'hub-article', group: 'resources', name: 'Hub · article', type: 'template', sub: 'use as a template (current state: 42 articles)', init: { scope: 'estimate' } },
+  { id: 'hub-archive', group: 'resources', name: 'Hub · category / tag', type: 'template', sub: 'use as a template (current state: 115 pages)', init: { scope: 'estimate' } },
+  { id: 'tools', group: 'resources', name: 'Tools & Templates', type: 'page', init: { scope: 'estimate' } },
+  { id: 'tool', group: 'resources', name: 'Tool / policy template', type: 'template', sub: 'use as a template (current state: 53 pages)', init: { scope: 'estimate' } },
   // Guides
-  { id: 'soc-2-cost', group: 'guides', name: 'SOC 2 Cost', type: 'page' },
-  { id: 'soc-2-checklist', group: 'guides', name: 'SOC 2 Checklist', type: 'page' },
-  { id: 'soc-2-for-startups', group: 'guides', name: 'SOC 2 for Startups', type: 'page' },
-  { id: 'soc-1-vs-soc-2', group: 'guides', name: 'SOC 1 vs SOC 2', type: 'page' },
-  { id: 'iso-42001', group: 'guides', name: 'ISO 42001', type: 'page' },
-  { id: 'grc-automation', group: 'guides', name: 'GRC Automation', type: 'page' },
+  { id: 'soc-2-cost', group: 'guides', name: 'SOC 2 Cost', type: 'page', init: { scope: 'estimate' } },
+  { id: 'soc-2-checklist', group: 'guides', name: 'SOC 2 Checklist', type: 'page', init: { scope: 'estimate' } },
+  { id: 'soc-2-for-startups', group: 'guides', name: 'SOC 2 for Startups', type: 'page', init: { scope: 'estimate' } },
+  { id: 'soc-1-vs-soc-2', group: 'guides', name: 'SOC 1 vs SOC 2', type: 'page', init: { scope: 'estimate' } },
+  { id: 'iso-42001', group: 'guides', name: 'ISO 42001', type: 'page', init: { scope: 'estimate' } },
+  { id: 'grc-automation', group: 'guides', name: 'GRC Automation', type: 'page', init: { scope: 'estimate' } },
   // Compare
-  { id: 'vendor-pricing', group: 'compare', name: 'Vendor pricing', type: 'template', sub: 'use as a template' },
-  { id: 'drata-vs-vanta', group: 'compare', name: 'Drata vs Vanta', type: 'page' },
-  { id: 'vendor-competitors', group: 'compare', name: 'Vendor competitors', type: 'template', sub: 'use as a template' },
-  { id: 'vendor-alternative', group: 'compare', name: 'Vendor alternative', type: 'template', sub: 'use as a template (6 pages, not in footer)' },
+  { id: 'vendor-pricing', group: 'compare', name: 'Vendor pricing', type: 'template', sub: 'use as a template', init: { scope: 'estimate' } },
+  { id: 'drata-vs-vanta', group: 'compare', name: 'Drata vs Vanta', type: 'page', init: { scope: 'estimate' } },
+  { id: 'vendor-competitors', group: 'compare', name: 'Vendor competitors', type: 'template', sub: 'use as a template', init: { scope: 'estimate' } },
+  { id: 'vendor-alternative', group: 'compare', name: 'Vendor alternative', type: 'template', sub: 'use as a template (6 pages, not in footer)', init: { scope: 'estimate' } },
   // Legal
   { id: 'legal', group: 'legal', name: 'Legal Overview', type: 'page' },
   { id: 'legal-doc', group: 'legal', name: 'Legal document', type: 'template', sub: 'use as a template · 6 documents' },
@@ -224,15 +229,15 @@ const LAYOUT = [
   { name: 'Main navigation', primary: true, note: 'top menu, left to right', cols: [
     { name: 'Home', pages: ['home'] },
     { name: 'Product ▾', pages: G('products') },
-    { name: 'Frameworks ▾', pages: ['demo-framework'] },
+    { name: 'Frameworks ▾', pages: G('frameworks') },
     { name: 'Customers', pages: ['case-studies', 'case-study'] },
     { name: 'Pricing', pages: ['pricing'] },
     { name: 'About', pages: ['about'] },
-    { name: 'Resources ▾', sub: [
+    { name: 'Resources ▾', note: 'not requested by client · to verify', sub: [
       { name: 'Hub & tools', pages: G('resources') },
       { name: 'Guides', pages: G('guides') },
       { name: 'Compare', pages: G('compare') } ] },
-    { name: 'Book a demo', badge: 'CTA', pages: ['demo'] } ] },
+    { name: 'Book a demo', badge: 'CTA', pages: ['demo', 'demo-framework'] } ] },
   { name: 'Footer only', note: 'pages not in the top menu', cols: [
     { name: 'Company', pages: G('company').filter(id => id !== 'about') },
     { name: 'Legal', pages: G('legal') } ] },
@@ -242,7 +247,8 @@ const LAYOUT = [
 const SCOPE  = [ ['scope','scope'], ['no-scope','no-scope'], ['estimate','to estimate'] ];
 const STATUS = [ ['todo','to do'], ['wip','work in progress'], ['review','in review'], ['hold','on hold'], ['ready','ready to dev'] ];
 const STAGE  = [ ['wireframe','wireframe'], ['design','design'], ['development','development'] ];
-const DEFAULTS = { scope: 'no-scope', status: 'todo', stage: '' };   // stage '' = nothing selected
+const PHASE  = [ ['1','1'], ['2','2'] ];   // client tranches (delivery order)
+const DEFAULTS = { scope: 'no-scope', status: 'todo', stage: '', phase: '' };   // stage '' = nothing selected
 const LEGACY = { status: { blocked: 'hold' } };
 const TEXT_MAX = { name: 60, sub: 80 };
 
@@ -263,7 +269,7 @@ let state = { version: 2, pages: {} };
 function pageState(id){
   const p = PAGES.find(x => x.id === id) || {}, i = p.init || {}, s = state.pages[id] || {};
   const pick = (f, list) => { let v = s[f] ?? i[f] ?? DEFAULTS[f]; v = (LEGACY[f] && LEGACY[f][v]) || v; return list.some(x => x[0] === v) ? v : DEFAULTS[f]; };
-  return { scope: pick('scope', SCOPE), status: pick('status', STATUS), stage: pick('stage', STAGE),
+  return { scope: pick('scope', SCOPE), status: pick('status', STATUS), stage: pick('stage', STAGE), phase: pick('phase', PHASE),
            name: s.name || p.name, sub: s.sub !== undefined ? s.sub : (p.sub || '') };
 }
 /* Same logic as in api/state.js (server) */
@@ -341,7 +347,7 @@ function render(){
     return $('section', { class: 'band' + (b.primary ? ' primary' : '') },
       $('div', { class: 'bhead' }, $('span', { class: 'bt' }, b.name), $('span', { class: 'bsum' }, count(all)), b.note ? $('span', { class: 'bnote' }, b.note) : null),
       $('div', { class: 'bcols' }, b.cols.map(c => $('div', { class: 'col' },
-        $('div', { class: 'chead' }, $('span', { class: 'cname' }, c.name), c.badge ? $('span', { class: 'cbadge' }, c.badge) : null,
+        $('div', { class: 'chead' }, $('span', { class: 'cname' }, c.name), c.badge ? $('span', { class: 'cbadge' }, c.badge) : null, c.note ? $('span', { class: 'cnote' }, c.note) : null,
           $('span', { class: 'gsum' }, count(idsOf(c), true))),
         c.sub
           ? $('div', { class: 'subcols' }, c.sub.map(x => $('div', { class: 'subcol' }, $('span', { class: 'st' }, x.name), x.pages.map(id => card(byId(id))))))
@@ -384,15 +390,19 @@ function card(p){
       onclick: () => set('scope', k) }, l)));
   const status = $('select', { class: 'status', 'data-v': s.status, 'aria-label': 'Status', onchange: e => set('status', e.target.value) },
     STATUS.map(([k, l]) => $('option', { value: k, selected: s.status === k }, l)));
+  const phaseSeg = $('div', { class: 'seg', role: 'group', 'aria-label': 'Tranche' },
+    PHASE.map(([k, l]) => $('button', { class: s.phase === k ? 'on ph p' + k : '', 'aria-pressed': s.phase === k, title: `Tranche ${l} (click again to clear)`,
+      onclick: () => set('phase', s.phase === k ? '' : k) }, l)));
   const stages = $('div', { class: 'stages', role: 'group', 'aria-label': 'Design stage' },
     STAGE.map(([k, l], i) => $('button', { class: i < stIdx ? 'done' : i === stIdx ? 'cur' : '', 'aria-pressed': i === stIdx, title: l,
       onclick: () => set('stage', s.stage === k ? '' : k) }, $('i'), l)));   // click the current stage again to clear it
 
   return $('article', { class: 'card' + (mode === 'offline' ? ' locked' : ''), 'data-id': p.id, 'data-st': s.status },
-    $('header', { class: 'ch' }, $('div', { class: 'cn' }, editable(p.id, 'name', s.name, ''), $('span', { class: 'type', title: p.type === 'page' ? 'One fixed page' : 'Repeated for many pages; final number not set yet' }, p.type)),
+    $('header', { class: 'ch' }, $('div', { class: 'cn' }, editable(p.id, 'name', s.name, ''), s.phase ? $('span', { class: 'tr t' + s.phase, title: 'Client tranche' }, 'T' + s.phase) : null, $('span', { class: 'type', title: p.type === 'page' ? 'One fixed page' : 'Repeated for many pages; final number not set yet' }, p.type)),
       editable(p.id, 'sub', s.sub, '+ subtitle')),
     $('div', { class: 'fields' },
       $('div', { class: 'f' }, $('span', { class: 'fl' }, 'Scope'), scopeSeg),
+      $('div', { class: 'f' }, $('span', { class: 'fl' }, 'Tranche'), phaseSeg),
       $('div', { class: 'f' }, $('span', { class: 'fl' }, 'Status'), status),
       $('div', { class: 'f stack' }, $('span', { class: 'fl' }, 'Stage'), stages)));
 }
@@ -401,7 +411,7 @@ function card(p){
 document.getElementById('dl').onclick = () => {
   const now = new Date();
   const out = { exportedAt: now.toISOString(), defaults: DEFAULTS,
-    pages: PAGES.map(p => { const s = pageState(p.id); return { id: p.id, group: p.group, name: s.name, sub: s.sub, type: p.type, scope: s.scope, status: s.status, stage: s.stage,
+    pages: PAGES.map(p => { const s = pageState(p.id); return { id: p.id, group: p.group, name: s.name, sub: s.sub, type: p.type, scope: s.scope, phase: s.phase, status: s.status, stage: s.stage,
       changed: !!state.pages[p.id] }; }) };
   const stamp = now.toISOString().slice(0, 16).replace(/[-:]/g, '').replace('T', '-');
   const a = $('a', { href: URL.createObjectURL(new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' })), download: `comp-ai-sitemap-state-${stamp}.json` });

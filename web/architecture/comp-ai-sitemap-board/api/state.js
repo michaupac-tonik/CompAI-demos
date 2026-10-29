@@ -1,6 +1,6 @@
 // Vercel Serverless Function: shared sitemap board state stored as JSON in a GitHub repository.
 // GET  /api/state  → { state }
-// POST /api/state  → body = { type: 'set', page, field: scope|status|stage|name|sub, value } → { state }
+// POST /api/state  → body = { type: 'set', page, field: scope|status|stage|phase|name|sub, value } → { state }
 //
 // Environment variables (Vercel → Project → Settings → Environment Variables):
 //   GITHUB_TOKEN   fine-grained token with Contents: Read and write, limited to the data repo
@@ -11,7 +11,8 @@
 
 const SCOPE = ['scope', 'no-scope', 'estimate'];
 const STATUS = ['todo', 'wip', 'review', 'hold', 'ready'];
-const STAGE = ['', 'wireframe', 'design', 'development'];   // '' = no stage selected
+const STAGE = ['', 'wireframe', 'design', 'development'];
+const PHASE = ['', '1', '2'];   // client tranche   // '' = no stage selected
 const TEXT_MAX = { name: 60, sub: 80 };
 const PAGE_ID = /^[a-z0-9][a-z0-9-]{0,63}$/;
 
@@ -63,7 +64,7 @@ function validate(op) {
     if (op.field === 'name' && !op.value) return 'Title cannot be empty';
     return null;
   }
-  const allowed = { scope: SCOPE, status: STATUS, stage: STAGE }[op.field];
+  const allowed = { scope: SCOPE, status: STATUS, stage: STAGE, phase: PHASE }[op.field];
   if (!allowed || !allowed.includes(op.value)) return 'Invalid value';
   return null;
 }
