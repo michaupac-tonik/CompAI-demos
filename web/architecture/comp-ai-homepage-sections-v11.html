@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Comp AI · Homepage story &amp; structure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F6F4;--card:#fff;--ink:#1A1A1A;--mute:#8A8A85;--line:#E2E2DE;--soft:#F1F1EE}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;padding:64px 24px 96px}
+.wrap{max-width:880px;margin:0 auto}
+header{margin-bottom:24px}
+.flow{display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:center;gap:4px;margin-bottom:40px}
+@media (max-width:860px){.flow{flex-wrap:wrap;justify-content:flex-start;gap:6px}}
+.step{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:4px 10px 4px 4px;font-size:12px;font-weight:500;white-space:nowrap}
+.sn{font-size:11px;font-weight:600;color:#fff;background:var(--ink);border-radius:99px;padding:1px 6px;font-variant-numeric:tabular-nums}
+.arr{color:var(--mute);font-size:12px}
+.kicker{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:10px}
+h1{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.lead{color:var(--mute);margin-top:10px;max-width:620px}
+
+.page{display:flex;flex-direction:column;gap:8px}
+.s{display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.s.global{background:var(--ink);color:#fff;border-color:var(--ink)}
+.n{font-size:13px;font-weight:600;color:var(--mute);font-variant-numeric:tabular-nums;padding-top:3px}
+.s.global .n{color:#8A8A85}
+.name{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.msg{margin-top:2px}
+.s.global .msg{color:#D6D6D2}
+.tl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);align-self:center;margin-right:2px}
+.s.global .tl{color:#8A8A85}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:12px;border:1px solid var(--line);border-radius:99px;padding:2px 9px;color:#4A4A47;background:var(--soft)}
+.s.global .tag{border-color:#3A3A38;background:#262625;color:#CFCFCB}
+.beat{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:4px}
+.covers{font-size:13px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.covers b{font-weight:600}
+.from{font-size:12px;color:var(--mute);margin-top:4px}
+.flag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);white-space:nowrap;padding-top:4px}
+.s.global .flag{color:#8A8A85}
+footer{margin-top:32px;color:var(--mute);font-size:13px}
+@media (max-width:600px){body{padding:40px 16px 64px}.s{grid-template-columns:32px 1fr}.flag{grid-column:2}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Comp AI · New homepage</p>
+    <h1>Homepage story &amp; structure</h1>
+    <p class="lead">The homepage has eight chapters, and each one carries a single message. In order, they say what changes for the visitor, what Comp AI does and who does it, who it is for, and why to trust it. All lines are working copy.</p>
+  </header>
+
+  <nav class="flow" id="flow" aria-label="Story order"></nav>
+
+  <main class="page" id="page"></main>
+
+  <footer>Draft v11 · tonik</footer>
+</div>
+
+<script>
+/* One entry per section: name, the one message it carries, the kind of information on it.
+   flag = 'Global' for sections shared with every page. Edit here, the list re-renders. */
+const SECTIONS = [
+  { name: 'Navigation', flag: 'Global', msg: 'Every main page is one click away, and Book a demo is the one main action.',
+    tags: ['Product', 'Frameworks', 'Customers', 'Pricing', 'About', 'Book a demo'] },
+  { short: 'Promise', beat: 'The promise (Hero)', name: 'Get audit-ready in days.', msg: "Comp AI does the compliance work, and your team gets the time back.",
+    tags: ['Headline', 'Book a demo'],
+    covers: 'Make the visitor want to keep reading.' },
+  { short: 'Shift', beat: 'The shift', name: 'The standards stay. The work moves to Comp AI.', msg: "Your team used to do the compliance work. Now Comp AI's agents do it with your company's context, and experts review the decisions that need a person.",
+    tags: ['Then vs now', 'Positioning statement'],
+    covers: 'The visitor recognises how they work today, then sees the new way.' },
+  { short: 'What it does', beat: 'What Comp AI does', name: 'See Comp AI do the work.', msg: 'Comp AI writes policies, collects evidence, reviews vendors and tracks risk.',
+    tags: ['Capabilities', 'Product in action', 'Integrations'],
+    covers: 'Show what Comp AI does in the product.' },
+  { short: 'People', beat: 'The people', name: 'Experts who have run audits before.', msg: 'The software does the work, and a compliance expert answers your questions within minutes.',
+    tags: ['Real conversation', 'Response time'],
+    covers: 'Show the visitor that a person answers when they need one.' },
+  { short: "Who it's for", beat: "Who it's for", name: 'Start with one framework. Add more as you grow.', msg: 'You add the next framework without starting over. Comp AI works for startups, mid-market companies and enterprises.',
+    tags: ['Frameworks', 'Startup · Mid-market · Enterprise'],
+    covers: 'Each visitor finds their company size and framework.' },
+  { short: 'Trust', beat: 'The trust', name: 'Check our security yourself.', msg: "A certificate is not enough, so you can check Comp AI's security yourself. The code is open source, the evidence updates live, and the trust center is public.",
+    tags: ['Proof points', 'Open source', 'Trust center'],
+    covers: 'Give the security lead what they need to approve Comp AI.' },
+  { short: 'Proof', beat: 'The proof', name: 'What customers got from Comp AI.', msg: 'Customer stories from companies like yours, with numbers such as time to audit, and their logos.',
+    tags: ['Customer stories', 'Results', 'Customer logos'],
+    covers: 'Back the promise in the hero with customer numbers.' },
+  { short: 'Next step', beat: 'Next step', name: 'See Comp AI do the work in a live demo.', msg: 'Book a demo on your own tools, see what sets the price, and read answers to common questions.',
+    tags: ['Book a demo', 'Price factors', 'FAQ'],
+    covers: 'Get the visitor to book a demo.' },
+  { name: 'Footer', flag: 'Global', msg: 'The footer links to every page of the site.',
+    tags: ['Link columns', 'Legal', 'Status'] },
+];
+
+const el = (t, c, txt) => { const e = document.createElement(t); if (c) e.className = c; if (txt != null) e.textContent = txt; return e; };
+const flow = document.getElementById('flow');
+SECTIONS.forEach((s, i) => { if (!s.short) return;
+  if (flow.childElementCount) flow.append(el('span', 'arr', '→'));
+  const step = el('span', 'step'); step.append(el('span', 'sn', String(i).padStart(2, '0')), s.short); flow.append(step); });
+document.getElementById('page').append(...SECTIONS.map((s, i) => {
+  const row = el('section', 's' + (s.flag === 'Global' ? ' global' : ''));
+  const body = el('div');
+  if (s.beat) body.append(el('div', 'beat', s.beat));
+  body.append(el('div', 'name', s.name), el('p', 'msg', s.msg));
+  const tags = el('div', 'tags'); tags.append(el('span', 'tl', 'Key content'));
+  s.tags.forEach(t => tags.append(el('span', 'tag', t))); body.append(tags);
+  if (s.covers) { const c = el('p', 'covers'); c.append(el('b', null, 'Covers: '), s.covers); body.append(c); }
+  row.append(el('span', 'n', String(i).padStart(2, '0')), body, el('span', 'flag', s.flag || ''));
+  return row;
+}));
+</script>
+</body>
+</html>
