@@ -480,7 +480,7 @@
       const g = sy + ga * Math.sin(TAU * (.55 * sx + .35 * sy) - gph) + ga * .5 * Math.sin(TAU * (.2 * sx - .6 * sy) - gph * .6 + 1.7);
       return Math.max(0, Math.min(Y_BANDS - 1, Math.floor(g * Y_BANDS))); };
     const r = D.round, hmax = D.hmax, hmin = D.hmin, active = t0 >= 0 && now < tEnd;
-    const pa = press.amt * press.force;
+    const pa = press.amt * press.force * (introOn ? smooth(.15, 1.4, (now - introT0) / 1000) : 1);
     const d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2);
     const R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
     const far = smooth(FAR_FROM, FAR_TO, d0) * pa;
@@ -595,9 +595,12 @@
       gradAmt += ((live ? 1 : 0) - gradAmt) * (live ? .012 : .05);
       if (!paused && !reduced) gradT += dt / 1000; }
     const inIntro = introOn && now - introT0 < INTRO_LEN * 1000;
-    // after the reveal the ambient press eases in about a second later
-    if (inIntro) { lastPointer = now - IDLE_MS + 900; press.target = 0; press.amt = 0; }
-    const idle = now - lastPointer > IDLE_MS;
+    // the cursor press works from the first frame (it builds with the reveal, see draw); only the
+    // ambient press waits until the reveal is over, plus about a second
+    const ambientOk = !introOn || now - introT0 > INTRO_LEN * 1000 + 900;
+    // a resting cursor keeps its press; the ambient press only runs when no cursor is over the page
+    const idle = !pointerIn && now - lastPointer > IDLE_MS && ambientOk;
+    if (!pointerIn && !ambientOk) press.target = 0;
     if (idle && !paused && !reduced) {
       // a slow loop around the print, just off its edge, so a soft warm patch keeps moving
       ambientT += dt * .00011;
@@ -610,14 +613,15 @@
     press.x += (press.tx - press.x) * follow;
     press.y += (press.ty - press.y) * follow;
     draw(now);
-    const moving = inIntro || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
+    const moving = inIntro || (introOn && !ambientOk && !paused && !reduced) || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
     raf = (visible && (now < tEnd || moving)) ? requestAnimationFrame(frame) : 0;
   }
 
-  let armed = true;
+  let armed = true, pointerIn = false;
   const introBusy = () => introOn && performance.now() - introT0 < INTRO_LEN * 1000;
-  addEventListener('pointermove', e => {
-    if (paused || e.pointerType === 'touch' || introBusy()) return;
+  const onPointer = e => {
+    if (paused || e.pointerType === 'touch') return;
+    pointerIn = true;
     const [x, y] = toShape(e.clientX, e.clientY);
     if (performance.now() - lastPointer > IDLE_MS) { press.x = x; press.y = y; }
     lastPointer = performance.now();
@@ -625,20 +629,23 @@
     press.force = e.pressure > 0 && e.pointerType !== 'mouse' ? .4 + 1.2 * e.pressure : 1;
     const S = F[cur], zx = (x - S.cx) / (S.rx * HOVER_ZONE), zy = (y - S.cy) / (S.ry * HOVER_ZONE);
     const z = zx * zx + zy * zy, busy = t0 >= 0 && performance.now() < tEnd;
-    if (z < 1 && armed && !busy) { armed = false; morph(x, y); }
+    if (z < 1 && armed && !busy && !introBusy()) { armed = false; morph(x, y); }
     else if (z > 1.3) armed = true;
     kick();
-  }, { passive: true });
+  };
+  // pointerover also fires when the page appears under a cursor that has not moved yet
+  addEventListener('pointermove', onPointer, { passive: true });
+  addEventListener('pointerover', onPointer, { passive: true });
   // touch: a ripple runs out from the point of touch and the press warms that spot
   cvs.parentElement.addEventListener('pointerdown', e => {
-    if (paused || e.pointerType !== 'touch' || e.target.closest('a,button') || introBusy()) return;
+    if (paused || e.pointerType !== 'touch' || e.target.closest('a,button')) return;
     const [x, y] = toShape(e.clientX, e.clientY);
     lastPointer = performance.now();
     Object.assign(press, { x, y, tx: x, ty: y, target: 1, force: .4 + 1.2 * (e.pressure || .5) });
-    if (!(t0 >= 0 && performance.now() < tEnd)) morph(x, y);
+    if (!(t0 >= 0 && performance.now() < tEnd) && !introBusy()) morph(x, y);
     kick();
   });
-  const release = () => { press.target = 0; lastPointer = performance.now(); kick(); };
+  const release = () => { pointerIn = false; press.target = 0; lastPointer = performance.now(); kick(); };
   document.documentElement.addEventListener('pointerleave', release);
   addEventListener('pointerup', e => { if (e.pointerType === 'touch') release(); });
   addEventListener('blur', release);
