@@ -1,11 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-type="software">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Comp AI hero v01</title>
-<meta name="description" content="Comp AI homepage hero proposal: Blend fingerprint motif with cursor pressure and heat map.">
+<meta name="description" content="Comp AI is an AI-native compliance platform. Its agents and experts get you compliance-ready faster.">
 <meta name="theme-color" content="#000000">
+<meta property="og:title" content="Comp AI: AI-native compliance platform">
+<meta property="og:description" content="Get compliance-ready faster while Comp AI does more of the work.">
+<meta property="og:image" content="share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5 22.5 12 12 22.5 1.5 12Z'/%3E%3C/svg%3E">
+<meta name="page-type" content="software">
+<meta name="site-kind" content="software">
+<script>document.documentElement.classList.add('js', 'm-enter')</script>
 <!--
   Comp AI · homepage hero proposal v01
   Copy: homepage structure v12 (chapter 01, The promise) + brand communication framework (draft 02.11).
@@ -18,11 +26,10 @@
   Fonts: ABC Favorit Pro (licensed) + ABC Favorit Mono (TRIAL files, swap before anything ships).
 -->
 <style>
-  @font-face { font-family: "Favorit"; src: url("fonts/ABCFavoritPro-Book.otf") format("opentype"); font-weight: 400; font-display: swap; }
-  @font-face { font-family: "Favorit"; src: url("fonts/ABCFavoritPro-Regular.otf") format("opentype"); font-weight: 450; font-display: swap; }
-  @font-face { font-family: "Favorit"; src: url("fonts/ABCFavoritPro-Medium.otf") format("opentype"); font-weight: 500; font-display: swap; }
-  @font-face { font-family: "Favorit Mono"; src: url("fonts/ABCFavoritMono-Book-Trial.otf") format("opentype"); font-weight: 400; font-display: swap; }
-  @font-face { font-family: "Favorit Mono"; src: url("fonts/ABCFavoritMono-Medium-Trial.otf") format("opentype"); font-weight: 500; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("fonts/ABCFavoritPro-Regular.woff2") format("woff2"); font-weight: 450; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("fonts/ABCFavoritPro-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("fonts/ABCFavoritMono-Book-Trial.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 
   :root {
     --black: #000;
@@ -35,7 +42,7 @@
     --muted: rgba(255, 255, 255, .62);
     --sans: "Favorit", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
     --mono: "Favorit Mono", ui-monospace, "SF Mono", Menlo, monospace;
-    --edge: clamp(16px, 4.4vw, 64px);
+    --edge: 64px;
     --ease: cubic-bezier(.2, .7, .1, 1);
   }
   * { box-sizing: border-box; }
@@ -43,22 +50,25 @@
   body { font: 400 16px/1.45 var(--sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
   a { color: inherit; text-decoration: none; }
   button { font: inherit; color: inherit; }
-  .skip { position: absolute; left: var(--edge); top: -60px; z-index: 50; background: var(--white); color: var(--black); padding: 10px 14px; border-radius: 6px; }
-  .skip:focus { top: 12px; }
+  .skip { position: fixed; left: var(--edge); top: 12px; z-index: 60; background: var(--white); color: var(--black); padding: 10px 14px; border-radius: 6px;
+    clip-path: inset(50%); width: 1px; height: 1px; overflow: hidden; white-space: nowrap; }
+  .skip:focus { clip-path: none; width: auto; height: auto; overflow: visible; }
   :focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; }
 
   /* ---- hero ---------------------------------------------------------------------------- */
-  .hero { position: relative; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; isolation: isolate; }
-  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; display: block; }
+  .hero { --strip: 84px; position: relative; height: 100svh; min-height: 560px; overflow: hidden; isolation: isolate; }
+  .hero-inner { position: relative; z-index: 1; height: 100%; display: grid; grid-template-rows: 76px 1fr auto; }
+  .hero canvas { position: absolute; left: 0; top: 0; width: 100%; height: calc(100% - var(--strip)); z-index: 0; display: block; }
   /* keeps the type on clean black when lines spill toward the cursor */
-  .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background: linear-gradient(180deg, #000 0, rgba(0,0,0,.94) 64px, rgba(0,0,0,0) 150px),
                 linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.78) 30%, rgba(0,0,0,0) 52%); }
-  .wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 var(--edge); }
+  .wrap { width: min(1312px, 100% - 2 * var(--edge)); margin-inline: auto; }
 
   /* nav */
-  .nav { height: 76px; display: flex; align-items: center; gap: 40px; }
-  .mark { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; font-size: 19px; letter-spacing: -.01em; }
+  .site-nav { position: absolute; left: 0; right: 0; top: 0; z-index: 30; }
+  .nav-row { height: 76px; display: flex; align-items: center; gap: 40px; }
+  .mark { display: inline-flex; align-items: center; min-height: 44px; gap: 10px; font-weight: 500; font-size: 19px; letter-spacing: -.01em; }
   .mark svg { width: 22px; height: 22px; }
   .links { display: flex; gap: 30px; margin-left: auto; font-size: 15px; color: var(--muted); }
   .links a { position: relative; padding: 6px 0; transition: color .2s; }
@@ -81,21 +91,18 @@
   .btn-ghost:hover { border-color: var(--white); }
   .btn .arr { transition: transform .25s var(--ease); }
   .btn:hover .arr { transform: translateX(3px); }
-  .nav .btn { height: 40px; padding: 0 18px; font-size: 14px; }
 
   /* copy */
-  .copy { align-self: center; max-width: 640px; padding: 56px 0 64px; }
-  .kicker { font: 400 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; margin: 0 0 28px; }
-  .kicker i { width: 7px; height: 7px; background: var(--mint); transform: rotate(45deg); border-radius: 1.5px; }
+  .copy { grid-row: 2; align-self: center; max-width: 640px; padding: 32px 0 48px; }
+  h1 .kicker { display: block; font: 400 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mint); margin: 0 0 28px; }
   h1 { font-weight: 450; font-size: clamp(52px, 7vw, 104px); line-height: .94; letter-spacing: -.045em; margin: 0; }
-  h1 span { display: block; }
+  h1 .line { display: block; }
   .sub { font-size: clamp(18px, 1.5vw, 21px); line-height: 1.4; color: rgba(255,255,255,.78); max-width: 30ch; margin: 28px 0 0; letter-spacing: -.005em; }
   .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
 
   /* bottom strip */
-  .strip { border-top: 1px solid var(--line); background: rgba(0,0,0,.88); }
-  .strip .wrap { min-height: 64px; display: flex; align-items: center; gap: 32px; font: 400 12px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .strip b { font-weight: 500; color: var(--white); }
+  .strip { grid-row: 3; border-top: 1px solid var(--line); height: var(--strip); padding-bottom: 24px; display: flex; align-items: center; gap: 32px; font: 400 12px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .strip b { font-weight: 400; color: var(--white); }
   .fw { display: flex; gap: 18px; }
   .agent { margin-left: auto; display: flex; align-items: center; gap: 10px; min-width: 0; }
   .agent .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 0 rgba(36,255,99,.5); animation: ping 2.4s infinite; flex: none; }
@@ -109,12 +116,12 @@
   .pause:hover { color: var(--white); }
 
   /* entrance, once on load */
-  [data-enter] > * { opacity: 0; transform: translateY(18px); }
-  .ready [data-enter] > * { opacity: 1; transform: none; transition: opacity .9s var(--ease), transform .9s var(--ease); }
-  .ready [data-enter] > :nth-child(2) { transition-delay: .08s; }
-  .ready [data-enter] > :nth-child(3) { transition-delay: .18s; }
-  .ready [data-enter] > :nth-child(4) { transition-delay: .26s; }
-  .hero canvas { opacity: 0; transition: opacity 1.6s ease .1s; }
+  .js [data-rise] > * { opacity: 0; transform: translateY(18px); }
+  .js.ready [data-rise] > * { opacity: 1; transform: none; transition: opacity .9s var(--ease), transform .9s var(--ease); }
+  .ready [data-rise] > :nth-child(2) { transition-delay: .08s; }
+  .ready [data-rise] > :nth-child(3) { transition-delay: .18s; }
+  .ready [data-rise] > :nth-child(4) { transition-delay: .26s; }
+  .js .hero canvas { opacity: 0; transition: opacity 1.6s ease .1s; }
   .ready .hero canvas { opacity: 1; }
 
   /* mobile menu */
@@ -128,37 +135,40 @@
     .login { display: none; }
   }
   @media (max-width: 900px) {
-    .links, .nav-actions .btn, .login { display: none; }
+    .links, .login { display: none; }
     .nav-actions { margin-left: auto; }
-    .menu-btn { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 4px; background: none; border: 0; cursor: pointer;
-      font: 400 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; position: relative; z-index: 45; }
-    .hero::before { background: linear-gradient(180deg, #000 0%, rgba(0,0,0,.9) 8%, rgba(0,0,0,.72) 46%, rgba(0,0,0,0) 66%); }
-    .copy { align-self: start; padding: 40px 0 0; }
-    .hero { grid-template-rows: auto 1fr auto; }
+    .menu-btn { display: inline-flex; align-items: center; height: 44px; padding: 0; background: none; border: 0; cursor: pointer;
+      font: 450 15px/1 var(--sans); position: relative; z-index: 45; }
+    .hero::after { background: linear-gradient(180deg, #000 0%, rgba(0,0,0,.9) 8%, rgba(0,0,0,.72) 46%, rgba(0,0,0,0) 66%); }
+    .copy { align-self: start; padding: 32px 0 0; }
     .fw { display: none; }
   }
   @media (max-width: 600px) {
+    :root { --edge: 16px; }
     .ctas { flex-direction: column; }
     .ctas .btn { width: 100%; }
-    .strip .wrap { gap: 16px; }
+    .hero { --strip: 100px; }
+    .strip { gap: 16px; }
+    .task { white-space: normal; }
+    .nav-row { gap: 12px; }
+    .nav-actions { gap: 12px; }
+    .nav-actions .btn { padding: 0 16px; }
     .trust { display: none; }
     .agent { margin-left: 0; flex: 1; }
+    .agent .dot { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
-    [data-enter] > *, .ready [data-enter] > * { opacity: 1; transform: none; transition: none; }
-    .hero canvas { transition: none; opacity: 1; }
+    .js [data-rise] > *, .js.ready [data-rise] > * { opacity: 1; transform: none; transition: none; }
+    .js .hero canvas { transition: none; opacity: 1; }
     .agent .dot { animation: none; }
     .btn, .btn:hover { transform: none; }
   }
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-
-<section class="hero" aria-labelledby="hero-title">
-  <canvas id="print" aria-hidden="true"></canvas>
-
-  <header class="wrap nav">
+<header class="nav site-nav">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="wrap nav-row">
     <a class="mark" href="#" aria-label="Comp AI home">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5 22.5 12 12 22.5 1.5 12Z"/><path fill="#000" d="M12 7.6 16.4 12 12 16.4 7.6 12Z"/></svg>
       Comp AI
@@ -171,22 +181,22 @@
       <a class="btn btn-primary" href="#demo">Book a demo</a>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="sheet">Menu</button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <div class="wrap" id="main">
-    <div class="copy" data-enter>
-      <p class="kicker"><i aria-hidden="true"></i>AI-native compliance platform</p>
-      <h1 id="hero-title"><span>Watch the work</span> <span>disappear.</span></h1>
-      <p class="sub">Get compliance-ready faster, with more of the work handled for you.</p>
+<main id="main">
+<section class="hero" aria-labelledby="hero-title" data-enter>
+  <canvas id="print" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <div class="copy hero-text" data-rise>
+      <h1 id="hero-title"><span class="kicker">AI-native compliance platform</span><span class="line">Watch the work</span> <span class="line">disappear.</span></h1>
+      <p class="sub">Get compliance-ready faster while Comp AI does more of the work.</p>
       <div class="ctas">
-        <a class="btn btn-primary" href="#demo">Book a demo <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn btn-primary" href="#demo">Book a demo</a>
         <a class="btn btn-ghost" href="#product">See the product</a>
       </div>
     </div>
-  </div>
-
-  <div class="strip">
-    <div class="wrap">
+    <div class="strip">
       <span class="trust">Trusted by <b>1,000+</b> companies</span>
       <span class="fw" aria-label="Frameworks"><span>SOC 2</span><span>ISO 27001</span><span>HIPAA</span><span>GDPR</span></span>
       <span class="agent" aria-live="off"><span class="dot" aria-hidden="true"></span><span class="task" id="task"><s>Collecting evidence from AWS</s></span></span>
@@ -194,6 +204,7 @@
     </div>
   </div>
 </section>
+</main>
 
 <div class="sheet" id="sheet" hidden>
   <a href="#">Product</a><a href="#">Frameworks</a><a href="#">Customers</a><a href="#">Pricing</a><a href="#">About</a>

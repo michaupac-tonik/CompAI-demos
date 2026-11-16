@@ -17,3 +17,6 @@ _playground/
 *.ttf
 *.woff
 *.woff2
+
+# Robocze pliki skilla design-taste-frontend (zrzuty, raporty, profil Chrome)
+.taste-skill/
