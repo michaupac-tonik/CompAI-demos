@@ -513,7 +513,7 @@
   }
   let dis = 0;                                        // 0..1 as the hero scrolls out
   const MIST_H = 1.5;                                 // size of the mist dots left behind (shape units)
-  const MIST_R = 380;                                 // mist: dots shrink toward the cursor within this reach (shape units)
+  const MIST_R = 380;                                 // mist: reach of the cursor (shape units); dots grow within it
   const INTRO_LEN = 3.5;                              // seconds; the cursor press waits until it is over
   let introT0 = performance.now(), introOn = !reduced;
 
@@ -653,10 +653,9 @@
       // scroll-out: the work disappears from the outer edge in, squares shrink to a mist of fine dots
       if (dis > 0) { const th = (1 - dis) * (PMAX + 320) - 60, kd = smooth(-160, 0, th - dP[i]);
         h = Math.max(h * kd, s > .4 ? MIST_H * Math.min(1, dis * 1.6) : 0); }
-      // mist: the cursor sets the scale. Dots are largest around the cursor and get smaller the farther
-      // they are from it, until they vanish
-      if (pz > .01) { const dc = Math.hypot(x - press.x, y - press.y);
-        h *= 1 + pz * (.7 * (1 - smooth(0, MIST_R * .45, dc)) - smooth(MIST_R * .3, MIST_R * 1.35, dc)); }
+      // mist: the small dimmed dots are the resting form and never go away; around the cursor they grow,
+      // getting smaller again with distance until they are back at their resting size
+      if (pz > .01) h *= 1 + .8 * pz * (1 - smooth(0, MIST_R * .7, Math.hypot(x - press.x, y - press.y)));
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
@@ -667,8 +666,9 @@
       if (hh < .5) continue;
       dmd(pathFor(bandOf(x, y), heat), x, y, hh); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hh + r;
     }
-    if (pa > .001 && TRAIL > 0) {
-      const L = TRAIL * pa * (1 - smooth(0, .3, dis));
+    const tp = Math.max(pa * (1 - mz), pz);             // trail strength: the hero's press, or the cursor on the mist
+    if (tp > .001 && TRAIL > 0) {
+      const L = TRAIL * tp;
       for (let i = 0; i < N; i++) {
         if (Mf[i] > .45 || Dr[i]) continue;
         let x = D.pts[2*i], y = D.pts[2*i+1];
@@ -682,33 +682,14 @@
           if (j < 0 || Mf[j] < .35) continue;
           const v = .5 + .5 * Math.cos(TAU * Cf[j]);
           const s = smooth(1 - Wf[j] - .34, 1 - Wf[j] + .30, v) * Mf[j];
-          const h = hmax * TRAIL_SIZE * s * (1 - (k - 1) / 4) * pa * (1 - Mf[i]);
-          if (h > .9) {
+          const h = (mz > .5 ? MIST_H * 2.2 : hmax * TRAIL_SIZE) * s * (1 - (k - 1) / 4) * tp * (1 - Mf[i]);
+          if (h > (mz > .5 ? .3 : .9)) {
             const hd = Math.min(h - r, 3.2) + r;
             let clear = true;                                   // keep clear of the drawn squares around it
             for (let k2 = 0; k2 < 8 && clear; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
               if (nb >= 0 && Dr[nb] && Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) < Hs[nb] + hd + 1.5) clear = false; }
             if (clear) { dmd(pathFor(bandOf(x, y), Hf[j]), x, y, Math.max(hd - r, .35)); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hd; }
           }
-          break;
-        }
-      }
-    }
-    // mist: on the side away from the cursor, smaller dots are added in the empty lattice points next to a
-    // line, each step smaller than the one nearer the cursor, so the lines thin out with distance
-    if (pz > .01) {
-      for (let i = 0; i < N; i++) {
-        if (Dr[i]) continue;
-        const x = D.pts[2*i], y = D.pts[2*i+1], dx = press.x - x, dy = press.y - y, dc = Math.hypot(dx, dy);
-        if (dc > MIST_R * 1.2 || dc < 1) continue;
-        const ux = dx / dc, uy = dy / dc;
-        for (let k = 1; k <= 3; k++) {
-          const j = near(x + ux * A * 2 * k, y + uy * A * 2 * k);          // a drawn dot nearer the cursor
-          if (j < 0 || !Dr[j]) continue;
-          let hd = (Hs[j] - r) * (1 - k * .3) * (1 - smooth(MIST_R * .2, MIST_R * 1.2, dc)) * pz;
-          for (let k2 = 0; k2 < 8; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
-            if (nb >= 0 && Dr[nb]) hd = Math.min(hd, Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) - Hs[nb] - r - 1); }
-          if (hd > .18) { dmd(pathFor(bandOf(x, y), 0), x, y, hd); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hd + r; }
           break;
         }
       }
