@@ -653,8 +653,10 @@
       // scroll-out: the work disappears from the outer edge in, squares shrink to a mist of fine dots
       if (dis > 0) { const th = (1 - dis) * (PMAX + 320) - 60, kd = smooth(-160, 0, th - dP[i]);
         h = Math.max(h * kd, s > .4 ? MIST_H * Math.min(1, dis * 1.6) : 0); }
-      // mist: the cursor dissolves it by scale. Dots get smaller toward the cursor until they vanish under it
-      if (pz > .01) h *= 1 - pz * (1 - smooth(0, MIST_R * .6, Math.hypot(x - press.x, y - press.y)));
+      // mist: the cursor sets the scale. Dots are largest around the cursor and get smaller the farther
+      // they are from it, until they vanish
+      if (pz > .01) { const dc = Math.hypot(x - press.x, y - press.y);
+        h *= 1 + pz * (.7 * (1 - smooth(0, MIST_R * .45, dc)) - smooth(MIST_R * .3, MIST_R * 1.35, dc)); }
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
@@ -692,18 +694,18 @@
         }
       }
     }
-    // mist: on the cursor side of each line, smaller dots are added in the empty lattice points, each step
-    // smaller than the dot behind it, so the line thins out toward the cursor and is gone under it
+    // mist: on the side away from the cursor, smaller dots are added in the empty lattice points next to a
+    // line, each step smaller than the one nearer the cursor, so the lines thin out with distance
     if (pz > .01) {
       for (let i = 0; i < N; i++) {
         if (Dr[i]) continue;
         const x = D.pts[2*i], y = D.pts[2*i+1], dx = press.x - x, dy = press.y - y, dc = Math.hypot(dx, dy);
-        if (dc > MIST_R || dc < 1) continue;
+        if (dc > MIST_R * 1.2 || dc < 1) continue;
         const ux = dx / dc, uy = dy / dc;
         for (let k = 1; k <= 3; k++) {
-          const j = near(x - ux * A * 2 * k, y - uy * A * 2 * k);
+          const j = near(x + ux * A * 2 * k, y + uy * A * 2 * k);          // a drawn dot nearer the cursor
           if (j < 0 || !Dr[j]) continue;
-          let hd = (Hs[j] - r) * (1 - k * .3) * smooth(MIST_R * .15, MIST_R, dc) * pz;
+          let hd = (Hs[j] - r) * (1 - k * .3) * (1 - smooth(MIST_R * .2, MIST_R * 1.2, dc)) * pz;
           for (let k2 = 0; k2 < 8; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
             if (nb >= 0 && Dr[nb]) hd = Math.min(hd, Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) - Hs[nb] - r - 1); }
           if (hd > .18) { dmd(pathFor(bandOf(x, y), 0), x, y, hd); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hd + r; }
