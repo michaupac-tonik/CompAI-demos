@@ -153,8 +153,8 @@
   html.ui-on .announce[data-ui] > a { opacity: 1; transform: none; }
   /* frameworks chip: unrolls from its outer edge, then its labels come in */
   .js .chip[data-ui] { opacity: 1; filter: none; transform: none; clip-path: inset(-8px -8px -8px 100%);
-    transition: clip-path .9s cubic-bezier(.65,0,.15,1) var(--d); }
-  .js .chip[data-ui] > * { opacity: 0; transition: opacity .5s ease calc(var(--d) + .45s); }
+    transition: clip-path .7s cubic-bezier(.65,0,.15,1) var(--d); }
+  .js .chip[data-ui] > * { opacity: 0; transition: opacity .4s ease calc(var(--d) + .3s); }
   html.ui-on .chip[data-ui] { clip-path: inset(-8px); }
   html.ui-on .chip[data-ui] > * { opacity: 1; }
 
@@ -626,13 +626,17 @@
   let rz = 0;
   addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { place(); draw(performance.now()); kick(); }); });
   // ---- UI entrance: one element at a time, top left to bottom right ----------------------------
-  const UI = [...document.querySelectorAll('.site-nav .mark, .site-nav .links a, .site-nav .nav-actions > *, .site-nav .announce, h1 .kicker, h1 .line, .hero .sub, .hero .ctas .btn, .hero .assure, .hero .agent, .hero .chip')];
-  UI.forEach(el => el.setAttribute('data-ui', ''));
+  const UI = [...document.querySelectorAll('.site-nav .mark, .site-nav .links a, .site-nav .nav-actions > *, .site-nav .announce, h1 .kicker, h1 .line, .hero .sub, .hero .ctas .btn, .hero .assure, .hero .agent')];
+  const chip = document.querySelector('.hero .chip');
+  [...UI, chip].forEach(el => el.setAttribute('data-ui', ''));
   function startUI() {
     root.classList.remove('ui-on');
     // one beat per element, the nav links as one quick group; hidden ones (menu vs links) take no beat
     let t = .3;
     for (const el of UI) { el.style.setProperty('--d', t.toFixed(2) + 's'); if (el.getClientRects().length) t += el.closest('.links') ? .05 : .12; }
+    // the frameworks chip does not wait for the queue: it unrolls just after the funding bar opens
+    const bar = document.querySelector('.site-nav .announce');
+    chip.style.setProperty('--d', (parseFloat(bar.style.getPropertyValue('--d')) + .2).toFixed(2) + 's');
     void root.offsetWidth;                                    // apply the hidden state before it runs
     requestAnimationFrame(() => root.classList.add('ui-on'));
   }
