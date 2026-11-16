@@ -11,3 +11,9 @@ _playground/
 
 # Lokalna konfiguracja Claude Code
 .claude/
+
+# Licencjonowane fonty (ABC Favorit, w tym wersje Trial), poza gitem
+*.otf
+*.ttf
+*.woff
+*.woff2
