@@ -362,6 +362,7 @@
   // ---- hero additions ----------------------------------------------------------------------
   const AMBIENT = 0.42;      // strength of the slow drifting press when nobody points
   const IDLE_MS = 2600;      // pointer still this long -> ambient takes over
+  const REST_MS = 3000;      // cursor still this long over the page -> the print lets go and returns to its first shape
   const GRAD_AMP = .14;      // idle: the mint-to-cyan gradient drifts this far (share of its length)
   const GRAD_PERIOD = 14;    // seconds for one slow pass of the drift
   // base colour (Figma 251:362): #24FF63 at the top of the screen to #00FFEE at the bottom.
@@ -431,9 +432,9 @@
     diffs.sort((x, y) => x - y);
     return Math.round(diffs[diffs.length >> 1] || 0);
   }
-  function morph(px, py) {
+  function morph(px, py, to_ = (cur + 1) % order.length) {
     from = copy(shown);
-    cur = (cur + 1) % order.length;
+    cur = to_;
     const T = F[cur];
     to = { ...T, shift: bestShift(from, T) };
     let max = 0;
@@ -601,6 +602,12 @@
     // a resting cursor keeps its press; the ambient press only runs when no cursor is over the page
     const idle = !pointerIn && now - lastPointer > IDLE_MS && ambientOk;
     if (!pointerIn && !ambientOk) press.target = 0;
+    // cursor resting: after REST_MS the press lets go (shape and colours settle back), and a print that was
+    // morphed on hover flows back to the first one; any movement brings the press back
+    if (pointerIn && now - lastPointer > REST_MS && !inIntro) {
+      press.target = 0;
+      if (cur !== 0 && !(t0 >= 0 && now < tEnd)) morph(press.x, press.y, 0);
+    }
     if (idle && !paused && !reduced) {
       // a slow loop around the print, just off its edge, so a soft warm patch keeps moving
       ambientT += dt * .00011;
@@ -617,11 +624,12 @@
     raf = (visible && (now < tEnd || moving)) ? requestAnimationFrame(frame) : 0;
   }
 
-  let armed = true, pointerIn = false;
+  let armed = true, pointerIn = false, restTimer = 0;
   const introBusy = () => introOn && performance.now() - introT0 < INTRO_LEN * 1000;
   const onPointer = e => {
     if (paused || e.pointerType === 'touch') return;
     pointerIn = true;
+    clearTimeout(restTimer); restTimer = setTimeout(kick, REST_MS + 30);   // wake the loop to let go after a rest
     const [x, y] = toShape(e.clientX, e.clientY);
     if (performance.now() - lastPointer > IDLE_MS) { press.x = x; press.y = y; }
     lastPointer = performance.now();
