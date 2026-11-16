@@ -66,27 +66,43 @@
   .links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: var(--nav); }
   .links a { position: relative; display: inline-flex; align-items: center; gap: 4px; padding: 8px 0; transition: color .2s; }
   .links a img { width: 10px; height: 10px; }
-  .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease); }
-  .links a:hover { color: var(--white); }
-  .links a:hover::after { transform: scaleX(1); }
+  .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease); }
+  .links a:is(:hover, :focus-visible) { color: var(--white); }
+  .links a:is(:hover, :focus-visible)::after { transform: scaleX(1); transform-origin: left; }
   .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 22px; }
   .menu-btn { display: none; }
+  .announce { position: relative; height: 36px; display: flex; align-items: center; justify-content: center; }
+  .announce::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); background: rgba(0,0,0,.45); z-index: -1; }
+  .announce .short { display: none; }
+  .announce a { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; font: 300 13px/1 var(--mono); letter-spacing: .02em; color: var(--white); }
+  .announce .tag { text-transform: uppercase; padding: 3px 8px 4px; border: 1px solid rgba(252,252,252,.8); font-size: 11px; letter-spacing: .04em; }
+  .announce .t { position: relative; }
+  .announce .t::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease); }
+  .announce a:is(:hover, :focus-visible) .t::after { transform: scaleX(1); transform-origin: left; }
+  .announce svg { width: 14px; height: 14px; transition: transform .3s var(--ease); }
+  .announce a:is(:hover, :focus-visible) svg { transform: translateX(2px); }
 
   /* buttons: square, mono label (232:56, 232:60, 232:19) */
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1.5px solid var(--white); color: var(--white);
-    font: 300 14.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
+  /* sizes: desktop UI scale (nav 36px, hero CTA 44px, 13-13.5px mono labels); Figma's 1920 sizes (41 / 48px,
+     14.5px) from 1680px up; touch screens keep 44px targets in the nav and 48px full-width CTAs */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 16px; border: 1.5px solid var(--white); color: var(--white);
+    font: 300 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; white-space: nowrap;
     transition: transform .18s var(--ease), background-color .2s, color .2s, border-color .2s; }
-  .btn:hover { transform: translateY(-2px); }
-  .btn:active { transform: translateY(0) scale(.98); }
-  .btn .chev { width: 16px; height: 16px; transition: transform .25s var(--ease); }
-  .btn:hover .chev { transform: translateX(3px); }
+  .btn:active { transform: scale(.98); }
+  .btn .chev { width: 14px; height: 14px; flex: none; transition: transform .3s var(--ease); }
   .btn-quiet { border-color: rgba(252,252,252,.4); }
-  .btn-quiet:hover { border-color: var(--white); }
-  .btn-outline:hover { background: rgba(252,252,252,.08); }
-  .btn-primary { height: 48px; padding: 0 20px 0 24px; gap: 12px; background: var(--white); border-color: var(--white); color: var(--ink); }
-  .btn-primary:hover { background: #fff; }
-  .btn-secondary { height: 48px; padding: 0 24px; background: rgba(252,252,252,.06); border-color: rgba(252,252,252,.6); }
-  .btn-secondary:hover { border-color: var(--white); background: rgba(252,252,252,.1); }
+  .btn-primary { height: 44px; padding: 0 16px 0 20px; gap: 10px; font-size: 13.5px; background: var(--white); border-color: var(--white); color: var(--ink); }
+  .btn-secondary { height: 44px; padding: 0 20px; font-size: 13.5px; background: rgba(252,252,252,.06); border-color: rgba(252,252,252,.6); }
+  /* hover: wipe (web/hero/hover-states-v01, variant 01). An inverse fill slides in from the left and leaves
+     to the right; the primary fills with the motif's mint to cyan, the others with white and dark text. */
+  .btn { position: relative; overflow: hidden; isolation: isolate; }
+  .btn::before { content: ""; position: absolute; inset: -1px; z-index: -1; background: var(--white);
+    transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease); }
+  .btn:is(:hover, :focus-visible)::before { transform: scaleX(1); transform-origin: left; }
+  .btn:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--white); }
+  .btn-primary::before { background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  .btn-primary:is(:hover, :focus-visible) { border-color: var(--mint); }
+  .btn:is(:hover, :focus-visible) .chev { transform: translateX(3px); }
   .chev path { stroke: currentColor; }
 
   /* ---- hero ---------------------------------------------------------------------------- */
@@ -96,7 +112,7 @@
   .hero::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background: linear-gradient(180deg, rgba(0,0,0,.85) 0, rgba(0,0,0,.6) 78px, rgba(0,0,0,0) 130px),
                 radial-gradient(70% 70% at 0% 100%, rgba(0,0,0,.92) 0%, rgba(0,0,0,.8) 45%, rgba(0,0,0,0) 75%); }
-  .hero-inner { position: relative; z-index: 1; height: 100%; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 74px 1fr auto auto; padding-bottom: 32px; }
+  .hero-inner { position: relative; z-index: 1; height: 100%; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 118px 1fr auto auto; padding-bottom: 32px; }
   .hero-text { grid-column: 1; grid-row: 3; max-width: min(760px, 46%); }
   h1 { margin: 0; font-weight: 300; font-size: clamp(44px, 3.55vw, 68px); line-height: 1.05; letter-spacing: -.04em; color: var(--white); }
   h1 .kicker { display: block; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.8); margin: 0 0 24px; }
@@ -107,7 +123,13 @@
   .assure { margin: 16px 0 0; font: 300 13px/1.3 var(--mono); letter-spacing: .04em; color: rgba(252,252,252,.8); }
 
   /* frameworks chip (232:8) */
-  .strip { grid-row: 4; margin-top: 16px; display: flex; justify-content: flex-end; }
+  .strip { grid-row: 4; margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .agent { display: flex; align-items: center; gap: 14px; min-width: 0; font: 300 13px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.8); }
+  .agent b { font-weight: 300; color: rgba(252,252,252,.55); flex: none; }
+  .task { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, filter .5s; }
+  .task.done { opacity: 0; filter: blur(3px); }
+  .task s { text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 55% / 0 1px no-repeat; transition: background-size .6s var(--ease); }
+  .task.strike s { background-size: 100% 1px; }
   .chip { display: flex; align-items: center; gap: 24px; padding: 0 0 0 12px; background: rgba(22,22,22,.9);
     font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.8); white-space: nowrap; }
   .chip .fw { display: flex; gap: 14px; }
@@ -116,15 +138,12 @@
     font: inherit; letter-spacing: inherit; text-transform: inherit; color: rgba(252,252,252,.8); cursor: pointer; transition: color .2s; }
   .pause:hover { color: var(--white); }
 
-  .js .hero canvas { opacity: 0; transition: opacity 1.6s ease .1s; }
 
   /* ---- entrance: each element lands in turn from soft to sharp (--d per element, set by the script).
      Nav also settles from a touch larger; the hero type only sharpens. Content stays visible without the script. */
   .js [data-ui] { opacity: 0; filter: blur(7px); transition: opacity .7s ease var(--d), transform .9s cubic-bezier(.16,1,.3,1) var(--d), filter .8s ease var(--d); }
   .js .site-nav [data-ui] { transform: scale(1.06); }
   html.ui-on [data-ui][data-ui] { opacity: 1; transform: none; filter: none; }
-  .ready .hero canvas { opacity: 1; }
-  .js .hero canvas { opacity: 1; transition: none; }
 
   /* mobile menu */
   .sheet { position: fixed; inset: 0; z-index: 40; background: var(--black); padding: 96px var(--edge) 32px; display: flex; flex-direction: column; }
@@ -132,14 +151,25 @@
   .sheet a:not(.btn) { font: 300 28px/1.2 var(--sans); letter-spacing: -.02em; padding: 12px 0; border-bottom: 1px solid rgba(252,252,252,.14); }
   .sheet .btn { margin-top: 24px; }
 
+  @media (min-width: 1680px) {
+    .btn { height: 41px; padding: 0 20px; gap: 8px; font-size: 14.5px; }
+    .btn .chev { width: 16px; height: 16px; }
+    .btn-primary { height: 48px; padding: 0 20px 0 24px; gap: 12px; }
+    .btn-secondary { height: 48px; padding: 0 24px; }
+  }
+  @media (pointer: coarse) {
+    .nav-actions .btn { height: 44px; }
+    .ctas .btn { height: 48px; }
+  }
   @media (max-width: 1279px) {
     .links { display: none; }
     .menu-btn { display: inline-flex; align-items: center; height: 44px; padding: 0; background: none; border: 0; cursor: pointer; font: 300 14.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--white); position: relative; z-index: 45; }
   }
   @media (max-width: 1023px) {
-    .hero-inner { grid-template-rows: 74px 1fr auto auto; }
+    .hero-inner { grid-template-rows: 110px 1fr auto auto; }
     .hero-text { max-width: 640px; }
-    .strip { justify-content: flex-start; margin-top: 24px; }
+    .strip { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; }
+    .task { white-space: normal; }
     .chip { background: none; padding: 0; }
     .pause { border-left: 0; padding: 0 0 0 4px; }
   }
@@ -148,9 +178,18 @@
     .hero::after { background: linear-gradient(180deg, rgba(0,0,0,.85) 0, rgba(0,0,0,0) 130px), linear-gradient(0deg, #000 0%, rgba(0,0,0,.94) 52%, rgba(0,0,0,0) 72%); }
   }
   @media (max-width: 600px) {
+    .announce { height: 44px; }
+    .agent { width: 100%; }
+    .task { flex: 1; }
+    .task s { display: block; background: none; text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: transparent; transition: text-decoration-color .5s; }
+    .task.strike s { text-decoration-color: currentColor; }
+    .announce a { min-height: 44px; }
+    .announce .full { display: none; }
+    .announce .short { display: inline; }
     :root { --edge: 16px; }
     .nav-actions .btn-quiet { display: none; }
     .nav-actions .btn { height: 44px; padding: 0 14px; }
+    .ctas .btn { height: 48px; }
     .ctas { flex-direction: column; gap: 12px; }
     .ctas .btn { width: 100%; }
     .chip .fw b { display: none; }
@@ -161,9 +200,8 @@
     .mark .w { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .js [data-ui], .js [data-ui] .in { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
-    .js .hero canvas { transition: none; opacity: 1; }
-    .btn, .btn:hover { transform: none; }
+    .js [data-ui] { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
+    .btn::before, .links a::after { transition: none; }
   }
 </style>
 </head>
@@ -181,6 +219,9 @@
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="sheet">Menu</button>
     </div>
   </div>
+  <div class="wrap announce">
+    <a href="#"><span class="tag">New</span><span class="t"><span class="full">Comp AI raises $34M to build agentic compliance</span><span class="short">Comp AI raises $34M</span></span><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 3.5 8.5 7 5 10.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg></a>
+  </div>
 </header>
 
 <main id="main">
@@ -197,6 +238,7 @@
       <p class="assure">Trusted by 1,000+ companies</p>
     </div>
     <div class="strip">
+      <span class="agent" aria-live="off"><b>Agent</b><span class="task" id="task"><s>Collecting evidence from AWS</s></span></span>
       <div class="chip">
         <span class="fw" aria-label="Frameworks"><b>Frameworks</b><span>SOC 2 · ISO 27001 · HIPAA · GDPR</span></span>
         <button class="pause" id="pause" type="button" aria-pressed="false">Pause motion</button>
@@ -216,8 +258,6 @@
 (() => {
   const root = document.documentElement;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // 'ready' (headline rise) is set by the intro below; without shape data it comes at once
-  if (!window.BLEND_FIELDS) requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('ready', 'ui-on')));
 
   // ---- menu ------------------------------------------------------------------------------
   const menuBtn = document.querySelector('.menu-btn'), sheet = document.getElementById('sheet');
@@ -227,6 +267,22 @@
   });
 
   let paused = reduced;
+
+  // ---- agent ticker: the work gets done, struck through and cleared --------------------------
+  const TASKS = ['Collecting evidence from AWS', 'Drafting the access control policy', 'Reviewing a new vendor',
+                 'Scoring laptop encryption risk', 'Mapping controls to ISO 27001', 'Checking MFA across Google Workspace'];
+  const taskEl = document.getElementById('task');
+  let ti = 0;
+  function tick() {
+    if (paused) return;
+    taskEl.classList.add('strike');
+    setTimeout(() => taskEl.classList.add('done'), 900);
+    setTimeout(() => {
+      ti = (ti + 1) % TASKS.length; taskEl.firstChild.textContent = TASKS[ti];
+      taskEl.classList.remove('strike', 'done');
+    }, 1500);
+  }
+  let tickTimer = setInterval(tick, 3400);
 
   // ---- fingerprint ------------------------------------------------------------------------
   const D = window.BLEND_FIELDS;
@@ -489,7 +545,7 @@
   const kick = () => { if (!raf && visible) raf = requestAnimationFrame(frame); };
   function frame(now) {
     const dt = Math.min(64, now - lastNow); lastNow = now;
-    const inIntro = introKind && now - introT0 < LEN[introKind] * 1000;
+    const inIntro = introOn && now - introT0 < INTRO_LEN * 1000;
     // after the reveal the ambient press eases in about a second later
     if (inIntro) { lastPointer = now - IDLE_MS + 900; press.target = 0; press.amt = 0; }
     const idle = now - lastPointer > IDLE_MS;
@@ -510,7 +566,7 @@
   }
 
   let armed = true;
-  const introBusy = () => introKind && performance.now() - introT0 < LEN[introKind] * 1000;
+  const introBusy = () => introOn && performance.now() - introT0 < INTRO_LEN * 1000;
   addEventListener('pointermove', e => {
     if (paused || e.pointerType === 'touch' || introBusy()) return;
     const [x, y] = toShape(e.clientX, e.clientY);
@@ -544,7 +600,7 @@
   const pauseBtn = document.getElementById('pause');
   const setPaused = v => {
     paused = v; pauseBtn.setAttribute('aria-pressed', v); pauseBtn.textContent = v ? 'Play motion' : 'Pause motion';
-    if (v) press.target = 0;
+    if (v) { press.target = 0; clearInterval(tickTimer); } else { clearInterval(tickTimer); tickTimer = setInterval(tick, 3400); }
     kick();
   };
   pauseBtn.addEventListener('click', () => setPaused(!paused));
@@ -552,86 +608,26 @@
 
   let rz = 0;
   addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { place(); draw(performance.now()); kick(); }); });
-  // ---- UI entrance ---------------------------------------------------------------------------
-  // 1 quiet  2 masked lines  3 press wave  4 mono decode. Times are seconds after the intro starts.
-  const UI_NAMES = ['', 'Spokojnie', 'Maska wierszy', 'Docisk UI', 'Dekodowanie mono', 'Docisk UI, tekst bez skali'];
-  let uiKind = Math.max(1, Math.min(5, +(qs.get('ui') ?? 1) || 1));
-  const $ = q => [...document.querySelectorAll(q)];
-  const UI = {
-    nav: $('.site-nav .mark, .site-nav .links a, .site-nav .nav-actions > *'),
-    kicker: $('h1 .kicker'), lines: $('h1 .line'), sub: $('.hero .sub'),
-    ctas: $('.hero .ctas .btn'), assure: $('.hero .assure'), chip: $('.hero .chip'),
-  };
-  const ALL = Object.values(UI).flat();
-  ALL.forEach(el => el.setAttribute('data-ui', ''));
-  UI.lines.forEach(l => { const w = document.createElement('span'); w.className = 'in'; while (l.firstChild) w.appendChild(l.firstChild); l.appendChild(w); });
-  [...UI.lines, ...UI.sub].forEach(el => el.classList.add('sans'));
-  // text nodes of the mono labels, kept for the decode
-  const MONO = [...UI.nav.filter(e => !e.classList.contains('mark')), ...UI.kicker, ...UI.ctas, ...UI.assure, ...UI.chip];
-  const texts = [];
-  MONO.forEach(el => { const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-    for (let n; (n = w.nextNode());) if (n.data.trim()) texts.push({ n, el, t: n.data }); });
-  const GLYPHS = '◆◇■□▪▫+/\\<>_=';
-  let decodeRaf = 0;
-  const setD = (el, d) => el.style.setProperty('--d', d.toFixed(2) + 's');
-  function planUI(k) {
-    const st = (list, a, step) => list.forEach((el, i) => setD(el, a + i * step));
-    if (k === 1) { st(UI.nav, .3, 0); st(UI.kicker, .7, 0); st(UI.lines, .78, .09); st(UI.sub, 1.0, 0); st(UI.ctas, 1.12, .07); st(UI.assure, 1.3, 0); st(UI.chip, 1.4, 0); }
-    if (k === 2) { st(UI.nav, .35, .04); st(UI.kicker, .6, 0); st(UI.lines, .68, .12); st(UI.sub, 1.0, 0); st(UI.ctas, 1.14, .07); st(UI.assure, 1.3, 0); st(UI.chip, 1.1, 0);
-      root.style.setProperty('--du', '1.55s'); }
-    if (k === 3 || k === 5) {
-      // own rhythm, not tied to the print: top left to bottom right, one beat per element
-      const seq = [...UI.nav, ...UI.kicker, ...UI.lines, ...UI.sub, ...UI.ctas, ...UI.assure, ...UI.chip];
-      const beat = el => UI.nav.includes(el) && el.closest('.links') ? .05 : .12;   // nav links run as one quick group
-      let t = .3; seq.forEach(el => { setD(el, t); if (el.getClientRects().length) t += beat(el); });   // hidden ones take no beat
-    }
-    if (k === 4) { st(UI.nav, .3, .06); st(UI.kicker, .55, 0); st(UI.lines, .75, .16); st(UI.sub, 1.1, 0); st(UI.ctas, 1.25, .1); st(UI.assure, 1.5, 0); st(UI.chip, 1.0, 0); }
-  }
-  function decode(t0) {
-    cancelAnimationFrame(decodeRaf);
-    const items = texts.map(o => ({ ...o, start: parseFloat(o.el.style.getPropertyValue('--d')) * 1000 + (o.el.contains(o.n) ? 0 : 0) }));
-    const step = now => {
-      let left = false;
-      for (const o of items) {
-        const e = (now - t0 - o.start) / (220 + o.t.length * 28);
-        if (e >= 1) { if (o.n.data !== o.t) o.n.data = o.t; continue; }
-        left = true;
-        const shown = Math.max(0, e) * o.t.length;
-        let out = '';
-        for (let i = 0; i < o.t.length; i++) { const ch = o.t[i];
-          out += i < shown - 2 || ch === ' ' || ch === '·' ? ch : i < shown + 3 ? GLYPHS[(Math.random() * GLYPHS.length) | 0] : '\u00a0'; }
-        o.n.data = out;
-      }
-      decodeRaf = left ? requestAnimationFrame(step) : 0;
-    };
-    decodeRaf = requestAnimationFrame(step);
-  }
-  function startUI(k, delay) {
-    cancelAnimationFrame(decodeRaf); texts.forEach(o => { o.n.data = o.t; });
-    root.classList.remove('ui-on', 'ui-1', 'ui-2', 'ui-3', 'ui-4', 'ui-5'); root.classList.add('ui-' + k); if (k === 5) root.classList.add('ui-3');
-    planUI(k);
+  // ---- UI entrance: one element at a time, top left to bottom right ----------------------------
+  const UI = [...document.querySelectorAll('.site-nav .mark, .site-nav .links a, .site-nav .nav-actions > *, .site-nav .announce a, h1 .kicker, h1 .line, .hero .sub, .hero .ctas .btn, .hero .assure, .hero .agent, .hero .chip')];
+  UI.forEach(el => el.setAttribute('data-ui', ''));
+  function startUI() {
+    root.classList.remove('ui-on');
+    // one beat per element, the nav links as one quick group; hidden ones (menu vs links) take no beat
+    let t = .3;
+    for (const el of UI) { el.style.setProperty('--d', t.toFixed(2) + 's'); if (el.getClientRects().length) t += el.closest('.links') ? .05 : .12; }
     void root.offsetWidth;                                    // apply the hidden state before it runs
-    if (k === 4) texts.forEach(o => { o.n.data = o.t.replace(/[^ ]/g, '\u00a0'); });
-    clearTimeout(startUI.t);
-    startUI.t = setTimeout(() => { root.classList.add('ready', 'ui-on'); if (k === 4) decode(performance.now()); }, delay);
+    requestAnimationFrame(() => root.classList.add('ui-on'));
   }
 
-  // intro start: canvas on at once (it is black), UI comes in with the press
-  const startIntro = (k, u = uiKind) => {
-    introKind = k; uiKind = u; introT0 = performance.now(); press.amt = press.target = 0; t0 = -1;
-    root.classList.toggle('intro', !!k); root.classList.remove('ready');
-    startUI(uiKind, k ? 0 : 30);
-    kick();
-  };
-  window.heroIntro = k => startIntro(k ?? introKind);
-  // review hook: a still frame of intro k at t seconds
-  window.heroIntroAt = (k, t) => { const now = performance.now(); introKind = k; introT0 = now - t * 1000;
-    cancelAnimationFrame(raf); raf = 0; root.classList.add('intro', 'ready', 'ui-on'); draw(now); };
-  window.heroIntroInfo = () => ({ kind: introKind, name: NAMES[introKind], len: LEN[introKind], ui: uiKind, uiName: UI_NAMES[uiKind] });
-  addEventListener('keydown', e => { if (e.target.closest('input,textarea')) return;
-    if (e.key >= '1' && e.key <= '5') startIntro(1, +e.key); else if (e.key === 'r' || e.key === 'R') startIntro(introKind || 1); });
-  addEventListener('message', e => { if (e.data && e.data.heroIntro) startIntro(+e.data.heroIntro, +(e.data.ui || uiKind)); });
-  place(); startIntro(introKind); draw(performance.now());
+  // the press intro and the UI start together; canvas is on at once (it is black)
+  const startIntro = () => { introT0 = performance.now(); press.amt = press.target = 0; t0 = -1; startUI(); kick(); };
+  place(); startIntro(); draw(performance.now());
+
+  // review hooks: replay the entrance, or a still frame of the intro at t seconds
+  window.heroIntro = () => { introOn = !reduced; startIntro(); };
+  window.heroIntroAt = t => { const now = performance.now(); introOn = true; introT0 = now - t * 1000;
+    cancelAnimationFrame(raf); raf = 0; root.classList.add('ui-on'); draw(now); };
 
   // review hook: a still press at viewport point (cx, cy)
   window.heroPress = (cx, cy, amt = 1) => { const [x, y] = toShape(cx, cy); paused = true;
