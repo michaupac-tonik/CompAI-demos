@@ -58,7 +58,10 @@
   .mono { font: 300 14.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 
   /* ---- nav (232:30) -------------------------------------------------------------------- */
-  .site-nav { position: absolute; left: 0; right: 0; top: 0; z-index: 30; }
+  .site-nav { position: fixed; left: 0; right: 0; top: 0; z-index: 30; }
+  .site-nav::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 74px; background: rgba(0,0,0,.72);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(252,252,252,.08); opacity: 0; transition: opacity .4s; pointer-events: none; }
+  html.scrolled .site-nav::before { opacity: 1; }
   .nav-row { position: relative; height: 74px; display: flex; align-items: center; }
   .mark { display: inline-flex; align-items: center; gap: 10.4px; min-height: 44px; }
   .mark .m { width: 27.5px; height: 26px; }
@@ -107,7 +110,9 @@
 
   /* ---- hero ---------------------------------------------------------------------------- */
   .hero { position: relative; height: 100svh; min-height: 600px; overflow: hidden; isolation: isolate; background: var(--black); }
-  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+  .hero canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; transition: opacity .35s linear; }
+  /* once the page scrolls, the hero's exit is driven by the scroll, not by the entrance transitions */
+  html.ui-done [data-ui], html.ui-done [data-ui] > * { transition: none !important; }
   /* nav contrast (232:7) + a soft lift behind the type when lines spill toward it */
   .hero::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background: linear-gradient(180deg, rgba(0,0,0,.85) 0, rgba(0,0,0,.6) 78px, rgba(0,0,0,0) 130px),
@@ -222,7 +227,7 @@
   }
 
   /* ==== 02 · The shift (structure v12): pinned for ~2.5 screens, scroll walks then → now ==== */
-  .shift { position: relative; height: 260svh; background: var(--black); border-top: 1px solid rgba(252,252,252,.08); }
+  .shift { position: relative; z-index: 1; height: 260svh; background: transparent; }
   .shift .stick { position: sticky; top: 0; height: 100svh; min-height: 640px; display: grid; align-items: center; overflow: hidden; }
   .shift-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: center; }
   .eyebrow { margin: 0 0 24px; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.6); }
@@ -232,6 +237,9 @@
   .shift[data-stage="2"] h2 .now { color: var(--white); }
   .shift .lead { margin: 20px 0 0; max-width: 34em; font-size: clamp(17px, 1.2vw, 21px); line-height: 1.42; letter-spacing: -.01em; color: rgba(252,252,252,.82); text-wrap: pretty; }
   /* stepper: three moments of the same work, a rail fills with the scroll */
+
+  .js .shift [data-in] { opacity: 0; filter: blur(7px); transition: opacity .7s ease var(--d), filter .8s ease var(--d); }
+  .shift.in [data-in] { opacity: 1; filter: none; }
   .steps { position: relative; list-style: none; margin: 40px 0 0; padding: 0 0 0 24px; display: grid; gap: 22px; }
   .steps::before, .steps::after { content: ""; position: absolute; left: 3px; top: 6px; bottom: 6px; width: 1px; background: rgba(252,252,252,.14); }
   .steps::after { background: linear-gradient(180deg, var(--mint), var(--cyan)); transform-origin: top; transform: scaleY(var(--p, 0)); }
@@ -242,7 +250,7 @@
   .steps .k { display: block; font: 300 12.5px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
   .steps .d { display: block; margin-top: 8px; font-size: 16px; line-height: 1.4; max-width: 30em; }
   /* board: who does the work */
-  .board { border: 1px solid rgba(252,252,252,.1); background: rgba(22,22,22,.6); font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .board { border: 1px solid rgba(252,252,252,.1); background: rgba(22,22,22,.92); font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
   .board .row { display: grid; grid-template-columns: minmax(0, 1fr) 236px; align-items: center; gap: 16px; min-height: 64px; padding: 0 20px; border-top: 1px solid rgba(252,252,252,.08); }
   .board .row.head { min-height: 44px; border-top: 0; color: rgba(252,252,252,.5); }
   .board .task { display: grid; gap: 8px; color: var(--white); }
@@ -279,6 +287,7 @@
     .steps li { color: var(--white); }
     .steps::after { transform: none; }
     .steps li:not(.on) .d { display: block; }
+    .js .shift [data-in] { opacity: 1; filter: none; transition: none; }
   }
 </style>
 </head>
@@ -499,6 +508,8 @@
     dP[i] = (PRESS_LINES * Math.min(lines, sil * 1.6) + PRESS_SIL * sil) * wob;
     if (S0.m[i] > .05 && dP[i] > PMAX) PMAX = dP[i];
   }
+  let dis = 0;                                        // 0..1 as the hero scrolls out
+  const MIST_H = 2.6;                                 // size of the mist dots left behind (shape units)
   const INTRO_LEN = 3.5;                              // seconds; the cursor press waits until it is over
   let introT0 = performance.now(), introOn = !reduced;
 
@@ -630,7 +641,10 @@
       const soft = 1 - P_CRISP * p;
       let s = smooth(1 - w - .34 * soft, 1 - w + .30 * soft, v) * Math.max(m, 0);
       s *= 1 + .12 * jit[i] * (1 - s);
-      const h = hmax * s * rv;
+      let h = hmax * s * rv;
+      // scroll-out: the work disappears from the outer edge in, squares shrink to a mist of fine dots
+      if (dis > 0) { const th = (1 - dis) * (PMAX + 320) - 60, kd = smooth(-160, 0, th - dP[i]);
+        h = Math.max(h * kd, s > .4 ? MIST_H * Math.min(1, dis * 1.6) : 0); }
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), .4);
@@ -686,7 +700,8 @@
     // ambient press waits until the reveal is over, plus about a second
     const ambientOk = !introOn || now - introT0 > INTRO_LEN * 1000 + 900;
     // a resting cursor keeps its press; the ambient press only runs when no cursor is over the page
-    const idle = !pointerIn && now - lastPointer > IDLE_MS && ambientOk;
+    const idle = !pointerIn && now - lastPointer > IDLE_MS && ambientOk && dis < .05;
+    if (dis > .12) press.target = 0;
     if (!pointerIn && !ambientOk) press.target = 0;
     // cursor resting: after REST_MS the press lets go (shape and colours settle back), and a print that was
     // morphed on hover flows back to the first one; any movement brings the press back
@@ -774,6 +789,34 @@
     requestAnimationFrame(() => root.classList.add('ui-on'));
   }
 
+  // ---- scroll out to section 02: the print stays and the work disappears; the UI leaves in reverse ----
+  const heroEl = document.querySelector('.hero'), announce = document.querySelector('.site-nav .announce');
+  const EXIT = [chip, document.querySelector('.hero .agent'), document.querySelector('.hero .assure'),
+    ...[...document.querySelectorAll('.hero .ctas .btn')].reverse(), document.querySelector('.hero .sub'),
+    ...[...document.querySelectorAll('h1 .line')].reverse(), document.querySelector('h1 .kicker')].filter(Boolean);
+  window.heroMist = .32;                                    // section 02 raises it on its last step
+  const clamp01 = v => Math.min(1, Math.max(0, v));
+  function onScroll() {
+    const y = scrollY, H = heroEl.offsetHeight;
+    root.classList.toggle('scrolled', y > 8);
+    const lv = clamp01(y / (H * .85));
+    if (lv > 0) root.classList.add('ui-done', 'ui-on');
+    EXIT.forEach((el, i) => {
+      const k = clamp01((lv - i * .045) / .32);
+      if (el === chip) { el.style.clipPath = k ? `inset(-8px -8px -8px ${(k * 100).toFixed(1)}%)` : ''; return; }
+      el.style.opacity = k ? (1 - k).toFixed(3) : ''; el.style.filter = k ? `blur(${(k * 8).toFixed(1)}px)` : '';
+      el.style.transform = k ? `translateY(${(-k * 22).toFixed(1)}px)` : '';
+    });
+    const ka = clamp01((lv - .02) / .22);
+    announce.style.clipPath = ka ? `inset(0 -100vw ${(ka * 100).toFixed(1)}% -100vw)` : '';
+    announce.firstElementChild.style.transform = ka ? `translateY(${(-ka * 100).toFixed(1)}%)` : '';
+    dis = clamp01((y / H - .05) / .8);
+    cvs.style.opacity = (1 - dis * (1 - window.heroMist)).toFixed(3);
+    if (raf) return; draw(performance.now()); kick();
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('heromist', onScroll);
+
   // the press intro and the UI start together; canvas is on at once (it is black)
   const startIntro = () => { introT0 = performance.now(); press.amt = press.target = 0; t0 = -1; startUI(); kick(); };
   place(); startIntro(); draw(performance.now());
@@ -806,13 +849,18 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let stage = -1;
   const set = s => { if (s === stage) return; stage = s; sec.dataset.stage = s;
+    window.heroMist = s === 2 ? .5 : .32; dispatchEvent(new Event('heromist'));   // the mist livens when Comp AI takes over
     steps.forEach((li, i) => li.classList.toggle('on', i === s)); tools.forEach(el => el.textContent = TOOL[s]); };
-  if (reduced) { set(2); steps.forEach(li => li.classList.add('on')); return; }
+  // entrance: the section lands like the hero UI, one element at a time, from soft to sharp
+  const IN = [sec.querySelector('.eyebrow'), ...sec.querySelectorAll('h2 span'), sec.querySelector('.lead'), ...steps, ...sec.querySelectorAll('.board .row, .board .foot')];
+  IN.forEach((el, i) => { el.setAttribute('data-in', ''); el.style.setProperty('--d', (i * .07).toFixed(2) + 's'); });
+  if (reduced) { sec.classList.add('in'); set(2); steps.forEach(li => li.classList.add('on')); return; }
   let tick = 0;
   const update = () => { tick = 0;
     const r = sec.getBoundingClientRect(), span = Math.max(1, r.height - innerHeight);
     const p = Math.min(1, Math.max(0, -r.top / span));
     rail.style.setProperty('--p', p.toFixed(3));
+    if (r.top < innerHeight * .55) sec.classList.add('in');
     set(p < .3 ? 0 : p < .6 ? 1 : 2); };
   addEventListener('scroll', () => { if (!tick) tick = requestAnimationFrame(update); }, { passive: true });
   addEventListener('resize', update); update();
