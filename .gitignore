@@ -20,3 +20,6 @@ _playground/
 
 # Robocze pliki skilla design-taste-frontend (zrzuty, raporty, profil Chrome)
 .taste-skill/
+
+# Lokalne eksporty do porównań (z osadzonymi fontami), poza gitem
+_local/
