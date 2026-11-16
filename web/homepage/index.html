@@ -513,8 +513,7 @@
   }
   let dis = 0;                                        // 0..1 as the hero scrolls out
   const MIST_H = 1.5;                                 // size of the mist dots left behind (shape units)
-  const SMEAR = 3.2, SMEAR_R2 = 230 * 230;           // mist: dots near the cursor are dragged along its movement
-  const pv = { x: 0, y: 0 };                          // cursor velocity in shape units per frame (decays when it stops)
+  const MIST_R = 380;                                 // mist: dots shrink toward the cursor within this reach (shape units)
   const INTRO_LEN = 3.5;                              // seconds; the cursor press waits until it is over
   let introT0 = performance.now(), introOn = !reduced;
 
@@ -583,6 +582,7 @@
       const g = sy + ga * Math.sin(TAU * (.55 * sx + .35 * sy) - gph) + ga * .5 * Math.sin(TAU * (.2 * sx - .6 * sy) - gph * .6 + 1.7);
       return Math.max(0, Math.min(Y_BANDS - 1, Math.floor(g * Y_BANDS))); };
     const mz = smooth(.3, .8, dis);                    // 0 in the hero, 1 once only the mist is left
+    const pz = press.amt * mz;                         // cursor presence on the mist
     const r = D.round * (1 - .7 * dis), hmax = D.hmax, hmin = D.hmin, active = t0 >= 0 && now < tEnd;   // finer dots on the mist
     const pa = press.amt * press.force * (introOn ? smooth(.15, 1.4, (now - introT0) / 1000) : 1) * (1 - .8 * dis);   // a fifth of the press on the mist
     const d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2);
@@ -640,8 +640,6 @@
         c = b * (1 + P_DENSE * p) + f;
         g = GRAVITY * p * Math.min(1, P_RADIUS / R) * (1 - mz);
         x -= dx * g; y -= dy * g;
-        if (mz > 0) { const sq = Math.exp(-(dx * dx + dy * dy) / SMEAR_R2) * press.amt * mz;
-          x += pv.x * SMEAR * sq; y += pv.y * SMEAR * sq; }
       }
       // heat: warm where pressed, cool on the side that lets go, neutral white at rest
       const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WARM_STEPS) : -Math.round(pa * away * DIM_STEPS * (1 - mz));
@@ -654,7 +652,9 @@
       let h = hmax * s * rv;
       // scroll-out: the work disappears from the outer edge in, squares shrink to a mist of fine dots
       if (dis > 0) { const th = (1 - dis) * (PMAX + 320) - 60, kd = smooth(-160, 0, th - dP[i]);
-        h = Math.max(h * kd, s > .4 ? MIST_H * Math.min(1, dis * 1.6) * (1 + 1.4 * p) : 0); }   // mist dots swell a little under the cursor
+        h = Math.max(h * kd, s > .4 ? MIST_H * Math.min(1, dis * 1.6) : 0); }
+      // mist: the cursor dissolves it by scale. Dots get smaller toward the cursor until they vanish under it
+      if (pz > .01) h *= 1 - pz * (1 - smooth(0, MIST_R * .6, Math.hypot(x - press.x, y - press.y)));
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
@@ -692,6 +692,25 @@
         }
       }
     }
+    // mist: on the cursor side of each line, smaller dots are added in the empty lattice points, each step
+    // smaller than the dot behind it, so the line thins out toward the cursor and is gone under it
+    if (pz > .01) {
+      for (let i = 0; i < N; i++) {
+        if (Dr[i]) continue;
+        const x = D.pts[2*i], y = D.pts[2*i+1], dx = press.x - x, dy = press.y - y, dc = Math.hypot(dx, dy);
+        if (dc > MIST_R || dc < 1) continue;
+        const ux = dx / dc, uy = dy / dc;
+        for (let k = 1; k <= 3; k++) {
+          const j = near(x - ux * A * 2 * k, y - uy * A * 2 * k);
+          if (j < 0 || !Dr[j]) continue;
+          let hd = (Hs[j] - r) * (1 - k * .3) * smooth(MIST_R * .15, MIST_R, dc) * pz;
+          for (let k2 = 0; k2 < 8; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
+            if (nb >= 0 && Dr[nb]) hd = Math.min(hd, Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) - Hs[nb] - r - 1); }
+          if (hd > .18) { dmd(pathFor(bandOf(x, y), 0), x, y, hd); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hd + r; }
+          break;
+        }
+      }
+    }
     ctx.lineWidth = 2 * r; ctx.lineJoin = 'round';
     for (const [k, P] of paths) { ctx.fillStyle = ctx.strokeStyle = PAL.get(k); ctx.fill(P); ctx.stroke(P); }
   }
@@ -702,7 +721,6 @@
   const kick = () => { if (!raf && visible) raf = requestAnimationFrame(frame); };
   function frame(now) {
     const dt = Math.min(64, now - lastNow); lastNow = now;
-    pv.x *= .86; pv.y *= .86;                          // the smear settles back when the cursor stops
     { const live = !paused && !reduced && now - lastPointer > IDLE_MS;
       gradAmt += ((live ? 1 : 0) - gradAmt) * (live ? .012 : .05);
       if (!paused && !reduced) gradT += dt / 1000; }
@@ -731,7 +749,7 @@
     press.x += (press.tx - press.x) * follow;
     press.y += (press.ty - press.y) * follow;
     draw(now);
-    const moving = Math.hypot(pv.x, pv.y) > .05 || inIntro || (introOn && !ambientOk && !paused && !reduced) || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
+    const moving = inIntro || (introOn && !ambientOk && !paused && !reduced) || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
     raf = (visible && (now < tEnd || moving)) ? requestAnimationFrame(frame) : 0;
   }
 
@@ -744,11 +762,6 @@
     const [x, y] = toShape(e.clientX, e.clientY);
     if (performance.now() - lastPointer > IDLE_MS) { press.x = x; press.y = y; }
     lastPointer = performance.now();
-    { const tn = performance.now(), dtp = Math.max(8, tn - onPointer.t || 0);
-      if (onPointer.t && tn - onPointer.t < 120) {
-        pv.x += (Math.max(-40, Math.min(40, (x - onPointer.x) / dtp * 16)) - pv.x) * .5;
-        pv.y += (Math.max(-40, Math.min(40, (y - onPointer.y) / dtp * 16)) - pv.y) * .5; }
-      onPointer.t = tn; onPointer.x = x; onPointer.y = y; }
     press.tx = x; press.ty = y; press.target = 1;
     press.force = e.pressure > 0 && e.pointerType !== 'mouse' ? .4 + 1.2 * e.pressure : 1;
     const S = F[cur], zx = (x - S.cx) / (S.rx * HOVER_ZONE), zy = (y - S.cy) / (S.ry * HOVER_ZONE);
