@@ -283,8 +283,7 @@
   .who .t { color: rgba(252,252,252,.62); }
   .who .t::before { content: ""; justify-self: center; width: 6px; height: 6px; transform: rotate(45deg); border: 1px solid rgba(252,252,252,.4); }
   .who .a { opacity: 0; filter: blur(6px); transform: translateY(10px); color: var(--ink); }
-  .who .a::before { content: ""; width: 14px; height: 13px; background: var(--ink);
-    -webkit-mask: url("../hero/comp-ai-hero-v01/img/logo-mark.svg") center / contain no-repeat; mask: url("../hero/comp-ai-hero-v01/img/logo-mark.svg") center / contain no-repeat; }
+  .who .a::before { content: ""; }   /* no mark: keeps the marker column so the owner text lines up with "Your team" */
   .who .a small { grid-column: 2; font-size: 11px; color: rgba(22,22,22,.68); }
   .row[data-s="2"] .who .t { opacity: 0; filter: blur(6px); transform: translateY(-10px); }
   .row[data-s="2"] .who .a { opacity: 1; filter: none; transform: none; }
