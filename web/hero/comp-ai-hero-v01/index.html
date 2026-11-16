@@ -323,6 +323,12 @@
     const i = Math.round(D.pts[2*n] / A), j = Math.round(D.pts[2*n+1] / A);
     [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([a, b], k) => { const v = idx.get(key(i + a, j + b)); if (v !== undefined) diag[4*n + k] = v; });
   }
+  // axis neighbours two steps away (same distance on the 45° lattice as the diagonal ones)
+  const axn = new Int32Array(4 * N).fill(-1);
+  for (let n = 0; n < N; n++) {
+    const i = Math.round(D.pts[2*n] / A), j = Math.round(D.pts[2*n+1] / A);
+    [[2, 0], [-2, 0], [0, 2], [0, -2]].forEach(([a, b], k) => { const v = idx.get(key(i + a, j + b)); if (v !== undefined) axn[4*n + k] = v; });
+  }
   for (const S of F) {
     let h = S.m.slice();
     for (let it = 0; it < 9; it++) {
@@ -344,7 +350,7 @@
       if (Math.abs(fx) > Math.abs(fy)) i += fx > 0 ? 1 : -1; else j += fy > 0 ? 1 : -1; }
     const v = idx.get(key(i, j)); return v === undefined ? -1 : v;
   };
-  const Cf = new Float32Array(N), Wf = new Float32Array(N), Mf = new Float32Array(N), Hf = new Float32Array(N), Dr = new Uint8Array(N);
+  const Cf = new Float32Array(N), Wf = new Float32Array(N), Mf = new Float32Array(N), Hf = new Float32Array(N), Dr = new Uint8Array(N), Xs = new Float32Array(N), Ys = new Float32Array(N), Hs = new Float32Array(N);
 
   // ---- tuning (press-screen.html, 16.11) ---------------------------------------------------
   const SPEED = reduced ? 1e9 : 3.3, LOCAL = reduced ? 300 : 2300, SWELL = reduced ? 0 : 0.94;
@@ -467,7 +473,7 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cvs.width, cvs.height);
     ctx.setTransform(view.k * view.dpr, 0, 0, view.k * view.dpr, view.ox * view.dpr, view.oy * view.dpr);
-    paths.clear();
+    paths.clear(); Dr.fill(0);
     // base gradient by screen height; while idle it drifts: a slow diagonal swell moves through the print
     const ga = GRAD_AMP * gradAmt, gph = gradT / GRAD_PERIOD * TAU;
     const bandOf = (x, y) => { const sx = (x * view.k + view.ox) / view.w, sy = (y * view.k + view.oy) / view.h;
@@ -500,7 +506,7 @@
         w = shown.w[i] = to.w[i]; m = shown.m[i] = to.m[i]; hl = shown.h[i] = to.h[i];
       }
       let c = b + f;
-      Mf[i] = 0; Dr[i] = 0;
+      Mf[i] = 0;
       let x = D.pts[2*i], y = D.pts[2*i+1];
       // intro: squares grow in behind the press front, which carries a little extra ink outward
       let rv = 1;
@@ -540,13 +546,22 @@
       const h = hmax * s * rv;
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
-      dmd(pathFor(bandOf(x, y), heat), x, y, Math.max(Math.min(h - r, room), .4)); Dr[i] = 1;
+      let hh = Math.max(Math.min(h - r, room), .4);
+      // hard rule: never touch a square already drawn next to it (squares are L1 balls: apart when the
+      // L1 distance is at least the sum of their reaches)
+      for (let k2 = 0; k2 < 8; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
+        if (nb >= 0 && Dr[nb]) hh = Math.min(hh, Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) - Hs[nb] - r - 1); }
+      if (hh < .5) continue;
+      dmd(pathFor(bandOf(x, y), heat), x, y, hh); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hh + r;
     }
     if (pa > .001 && TRAIL > 0) {
       const L = TRAIL * pa;
       for (let i = 0; i < N; i++) {
         if (Mf[i] > .45 || Dr[i]) continue;
-        const x = D.pts[2*i], y = D.pts[2*i+1];
+        let x = D.pts[2*i], y = D.pts[2*i+1];
+        { const dx = x - press.x, dy = y - press.y;
+          const g = GRAVITY * pa * Math.min(1, Math.exp(-(dx * dx + dy * dy) / pr2) / qNear) * Math.min(1, P_RADIUS / R);
+          x -= dx * g; y -= dy * g; }
         let ux = press.x - x, uy = press.y - y; const ul = Math.hypot(ux, uy);
         if (ul < 1) continue; ux /= ul; uy /= ul;
         for (let k = 1; k <= 4; k++) {
@@ -555,7 +570,13 @@
           const v = .5 + .5 * Math.cos(TAU * Cf[j]);
           const s = smooth(1 - Wf[j] - .34, 1 - Wf[j] + .30, v) * Mf[j];
           const h = hmax * TRAIL_SIZE * s * (1 - (k - 1) / 4) * pa * (1 - Mf[i]);
-          if (h > .9) { dmd(pathFor(bandOf(x, y), Hf[j]), x, y, Math.max(Math.min(h - r, 3.2), .35)); Dr[i] = 1; }
+          if (h > .9) {
+            const hd = Math.min(h - r, 3.2) + r;
+            let clear = true;                                   // keep clear of the drawn squares around it
+            for (let k2 = 0; k2 < 8 && clear; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
+              if (nb >= 0 && Dr[nb] && Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) < Hs[nb] + hd + 1.5) clear = false; }
+            if (clear) { dmd(pathFor(bandOf(x, y), Hf[j]), x, y, Math.max(hd - r, .35)); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hd; }
+          }
           break;
         }
       }
@@ -663,6 +684,12 @@
 
   // review hook: a still idle frame with the gradient drift at t seconds
   window.heroDriftAt = t => { introOn = false; gradAmt = 1; gradT = t; press.amt = press.target = 0; cancelAnimationFrame(raf); raf = 0; draw(performance.now()); };
+  // review hook: drawn neighbours whose squares touch in the last frame (should be 0)
+  window.heroAudit = () => { let n = 0, drawn = 0;
+    for (let i = 0; i < N; i++) { if (!Dr[i]) continue; drawn++;
+      for (let k = 0; k < 8; k++) { const nb = k < 4 ? diag[4*i + k] : axn[4*i + k - 4];
+        if (nb > i && Dr[nb] && Math.abs(Xs[nb] - Xs[i]) + Math.abs(Ys[nb] - Ys[i]) < Hs[nb] + Hs[i] - .01) n++; } }
+    return { touching: n, drawn }; };
   // review hook: a still press at viewport point (cx, cy)
   window.heroPress = (cx, cy, amt = 1) => { const [x, y] = toShape(cx, cy); paused = true;
     Object.assign(press, { x, y, tx: x, ty: y, amt, target: amt, force: 1 }); cancelAnimationFrame(raf); raf = 0; draw(performance.now()); };
