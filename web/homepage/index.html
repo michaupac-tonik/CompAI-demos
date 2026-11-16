@@ -236,52 +236,80 @@
   .shift h2 .now { color: rgba(252,252,252,.32); }
   .shift[data-stage="2"] h2 .now { color: var(--white); }
   .shift .lead { margin: 20px 0 0; max-width: 34em; font-size: clamp(17px, 1.2vw, 21px); line-height: 1.42; letter-spacing: -.01em; color: rgba(252,252,252,.82); text-wrap: pretty; }
-  /* stepper: three moments of the same work, a rail fills with the scroll */
 
   .js .shift [data-in] { opacity: 0; filter: blur(7px); transition: opacity .7s ease var(--d), filter .8s ease var(--d); }
+  /* the entrance transition above would replace their own colour transition (and the colour would snap): keep both */
+  .js .shift h2 span[data-in] { transition: opacity .7s ease var(--d), filter .8s ease var(--d), color .8s var(--ease); }
+  .js .shift .steps li[data-in] { transition: opacity .7s ease var(--d), filter .8s ease var(--d), color .7s var(--ease); }
   .shift.in [data-in] { opacity: 1; filter: none; }
-  @keyframes land { from { opacity: 0; filter: blur(7px); } to { opacity: 1; filter: none; } }
-  .land { animation: land .75s ease both; animation-delay: var(--ld, 0s); }
+  /* stepper: three moments of the same work. The rail fills with an eased follow of the scroll and lands
+     exactly on each diamond; the diamond fills from the line as it arrives (--a 0..1) and swells once (--b). */
   .steps { position: relative; list-style: none; margin: 40px 0 0; padding: 0 0 0 24px; display: grid; gap: 22px; }
-  .steps::before, .steps::after { content: ""; position: absolute; left: 3px; top: 6px; bottom: 6px; width: 1px; background: rgba(252,252,252,.14); }
+  .steps::before, .steps::after { content: ""; position: absolute; left: 3px; top: 6px; height: var(--rh, calc(100% - 12px)); width: 1px; background: rgba(252,252,252,.14); }   /* ends at the last diamond */
   .steps::after { background: linear-gradient(180deg, var(--mint), var(--cyan)); transform-origin: top; transform: scaleY(var(--p, 0)); }
-  .steps li { position: relative; color: rgba(252,252,252,.35); transition: color .5s; }
-  .steps li::before { content: ""; position: absolute; left: -24px; top: 4px; width: 7px; height: 7px; transform: rotate(45deg); background: #333; transition: background .5s; }
+  .steps li { position: relative; color: rgba(252,252,252,.35); transition: color .7s var(--ease); }
+  .steps li::before, .steps li::after { content: ""; position: absolute; left: -24px; top: 4px; width: 7px; height: 7px; transform: rotate(45deg); background: #333; }
+  .steps li::after { background: linear-gradient(135deg, var(--mint), var(--cyan)); opacity: var(--a, 0);
+    transform: rotate(45deg) scale(calc(.4 + .6 * var(--a, 0) + .45 * var(--b, 0)));
+    box-shadow: 0 0 calc(14px * var(--b, 0)) rgba(36,255,99, calc(.55 * var(--b, 0))); }
   .steps li.on { color: var(--white); }
-  .steps li.on::before { background: linear-gradient(180deg, var(--mint), var(--cyan)); }
   .steps .k { display: block; font: 300 12.5px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
   .steps .d { display: block; margin-top: 8px; font-size: 16px; line-height: 1.4; max-width: 30em; }
   /* board: who does the work */
   .board { border: 1px solid rgba(252,252,252,.1); background: rgba(22,22,22,.92); font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
-  .board .row { display: grid; grid-template-columns: minmax(0, 1fr) 236px; align-items: center; gap: 16px; min-height: 64px; padding: 0 20px; border-top: 1px solid rgba(252,252,252,.08); }
+  .board .row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 236px; align-items: center; gap: 16px; min-height: 64px; padding: 0 20px; border-top: 1px solid rgba(252,252,252,.08); overflow: hidden; }
   .board .row.head { min-height: 44px; border-top: 0; color: rgba(252,252,252,.5); }
+  .board .row.head > :last-child, .board .foot > :last-child { padding-left: 24px; }
+  /* legend for the bars: shows with the first bar, right-aligned where the bars are anchored */
+  .board .hw { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .board .ts { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(252,252,252,.45); opacity: 0; filter: blur(6px); transition: opacity .6s ease, filter .6s ease; }
+  .board .ts::before { content: ""; width: 10px; height: 6px; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  .shift[data-stage="2"] .board .ts { opacity: 1; filter: none; transition-delay: .5s; }   /* in line with the owner's name, past its marker */
   .board .task { display: grid; gap: 8px; color: var(--white); }
   .board .tool { color: rgba(252,252,252,.45); font-size: 11.5px; }
   .board .tool i { font-style: normal; }
-  .who { position: relative; justify-self: start; display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border: 1px solid rgba(252,252,252,.3);
-    color: var(--white); overflow: hidden; isolation: isolate; white-space: nowrap; transition: color .45s var(--ease) var(--dl, 0s), border-color .45s var(--dl, 0s); }
-  .who::before { content: ""; position: absolute; inset: -1px; z-index: -1; background: linear-gradient(90deg, var(--mint), var(--cyan));
-    transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease) var(--dl, 0s); }
-  .who .a { display: none; }
-  .shift[data-stage="2"] .who { color: var(--ink); border-color: var(--mint); }
-  .shift[data-stage="2"] .who::before { transform: scaleX(1); }
-  .shift[data-stage="2"] .who .t { display: none; }
-  .shift[data-stage="2"] .who .a { display: inline; }
-  .board .foot { display: flex; justify-content: space-between; gap: 16px; padding: 14px 20px; border-top: 1px solid rgba(252,252,252,.08); color: rgba(252,252,252,.5); font-size: 12px; }
-  .board .foot b { font-weight: 300; color: var(--white); }
+  /* handover: a solid bar in the primary button's hover gradient (mint to cyan) grows in from the row's right edge;
+     its length is the time the agent saves on that task (--gw, set from data-saved). Going back it folds into the
+     same edge */
+  .board .row::before { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: var(--gw, 40%); pointer-events: none; z-index: 0;
+    background: linear-gradient(90deg, var(--mint), var(--cyan)); clip-path: inset(0 0 0 100%); transition: clip-path .45s var(--ease); }
+  .board .row[data-s="2"]::before { clip-path: inset(0); transition: clip-path .9s cubic-bezier(.2, .8, .2, 1); }   /* revealed, so the colours stay put while it grows */
+  .board .row > * { position: relative; z-index: 1; }
+  /* owner: a status, not a button. Both states share one cell and cross over (old rises and blurs out,
+     new settles in from below); on Comp AI it sits in ink on the gradient bar, with the Comp AI mark */
+  .who { display: grid; justify-self: start; white-space: nowrap; }
+  .who > span { grid-area: 1 / 1; display: grid; grid-template-columns: 14px auto; column-gap: 10px; row-gap: 6px; align-items: center;
+    transition: opacity .55s ease var(--hd, 0s), filter .6s ease var(--hd, 0s), transform .75s var(--ease) var(--hd, 0s); }
+  .who .t { color: rgba(252,252,252,.62); }
+  .who .t::before { content: ""; justify-self: center; width: 6px; height: 6px; transform: rotate(45deg); border: 1px solid rgba(252,252,252,.4); }
+  .who .a { opacity: 0; filter: blur(6px); transform: translateY(10px); color: var(--ink); }
+  .who .a::before { content: ""; width: 14px; height: 13px; background: var(--ink);
+    -webkit-mask: url("../hero/comp-ai-hero-v01/img/logo-mark.svg") center / contain no-repeat; mask: url("../hero/comp-ai-hero-v01/img/logo-mark.svg") center / contain no-repeat; }
+  .who .a small { grid-column: 2; font-size: 11px; color: rgba(22,22,22,.68); }
+  .row[data-s="2"] .who .t { opacity: 0; filter: blur(6px); transform: translateY(-10px); }
+  .row[data-s="2"] .who .a { opacity: 1; filter: none; transform: none; }
+  /* footer: what does not change, on the same columns as the rows, set off by a stronger rule */
+  .board .foot { display: grid; grid-template-columns: minmax(0, 1fr) 236px; align-items: center; gap: 16px; min-height: 64px; padding: 0 20px;
+    border-top: 1px solid rgba(252,252,252,.22); color: var(--white); }
+  .board .foot > span:first-child { display: grid; gap: 8px; }
+  .board .foot small { color: rgba(252,252,252,.45); font-size: 11.5px; }
+  .board .foot b { font-weight: 300; }
   @media (max-width: 1023px) {
     .shift-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
     .steps { margin-top: 28px; }
-    .board .row { grid-template-columns: minmax(0, 1fr) auto; min-height: 54px; }
+    .board .row, .board .foot { grid-template-columns: minmax(0, 1fr) auto; min-height: 54px; }
   }
   @media (max-width: 600px) {
     .shift .stick { align-items: start; padding-top: 72px; }
     .steps { gap: 14px; }
     .steps li:not(.on) .d { display: none; }
-    .board .row { padding: 0 12px; gap: 10px; }
+    .board .row, .board .foot { padding: 0 12px; gap: 10px; }
+    .board .row.head > :last-child, .board .foot > :last-child { padding-left: 22px; }
+    .board .foot small { display: none; }
     .board .row:nth-child(n+5):not(.head) { display: none; }
     .board .tool { display: none; }
-    .who { height: 28px; padding: 0 8px; font-size: 11.5px; }
+    .who { font-size: 11.5px; }
+    .who > span { column-gap: 8px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .shift { height: auto; }
@@ -290,7 +318,6 @@
     .steps::after { transform: none; }
     .steps li:not(.on) .d { display: block; }
     .js .shift [data-in] { opacity: 1; filter: none; transition: none; }
-    .land { animation: none; }
   }
 </style>
 </head>
@@ -350,13 +377,13 @@
         </ol>
       </div>
       <div class="board" role="table" aria-label="Who does the compliance work">
-        <div class="row head" role="row"><span role="columnheader">The work</span><span role="columnheader">Who does it</span></div>
-        <div class="row" role="row"><span class="task" role="cell">Write and update policies<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who" style="--dl:0s"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
-        <div class="row" role="row"><span class="task" role="cell">Collect audit evidence<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who" style="--dl:.08s"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
-        <div class="row" role="row"><span class="task" role="cell">Review new vendors<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who" style="--dl:.16s"><span class="t">Your team</span><span class="a">Agent · expert review</span></span></span></div>
-        <div class="row" role="row"><span class="task" role="cell">Assess risk<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who" style="--dl:.24s"><span class="t">Your team</span><span class="a">Agent · expert review</span></span></span></div>
-        <div class="row" role="row"><span class="task" role="cell">Answer security questionnaires<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who" style="--dl:.32s"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
-        <div class="foot"><span>Standards</span><b>Unchanged</b></div>
+        <div class="row head" role="row"><span role="columnheader">The work</span><span role="columnheader" class="hw">Who does it<span class="ts">Time saved</span></span></div>
+        <div class="row" role="row" data-saved="90"><span class="task" role="cell">Write and update policies<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
+        <div class="row" role="row" data-saved="85"><span class="task" role="cell">Collect audit evidence<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
+        <div class="row" role="row" data-saved="70"><span class="task" role="cell">Review new vendors<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent<small>+ Expert review</small></span></span></span></div>
+        <div class="row" role="row" data-saved="60"><span class="task" role="cell">Assess risk<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent<small>+ Expert review</small></span></span></span></div>
+        <div class="row" role="row" data-saved="80"><span class="task" role="cell">Answer security questionnaires<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
+        <div class="foot" role="row"><span role="cell">Standards<small>SOC 2 · ISO 27001 · HIPAA · GDPR</small></span><b role="cell">Unchanged</b></div>
       </div>
     </div>
   </div>
@@ -859,28 +886,75 @@
   const tools = [...sec.querySelectorAll('.tool i')], TOOL = ['a spreadsheet', 'a dashboard', 'Comp AI'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let stage = -1;
-  // a stage swap re-lands what changed, from soft to sharp, row by row
-  const land = (el, d) => { el.classList.remove('land'); void el.offsetWidth; el.style.setProperty('--ld', d.toFixed(2) + 's'); el.classList.add('land'); };
-  const whos = [...sec.querySelectorAll('.who')];
-  const set = s => { if (s === stage) return; const first = stage < 0, wasNow = stage === 2; stage = s; sec.dataset.stage = s;
-    if (!first && !reduced) { setTimeout(() => {
-      land(steps[s].querySelector('.d'), 0); tools.forEach((el, i) => land(el, .12 * i));
-      if (s === 2 || wasNow) whos.forEach((el, i) => land(el, .08 * i)); }); }
+  // text swap without a blink: the old word goes soft and out, the new one comes in from soft to sharp
+  // (a restarted 'land' animation used to drop the old word to nothing in one frame, which read as a flicker)
+  const swap = (el, text) => { if (el._t === text) return; el._t = text;
+    if (reduced) { el.textContent = text; return; }
+    el.getAnimations().forEach(a => a.cancel());
+    const out = el.animate([{ opacity: 1, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(4px)' }], { duration: 170, easing: 'ease-in', fill: 'forwards' });
+    out.onfinish = () => { el.textContent = text;
+      el.animate([{ opacity: 0, filter: 'blur(4px)' }, { opacity: 1, filter: 'blur(0px)' }], { duration: 420, easing: 'ease-out', fill: 'backwards' }); out.cancel(); }; };
+  const rows = [...sec.querySelectorAll('.board .row:not(.head)')], whos = rows.map(r => r.querySelector('.who'));
+  const rowS = rows.map(() => 0);
+  // bar length = share of the team's time the agent saves on that task (data-saved, %), drawn on a track that
+  // spans the right 62% of the row, so lengths compare honestly. WORKING VALUES until Comp AI sends real figures.
+  const TRACK = 62;
+  rows.forEach(r => r.style.setProperty('--gw', (TRACK * (+r.dataset.saved || 0) / 100).toFixed(1) + '%'));
+  // a row moves to the next stage on its own: the tool swaps softly; into Comp AI the gradient bar grows in from the
+  // right edge under the new owner; going back the bar folds away and the owner simply returns
+  const setRow = (i, s) => { if (s === rowS[i]) return; rowS[i] = s; const r = rows[i];
+    r.dataset.s = s; swap(tools[i], TOOL[s]);
+    if (reduced) return;
+    whos[i].style.setProperty('--hd', s === 2 ? '.18s' : '0s'); };   // the new owner lands as the bar passes under it
+  // stage = the step the line is heading to: it lights as soon as the line leaves the previous diamond
+  const set = s => { if (s === stage) return; const first = stage < 0; stage = s;
+    sec.dataset.stage = s;
     window.heroMist = s === 2 ? .5 : .32; dispatchEvent(new Event('heromist'));   // the mist livens when Comp AI takes over
-    steps.forEach((li, i) => li.classList.toggle('on', i === s)); tools.forEach(el => el.textContent = TOOL[s]); };
+    steps.forEach((li, i) => li.classList.toggle('on', i === s)); };
   // entrance: the section lands like the hero UI, one element at a time, from soft to sharp
   const IN = [sec.querySelector('.eyebrow'), ...sec.querySelectorAll('h2 span'), sec.querySelector('.lead'), ...steps, ...sec.querySelectorAll('.board .row, .board .foot')];
   IN.forEach((el, i) => { el.setAttribute('data-in', ''); el.style.setProperty('--d', (.3 + i * .12).toFixed(2) + 's'); });   // the hero's rhythm
-  if (reduced) { sec.classList.add('in'); set(2); steps.forEach(li => li.classList.add('on')); return; }
-  let tick = 0;
-  const update = () => { tick = 0;
+  if (reduced) { sec.classList.add('in'); set(2); rows.forEach((r, i) => setRow(i, 2)); steps.forEach(li => { li.classList.add('on'); li.style.setProperty('--a', 1); }); return; }
+
+  // rail: scroll progress maps piecewise onto the diamonds (diamond k at P[k] of the pin, at Y[k] on the rail);
+  // the drawn fill eases toward that target. Everything follows the drawn fill: between two diamonds the rows
+  // change one by one (row i at ROW[i] of the way), the last just before the line arrives, so the first
+  // scroll already moves the board
+  const P = [0, .3, .6], ROW = [.04, .22, .4, .58, .76];
+  let fill = -1, target = 0, raf = 0, Y = [], H = 1, passed = 0;
+  const measure = () => { Y = steps.map(li => li.offsetTop + 7.5 - 6); H = Y[Y.length - 1]; rail.style.setProperty('--rh', H + 'px'); };   // the rail ends at the last diamond
+  const toY = p => { for (let k = P.length - 1; k >= 0; k--) if (p >= P[k]) { const p1 = k + 1 < P.length ? P[k + 1] : 1, y1 = k + 1 < Y.length ? Y[k + 1] : H;
+    return Y[k] + (y1 - Y[k]) * (p - P[k]) / (p1 - P[k]); } return Y[0]; };
+  // the diamond swells once when the line reaches it (a short pulse in time, not tied to where the scroll stops)
+  const hit = steps.map(() => -1e9), PULSE = 750;
+  let pulsing = false; const HY = 4;
+  const draw = now => {
+    rail.style.setProperty('--p', (Math.max(0, fill) / H).toFixed(4));
+    let n = 0; pulsing = false;
+    steps.forEach((li, k) => { const e = fill - Y[k];
+      const a = Math.min(1, Math.max(0, (e + 26) / 26));
+      if (e >= -1) { n = k; if (k > passed && now - hit[k] > PULSE) hit[k] = now; }
+      const u = (now - hit[k]) / PULSE, b = u >= 0 && u < 1 ? Math.sin(Math.PI * Math.pow(u, .6)) : 0;
+      if (b) pulsing = true;
+      li.style.setProperty('--a', (a * a * (3 - 2 * a)).toFixed(3)); li.style.setProperty('--b', b.toFixed(3)); });
+    passed = n;
+    // a little hysteresis (HY px) so a fill resting right on a threshold cannot toggle a row or a step back and forth
+    const at = (i, f) => { let s = 0; for (let j = 0; j + 1 < Y.length; j++) if (f >= Y[j] + ROW[i] * (Y[j + 1] - Y[j])) s = j + 1; return s; };
+    rows.forEach((r, i) => { const up = at(i, fill), down = at(i, fill + HY); setRow(i, up > rowS[i] ? up : down < rowS[i] ? down : rowS[i]); });
+    const head = f => n + 1 < Y.length && f > Y[n] + 2 ? n + 1 : n, hu = head(fill), hd = head(fill + HY);
+    set(stage < 0 ? hu : hu > stage ? hu : hd < stage ? hd : stage); };
+  const loop = now => { raf = 0; const d = target - fill;
+    fill = Math.abs(d) < .3 ? target : fill + d * .085;
+    draw(now); if (fill !== target || pulsing) raf = requestAnimationFrame(loop); };
+  const update = () => { measure();
     const r = sec.getBoundingClientRect(), span = Math.max(1, r.height - innerHeight);
-    const p = Math.min(1, Math.max(0, -r.top / span));
-    rail.style.setProperty('--p', p.toFixed(3));
+    target = toY(Math.min(1, Math.max(0, -r.top / span)));
     if (r.top < innerHeight * .55) sec.classList.add('in');
-    set(p < .3 ? 0 : p < .6 ? 1 : 2); };
-  addEventListener('scroll', () => { if (!tick) tick = requestAnimationFrame(update); }, { passive: true });
+    if (fill < 0) { fill = target; passed = Y.reduce((n, y, k) => fill >= y - 1 ? k : n, 0); draw(performance.now()); }   // no pulse on load
+    else if (!raf) raf = requestAnimationFrame(loop); };
+  addEventListener('scroll', update, { passive: true });
   addEventListener('resize', update); update();
+
 })();
 </script>
 </body>
