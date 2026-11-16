@@ -144,6 +144,19 @@
   .js [data-ui] { opacity: 0; filter: blur(7px); transition: opacity .7s ease var(--d), transform .9s cubic-bezier(.16,1,.3,1) var(--d), filter .8s ease var(--d); }
   .js .site-nav [data-ui] { transform: scale(1.06); }
   html.ui-on [data-ui][data-ui] { opacity: 1; transform: none; filter: none; }
+  /* funding bar: slides down from under the nav (the bar opens from its top edge, the line rides down with it) */
+  .js .announce[data-ui] { opacity: 1; filter: none; transform: none; clip-path: inset(0 -100vw 100% -100vw);
+    transition: clip-path .8s cubic-bezier(.16,1,.3,1) var(--d); }
+  .js .announce[data-ui] > a { opacity: 0; transform: translateY(-100%);
+    transition: transform .8s cubic-bezier(.16,1,.3,1) var(--d), opacity .5s ease calc(var(--d) + .1s); }
+  html.ui-on .announce[data-ui] { clip-path: inset(0 -100vw -8px -100vw); }
+  html.ui-on .announce[data-ui] > a { opacity: 1; transform: none; }
+  /* frameworks chip: unrolls from its outer edge, then its labels come in */
+  .js .chip[data-ui] { opacity: 1; filter: none; transform: none; clip-path: inset(-8px -8px -8px 100%);
+    transition: clip-path .9s cubic-bezier(.65,0,.15,1) var(--d); }
+  .js .chip[data-ui] > * { opacity: 0; transition: opacity .5s ease calc(var(--d) + .45s); }
+  html.ui-on .chip[data-ui] { clip-path: inset(-8px); }
+  html.ui-on .chip[data-ui] > * { opacity: 1; }
 
   /* mobile menu */
   .sheet { position: fixed; inset: 0; z-index: 40; background: var(--black); padding: 96px var(--edge) 32px; display: flex; flex-direction: column; }
@@ -171,6 +184,8 @@
     .strip { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; }
     .task { white-space: normal; }
     .chip { background: none; padding: 0; }
+    .js .chip[data-ui] { clip-path: inset(-8px 100% -8px -8px); }
+    html.ui-on .chip[data-ui] { clip-path: inset(-8px); }
     .pause { border-left: 0; padding: 0 0 0 4px; }
   }
   @media (max-width: 900px) {
@@ -201,6 +216,8 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .js [data-ui] { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
+    .js .announce[data-ui], .js .chip[data-ui] { clip-path: none !important; }
+    .js .announce[data-ui] > a, .js .chip[data-ui] > * { opacity: 1 !important; transform: none !important; transition: none !important; }
     .btn::before, .links a::after { transition: none; }
   }
 </style>
@@ -609,7 +626,7 @@
   let rz = 0;
   addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { place(); draw(performance.now()); kick(); }); });
   // ---- UI entrance: one element at a time, top left to bottom right ----------------------------
-  const UI = [...document.querySelectorAll('.site-nav .mark, .site-nav .links a, .site-nav .nav-actions > *, .site-nav .announce a, h1 .kicker, h1 .line, .hero .sub, .hero .ctas .btn, .hero .assure, .hero .agent, .hero .chip')];
+  const UI = [...document.querySelectorAll('.site-nav .mark, .site-nav .links a, .site-nav .nav-actions > *, .site-nav .announce, h1 .kicker, h1 .line, .hero .sub, .hero .ctas .btn, .hero .assure, .hero .agent, .hero .chip')];
   UI.forEach(el => el.setAttribute('data-ui', ''));
   function startUI() {
     root.classList.remove('ui-on');
