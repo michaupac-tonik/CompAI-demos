@@ -512,7 +512,9 @@
     if (S0.m[i] > .05 && dP[i] > PMAX) PMAX = dP[i];
   }
   let dis = 0;                                        // 0..1 as the hero scrolls out
-  const MIST_H = 2.6;                                 // size of the mist dots left behind (shape units)
+  const MIST_H = 1.5;                                 // size of the mist dots left behind (shape units)
+  const SMEAR = 3.2, SMEAR_R2 = 230 * 230;           // mist: dots near the cursor are dragged along its movement
+  const pv = { x: 0, y: 0 };                          // cursor velocity in shape units per frame (decays when it stops)
   const INTRO_LEN = 3.5;                              // seconds; the cursor press waits until it is over
   let introT0 = performance.now(), introOn = !reduced;
 
@@ -580,14 +582,15 @@
     const bandOf = (x, y) => { const sx = (x * view.k + view.ox) / view.w, sy = (y * view.k + view.oy) / view.h;
       const g = sy + ga * Math.sin(TAU * (.55 * sx + .35 * sy) - gph) + ga * .5 * Math.sin(TAU * (.2 * sx - .6 * sy) - gph * .6 + 1.7);
       return Math.max(0, Math.min(Y_BANDS - 1, Math.floor(g * Y_BANDS))); };
-    const r = D.round, hmax = D.hmax, hmin = D.hmin, active = t0 >= 0 && now < tEnd;
+    const mz = smooth(.3, .8, dis);                    // 0 in the hero, 1 once only the mist is left
+    const r = D.round * (1 - .7 * dis), hmax = D.hmax, hmin = D.hmin, active = t0 >= 0 && now < tEnd;   // finer dots on the mist
     const pa = press.amt * press.force * (introOn ? smooth(.15, 1.4, (now - introT0) / 1000) : 1) * (1 - .8 * dis);   // a fifth of the press on the mist
     const d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2);
     const R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
     const far = smooth(FAR_FROM, FAR_TO, d0) * pa;
     const qNear = Math.exp(-Math.pow(Math.max(0, d0 - 560), 2) / pr2);
     const it = (now - introT0) / 1000, ik = introOn && it < INTRO_LEN;
-    const cull = ik ? .5 : hmin;
+    const cull = ik ? .5 : (dis > .05 ? .4 : hmin);
     const frontR = 30 + (1 - Math.pow(1 - Math.min(1, it / 3.0), 2)) * (PMAX + 300), inkFade = 1 - smooth(2.0, 3.4, it);
     for (let i = 0; i < N; i++) {
       let b, f, w, m, hl, swell = 0;
@@ -628,16 +631,20 @@
         q = Math.min(1, Math.exp(-(dx * dx + dy * dy) / pr2) / qNear);
         p = pa * q;
         away = 1 - q;
-        w = Math.min(.9, w + P_SPREAD * p) - LIFT_W * pa * away - FAR_W * far * away;
-        m = (1 - Math.pow(1 - m, 1 + P_EDGE * p)) * (1 - LIFT_M * pa * away * (1 - m * m));
-        m *= 1 - FAR_M * far * Math.pow(away, 1.6);
+        // on the mist the whole-print reactions (the far side letting go, the pull to the press) fade out:
+        // together they read as a tilting 3D object; the mist only smears along the cursor's movement
+        w = Math.min(.9, w + P_SPREAD * p) - (LIFT_W * pa * away + FAR_W * far * away) * (1 - mz);
+        m = (1 - Math.pow(1 - m, 1 + P_EDGE * p)) * (1 - LIFT_M * pa * away * (1 - m * m) * (1 - mz));
+        m *= 1 - FAR_M * far * Math.pow(away, 1.6) * (1 - mz);
         m = Math.max(m, hl * P_SPILL * p * p);
         c = b * (1 + P_DENSE * p) + f;
-        g = GRAVITY * p * Math.min(1, P_RADIUS / R);
+        g = GRAVITY * p * Math.min(1, P_RADIUS / R) * (1 - mz);
         x -= dx * g; y -= dy * g;
+        if (mz > 0) { const sq = Math.exp(-(dx * dx + dy * dy) / SMEAR_R2) * press.amt * mz;
+          x += pv.x * SMEAR * sq; y += pv.y * SMEAR * sq; }
       }
       // heat: warm where pressed, cool on the side that lets go, neutral white at rest
-      const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WARM_STEPS) : -Math.round(pa * away * DIM_STEPS);
+      const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WARM_STEPS) : -Math.round(pa * away * DIM_STEPS * (1 - mz));
       Cf[i] = c - swell; Wf[i] = w; Mf[i] = m; Hf[i] = heat;
       if (m < .01) continue;
       const v = .5 + .5 * Math.cos(TAU * (c - swell));
@@ -650,7 +657,7 @@
         h = Math.max(h * kd, s > .4 ? MIST_H * Math.min(1, dis * 1.6) * (1 + 1.4 * p) : 0); }   // mist dots swell a little under the cursor
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
-      let hh = Math.max(Math.min(h - r, room), .4);
+      let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
       // hard rule: never touch a square already drawn next to it (squares are L1 balls: apart when the
       // L1 distance is at least the sum of their reaches)
       for (let k2 = 0; k2 < 8; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
@@ -695,6 +702,7 @@
   const kick = () => { if (!raf && visible) raf = requestAnimationFrame(frame); };
   function frame(now) {
     const dt = Math.min(64, now - lastNow); lastNow = now;
+    pv.x *= .86; pv.y *= .86;                          // the smear settles back when the cursor stops
     { const live = !paused && !reduced && now - lastPointer > IDLE_MS;
       gradAmt += ((live ? 1 : 0) - gradAmt) * (live ? .012 : .05);
       if (!paused && !reduced) gradT += dt / 1000; }
@@ -723,7 +731,7 @@
     press.x += (press.tx - press.x) * follow;
     press.y += (press.ty - press.y) * follow;
     draw(now);
-    const moving = inIntro || (introOn && !ambientOk && !paused && !reduced) || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
+    const moving = Math.hypot(pv.x, pv.y) > .05 || inIntro || (introOn && !ambientOk && !paused && !reduced) || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
     raf = (visible && (now < tEnd || moving)) ? requestAnimationFrame(frame) : 0;
   }
 
@@ -736,11 +744,16 @@
     const [x, y] = toShape(e.clientX, e.clientY);
     if (performance.now() - lastPointer > IDLE_MS) { press.x = x; press.y = y; }
     lastPointer = performance.now();
+    { const tn = performance.now(), dtp = Math.max(8, tn - onPointer.t || 0);
+      if (onPointer.t && tn - onPointer.t < 120) {
+        pv.x += (Math.max(-40, Math.min(40, (x - onPointer.x) / dtp * 16)) - pv.x) * .5;
+        pv.y += (Math.max(-40, Math.min(40, (y - onPointer.y) / dtp * 16)) - pv.y) * .5; }
+      onPointer.t = tn; onPointer.x = x; onPointer.y = y; }
     press.tx = x; press.ty = y; press.target = 1;
     press.force = e.pressure > 0 && e.pointerType !== 'mouse' ? .4 + 1.2 * e.pressure : 1;
     const S = F[cur], zx = (x - S.cx) / (S.rx * HOVER_ZONE), zy = (y - S.cy) / (S.ry * HOVER_ZONE);
     const z = zx * zx + zy * zy, busy = t0 >= 0 && performance.now() < tEnd;
-    if (z < 1 && armed && !busy && !introBusy() && dis < .1) { armed = false; morph(x, y); }
+    if (z < 1 && armed && !busy && !introBusy()) { armed = false; morph(x, y); }   // also on the mist
     else if (z > 1.3) armed = true;
     kick();
   };
