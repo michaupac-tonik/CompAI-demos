@@ -15,7 +15,7 @@
 <meta name="site-kind" content="software">
 <script>document.documentElement.classList.add('js', 'm-enter')</script>
 <!--
-  Transition option B ("squares become the board"): as the hero scrolls out, the print breaks up and
+  DRAFT · transition option 2 ("squares become the board"): as the hero scrolls out, the print breaks up and
   its squares stream into the "who does the work" board, settling on its lattice as a dotted ground behind it.
   Option 1 is index.html.
   Comp AI · homepage hero proposal v01
@@ -243,8 +243,6 @@
 
   .js .shift [data-in] { opacity: 0; filter: blur(7px); transition: opacity .7s ease var(--d), filter .8s ease var(--d); }
   .shift.in [data-in] { opacity: 1; filter: none; }
-  @keyframes land { from { opacity: 0; filter: blur(7px); } to { opacity: 1; filter: none; } }
-  .land { animation: land .75s ease both; animation-delay: var(--ld, 0s); }
   .steps { position: relative; list-style: none; margin: 40px 0 0; padding: 0 0 0 24px; display: grid; gap: 22px; }
   .steps::before, .steps::after { content: ""; position: absolute; left: 3px; top: 6px; bottom: 6px; width: 1px; background: rgba(252,252,252,.14); }
   .steps::after { background: linear-gradient(180deg, var(--mint), var(--cyan)); transform-origin: top; transform: scaleY(var(--p, 0)); }
@@ -293,7 +291,6 @@
     .steps::after { transform: none; }
     .steps li:not(.on) .d { display: block; }
     .js .shift [data-in] { opacity: 1; filter: none; transition: none; }
-    .land { animation: none; }
   }
 </style>
 </head>
@@ -585,7 +582,7 @@
       const g = sy + ga * Math.sin(TAU * (.55 * sx + .35 * sy) - gph) + ga * .5 * Math.sin(TAU * (.2 * sx - .6 * sy) - gph * .6 + 1.7);
       return Math.max(0, Math.min(Y_BANDS - 1, Math.floor(g * Y_BANDS))); };
     const r = D.round, hmax = D.hmax, hmin = D.hmin, active = t0 >= 0 && now < tEnd;
-    const pa = press.amt * press.force * (introOn ? smooth(.15, 1.4, (now - introT0) / 1000) : 1) * (1 - .8 * dis);
+    const pa = press.amt * press.force * (introOn ? smooth(.15, 1.4, (now - introT0) / 1000) : 1);
     const d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2);
     const R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
     const far = smooth(FAR_FROM, FAR_TO, d0) * pa;
@@ -626,14 +623,6 @@
         }
       }
       if (hl < .01) continue;
-      // option B: the print breaks up and its squares stream into the board, settling on its lattice
-      let fe = 0;
-      if (dis > 0 && box.c) {
-        fe = ease(Math.min(1, Math.max(0, dis * 1.35 - (dP[i] / PMAX) * .35)));
-        const cell = Math.imul(i, 2654435761) >>> 0, ci = cell % box.c, cx = ci % box.cols, cy = (ci / box.cols) | 0;
-        const tx = box.x0 + (cx + .5) * A * 2 + (cy % 2) * A, ty = box.y0 + (cy + .5) * A;
-        x += (tx - x) * fe; y += (ty - y) * fe;
-      }
       let p = 0, q = 0, away = 0, g = 0;
       if (pa > .001) {
         const dx = x - press.x, dy = y - press.y;
@@ -657,7 +646,15 @@
       let s = smooth(1 - w - .34 * soft, 1 - w + .30 * soft, v) * Math.max(m, 0);
       s *= 1 + .12 * jit[i] * (1 - s);
       let h = hmax * s * rv;
-      if (fe > 0) h = h * (1 - fe) + (s > .3 ? 3.4 : 0) * fe;   // settled squares become fine dots
+      // scroll-out: the work disappears from the outer edge in, squares shrink to a mist of fine dots
+      if (dis > 0 && box.c) {
+        // draft 2: the print breaks up and its squares stream into the board, settling on its lattice
+        const e = ease(Math.min(1, Math.max(0, dis * 1.35 - (dP[i] / PMAX) * .35)));
+        const cell = Math.imul(i, 2654435761) >>> 0, ci = cell % box.c, cx = ci % box.cols, cy = (ci / box.cols) | 0;
+        const tx = box.x0 + (cx + .5) * A * 2 + (cy % 2) * A, ty = box.y0 + (cy + .5) * A;
+        x += (tx - x) * e; y += (ty - y) * e;
+        h = h * (1 - e) + (s > .3 ? 3.4 : 0) * e;
+      }
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), .4);
@@ -669,7 +666,7 @@
       dmd(pathFor(bandOf(x, y), heat), x, y, hh); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hh + r;
     }
     if (pa > .001 && TRAIL > 0) {
-      const L = TRAIL * pa * (1 - smooth(0, .3, dis));
+      const L = TRAIL * pa;
       for (let i = 0; i < N; i++) {
         if (Mf[i] > .45 || Dr[i]) continue;
         let x = D.pts[2*i], y = D.pts[2*i+1];
@@ -714,6 +711,7 @@
     const ambientOk = !introOn || now - introT0 > INTRO_LEN * 1000 + 900;
     // a resting cursor keeps its press; the ambient press only runs when no cursor is over the page
     const idle = !pointerIn && now - lastPointer > IDLE_MS && ambientOk && dis < .05;
+    if (dis > .12) press.target = 0;
     if (!pointerIn && !ambientOk) press.target = 0;
     // cursor resting: after REST_MS the press lets go (shape and colours settle back), and a print that was
     // morphed on hover flows back to the first one; any movement brings the press back
@@ -750,7 +748,7 @@
     press.force = e.pressure > 0 && e.pointerType !== 'mouse' ? .4 + 1.2 * e.pressure : 1;
     const S = F[cur], zx = (x - S.cx) / (S.rx * HOVER_ZONE), zy = (y - S.cy) / (S.ry * HOVER_ZONE);
     const z = zx * zx + zy * zy, busy = t0 >= 0 && performance.now() < tEnd;
-    if (z < 1 && armed && !busy && !introBusy() && dis < .1) { armed = false; morph(x, y); }
+    if (z < 1 && armed && !busy && !introBusy()) { armed = false; morph(x, y); }
     else if (z > 1.3) armed = true;
     kick();
   };
@@ -864,18 +862,11 @@
   const tools = [...sec.querySelectorAll('.tool i')], TOOL = ['a spreadsheet', 'a dashboard', 'Comp AI'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let stage = -1;
-  // a stage swap re-lands what changed, from soft to sharp, row by row
-  const land = (el, d) => { el.classList.remove('land'); void el.offsetWidth; el.style.setProperty('--ld', d.toFixed(2) + 's'); el.classList.add('land'); };
-  const whos = [...sec.querySelectorAll('.who')];
-  const set = s => { if (s === stage) return; const first = stage < 0, wasNow = stage === 2; stage = s; sec.dataset.stage = s;
-    steps.forEach((li, i) => li.classList.toggle('on', i === s)); tools.forEach(el => el.textContent = TOOL[s]);
-    if (first || reduced) return;
-    land(steps[s].querySelector('.d'), 0);
-    tools.forEach((el, i) => land(el, .12 * i));
-    if (s === 2 || wasNow) whos.forEach((el, i) => land(el, .08 * i)); };
+  const set = s => { if (s === stage) return; stage = s; sec.dataset.stage = s;
+    steps.forEach((li, i) => li.classList.toggle('on', i === s)); tools.forEach(el => el.textContent = TOOL[s]); };
   // entrance: the section lands like the hero UI, one element at a time, from soft to sharp
   const IN = [sec.querySelector('.eyebrow'), ...sec.querySelectorAll('h2 span'), sec.querySelector('.lead'), ...steps, ...sec.querySelectorAll('.board .row, .board .foot')];
-  IN.forEach((el, i) => { el.setAttribute('data-in', ''); el.style.setProperty('--d', (.3 + i * .12).toFixed(2) + 's'); });   // the hero's rhythm
+  IN.forEach((el, i) => { el.setAttribute('data-in', ''); el.style.setProperty('--d', (i * .07).toFixed(2) + 's'); });
   if (reduced) { sec.classList.add('in'); set(2); steps.forEach(li => li.classList.add('on')); return; }
   let tick = 0;
   const update = () => { tick = 0;
