@@ -1,1 +1,13 @@
 .DS_Store
+
+# Nowe repo strony (osobny git, osobny remote)
+site/
+
+# Duże pliki wideo, poza GitHubem
+resources/CompAI_Animation/
+
+# Playground: wcześniejsze próby z Cowork, tylko do wglądu, poza gitem
+_playground/
+
+# Lokalna konfiguracja Claude Code
+.claude/
