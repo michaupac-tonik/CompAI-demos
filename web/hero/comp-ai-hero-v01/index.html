@@ -344,7 +344,7 @@
       if (Math.abs(fx) > Math.abs(fy)) i += fx > 0 ? 1 : -1; else j += fy > 0 ? 1 : -1; }
     const v = idx.get(key(i, j)); return v === undefined ? -1 : v;
   };
-  const Cf = new Float32Array(N), Wf = new Float32Array(N), Mf = new Float32Array(N), Hf = new Float32Array(N);
+  const Cf = new Float32Array(N), Wf = new Float32Array(N), Mf = new Float32Array(N), Hf = new Float32Array(N), Dr = new Uint8Array(N);
 
   // ---- tuning (press-screen.html, 16.11) ---------------------------------------------------
   const SPEED = reduced ? 1e9 : 3.3, LOCAL = reduced ? 300 : 2300, SWELL = reduced ? 0 : 0.94;
@@ -356,10 +356,12 @@
   // ---- hero additions ----------------------------------------------------------------------
   const AMBIENT = 0.42;      // strength of the slow drifting press when nobody points
   const IDLE_MS = 2600;      // pointer still this long -> ambient takes over
+  const GRAD_AMP = .14;      // idle: the mint-to-cyan gradient drifts this far (share of its length)
+  const GRAD_PERIOD = 14;    // seconds for one slow pass of the drift
   // base colour (Figma 251:362): #24FF63 at the top of the screen to #00FFEE at the bottom.
   // heat on top: pressed lines warm toward yellow and orange, the side that lets go dims.
   const BASE_TOP = [36,255,99], BASE_BOT = [0,255,238], WARM = [[241,188,55], [245,56,14]];
-  const Y_BANDS = 14, WARM_STEPS = 8, DIM_STEPS = 3;
+  const Y_BANDS = 28, WARM_STEPS = 8, DIM_STEPS = 3;
   const mix = (a, b, u) => a.map((v, i) => Math.round(v + (b[i] - v) * u));
   const colourOf = (band, heat) => {        // heat: -DIM_STEPS..WARM_STEPS
     let c = mix(BASE_TOP, BASE_BOT, band / (Y_BANDS - 1));
@@ -466,7 +468,11 @@
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cvs.width, cvs.height);
     ctx.setTransform(view.k * view.dpr, 0, 0, view.k * view.dpr, view.ox * view.dpr, view.oy * view.dpr);
     paths.clear();
-    const bandOf = y => Math.max(0, Math.min(Y_BANDS - 1, Math.floor((y * view.k + view.oy) / view.h * Y_BANDS)));
+    // base gradient by screen height; while idle it drifts: a slow diagonal swell moves through the print
+    const ga = GRAD_AMP * gradAmt, gph = gradT / GRAD_PERIOD * TAU;
+    const bandOf = (x, y) => { const sx = (x * view.k + view.ox) / view.w, sy = (y * view.k + view.oy) / view.h;
+      const g = sy + ga * Math.sin(TAU * (.55 * sx + .35 * sy) - gph) + ga * .5 * Math.sin(TAU * (.2 * sx - .6 * sy) - gph * .6 + 1.7);
+      return Math.max(0, Math.min(Y_BANDS - 1, Math.floor(g * Y_BANDS))); };
     const r = D.round, hmax = D.hmax, hmin = D.hmin, active = t0 >= 0 && now < tEnd;
     const pa = press.amt * press.force;
     const d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2);
@@ -494,7 +500,7 @@
         w = shown.w[i] = to.w[i]; m = shown.m[i] = to.m[i]; hl = shown.h[i] = to.h[i];
       }
       let c = b + f;
-      Mf[i] = 0;
+      Mf[i] = 0; Dr[i] = 0;
       let x = D.pts[2*i], y = D.pts[2*i+1];
       // intro: squares grow in behind the press front, which carries a little extra ink outward
       let rv = 1;
@@ -509,7 +515,7 @@
         }
       }
       if (hl < .01) continue;
-      let p = 0, q = 0, away = 0;
+      let p = 0, q = 0, away = 0, g = 0;
       if (pa > .001) {
         const dx = x - press.x, dy = y - press.y;
         q = Math.min(1, Math.exp(-(dx * dx + dy * dy) / pr2) / qNear);
@@ -520,7 +526,7 @@
         m *= 1 - FAR_M * far * Math.pow(away, 1.6);
         m = Math.max(m, hl * P_SPILL * p * p);
         c = b * (1 + P_DENSE * p) + f;
-        const g = GRAVITY * p * Math.min(1, P_RADIUS / R);
+        g = GRAVITY * p * Math.min(1, P_RADIUS / R);
         x -= dx * g; y -= dy * g;
       }
       // heat: warm where pressed, cool on the side that lets go, neutral white at rest
@@ -533,12 +539,13 @@
       s *= 1 + .12 * jit[i] * (1 - s);
       const h = hmax * s * rv;
       if (h < cull) continue;
-      dmd(pathFor(bandOf(y), heat), x, y, Math.max(h - r, .4));
+      const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
+      dmd(pathFor(bandOf(x, y), heat), x, y, Math.max(Math.min(h - r, room), .4)); Dr[i] = 1;
     }
     if (pa > .001 && TRAIL > 0) {
       const L = TRAIL * pa;
       for (let i = 0; i < N; i++) {
-        if (Mf[i] > .45) continue;
+        if (Mf[i] > .45 || Dr[i]) continue;
         const x = D.pts[2*i], y = D.pts[2*i+1];
         let ux = press.x - x, uy = press.y - y; const ul = Math.hypot(ux, uy);
         if (ul < 1) continue; ux /= ul; uy /= ul;
@@ -548,7 +555,7 @@
           const v = .5 + .5 * Math.cos(TAU * Cf[j]);
           const s = smooth(1 - Wf[j] - .34, 1 - Wf[j] + .30, v) * Mf[j];
           const h = hmax * TRAIL_SIZE * s * (1 - (k - 1) / 4) * pa * (1 - Mf[i]);
-          if (h > .9) dmd(pathFor(bandOf(y), Hf[j]), x, y, Math.max(h - r, .35));
+          if (h > .9) { dmd(pathFor(bandOf(x, y), Hf[j]), x, y, Math.max(Math.min(h - r, 3.2), .35)); Dr[i] = 1; }
           break;
         }
       }
@@ -559,9 +566,13 @@
 
   // ---- loop: pointer press, ambient drift, morph; sleeps off screen and when paused ---------
   let raf = 0, visible = true, lastPointer = -1e9, ambientT = Math.random() * 100, lastNow = performance.now();
+  let gradT = Math.random() * GRAD_PERIOD, gradAmt = 0;   // idle gradient drift: its clock and strength
   const kick = () => { if (!raf && visible) raf = requestAnimationFrame(frame); };
   function frame(now) {
     const dt = Math.min(64, now - lastNow); lastNow = now;
+    { const live = !paused && !reduced && now - lastPointer > IDLE_MS;
+      gradAmt += ((live ? 1 : 0) - gradAmt) * (live ? .012 : .05);
+      if (!paused && !reduced) gradT += dt / 1000; }
     const inIntro = introOn && now - introT0 < INTRO_LEN * 1000;
     // after the reveal the ambient press eases in about a second later
     if (inIntro) { lastPointer = now - IDLE_MS + 900; press.target = 0; press.amt = 0; }
@@ -650,6 +661,8 @@
   window.heroIntroAt = t => { const now = performance.now(); introOn = true; introT0 = now - t * 1000;
     cancelAnimationFrame(raf); raf = 0; root.classList.add('ui-on'); draw(now); };
 
+  // review hook: a still idle frame with the gradient drift at t seconds
+  window.heroDriftAt = t => { introOn = false; gradAmt = 1; gradT = t; press.amt = press.target = 0; cancelAnimationFrame(raf); raf = 0; draw(performance.now()); };
   // review hook: a still press at viewport point (cx, cy)
   window.heroPress = (cx, cy, amt = 1) => { const [x, y] = toShape(cx, cy); paused = true;
     Object.assign(press, { x, y, tx: x, ty: y, amt, target: amt, force: 1 }); cancelAnimationFrame(raf); raf = 0; draw(performance.now()); };
