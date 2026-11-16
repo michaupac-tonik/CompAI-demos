@@ -64,27 +64,41 @@
   .links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: var(--nav); }
   .links a { position: relative; display: inline-flex; align-items: center; gap: 4px; padding: 8px 0; transition: color .2s; }
   .links a img { width: 10px; height: 10px; }
-  .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease); }
-  .links a:hover { color: var(--white); }
-  .links a:hover::after { transform: scaleX(1); }
+  .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease); }
+  .links a:is(:hover, :focus-visible) { color: var(--white); }
+  .links a:is(:hover, :focus-visible)::after { transform: scaleX(1); transform-origin: left; }
   .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 22px; }
   .menu-btn { display: none; }
+  .announce { position: relative; height: 36px; display: flex; align-items: center; justify-content: center; }
+  .announce::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); background: rgba(0,0,0,.45); z-index: -1; }
+  .announce .short { display: none; }
+  .announce a { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; font: 300 13px/1 var(--mono); letter-spacing: .02em; color: var(--white); }
+  .announce .tag { text-transform: uppercase; padding: 3px 8px 4px; border: 1px solid rgba(252,252,252,.8); font-size: 11px; letter-spacing: .04em; }
+  .announce .t { position: relative; }
+  .announce .t::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease); }
+  .announce a:is(:hover, :focus-visible) .t::after { transform: scaleX(1); transform-origin: left; }
+  .announce svg { width: 14px; height: 14px; transition: transform .3s var(--ease); }
+  .announce a:is(:hover, :focus-visible) svg { transform: translateX(2px); }
 
   /* buttons: square, mono label (232:56, 232:60, 232:19) */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1.5px solid var(--white); color: var(--white);
     font: 300 14.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
     transition: transform .18s var(--ease), background-color .2s, color .2s, border-color .2s; }
-  .btn:hover { transform: translateY(-2px); }
-  .btn:active { transform: translateY(0) scale(.98); }
-  .btn .chev { width: 16px; height: 16px; transition: transform .25s var(--ease); }
-  .btn:hover .chev { transform: translateX(3px); }
+  .btn:active { transform: scale(.98); }
+  .btn .chev { width: 16px; height: 16px; flex: none; transition: transform .3s var(--ease); }
   .btn-quiet { border-color: rgba(252,252,252,.4); }
-  .btn-quiet:hover { border-color: var(--white); }
-  .btn-outline:hover { background: rgba(252,252,252,.08); }
   .btn-primary { height: 48px; padding: 0 20px 0 24px; gap: 12px; background: var(--white); border-color: var(--white); color: var(--ink); }
-  .btn-primary:hover { background: #fff; }
   .btn-secondary { height: 48px; padding: 0 24px; background: rgba(252,252,252,.06); border-color: rgba(252,252,252,.6); }
-  .btn-secondary:hover { border-color: var(--white); background: rgba(252,252,252,.1); }
+  /* hover: wipe (web/hero/hover-states-v01, variant 01). An inverse fill slides in from the left and leaves
+     to the right; the primary fills with the motif's mint to cyan, the others with white and dark text. */
+  .btn { position: relative; overflow: hidden; isolation: isolate; }
+  .btn::before { content: ""; position: absolute; inset: -1px; z-index: -1; background: var(--white);
+    transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease); }
+  .btn:is(:hover, :focus-visible)::before { transform: scaleX(1); transform-origin: left; }
+  .btn:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--white); }
+  .btn-primary::before { background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  .btn-primary:is(:hover, :focus-visible) { border-color: var(--mint); }
+  .btn:is(:hover, :focus-visible) .chev { transform: translateX(3px); }
   .chev path { stroke: currentColor; }
 
   /* ---- hero ---------------------------------------------------------------------------- */
@@ -94,7 +108,7 @@
   .hero::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background: linear-gradient(180deg, rgba(0,0,0,.85) 0, rgba(0,0,0,.6) 78px, rgba(0,0,0,0) 130px),
                 radial-gradient(70% 70% at 0% 100%, rgba(0,0,0,.92) 0%, rgba(0,0,0,.8) 45%, rgba(0,0,0,0) 75%); }
-  .hero-inner { position: relative; z-index: 1; height: 100%; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 74px 1fr auto auto; padding-bottom: 32px; }
+  .hero-inner { position: relative; z-index: 1; height: 100%; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 118px 1fr auto auto; padding-bottom: 32px; }
   .hero-text { grid-column: 1; grid-row: 3; max-width: min(760px, 46%); }
   h1 { margin: 0; font-weight: 300; font-size: clamp(44px, 3.55vw, 68px); line-height: 1.05; letter-spacing: -.04em; color: var(--white); }
   h1 .kicker { display: block; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.8); margin: 0 0 24px; }
@@ -105,7 +119,13 @@
   .assure { margin: 16px 0 0; font: 300 13px/1.3 var(--mono); letter-spacing: .04em; color: rgba(252,252,252,.8); }
 
   /* frameworks chip (232:8) */
-  .strip { grid-row: 4; margin-top: 16px; display: flex; justify-content: flex-end; }
+  .strip { grid-row: 4; margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .agent { display: flex; align-items: center; gap: 14px; min-width: 0; font: 300 13px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.8); }
+  .agent b { font-weight: 300; color: rgba(252,252,252,.55); flex: none; }
+  .task { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, filter .5s; }
+  .task.done { opacity: 0; filter: blur(3px); }
+  .task s { text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 55% / 0 1px no-repeat; transition: background-size .6s var(--ease); }
+  .task.strike s { background-size: 100% 1px; }
   .chip { display: flex; align-items: center; gap: 24px; padding: 0 0 0 12px; background: rgba(22,22,22,.9);
     font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.8); white-space: nowrap; }
   .chip .fw { display: flex; gap: 14px; }
@@ -134,9 +154,10 @@
     .menu-btn { display: inline-flex; align-items: center; height: 44px; padding: 0; background: none; border: 0; cursor: pointer; font: 300 14.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--white); position: relative; z-index: 45; }
   }
   @media (max-width: 1023px) {
-    .hero-inner { grid-template-rows: 74px 1fr auto auto; }
+    .hero-inner { grid-template-rows: 110px 1fr auto auto; }
     .hero-text { max-width: 640px; }
-    .strip { justify-content: flex-start; margin-top: 24px; }
+    .strip { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; }
+    .task { white-space: normal; }
     .chip { background: none; padding: 0; }
     .pause { border-left: 0; padding: 0 0 0 4px; }
   }
@@ -145,6 +166,14 @@
     .hero::after { background: linear-gradient(180deg, rgba(0,0,0,.85) 0, rgba(0,0,0,0) 130px), linear-gradient(0deg, #000 0%, rgba(0,0,0,.94) 52%, rgba(0,0,0,0) 72%); }
   }
   @media (max-width: 600px) {
+    .announce { height: 44px; }
+    .agent { width: 100%; }
+    .task { flex: 1; }
+    .task s { display: block; background: none; text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: transparent; transition: text-decoration-color .5s; }
+    .task.strike s { text-decoration-color: currentColor; }
+    .announce a { min-height: 44px; }
+    .announce .full { display: none; }
+    .announce .short { display: inline; }
     :root { --edge: 16px; }
     .nav-actions .btn-quiet { display: none; }
     .nav-actions .btn { height: 44px; padding: 0 14px; }
@@ -160,7 +189,8 @@
   @media (prefers-reduced-motion: reduce) {
     .js [data-rise] > *, .js.ready [data-rise] > * { opacity: 1; transform: none; transition: none; }
     .js .hero canvas { transition: none; opacity: 1; }
-    .btn, .btn:hover { transform: none; }
+    .btn::before, .links a::after { transition: none; }
+
   }
 </style>
 </head>
@@ -178,6 +208,9 @@
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="sheet">Menu</button>
     </div>
   </div>
+  <div class="wrap announce">
+    <a href="#"><span class="tag">New</span><span class="t"><span class="full">Comp AI raises $34M to build agentic compliance</span><span class="short">Comp AI raises $34M</span></span><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 3.5 8.5 7 5 10.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg></a>
+  </div>
 </header>
 
 <main id="main">
@@ -194,6 +227,7 @@
       <p class="assure">Trusted by 1,000+ companies</p>
     </div>
     <div class="strip">
+      <span class="agent" aria-live="off"><b>Agent</b><span class="task" id="task"><s>Collecting evidence from AWS</s></span></span>
       <div class="chip">
         <span class="fw" aria-label="Frameworks"><b>Frameworks</b><span>SOC 2 · ISO 27001 · HIPAA · GDPR</span></span>
         <button class="pause" id="pause" type="button" aria-pressed="false">Pause motion</button>
@@ -223,6 +257,22 @@
   });
 
   let paused = reduced;
+
+  // ---- agent ticker: the work gets done, struck through and cleared --------------------------
+  const TASKS = ['Collecting evidence from AWS', 'Drafting the access control policy', 'Reviewing a new vendor',
+                 'Scoring laptop encryption risk', 'Mapping controls to ISO 27001', 'Checking MFA across Google Workspace'];
+  const taskEl = document.getElementById('task');
+  let ti = 0;
+  function tick() {
+    if (paused) return;
+    taskEl.classList.add('strike');
+    setTimeout(() => taskEl.classList.add('done'), 900);
+    setTimeout(() => {
+      ti = (ti + 1) % TASKS.length; taskEl.firstChild.textContent = TASKS[ti];
+      taskEl.classList.remove('strike', 'done');
+    }, 1500);
+  }
+  let tickTimer = setInterval(tick, 3400);
 
   // ---- fingerprint ------------------------------------------------------------------------
   const D = window.BLEND_FIELDS;
@@ -488,7 +538,7 @@
   const pauseBtn = document.getElementById('pause');
   const setPaused = v => {
     paused = v; pauseBtn.setAttribute('aria-pressed', v); pauseBtn.textContent = v ? 'Play motion' : 'Pause motion';
-    if (v) press.target = 0;
+    if (v) { press.target = 0; clearInterval(tickTimer); } else { clearInterval(tickTimer); tickTimer = setInterval(tick, 3400); }
     kick();
   };
   pauseBtn.addEventListener('click', () => setPaused(!paused));
