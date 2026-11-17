@@ -226,6 +226,7 @@
     .btn::before, .links a::after { transition: none; }
   }
 
+  /* @section:02 css:start */
   /* ==== 02 · The shift (structure v12): pinned for ~2.5 screens, scroll walks then → now ==== */
   .shift { position: relative; z-index: 1; height: 260svh; background: transparent; }
   .shift .stick { position: sticky; top: 0; height: 100svh; min-height: 640px; display: grid; align-items: center; overflow: hidden; }
@@ -318,6 +319,7 @@
     .steps li:not(.on) .d { display: block; }
     .js .shift [data-in] { opacity: 1; filter: none; transition: none; }
   }
+  /* @section:02 css:end */
 </style>
 </head>
 <body>
@@ -362,6 +364,7 @@
   </div>
 </section>
 
+<!-- @section:02 html:start -->
 <section class="shift" id="shift" data-stage="0" aria-labelledby="shift-title">
   <div class="stick">
     <div class="wrap shift-grid">
@@ -387,6 +390,7 @@
     </div>
   </div>
 </section>
+<!-- @section:02 html:end -->
 </main>
 
 <div class="sheet" id="sheet" hidden>
@@ -877,6 +881,7 @@
 })();
 </script>
 
+<!-- @section:02 js:start -->
 <script>
 // 02 · The shift: scroll progress through the pinned section picks the stage (spreadsheets, dashboards, Comp AI)
 (() => {
@@ -956,5 +961,6 @@
 
 })();
 </script>
+<!-- @section:02 js:end -->
 </body>
 </html>

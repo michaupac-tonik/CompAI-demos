@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI · 02 The shift</title>
+<link rel="icon" href="../../hero/comp-ai-hero-v01/img/logo-mark.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add('js')</script>
+<!--
+  Comp AI · homepage section 02 "The shift", isolated from index.html for UI work.
+  Same markup, CSS and scroll script as the homepage, with the mist behind it (the hero's print code with the hero already scrolled out).
+  Dev bar (bottom right): jump to a stage, replay the entrance. Keys 1 / 2 / 3, R.
+  When the UI is settled, carry the changes back into index.html (the block "02 · The shift").
+-->
+<style>
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Light-Trial.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+
+  :root {
+    --black: #000;
+    --ink: #161616;
+    --white: #fcfcfc;
+    --mint: #24ff63;
+    --cyan: #00ffee;
+    --sans: "Favorit", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Favorit Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --edge: 64px;
+    --ease: cubic-bezier(.2, .7, .1, 1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--black); color: var(--white); }
+  body { font: 300 16px/1.45 var(--sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  :focus-visible { outline: 1.5px solid var(--mint); outline-offset: 3px; }
+  .wrap { width: min(1792px, 100% - 2 * var(--edge)); margin-inline: auto; }
+
+  /* inherited from the hero's .task (applies to the board's task cells on the homepage too) */
+  .task { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, filter .5s; }
+  @media (max-width: 1023px) { .task { white-space: normal; } }
+  @media (max-width: 600px) { :root { --edge: 16px; } .task { flex: 1; } }
+
+  /* @section:02 css:start */
+  /* ==== 02 · The shift (structure v12): pinned for ~2.5 screens, scroll walks then → now ==== */
+  .shift { position: relative; z-index: 1; height: 260svh; background: transparent; }
+  .shift .stick { position: sticky; top: 0; height: 100svh; min-height: 640px; display: grid; align-items: center; overflow: hidden; }
+  .shift-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: center; }
+  .eyebrow { margin: 0 0 24px; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.6); }
+  .shift h2 { margin: 0; font-weight: 300; font-size: clamp(38px, 3.55vw, 64px); line-height: 1.05; letter-spacing: -.04em; }
+  .shift h2 span { display: block; transition: color .8s var(--ease); }
+  .shift h2 .now { color: rgba(252,252,252,.32); }
+  .shift[data-stage="2"] h2 .now { color: var(--white); }
+  .shift .lead { margin: 20px 0 0; max-width: 34em; font-size: clamp(17px, 1.2vw, 21px); line-height: 1.42; letter-spacing: -.01em; color: rgba(252,252,252,.82); text-wrap: pretty; }
+
+  .js .shift [data-in] { opacity: 0; filter: blur(7px); transition: opacity .7s ease var(--d), filter .8s ease var(--d); }
+  /* the entrance transition above would replace their own colour transition (and the colour would snap): keep both */
+  .js .shift h2 span[data-in] { transition: opacity .7s ease var(--d), filter .8s ease var(--d), color .8s var(--ease); }
+  .js .shift .steps li[data-in] { transition: opacity .7s ease var(--d), filter .8s ease var(--d), color .7s var(--ease); }
+  .shift.in [data-in] { opacity: 1; filter: none; }
+  /* stepper: three moments of the same work. The rail fills with an eased follow of the scroll and lands
+     exactly on each diamond; the diamond fills from the line as it arrives (--a 0..1) and swells once (--b). */
+  .steps { position: relative; list-style: none; margin: 40px 0 0; padding: 0 0 0 24px; display: grid; gap: 22px; }
+  .steps::before, .steps::after { content: ""; position: absolute; left: 3px; top: 6px; height: var(--rh, calc(100% - 12px)); width: 1px; background: rgba(252,252,252,.14); }   /* ends at the last diamond */
+  .steps::after { background: linear-gradient(180deg, var(--mint), var(--cyan)); transform-origin: top; transform: scaleY(var(--p, 0)); }
+  .steps li { position: relative; color: rgba(252,252,252,.35); transition: color .7s var(--ease); }
+  .steps li::before, .steps li::after { content: ""; position: absolute; left: -24px; top: 4px; width: 7px; height: 7px; transform: rotate(45deg); background: #333; }
+  .steps li::after { background: linear-gradient(135deg, var(--mint), var(--cyan)); opacity: var(--a, 0);
+    transform: rotate(45deg) scale(calc(.4 + .6 * var(--a, 0) + .45 * var(--b, 0)));
+    box-shadow: 0 0 calc(14px * var(--b, 0)) rgba(36,255,99, calc(.55 * var(--b, 0))); }
+  .steps li.on { color: var(--white); }
+  .steps .k { display: block; font: 300 12.5px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .steps .d { display: block; margin-top: 8px; font-size: 16px; line-height: 1.4; max-width: 30em; }
+  /* board: who does the work */
+  .board { border: 1px solid rgba(252,252,252,.1); background: rgba(22,22,22,.92); font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .board .row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 236px; align-items: center; gap: 16px; min-height: 64px; padding: 0 20px; border-top: 1px solid rgba(252,252,252,.08); overflow: hidden; }
+  .board .row.head { min-height: 44px; border-top: 0; color: rgba(252,252,252,.5); }
+  .board .row.head > :last-child, .board .foot > :last-child { padding-left: 24px; }
+  /* legend for the bars: shows with the first bar, right-aligned where the bars are anchored */
+  .board .hw { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .board .ts { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(252,252,252,.45); opacity: 0; filter: blur(6px); transition: opacity .6s ease, filter .6s ease; }
+  .board .ts::before { content: ""; width: 10px; height: 6px; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  .shift[data-stage="2"] .board .ts { opacity: 1; filter: none; transition-delay: .5s; }   /* in line with the owner's name, past its marker */
+  .board .task { display: grid; gap: 8px; color: var(--white); }
+  .board .tool { color: rgba(252,252,252,.45); font-size: 11.5px; }
+  .board .tool i { font-style: normal; }
+  /* handover: a solid bar in the primary button's hover gradient (mint to cyan) grows in from the row's right edge;
+     its length is the time the agent saves on that task (--gw, set from data-saved). Going back it folds into the
+     same edge */
+  .board .row::before { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: var(--gw, 40%); pointer-events: none; z-index: 0;
+    background: linear-gradient(90deg, var(--mint), var(--cyan)); clip-path: inset(0 0 0 100%); transition: clip-path .45s var(--ease); }
+  .board .row[data-s="2"]::before { clip-path: inset(0); transition: clip-path .9s cubic-bezier(.2, .8, .2, 1); }   /* revealed, so the colours stay put while it grows */
+  .board .row > * { position: relative; z-index: 1; }
+  /* owner: a status, not a button. Both states share one cell and cross over (old rises and blurs out,
+     new settles in from below); on Comp AI it sits in ink on the gradient bar, with the Comp AI mark */
+  .who { display: grid; justify-self: start; white-space: nowrap; }
+  .who > span { grid-area: 1 / 1; display: grid; grid-template-columns: 14px auto; column-gap: 10px; row-gap: 6px; align-items: center;
+    transition: opacity .55s ease var(--hd, 0s), filter .6s ease var(--hd, 0s), transform .75s var(--ease) var(--hd, 0s); }
+  .who .t { color: rgba(252,252,252,.62); }
+  .who .t::before { content: ""; justify-self: center; width: 6px; height: 6px; transform: rotate(45deg); border: 1px solid rgba(252,252,252,.4); }
+  .who .a { opacity: 0; filter: blur(6px); transform: translateY(10px); color: var(--ink); }
+  .who .a::before { content: ""; }   /* no mark: keeps the marker column so the owner text lines up with "Your team" */
+  .who .a small { grid-column: 2; font-size: 11px; color: rgba(22,22,22,.68); }
+  .row[data-s="2"] .who .t { opacity: 0; filter: blur(6px); transform: translateY(-10px); }
+  .row[data-s="2"] .who .a { opacity: 1; filter: none; transform: none; }
+  /* footer: what does not change, on the same columns as the rows, set off by a stronger rule */
+  .board .foot { display: grid; grid-template-columns: minmax(0, 1fr) 236px; align-items: center; gap: 16px; min-height: 64px; padding: 0 20px;
+    border-top: 1px solid rgba(252,252,252,.22); color: var(--white); }
+  .board .foot > span:first-child { display: grid; gap: 8px; }
+  .board .foot small { color: rgba(252,252,252,.45); font-size: 11.5px; }
+  .board .foot b { font-weight: 300; }
+  @media (max-width: 1023px) {
+    .shift-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .steps { margin-top: 28px; }
+    .board .row, .board .foot { grid-template-columns: minmax(0, 1fr) auto; min-height: 54px; }
+  }
+  @media (max-width: 600px) {
+    .shift .stick { align-items: start; padding-top: 72px; }
+    .steps { gap: 14px; }
+    .steps li:not(.on) .d { display: none; }
+    .board .row, .board .foot { padding: 0 12px; gap: 10px; }
+    .board .row.head > :last-child, .board .foot > :last-child { padding-left: 22px; }
+    .board .foot small { display: none; }
+    .board .row:nth-child(n+5):not(.head) { display: none; }
+    .board .tool { display: none; }
+    .who { font-size: 11.5px; }
+    .who > span { column-gap: 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .shift { height: auto; }
+    .shift .stick { position: static; height: auto; padding: 120px 0; }
+    .steps li { color: var(--white); }
+    .steps::after { transform: none; }
+    .steps li:not(.on) .d { display: block; }
+    .js .shift [data-in] { opacity: 1; filter: none; transition: none; }
+  }
+  /* @section:02 css:end */
+
+  /* mist: the hero's print after it dissolved (fixed behind the page, as on the homepage) */
+  #print { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; opacity: .32; transition: opacity 1.2s var(--ease); }
+
+  /* ---- dev bar (isolation file only) ---- */
+  .dev { position: fixed; right: 16px; bottom: 16px; z-index: 50; display: flex; gap: 1px; background: rgba(252,252,252,.12);
+    font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .dev button { height: 30px; padding: 0 10px; border: 0; background: #111; color: rgba(252,252,252,.7); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+  .dev button:hover, .dev button[aria-pressed="true"] { background: var(--white); color: var(--ink); }
+</style>
+</head>
+<body>
+<canvas id="print" aria-hidden="true"></canvas>
+<main>
+<!-- @section:02 html:start -->
+<section class="shift" id="shift" data-stage="0" aria-labelledby="shift-title">
+  <div class="stick">
+    <div class="wrap shift-grid">
+      <div>
+        <p class="eyebrow">The shift</p>
+        <h2 id="shift-title"><span>Same standards.</span> <span class="now">Different work.</span></h2>
+        <p class="lead">Compliance software moved from spreadsheets to dashboards, but the work stayed with your team. Comp AI changes who does the work.</p>
+        <ol class="steps">
+          <li class="on"><span class="k">Spreadsheets</span><span class="d">Your team chases every policy, screenshot and vendor form by hand.</span></li>
+          <li><span class="k">Dashboards</span><span class="d">The tracking moved into an app. The work stayed with your team.</span></li>
+          <li><span class="k">Comp AI</span><span class="d">Agents do the work with your company's context. Experts review the decisions that need a person.</span></li>
+        </ol>
+      </div>
+      <div class="board" role="table" aria-label="Who does the compliance work">
+        <div class="row head" role="row"><span role="columnheader">The work</span><span role="columnheader" class="hw">Who does it<span class="ts">Time saved</span></span></div>
+        <div class="row" role="row" data-saved="90"><span class="task" role="cell">Write and update policies<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
+        <div class="row" role="row" data-saved="85"><span class="task" role="cell">Collect audit evidence<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
+        <div class="row" role="row" data-saved="70"><span class="task" role="cell">Review new vendors<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent<small>+ Expert review</small></span></span></span></div>
+        <div class="row" role="row" data-saved="60"><span class="task" role="cell">Assess risk<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent<small>+ Expert review</small></span></span></span></div>
+        <div class="row" role="row" data-saved="80"><span class="task" role="cell">Answer security questionnaires<span class="tool">In <i>a spreadsheet</i></span></span><span role="cell"><span class="who"><span class="t">Your team</span><span class="a">Comp AI agent</span></span></span></div>
+        <div class="foot" role="row"><span role="cell">Standards<small>SOC 2 · ISO 27001 · HIPAA · GDPR</small></span><b role="cell">Unchanged</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- @section:02 html:end -->
+</main>
+
+<div class="dev" aria-label="Dev controls">
+  <button type="button" data-go="0">1 Sheets</button><button type="button" data-go="1">2 Dash</button><button type="button" data-go="2">3 Comp AI</button><button type="button" data-replay>R Replay</button>
+</div>
+
+<!-- @section:02 js:start -->
+<script>
+// 02 · The shift: scroll progress through the pinned section picks the stage (spreadsheets, dashboards, Comp AI)
+(() => {
+  const sec = document.getElementById('shift'); if (!sec) return;
+  const steps = [...sec.querySelectorAll('.steps li')], rail = sec.querySelector('.steps');
+  const tools = [...sec.querySelectorAll('.tool i')], TOOL = ['a spreadsheet', 'a dashboard', 'Comp AI'];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let stage = -1;
+  // text swap without a blink: the old word goes soft and out, the new one comes in from soft to sharp
+  // (a restarted 'land' animation used to drop the old word to nothing in one frame, which read as a flicker)
+  const swap = (el, text) => { if (el._t === text) return; el._t = text;
+    if (reduced) { el.textContent = text; return; }
+    el.getAnimations().forEach(a => a.cancel());
+    const out = el.animate([{ opacity: 1, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(4px)' }], { duration: 170, easing: 'ease-in', fill: 'forwards' });
+    out.onfinish = () => { el.textContent = text;
+      el.animate([{ opacity: 0, filter: 'blur(4px)' }, { opacity: 1, filter: 'blur(0px)' }], { duration: 420, easing: 'ease-out', fill: 'backwards' }); out.cancel(); }; };
+  const rows = [...sec.querySelectorAll('.board .row:not(.head)')], whos = rows.map(r => r.querySelector('.who'));
+  const rowS = rows.map(() => 0);
+  // bar length = share of the team's time the agent saves on that task (data-saved, %), drawn on a track that
+  // spans the right 62% of the row, so lengths compare honestly. WORKING VALUES until Comp AI sends real figures.
+  const TRACK = 62;
+  rows.forEach(r => r.style.setProperty('--gw', (TRACK * (+r.dataset.saved || 0) / 100).toFixed(1) + '%'));
+  // a row moves to the next stage on its own: the tool swaps softly; into Comp AI the gradient bar grows in from the
+  // right edge under the new owner; going back the bar folds away and the owner simply returns
+  const setRow = (i, s) => { if (s === rowS[i]) return; rowS[i] = s; const r = rows[i];
+    r.dataset.s = s; swap(tools[i], TOOL[s]);
+    if (reduced) return;
+    whos[i].style.setProperty('--hd', s === 2 ? '.18s' : '0s'); };   // the new owner lands as the bar passes under it
+  // stage = the step the line is heading to: it lights as soon as the line leaves the previous diamond
+  const set = s => { if (s === stage) return; const first = stage < 0; stage = s;
+    sec.dataset.stage = s;
+    window.heroMist = s === 2 ? .5 : .32; dispatchEvent(new Event('heromist'));   // the mist livens when Comp AI takes over
+    steps.forEach((li, i) => li.classList.toggle('on', i === s)); };
+  // entrance: the section lands like the hero UI, one element at a time, from soft to sharp
+  const IN = [sec.querySelector('.eyebrow'), ...sec.querySelectorAll('h2 span'), sec.querySelector('.lead'), ...steps, ...sec.querySelectorAll('.board .row, .board .foot')];
+  IN.forEach((el, i) => { el.setAttribute('data-in', ''); el.style.setProperty('--d', (.3 + i * .12).toFixed(2) + 's'); });   // the hero's rhythm
+  if (reduced) { sec.classList.add('in'); set(2); rows.forEach((r, i) => setRow(i, 2)); steps.forEach(li => { li.classList.add('on'); li.style.setProperty('--a', 1); }); return; }
+
+  // rail: scroll progress maps piecewise onto the diamonds (diamond k at P[k] of the pin, at Y[k] on the rail);
+  // the drawn fill eases toward that target. Everything follows the drawn fill: between two diamonds the rows
+  // change one by one (row i at ROW[i] of the way), the last just before the line arrives, so the first
+  // scroll already moves the board
+  const P = [0, .3, .6], ROW = [.04, .22, .4, .58, .76];
+  let fill = -1, target = 0, raf = 0, Y = [], H = 1, passed = 0;
+  const measure = () => { Y = steps.map(li => li.offsetTop + 7.5 - 6); H = Y[Y.length - 1]; rail.style.setProperty('--rh', H + 'px'); };   // the rail ends at the last diamond
+  const toY = p => { for (let k = P.length - 1; k >= 0; k--) if (p >= P[k]) { const p1 = k + 1 < P.length ? P[k + 1] : 1, y1 = k + 1 < Y.length ? Y[k + 1] : H;
+    return Y[k] + (y1 - Y[k]) * (p - P[k]) / (p1 - P[k]); } return Y[0]; };
+  // the diamond swells once when the line reaches it (a short pulse in time, not tied to where the scroll stops)
+  const hit = steps.map(() => -1e9), PULSE = 750;
+  let pulsing = false; const HY = 4;
+  const draw = now => {
+    rail.style.setProperty('--p', (Math.max(0, fill) / H).toFixed(4));
+    let n = 0; pulsing = false;
+    steps.forEach((li, k) => { const e = fill - Y[k];
+      const a = Math.min(1, Math.max(0, (e + 26) / 26));
+      if (e >= -1) { n = k; if (k > passed && now - hit[k] > PULSE) hit[k] = now; }
+      const u = (now - hit[k]) / PULSE, b = u >= 0 && u < 1 ? Math.sin(Math.PI * Math.pow(u, .6)) : 0;
+      if (b) pulsing = true;
+      li.style.setProperty('--a', (a * a * (3 - 2 * a)).toFixed(3)); li.style.setProperty('--b', b.toFixed(3)); });
+    passed = n;
+    // a little hysteresis (HY px) so a fill resting right on a threshold cannot toggle a row or a step back and forth
+    const at = (i, f) => { let s = 0; for (let j = 0; j + 1 < Y.length; j++) if (f >= Y[j] + ROW[i] * (Y[j + 1] - Y[j])) s = j + 1; return s; };
+    rows.forEach((r, i) => { const up = at(i, fill), down = at(i, fill + HY); setRow(i, up > rowS[i] ? up : down < rowS[i] ? down : rowS[i]); });
+    const head = f => n + 1 < Y.length && f > Y[n] + 2 ? n + 1 : n, hu = head(fill), hd = head(fill + HY);
+    set(stage < 0 ? hu : hu > stage ? hu : hd < stage ? hd : stage); };
+  const loop = now => { raf = 0; const d = target - fill;
+    fill = Math.abs(d) < .3 ? target : fill + d * .085;
+    draw(now); if (fill !== target || pulsing) raf = requestAnimationFrame(loop); };
+  const update = () => { measure();
+    const r = sec.getBoundingClientRect(), span = Math.max(1, r.height - innerHeight);
+    target = toY(Math.min(1, Math.max(0, -r.top / span)));
+    if (r.top < innerHeight * .55) sec.classList.add('in');
+    if (fill < 0) { fill = target; passed = Y.reduce((n, y, k) => fill >= y - 1 ? k : n, 0); draw(performance.now()); }   // no pulse on load
+    else if (!raf) raf = requestAnimationFrame(loop); };
+  addEventListener('scroll', update, { passive: true });
+  addEventListener('resize', update); update();
+
+})();
+</script>
+<!-- @section:02 js:end -->
+<script>
+// dev bar (isolated page only, outside the @section markers: never integrated into index.html)
+(() => {
+  const sec = document.getElementById('shift'), MID = [0, .3, .8];
+  const go = s => { const span = sec.offsetHeight - innerHeight; scrollTo({ top: sec.offsetTop + span * MID[s], behavior: 'instant' }); };
+  const replay = () => { sec.classList.remove('in'); void sec.offsetWidth; requestAnimationFrame(() => sec.classList.add('in')); };
+  const btns = [...document.querySelectorAll('.dev [data-go]')];
+  btns.forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
+  document.querySelector('.dev [data-replay]').addEventListener('click', replay);
+  new MutationObserver(() => btns.forEach(b => b.setAttribute('aria-pressed', b.dataset.go === sec.dataset.stage)))
+    .observe(sec, { attributes: true, attributeFilter: ['data-stage'] });
+  addEventListener('keydown', e => { if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if ('123'.includes(e.key) && e.key) go(+e.key - 1); else if (e.key === 'r' || e.key === 'R') replay(); });
+  window.shiftStage = go; window.shiftReplay = replay;
+})();
+</script>
+<script src="../../hero/comp-ai-hero-v01/shapes-phase.js"></script>
+<script src="../shared/mist.js"></script>
+</body>
+</html>

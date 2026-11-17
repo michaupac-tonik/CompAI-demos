@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI · {{NN}} {{TITLE}}</title>
+<link rel="icon" href="../../hero/comp-ai-hero-v01/img/logo-mark.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add('js')</script>
+<!--
+  Comp AI · homepage section {{NN}} "{{TITLE}}", isolated from index.html for UI work.
+  Only the three @section:{{NN}} blocks (css, html, js) are carried into index.html by
+  tools/integrate-section.py; everything else here (head, base styles, mist, dev bits) is for previewing.
+  Rules: prefix your class names with .sec-{{NN}} (the blocks end up in one stylesheet with the other sections),
+  use the variables of the base :root (--mint, --cyan, --ink, --white, --mono, --sans, --ease, --edge, .wrap),
+  keep dev code outside the markers. Behind the section the mist from ../shared/mist.js stands in for the hero's print.
+-->
+<style>
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Light-Trial.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+
+  :root {
+    --black: #000;
+    --ink: #161616;
+    --white: #fcfcfc;
+    --mint: #24ff63;
+    --cyan: #00ffee;
+    --sans: "Favorit", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Favorit Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --edge: 64px;
+    --ease: cubic-bezier(.2, .7, .1, 1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--black); color: var(--white); }
+  body { font: 300 16px/1.45 var(--sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  :focus-visible { outline: 1.5px solid var(--mint); outline-offset: 3px; }
+  .wrap { width: min(1792px, 100% - 2 * var(--edge)); margin-inline: auto; }
+
+  /* inherited from the hero's .task (applies to the board's task cells on the homepage too) */
+  .task { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, filter .5s; }
+  @media (max-width: 1023px) { .task { white-space: normal; } }
+  @media (max-width: 600px) { :root { --edge: 16px; } .task { flex: 1; } }
+
+  /* @section:{{NN}} css:start */
+  .sec-{{NN}} { position: relative; z-index: 1; min-height: 100svh; display: grid; align-items: center; }
+  .sec-{{NN}} .eyebrow-{{NN}} { margin: 0 0 24px; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.6); }
+  .sec-{{NN}} h2 { margin: 0; font-weight: 300; font-size: clamp(38px, 3.55vw, 64px); line-height: 1.05; letter-spacing: -.04em; }
+  /* @section:{{NN}} css:end */
+
+  /* mist: the hero's print after it dissolved (fixed behind the page, as on the homepage) */
+  #print { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; opacity: .32; transition: opacity 1.2s var(--ease); }
+</style>
+</head>
+<body>
+<canvas id="print" aria-hidden="true"></canvas>
+<main>
+<!-- @section:{{NN}} html:start -->
+<section class="sec-{{NN}}" id="sec-{{NN}}" aria-labelledby="sec-{{NN}}-title">
+  <div class="wrap">
+    <p class="eyebrow-{{NN}}">{{TITLE}}</p>
+    <h2 id="sec-{{NN}}-title">Headline of section {{NN}}</h2>
+  </div>
+</section>
+<!-- @section:{{NN}} html:end -->
+</main>
+
+<!-- @section:{{NN}} js:start -->
+<script>
+// {{NN}} · {{TITLE}}
+(() => {
+  const sec = document.getElementById('sec-{{NN}}'); if (!sec) return;
+})();
+</script>
+<!-- @section:{{NN}} js:end -->
+<script src="../../hero/comp-ai-hero-v01/shapes-phase.js"></script>
+<script src="../shared/mist.js"></script>
+</body>
+</html>
