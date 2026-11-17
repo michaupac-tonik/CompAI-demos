@@ -74,8 +74,7 @@ def main():
             report.append(f'{kind}: new in index.html' + ('' if check else ' -> appended'))
             if not check:
                 at = idx.rindex(ANCHOR[kind])
-                sep = '\n' if kind != 'css' else '\n'
-                idx = idx[:at] + (new + sep) + idx[at:]
+                idx = idx[:at] + ('  ' if kind == 'css' else '') + new + '\n' + idx[at:]
     if not check:
         INDEX.write_text(idx, encoding='utf-8')
     print(f'section {n} ({sec_path.name}) -> {INDEX.relative_to(HOME.parent.parent)}' + (' [check only]' if check else ''))
