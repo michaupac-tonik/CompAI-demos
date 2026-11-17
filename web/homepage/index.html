@@ -568,6 +568,11 @@
   .sec-03 .co li { font-size: var(--t-body); line-height: 1.55; letter-spacing: 0; }
   /* the Agent / You sentence has no role yet: scale step 3 (33 / 26), line-height 1.1, -4%, proposed as Display M */
   .sec-03 .sent { font-size: var(--t-display-m); line-height: 1.1; letter-spacing: -.04em; }
+  /* handoff between the sections above and this one: section 2 is raised into the hero's empty foot and fades out while this section rises.
+     (Lives here so it integrates with the section; it can move to the Homepage layer later.) Section 2 has no controls, so it can let clicks through to the hero. */
+  #shift { pointer-events: none; }
+  @media (min-width: 1024px) { #shift { margin-top: -25svh; } }
+  @media (max-width: 1023px) { #shift { margin-top: -12svh; } }
   /* @section:03 css:end */
 </style>
 </head>
@@ -1331,6 +1336,13 @@
   if (bar.classList.contains('in') || reduced) showSentence(0); else new MutationObserver((m, ob) => { if (bar.classList.contains('in')) { ob.disconnect(); showSentence(0); } }).observe(bar, { attributes: true, attributeFilter: ['class'] });
   new MutationObserver(() => { const k = tabs.findIndex(t => t.classList.contains('on')); if (k >= 0 && sIdx >= 0) showSentence(k); })
     .observe(sec.querySelector('.tabs'), { attributes: true, attributeFilter: ['class'], subtree: true });
+  // handoff: section 2 fades out as this section rises into view (opacity only: cheap while scrolling)
+  const prevStick = document.querySelector('#shift .stick');
+  if (prevStick) {
+    const fadePrev = () => { const r = sec.getBoundingClientRect(), p = Math.min(1, Math.max(0, (innerHeight * .9 - r.top) / (innerHeight * .55)));
+      prevStick.style.opacity = (1 - p).toFixed(3); prevStick.style.visibility = p >= 1 ? 'hidden' : ''; };
+    if (!reduced) { addEventListener('scroll', fadePrev, { passive: true }); addEventListener('resize', fadePrev); fadePrev(); }
+  }
 })();
 </script>
 <!-- @section:03 js:end -->
