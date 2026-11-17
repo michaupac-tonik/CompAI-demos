@@ -552,6 +552,9 @@
   .sec-03 .sd .w { display: inline-block; opacity: 0; filter: blur(6px); transform: translateY(9px); transition: opacity .16s ease, filter .16s ease, transform .16s ease; }
   .sec-03 .shotd.on .sd .w { opacity: 1; filter: none; transform: none; transition: opacity .7s cubic-bezier(.2,.7,.1,1) calc(var(--i) * 34ms + .55s), filter .8s ease calc(var(--i) * 34ms + .55s), transform .9s var(--ease) calc(var(--i) * 34ms + .55s); }
   @media (prefers-reduced-motion: reduce) { .sec-03 .sd .sdk, .sec-03 .sd .w { opacity: 1; filter: none; transform: none; transition: none; } }
+  /* entrance choreography: the screen block only fades in (the wipe is its reveal), the tab progress line waits for the entrance to finish */
+  .js .sec-03 .stage.rv { transform: none; filter: none; }
+  .sec-03:not(.live) .tb.on::after { transform: scaleX(0); }
   /* @section:03 css:end */
 </style>
 </head>
@@ -1233,10 +1236,10 @@
     const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; e.target.classList.add('in'); const u = e.target.querySelector('.ui'); if (u) setTimeout(() => u.classList.add('on'), delay || 400); io.unobserve(e.target); }), { threshold: .25 });
     els.forEach(g => io.observe(g)); };
   const tabs = [...sec.querySelectorAll('.tb')], shots = [...sec.querySelectorAll('.shotd')];
-  let cur = 0, inView = false;
+  let cur = 0, inView = false, ready = false, manual = false;   // ready: the entrance is over; manual: the visitor picked a tab (auto-advance ends)
   const set = i => { resetAll(); cur = i; tabs.forEach((t, k) => { t.classList.toggle('on', k === i); t.setAttribute('aria-selected', k === i); });
     shots.forEach((s, k) => { s.classList.toggle('on', k === i); const u = s.querySelector('.ui'); if (k === i) setTimeout(() => u.classList.add('on'), 250); else setTimeout(() => u.classList.remove('on'), 650); });
-    sec.classList.remove('run'); void sec.offsetWidth; if (inView && !reduced && matchMedia('(min-width:1101px)').matches) sec.classList.add('run'); };
+    sec.classList.remove('run'); void sec.offsetWidth; if (inView && ready && !manual && !reduced && matchMedia('(min-width:1101px)').matches) sec.classList.add('run'); };
   const setSt = (st, v, t) => { st.dataset.v = v; st.querySelector('em').textContent = t; };
   const flash = el => { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); };
   const actEl = sh => { const a = sh.querySelector('.act span'); if (!a.dataset.o) a.dataset.o = a.textContent; return a; };
@@ -1254,7 +1257,7 @@
   sec.querySelectorAll('.fx .bt button').forEach(b => b.addEventListener('click', () => { const fx = b.closest('.fx'), sh = b.closest('.shotd'), d = DONE[b.dataset.act];
     fx.dataset.p = fx.querySelector('p').textContent; fx.dataset.ft = fx.querySelector('.ft').textContent;
     ACT[b.dataset.act].on(sh); fx.querySelector('p').textContent = d[1]; fx.querySelector('.ft').textContent = d[2]; b.textContent = '✓ ' + d[0]; b.classList.add('done'); }));
-  tabs.forEach((t, i) => t.addEventListener('click', () => set(i)));
+  tabs.forEach((t, i) => t.addEventListener('click', () => { manual = true; sec.classList.add('live'); set(i); }));
   const place = () => sec.querySelectorAll('.pin').forEach(p => { const sc = p.closest('.scr'), t = sc.querySelector(p.dataset.t); if (!t) return; const a = sc.getBoundingClientRect(), r = t.getBoundingClientRect();
     let x = r.width > 200 ? r.right - 22 : r.right; const dsc = t.classList.contains('rw') && t.querySelector('.dsc'); if (dsc) { const rg = document.createRange(); rg.selectNodeContents(dsc); x = rg.getBoundingClientRect().right + 20; }
     const y = r.width > 200 || t.classList.contains('rw') ? r.top + r.height / 2 : r.top + 2; p.style.left = (x - a.left) + 'px'; p.style.top = (y - a.top) + 'px'; });
@@ -1265,9 +1268,26 @@
   sec.querySelectorAll('.pin').forEach(p => { const sh = p.closest('.shotd'); const li = () => sh.querySelector('.co li[data-i="' + p.dataset.i + '"]');
     p.addEventListener('mouseenter', () => { p.classList.add('hot'); li().classList.add('hot'); }); p.addEventListener('mouseleave', () => { p.classList.remove('hot'); li().classList.remove('hot'); }); });
   tabs.forEach(t => t.addEventListener('animationend', () => { if (t.classList.contains('on')) set((cur + 1) % tabs.length); }));
-  reveal([...sec.querySelectorAll('.rv')], 500);
-  shots[0].querySelector('.ui').classList.add('on');
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { inView = e.isIntersecting; if (reduced || !matchMedia('(min-width:1101px)').matches) return; sec.classList.toggle('run', inView); }), { threshold: .45 }).observe(sec.querySelector('.stage'));
+  // the heading block keeps its own reveals; tabs, sentence, screen and strip follow one choreography
+  reveal([...sec.querySelectorAll('.rv:not(.tabs):not(.sentbar):not(.stage):not(.foot)')], 500);
+  const tabsEl = sec.querySelector('.tabs'), sentEl = sec.querySelector('.sentbar'), stageEl = sec.querySelector('.stage'), footEl = sec.querySelector('.foot');
+  const goLive = () => { ready = true; sec.classList.add('live'); if (inView && !manual && !reduced && matchMedia('(min-width:1101px)').matches) sec.classList.add('run'); };
+  const instant = () => { [tabsEl, sentEl, stageEl, footEl].forEach(e => e.classList.add('in')); shots[0].classList.add('on'); shots[0].querySelector('.ui').classList.add('on'); goLive(); };
+  if (reduced || !('IntersectionObserver' in window)) instant();
+  else {
+    [tabsEl, sentEl, stageEl, footEl].forEach(e => e.style.setProperty('--d', '0'));
+    shots[0].classList.remove('on'); shots[0].querySelector('.ui').classList.remove('on');
+    const enter = () => {
+      setTimeout(() => tabsEl.classList.add('in'), 300);                                   // beat 1: the tabs (hero rhythm: start 0.3 s)
+      setTimeout(() => sentEl.classList.add('in'), 700);                                   // beat 2: the sentence (Agent first, the second role 0.22 s later)
+      setTimeout(() => { stageEl.classList.add('in'); shots[0].classList.add('on');        // beat 3: the screen wipes in, its parts follow
+        setTimeout(() => shots[0].querySelector('.ui').classList.add('on'), 450); }, 1250);
+      setTimeout(() => footEl.classList.add('in'), 2000);
+      setTimeout(goLive, 3400); };                                                         // the tabs start their auto-advance only now
+    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); enter(); } }, { threshold: .35 });
+    io.observe(stageEl);
+  }
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { inView = e.isIntersecting; if (reduced || !matchMedia('(min-width:1101px)').matches) return; sec.classList.toggle('run', inView && ready && !manual); }), { threshold: .45 }).observe(sec.querySelector('.stage'));
 
   const SENT = [{"r1": "Agent", "t1": "drafts from your handbook and tools.", "r2": "You", "t2": "approve before it goes live."}, {"r1": "Agent", "t1": "collects and timestamps the proof.", "r2": "You", "t2": "fix only what is flagged."}, {"r1": "Agent", "t1": "reads reports, chases the gaps.", "r2": "Expert", "t2": "makes the final call."}, {"r1": "Agent", "t1": "scores and ranks on the live picture.", "r2": "Expert", "t2": "reviews the high risks."}, {"r1": "Agent", "t1": "keeps every control current.", "r2": "You", "t2": "show it to the auditor."}], bar = sec.querySelector('.sentbar'), roles = [bar.querySelector('.r1'), bar.querySelector('.r2')], tt = [bar.querySelector('.t1'), bar.querySelector('.t2')];
   const widthOf = (el, text) => { const m = el.cloneNode(false); m.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;width:auto;left:0;top:0'; m.textContent = text; el.parentNode.appendChild(m); const w = m.getBoundingClientRect().width; m.remove(); return w; };
