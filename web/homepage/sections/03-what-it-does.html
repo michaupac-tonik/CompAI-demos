@@ -209,7 +209,7 @@
   @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .side .fx .ft { display: none; } .sec-03 .co li { padding: 9px 0; } .sec-03 .tb { padding-top: 12px; } }
   @media (min-width: 1101px) and (max-height: 720px) { .sec-03 .side .fx p { display: none; } .sec-03 .side .sd { font-size: 15px; } }
   /* narrow screens: stacked, tabs stay pinned to the top of the section so you switch without scrolling back */
-  @media (max-width: 1100px) { .sec-03 .stage { --sw: 100%; } .sec-03 .shotd { grid-template-columns: minmax(0, 1fr); } .sec-03 .tabs { position: sticky; top: 0; z-index: 30; display: flex; overflow-x: auto; gap: 22px; margin-inline: calc(var(--edge) * -1); padding: 0 var(--edge) 10px; background: rgba(0,0,0,.94); scrollbar-width: none; } .sec-03 .tabs::-webkit-scrollbar { display: none; } .sec-03 .tb { flex: none; padding-top: 14px; } .sec-03 .tb .n { font-size: 20px; } .sec-03 .side { margin-top: 20px; } }
+  @media (max-width: 1100px) { .sec-03 .stage { --sw: 100%; } .sec-03 .shotd { grid-template-columns: minmax(0, 1fr); } .sec-03 .tabs { position: sticky; top: var(--nav-h, 74px); z-index: 25; display: flex; overflow-x: auto; gap: 22px; margin-inline: calc(var(--edge) * -1); padding: 0 var(--edge) 10px; background: rgba(0,0,0,.94); scrollbar-width: none; } .sec-03 .tabs::-webkit-scrollbar { display: none; } .sec-03 .tb { flex: none; padding-top: 14px; } .sec-03 .tb .n { font-size: 20px; } .sec-03 .side { margin-top: 20px; } }
   @media (max-width: 760px) { .sec-03 .co li { padding: 10px 0; } }
   /* D6: the sentence runs the full width on one line; the description leads the numbered feature points; the widget floats off the screen edge */
   .sec-03 .stage { margin-top: 38px; }
