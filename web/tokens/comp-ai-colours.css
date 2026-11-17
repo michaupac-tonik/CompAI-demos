@@ -1,0 +1,65 @@
+/* Comp AI · brand colour library
+   Source: Figma "Comp AI - Brand Guidelines", page "🎨 Colour" (node 1:4), read 16.11.2026.
+   Four families, 11 solid steps each (000 darkest → 100 lightest). Values are the Figma variables
+   (neutral/sld/040 etc.); green 080, cyan 080 and coral 030 had no variable on the swatch and were read
+   from the swatch label. The web version of the library is still to be defined with the client: these
+   are the brand values, not yet semantic web tokens.
+
+   Brand core (the "colours-branding" sheet): neutral 000, neutral 100, green 080, cyan 080, coral 050, coral 080.
+   Transparent ramps in the library: neutral 000 and 100, green 080, cyan 080, coral 050 and 080 at
+   100 → 0 % alpha (100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 16, 12, 8, 4, 0).
+   Use them as color-mix() or rgb(… / a) on the solid value below. */
+
+:root {
+  /* neutral */
+  --neutral-000: #010101;
+  --neutral-010: #202020;
+  --neutral-020: #343434;
+  --neutral-030: #515151;
+  --neutral-040: #696969;
+  --neutral-050: #848484;
+  --neutral-060: #979797;
+  --neutral-070: #B5B5B5;
+  --neutral-080: #CBCBCB;
+  --neutral-090: #DFDFDF;
+  --neutral-100: #F8F8F8;
+
+  /* green */
+  --green-000: #000200;
+  --green-010: #002908;
+  --green-020: #004011;
+  --green-030: #00631F;
+  --green-040: #00802B;
+  --green-050: #009F37;
+  --green-060: #00B640;
+  --green-070: #00DA4F;
+  --green-080: #24FF63;   /* brand core */
+  --green-090: #99FAA3;
+  --green-100: #EAFFEB;
+
+  /* cyan */
+  --cyan-000: #000101;
+  --cyan-010: #002723;
+  --cyan-020: #003D39;
+  --cyan-030: #005E58;
+  --cyan-040: #007A71;
+  --cyan-050: #00988E;
+  --cyan-060: #00AEA2;
+  --cyan-070: #00D0C2;
+  --cyan-080: #00FFEE;    /* brand core */
+  --cyan-090: #A4FFF4;
+  --cyan-100: #E3FFFB;
+
+  /* coral */
+  --coral-000: #040000;
+  --coral-010: #440100;
+  --coral-020: #670400;
+  --coral-030: #991100;
+  --coral-040: #C12000;
+  --coral-050: #F5380E;   /* brand core */
+  --coral-060: #F37300;
+  --coral-070: #F49900;
+  --coral-080: #F1BC37;   /* brand core */
+  --coral-090: #F9DC9A;
+  --coral-100: #FFF8E4;
+}
