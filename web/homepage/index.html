@@ -321,11 +321,11 @@
   }
   /* @section:02 css:end */
   /* @section:03 css:start */
-  .sec-03 { position: relative; z-index: 1; padding: 140px 0 120px; }
+  .sec-03 { position: relative; z-index: 1; margin-top: -72px; padding: 24px 0 96px; }   /* pulled up into the empty foot of the pinned section above */
   .sec-03 .head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 72px; align-items: end; }
   .sec-03 .head .lead { margin: 0; max-width: 28em; }
   .sec-03 .foot { margin-top: 72px; }
-  @media (max-width: 1023px) { .sec-03 { padding: 96px 0 80px; } .sec-03 .head { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
+  @media (max-width: 1023px) { .sec-03 { margin-top: 0; padding: 24px 0 72px; } .sec-03 .head { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
   /* ==== 03 · D: tabs showcase. One big screen, five equal tabs with their full text; auto-advances, click to pick ==== */
   .sec-03 .tabs { margin-top: 64px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
   .sec-03 .tb { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; text-align: left; padding: 20px 4px 0 0; border: 0; background: none; color: rgba(252,252,252,.45); font: inherit; cursor: pointer; transition: color .5s var(--ease); }
@@ -336,8 +336,8 @@
   .sec-03.run .tb.on::after { animation: tbrun 7s linear both; }
   .sec-03:hover .tb.on::after, .sec-03 .tabs:focus-within .tb.on::after { animation-play-state: paused; }
   @keyframes tbrun { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  .sec-03 .tb .k { display: block; font: 300 12.5px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; opacity: .7; }
-  .sec-03 .tb .n { display: block; margin-top: 14px; font-size: clamp(24px, 1.9vw, 32px); line-height: 1.05; letter-spacing: -.035em; }
+  .sec-03 .tb .k { display: block; opacity: .7; }
+  .sec-03 .tb .n { display: block; margin-top: 14px; }
   .sec-03 .stage { position: relative; margin: 40px auto 0; width: min(100%, 1040px); aspect-ratio: 16 / 9; }
   .sec-03 .shotd { position: absolute; inset: 0; opacity: 0; filter: blur(6px); transform: translateY(14px); pointer-events: none; transition: opacity .6s ease, filter .7s ease, transform .8s var(--ease); }
   .sec-03 .shotd.on { opacity: 1; filter: none; transform: none; pointer-events: auto; }
@@ -380,12 +380,12 @@
   .js .sec-03 .ui:not(.on) .bar b { width: 0; }
   .js .sec-03 .ui .it { opacity: 0; transform: translateY(8px); filter: blur(5px); transition: opacity .6s ease calc(var(--i, 0) * .11s + .15s), transform .7s var(--ease) calc(var(--i, 0) * .11s + .15s), filter .7s ease calc(var(--i, 0) * .11s + .15s); }
   .js .sec-03 .ui.on .it { opacity: 1; transform: none; filter: none; }
-  .sec-03 .integ { display: flex; align-items: center; gap: 28px; padding-top: 22px; border-top: 1px solid rgba(252,252,252,.12); font: 300 12.5px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.5); }
+  .sec-03 .integ { display: flex; align-items: center; gap: 28px; padding-top: 22px; border-top: 1px solid rgba(252,252,252,.12); color: rgba(252,252,252,.5); }
   .sec-03 .integ .l { color: rgba(252,252,252,.7); white-space: nowrap; }
   .sec-03 .integ ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 28px; }
-  .sec-03 .eyebrow-03 { margin: 0 0 24px; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.6); }
-  .sec-03 h2 { margin: 0; font-weight: 300; font-size: clamp(38px, 3.55vw, 64px); line-height: 1.05; letter-spacing: -.04em; }
-  .sec-03 .lead { margin: 20px 0 0; font-size: clamp(17px, 1.2vw, 21px); line-height: 1.42; letter-spacing: -.01em; color: rgba(252,252,252,.82); text-wrap: pretty; }
+  .sec-03 .eyebrow-03 { margin: 0 0 24px; color: rgba(252,252,252,.6); }
+  .sec-03 h2 { margin: 0; font-weight: 300; }
+  .sec-03 .lead { margin: 20px 0 0; color: rgba(252,252,252,.82); text-wrap: pretty; }
   @media (max-width: 760px) { .sec-03 .integ { flex-direction: column; align-items: start; gap: 12px; } .sec-03 .ui .rw { grid-template-columns: 62px minmax(0, 1fr) auto; } .sec-03 .ui .rw .tm { display: none; } }
   @media (prefers-reduced-motion: reduce) { .js .sec-03 .ui .it { opacity: 1; transform: none; filter: none; transition: none; } .js .sec-03 .ui:not(.on) .bar b { width: var(--w, 90%); } }
   /* richer screens: activity line, split layouts, KPI strips, heat matrix (container-aware, so they also fit narrow tiles) */
@@ -434,7 +434,7 @@
   .sec-03 .shotd.on .pin.hot::after { opacity: 1; animation: pinring 1.4s ease-out infinite; }
   @keyframes pinring { from { transform: scale(.8); opacity: .9; } to { transform: scale(1.6); opacity: 0; } }
   .sec-03 .co { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
-  .sec-03 .co li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 14px; align-items: start; padding: 20px 0; border-top: 1px solid rgba(252,252,252,.14); color: rgba(252,252,252,.6); font-size: clamp(17px, 1.3vw, 21px); line-height: 1.3; letter-spacing: -.01em; cursor: default; opacity: 0; transform: translateY(8px); filter: blur(5px); transition: opacity .6s ease calc(.9s + var(--i) * .15s), transform .7s var(--ease) calc(.9s + var(--i) * .15s), filter .7s ease calc(.9s + var(--i) * .15s), color .3s; }
+  .sec-03 .co li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 14px; align-items: start; padding: 20px 0; border-top: 1px solid rgba(252,252,252,.14); color: rgba(252,252,252,.6); cursor: default; opacity: 0; transform: translateY(8px); filter: blur(5px); transition: opacity .6s ease calc(.9s + var(--i) * .15s), transform .7s var(--ease) calc(.9s + var(--i) * .15s), filter .7s ease calc(.9s + var(--i) * .15s), color .3s; }
   .sec-03 .co li:last-child { border-bottom: 1px solid rgba(252,252,252,.14); }
   .sec-03 .shotd.on .co li { opacity: 1; transform: none; filter: none; }
   .sec-03 .co li.hot { color: var(--white); }
@@ -445,7 +445,7 @@
   /* combined: tabs, then who-does-what band, then screen (pins) + annotations + widget */
   .sec-03 .shotd { grid-template-columns: minmax(0, 880px) minmax(0, 1fr); grid-template-rows: auto auto; align-items: start; gap: 0 48px; }
   .sec-03 .side { display: grid; gap: 28px; align-content: start; }
-  .sec-03 .co li { padding: 16px 0; font-size: clamp(16px, 1.2vw, 19px); }
+  .sec-03 .co li { padding: 16px 0; }
   .sec-03 .side .fx { position: relative; right: auto; bottom: auto; width: auto; margin-left: -56px; box-shadow: 0 18px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.4); }
   @media (max-width: 1100px) { .sec-03 .shotd { grid-template-columns: minmax(0, 1fr); } .sec-03 .side .fx { margin-left: 0; } .sec-03 .side { margin-top: 24px; } }
   .sec-03 .fx { position: relative; z-index: 5; padding: 16px 18px 14px; background: #fff; color: #161616; border-radius: 6px; box-shadow: 0 24px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.5); font: 300 14px/1.4 var(--sans); opacity: 0; filter: blur(7px); transform: translate(24px, 18px); transition: opacity .7s ease 1.1s, filter .8s ease 1.1s, transform .9s var(--ease) 1.1s; }
@@ -475,27 +475,27 @@
   /* compact chrome: tabs show number + title only; the whole interactive block fits one viewport on laptops */
   .sec-03 .tabs { margin-top: 28px; gap: 16px; }
   .sec-03 .tb { flex-direction: row; align-items: baseline; gap: 12px; padding: 16px 4px 0 0; }
-  .sec-03 .tb .n { margin-top: 0; font-size: clamp(20px, 1.7vw, 28px); }
+  .sec-03 .tb .n { margin-top: 0; }
   .sec-03 .stage { margin-top: 22px; --sw: min(880px, calc((100svh - 290px) * 16 / 9), calc(100% - 340px)); }
   .sec-03 .shotd { grid-template-columns: minmax(0, var(--sw)) minmax(0, 1fr); gap: 0 40px; }
   .sec-03 .shotd .ui { width: 100%; }
   .sec-03 .side { gap: 18px; }
-  .sec-03 .side .sd { margin: 0; font-size: clamp(16px, 1.15vw, 19px); line-height: 1.38; letter-spacing: -.01em; color: rgba(252,252,252,.85); }
-  .sec-03 .co li { padding: 12px 0; font-size: clamp(15px, 1.05vw, 17px); }
+  .sec-03 .side .sd { margin: 0; color: rgba(252,252,252,.85); }
+  .sec-03 .co li { padding: 12px 0; }
   .sec-03 .side .fx { padding: 14px 16px 12px; }
   .sec-03 .side .fx .who { margin-top: 8px; }
   .sec-03 .side .fx .bt { margin-top: 10px; }
   @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .side .fx .ft { display: none; } .sec-03 .co li { padding: 9px 0; } .sec-03 .tb { padding-top: 12px; } }
-  @media (min-width: 1101px) and (max-height: 720px) { .sec-03 .side .fx p { display: none; } .sec-03 .side .sd { font-size: 15px; } }
+  @media (min-width: 1101px) and (max-height: 720px) { .sec-03 .side .fx p { display: none; } }
   /* narrow screens: stacked, tabs stay pinned to the top of the section so you switch without scrolling back */
-  @media (max-width: 1100px) { .sec-03 .stage { --sw: 100%; } .sec-03 .shotd { grid-template-columns: minmax(0, 1fr); } .sec-03 .tabs { position: sticky; top: var(--nav-h, 74px); z-index: 25; display: flex; overflow-x: auto; gap: 22px; margin-inline: calc(var(--edge) * -1); padding: 0 var(--edge) 10px; background: rgba(0,0,0,.94); scrollbar-width: none; } .sec-03 .tabs::-webkit-scrollbar { display: none; } .sec-03 .tb { flex: none; padding-top: 14px; } .sec-03 .tb .n { font-size: 20px; } .sec-03 .side { margin-top: 20px; } }
+  @media (max-width: 1100px) { .sec-03 .stage { --sw: 100%; } .sec-03 .shotd { grid-template-columns: minmax(0, 1fr); } .sec-03 .tabs { position: sticky; top: var(--nav-h, 74px); z-index: 25; display: flex; overflow-x: auto; gap: 22px; margin-inline: calc(var(--edge) * -1); padding: 0 var(--edge) 10px; background: rgba(0,0,0,.94); scrollbar-width: none; } .sec-03 .tabs::-webkit-scrollbar { display: none; } .sec-03 .tb { flex: none; padding-top: 14px; } .sec-03 .side { margin-top: 20px; } }
   @media (max-width: 760px) { .sec-03 .co li { padding: 10px 0; } }
   /* D6: the sentence runs the full width on one line; the description leads the numbered feature points; the widget floats off the screen edge */
   .sec-03 .stage { margin-top: 38px; }
   /* description = intro of the numbered points (they annotate the pins on the screen) */
   .sec-03 .side .sd { margin: 0 0 4px; }
-  .sec-03 .sd .sdk { display: block; font: 300 12px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.55); }
-  .sec-03 .sd p { margin: 10px 0 0; font-size: clamp(16px, 1.15vw, 19px); line-height: 1.38; letter-spacing: -.01em; color: rgba(252,252,252,.88); }
+  .sec-03 .sd .sdk { display: block; color: rgba(252,252,252,.55); }
+  .sec-03 .sd p { margin: 10px 0 0; color: rgba(252,252,252,.88); }
   .sec-03 .side { justify-content: flex-start; gap: 14px; }
   /* widget sits on the screen, in a free area chosen per screen so it never hides content; it floats gently */
   .sec-03 .scr .fx { position: absolute; z-index: 6; margin: 0; width: 270px; padding: 12px 14px 10px; right: var(--fxr, 16%); bottom: var(--fxb, 11%); left: auto; }
@@ -507,8 +507,7 @@
   .sec-03 .shotd[data-k="risk"] .fx p { display: none; }
   .sec-03 .shotd.on .fx { animation: fxfloat 6s ease-in-out 2s infinite alternate; }
   @keyframes fxfloat { from { translate: 0 0; } to { translate: 0 -8px; } }
-  @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .sd p { font-size: 15px; margin-top: 8px; } .sec-03 .stage { margin-top: 30px; } }
-  @media (min-width: 1101px) and (max-height: 720px) { .sec-03 .sd p { font-size: 14px; } }
+  @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .sd p { margin-top: 8px; } .sec-03 .stage { margin-top: 30px; } }
   @media (max-width: 1100px) { .sec-03 .scr .fx { position: relative; right: auto; left: auto; bottom: auto; width: auto; margin: 14px 0 0; } .sec-03 .shotd[data-k="risk"] .fx p { display: block; } .sec-03 .scr .fx .ft { display: block; } .sec-03 .side { margin-top: 20px; } }
   @media (prefers-reduced-motion: reduce) { .sec-03 .shotd.on .fx { animation: none; } }
   /* one persistent sentence; roles are the important element: they enter first and stay. Height is locked to the tallest variant. */
@@ -517,7 +516,7 @@
   .sec-03 .stage { margin-top: 32px; }
   .sec-03 .shotd { grid-template-rows: auto; }
   .sec-03 .shotd .side { padding-top: 36px; }
-  .sec-03 .sent { margin: 0; font-size: clamp(24px, 2.5vw, 40px); line-height: 1.1; letter-spacing: -.04em; color: rgba(252,252,252,.5); user-select: none; }
+  .sec-03 .sent { margin: 0; color: rgba(252,252,252,.5); user-select: none; }
   .sec-03 .sent .role { position: relative; display: inline-grid; vertical-align: top; font-weight: 300; color: var(--white); white-space: nowrap; padding-bottom: .1em; }
   .sec-03 .sent .role .rl { grid-area: 1 / 1; display: block; }
   .sec-03 .sent .role::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .8s var(--ease) .25s; }
@@ -525,8 +524,8 @@
   .sec-03 .sent .w { display: inline-block; opacity: 0; filter: blur(6px); transform: translateY(9px); }
   .sec-03 .sent .go .w { opacity: 1; filter: none; transform: none; transition: opacity .7s cubic-bezier(.2,.7,.1,1) calc(var(--i) * 34ms + var(--base, 0s)), filter .8s ease calc(var(--i) * 34ms + var(--base, 0s)), transform .9s var(--ease) calc(var(--i) * 34ms + var(--base, 0s)); }
   .sec-03 .sent .leave .w { opacity: 0; filter: blur(5px); transform: translateY(-7px); transition: opacity .14s ease, filter .14s ease, transform .14s ease; }
-  @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .sent { font-size: clamp(22px, 2.1vw, 30px); } .sec-03 .sentbar { margin-top: 30px; } .sec-03 .stage { margin-top: 24px; } .sec-03 .shotd .side { padding-top: 26px; } }
-  @media (max-width: 1100px) { .sec-03 .sent { font-size: clamp(24px, 4.6vw, 36px); } .sec-03 .shotd .side { padding-top: 0; } }
+  @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .sentbar { margin-top: 30px; } .sec-03 .stage { margin-top: 24px; } .sec-03 .shotd .side { padding-top: 26px; } }
+  @media (max-width: 1100px) { .sec-03 .shotd .side { padding-top: 0; } }
   @media (prefers-reduced-motion: reduce) { .sec-03 .sent .w { opacity: 1; filter: none; transform: none; transition: none; } .sec-03 .sent .role::after { transform: scaleX(1); transition: none; } }
   /* roles: underline leads. Everything that changes layout happens while nothing is visible (all lines retracted, all words out), so nothing jumps */
   .sec-03 .sent { --base: .42s; }
@@ -534,12 +533,12 @@
   .sec-03 .sent .role.gone .rl { opacity: 0; transition: opacity .12s ease; }
   .sec-03 .sentbar.in .sent .role.retract::after { transform: scaleX(0); transform-origin: right; transition: transform .24s ease-in; }
   /* screens: no vertical move at all. The new screen is wiped in from the left while the old one fades; content fades in place (no rise) */
-  .sec-03 .shotd { filter: none; transform: none; opacity: 0; clip-path: inset(-80px 100% -110px -80px); transition: opacity .3s ease, clip-path 0s linear .3s; }
-  .sec-03 .shotd.on { opacity: 1; clip-path: inset(-80px -80px -110px -80px); transition: opacity .35s ease, clip-path 1s var(--ease); }
+  .sec-03 .shotd { transform: none; opacity: 0; filter: blur(10px); clip-path: none; transition: opacity .3s ease, filter .3s ease; }
+  .sec-03 .shotd.on { opacity: 1; filter: none; transition: opacity 1s var(--ease), filter 1.1s var(--ease); }
   .js .sec-03 .ui .it { transform: none; }
   .sec-03 .co li, .sec-03 .shotd.on .co li { transform: none; }
   .sec-03 .fx { transform: none; }
-  @media (prefers-reduced-motion: reduce) { .sec-03 .shotd, .sec-03 .shotd.on { clip-path: none; transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .sec-03 .shotd, .sec-03 .shotd.on { filter: none; transition: none; } }
   /* sequence: Agent + first clause land first; the second role and clause follow ~0.22s later */
   .sec-03 .sent .t1 { --base: .42s; }
   .sec-03 .sent .t2 { --base: .64s; }
@@ -555,6 +554,20 @@
   /* entrance choreography: the screen block only fades in (the wipe is its reveal), the tab progress line waits for the entrance to finish */
   .js .sec-03 .stage.rv { transform: none; filter: none; }
   .sec-03:not(.live) .tb.on::after { transform: scaleX(0); }
+  /* typography: Comp AI typography v0.1 (styleguide draft). Scale 1.272 on 16 px, desktop from 1024 px, weight 300 only.
+     Product UI text inside the mock screens is out of the system's scope and keeps its own sizes. */
+  .sec-03 { --t-label: 13px; --t-body: 16px; --t-lead-m: 20px; --t-display-m: 33px; --t-display-l: 53px; }
+  @media (max-width: 1023px) { .sec-03 { --t-lead-m: 16px; --t-display-m: 26px; --t-display-l: 33px; } }
+  /* label S: mono, uppercase, +4% */
+  .sec-03 .eyebrow-03, .sec-03 .tb .k, .sec-03 .integ, .sec-03 .sd .sdk { font-family: var(--mono); font-weight: 300; font-size: var(--t-label); line-height: 1.3; letter-spacing: .04em; text-transform: uppercase; }
+  /* display L (h2): 53 / 33, line-height 1, -4% */
+  .sec-03 h2 { font-size: var(--t-display-l); line-height: 1; letter-spacing: -.04em; }
+  /* lead M: 20 / 16, line-height 1.4, -1% (section lead, tab titles, the description beside the screen) */
+  .sec-03 .lead, .sec-03 .tb .n, .sec-03 .sd p { font-size: var(--t-lead-m); line-height: 1.4; letter-spacing: -.01em; }
+  /* body M: 16, line-height 1.55 (the numbered feature points) */
+  .sec-03 .co li { font-size: var(--t-body); line-height: 1.55; letter-spacing: 0; }
+  /* the Agent / You sentence has no role yet: scale step 3 (33 / 26), line-height 1.1, -4%, proposed as Display M */
+  .sec-03 .sent { font-size: var(--t-display-m); line-height: 1.1; letter-spacing: -.04em; }
   /* @section:03 css:end */
 </style>
 </head>
@@ -1233,7 +1246,7 @@
   const sec = document.getElementById('sec-03'); if (!sec) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const reveal = (els, delay) => { if (reduced || !('IntersectionObserver' in window)) { els.forEach(g => g.classList.add('in')); return; }
-    const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; e.target.classList.add('in'); const u = e.target.querySelector('.ui'); if (u) setTimeout(() => u.classList.add('on'), delay || 400); io.unobserve(e.target); }), { threshold: .25 });
+    const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; e.target.classList.add('in'); const u = e.target.querySelector('.ui'); if (u) setTimeout(() => u.classList.add('on'), delay || 400); io.unobserve(e.target); }), { threshold: .1, rootMargin: '0px 0px -6% 0px' });
     els.forEach(g => io.observe(g)); };
   const tabs = [...sec.querySelectorAll('.tb')], shots = [...sec.querySelectorAll('.shotd')];
   let cur = 0, inView = false, ready = false, manual = false;   // ready: the entrance is over; manual: the visitor picked a tab (auto-advance ends)
@@ -1278,13 +1291,13 @@
     [tabsEl, sentEl, stageEl, footEl].forEach(e => e.style.setProperty('--d', '0'));
     shots[0].classList.remove('on'); shots[0].querySelector('.ui').classList.remove('on');
     const enter = () => {
-      setTimeout(() => tabsEl.classList.add('in'), 300);                                   // beat 1: the tabs (hero rhythm: start 0.3 s)
-      setTimeout(() => sentEl.classList.add('in'), 700);                                   // beat 2: the sentence (Agent first, the second role 0.22 s later)
+      setTimeout(() => tabsEl.classList.add('in'), 120);                                   // beat 1: the tabs (hero rhythm: start 0.3 s)
+      setTimeout(() => sentEl.classList.add('in'), 400);                                   // beat 2: the sentence (Agent first, the second role 0.22 s later)
       setTimeout(() => { stageEl.classList.add('in'); shots[0].classList.add('on');        // beat 3: the screen wipes in, its parts follow
-        setTimeout(() => shots[0].querySelector('.ui').classList.add('on'), 450); }, 1250);
-      setTimeout(() => footEl.classList.add('in'), 2000);
-      setTimeout(goLive, 3400); };                                                         // the tabs start their auto-advance only now
-    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); enter(); } }, { threshold: .35 });
+        setTimeout(() => shots[0].querySelector('.ui').classList.add('on'), 350); }, 760);
+      setTimeout(() => footEl.classList.add('in'), 1300);
+      setTimeout(goLive, 2500); };                                                         // the tabs start their auto-advance only now
+    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); enter(); } }, { threshold: .12 });
     io.observe(stageEl);
   }
   if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { inView = e.isIntersecting; if (reduced || !matchMedia('(min-width:1101px)').matches) return; sec.classList.toggle('run', inView && ready && !manual); }), { threshold: .45 }).observe(sec.querySelector('.stage'));
