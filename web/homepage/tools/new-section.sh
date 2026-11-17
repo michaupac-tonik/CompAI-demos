@@ -29,6 +29,9 @@ FILE="web/homepage/sections/$N-$NAME.html"
 git -C "$ROOT" worktree add -b "$BRANCH" "$WT" homepage
 mkdir -p "$WT/web/hero/comp-ai-hero-v01"
 ln -s "$ROOT/web/hero/comp-ai-hero-v01/fonts" "$WT/web/hero/comp-ai-hero-v01/fonts"
+# the link would show up as untracked: keep it out of `git add` (local exclude, shared by all worktrees, never committed)
+EXCL="$(git -C "$WT" rev-parse --path-format=absolute --git-path info/exclude)"
+grep -qxF "web/hero/comp-ai-hero-v01/fonts" "$EXCL" 2>/dev/null || echo "web/hero/comp-ai-hero-v01/fonts" >> "$EXCL"
 sed -e "s/{{NN}}/$N/g" -e "s/{{TITLE}}/$TITLE/g" "$WT/web/homepage/sections/_template.html" > "$WT/$FILE"
 
 mkdir -p "$WT/.claude"
