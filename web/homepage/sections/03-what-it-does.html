@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI · 03 what it does</title>
+<link rel="icon" href="../../hero/comp-ai-hero-v01/img/logo-mark.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add('js')</script>
+<!--
+  Comp AI · homepage section 03 "what it does", isolated from index.html for UI work.
+  Only the three @section:03 blocks (css, html, js) are carried into index.html by
+  tools/integrate-section.py; everything else here (head, base styles, mist, dev bits) is for previewing.
+  Rules: prefix your class names with .sec-03 (the blocks end up in one stylesheet with the other sections),
+  use the variables of the base :root (--mint, --cyan, --ink, --white, --mono, --sans, --ease, --edge, .wrap),
+  keep dev code outside the markers. Behind the section the mist from ../shared/mist.js stands in for the hero's print.
+-->
+<style>
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Light-Trial.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+
+  :root {
+    --black: #000;
+    --ink: #161616;
+    --white: #fcfcfc;
+    --mint: #24ff63;
+    --cyan: #00ffee;
+    --sans: "Favorit", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Favorit Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --edge: 64px;
+    --ease: cubic-bezier(.2, .7, .1, 1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--black); color: var(--white); }
+  body { font: 300 16px/1.45 var(--sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  :focus-visible { outline: 1.5px solid var(--mint); outline-offset: 3px; }
+  .wrap { width: min(1792px, 100% - 2 * var(--edge)); margin-inline: auto; }
+
+  /* inherited from the hero's .task (applies to the board's task cells on the homepage too) */
+  .task { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, filter .5s; }
+  @media (max-width: 1023px) { .task { white-space: normal; } }
+  @media (max-width: 600px) { :root { --edge: 16px; } .task { flex: 1; } }
+
+  /* @section:03 css:start */
+  .sec-03 { position: relative; z-index: 1; margin-top: -72px; padding: 24px 0 96px; }   /* pulled up into the empty foot of the pinned section above */
+  .sec-03 .head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 72px; align-items: end; }
+  .sec-03 .head .lead { margin: 0; max-width: 28em; }
+  .sec-03 .foot { margin-top: 72px; }
+  @media (max-width: 1023px) { .sec-03 { margin-top: 0; padding: 24px 0 72px; } .sec-03 .head { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
+  /* ==== 03 · D: tabs showcase. One big screen, five equal tabs with their full text; auto-advances, click to pick ==== */
+  .sec-03 .tabs { margin-top: 64px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+  .sec-03 .tb { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; text-align: left; padding: 20px 4px 0 0; border: 0; background: none; color: rgba(252,252,252,.45); font: inherit; cursor: pointer; transition: color .5s var(--ease); }
+  .sec-03 .tb::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: rgba(252,252,252,.16); }
+  .sec-03 .tb::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(0); }
+  .sec-03 .tb.on { color: var(--white); }
+  .sec-03 .tb.on::after { transform: scaleX(1); }
+  .sec-03.run .tb.on::after { animation: tbrun 7s linear both; }
+  .sec-03:hover .tb.on::after, .sec-03 .tabs:focus-within .tb.on::after { animation-play-state: paused; }
+  @keyframes tbrun { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .sec-03 .tb .k { display: block; opacity: .7; }
+  .sec-03 .tb .n { display: block; margin-top: 14px; }
+  .sec-03 .stage { position: relative; margin: 40px auto 0; width: min(100%, 1040px); aspect-ratio: 16 / 9; }
+  .sec-03 .shotd { position: absolute; inset: 0; opacity: 0; filter: blur(6px); transform: translateY(14px); pointer-events: none; transition: opacity .6s ease, filter .7s ease, transform .8s var(--ease); }
+  .sec-03 .shotd.on { opacity: 1; filter: none; transform: none; pointer-events: auto; }
+  .sec-03 .shotd .ui { height: 100%; aspect-ratio: auto; }
+  @media (max-width: 1023px) { .sec-03 .tabs { grid-template-columns: minmax(0, 1fr); gap: 0; } .sec-03 .tb { padding: 16px 0; } .sec-03 .tb:not(.on) .d { display: none; } .sec-03 .stage { aspect-ratio: auto; height: 520px; } }
+  .js .sec-03 .rv { opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .9s var(--ease) calc(var(--d, 0) * .12s); }
+  .js .sec-03 .rv.in { opacity: 1; filter: none; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .js .sec-03 .rv { opacity: 1; filter: none; transform: none; transition: none; } }
+  /* product screens: light panels on the dark page. WORKING SAMPLE DATA (names, counts, times): confirm before launch */
+  .sec-03 .mono { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .sec-03 .ui { display: flex; flex-direction: column; background: #f7f7f7; color: #161616; border-radius: 6px; overflow: hidden; font: 300 14px/1.35 var(--sans); box-shadow: 0 30px 80px rgba(0,0,0,.5); text-align: left; text-transform: none; letter-spacing: 0; }
+  .sec-03 .ui-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid #e6e6e6; background: #f1f1f1; }
+  .sec-03 .ui-tag { color: #777; }
+  .sec-03 .ui-b { flex: 1; min-height: 0; padding: 16px 18px; display: grid; gap: 10px; align-content: start; }
+  .sec-03 .ui .t { font-size: 22px; line-height: 1.1; letter-spacing: -.03em; }
+  .sec-03 .ui p { margin: 0; color: #444; font-size: 13.5px; line-height: 1.45; }
+  .sec-03 .ui .ln { display: grid; gap: 7px; }
+  .sec-03 .ui .ln i { display: block; height: 6px; border-radius: 3px; background: #e2e2e2; }
+  .sec-03 .ui .src { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; color: #777; }
+  .sec-03 .ui .src b, .sec-03 .ui .chip { font-weight: 300; font-size: 12px; padding: 4px 8px; background: #fff; border: 1px solid #e6e6e6; border-radius: 3px; color: #333; white-space: nowrap; }
+  .sec-03 .ui .chip { font: 300 10.5px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 5px 7px; color: #444; }
+  .sec-03 .ui-f { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 18px; border-top: 1px solid #ececec; background: #fff; }
+  .sec-03 .ui .rw { display: grid; grid-template-columns: 78px minmax(0, 1fr) auto; gap: 12px; align-items: center; min-height: 40px; border-top: 1px solid #ececec; font-size: 13px; }
+  .sec-03 .ui .rw:first-of-type { border-top: 0; }
+  .sec-03 .ui .rw .dsc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sec-03 .ui .rw .tm { color: #888; }
+  .sec-03 .ui .st { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .sec-03 .ui .st em { font-style: normal; }
+  .sec-03 .ui .st::before { content: ""; width: 8px; height: 8px; transform: rotate(45deg); background: #24ff63; border: 1px solid #24ff63; }
+  .sec-03 .ui .st[data-v="c"]::before { width: 5px; height: 5px; margin: 0 1.5px; background: #f08a3c; border-color: #f08a3c; }
+  .sec-03 .ui .st[data-v="n"]::before { background: transparent; border-color: #f08a3c; }
+  .sec-03 .ui .bar { position: relative; height: 30px; border-radius: 4px; overflow: hidden; background: radial-gradient(circle, #cfcfcf .6px, transparent .8px) 0 0 / 4px 4px; }
+  .sec-03 .ui .bar b { position: absolute; inset: 0 auto 0 0; width: var(--w, 90%); background: linear-gradient(90deg, #24ff63, #00ffee); transition: width 1.3s var(--ease) .3s; }
+  .sec-03 .ui .pr { color: #0b8a3a; }
+  .sec-03 .ui .kp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .sec-03 .ui .kp div { padding: 10px 12px; background: #fff; border: 1px solid #ececec; border-radius: 6px; }
+  .sec-03 .ui .kp b { display: block; font-weight: 300; font-size: 22px; line-height: 1; letter-spacing: -.03em; }
+  .sec-03 .ui .kp b.warn { color: #d4491b; }
+  .sec-03 .ui .kp span { display: block; margin-top: 6px; color: #777; font-size: 12px; }
+  .js .sec-03 .ui:not(.on) .bar b { width: 0; }
+  .js .sec-03 .ui .it { opacity: 0; transform: translateY(8px); filter: blur(5px); transition: opacity .6s ease calc(var(--i, 0) * .11s + .15s), transform .7s var(--ease) calc(var(--i, 0) * .11s + .15s), filter .7s ease calc(var(--i, 0) * .11s + .15s); }
+  .js .sec-03 .ui.on .it { opacity: 1; transform: none; filter: none; }
+  .sec-03 .integ { display: flex; align-items: center; gap: 28px; padding-top: 22px; border-top: 1px solid rgba(252,252,252,.12); color: rgba(252,252,252,.5); }
+  .sec-03 .integ .l { color: rgba(252,252,252,.7); white-space: nowrap; }
+  .sec-03 .integ ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 28px; }
+  .sec-03 .eyebrow-03 { margin: 0 0 24px; color: rgba(252,252,252,.6); }
+  .sec-03 h2 { margin: 0; font-weight: 300; }
+  .sec-03 .lead { margin: 20px 0 0; color: rgba(252,252,252,.82); text-wrap: pretty; }
+  @media (max-width: 760px) { .sec-03 .integ { flex-direction: column; align-items: start; gap: 12px; } .sec-03 .ui .rw { grid-template-columns: 62px minmax(0, 1fr) auto; } .sec-03 .ui .rw .tm { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .js .sec-03 .ui .it { opacity: 1; transform: none; filter: none; transition: none; } .js .sec-03 .ui:not(.on) .bar b { width: var(--w, 90%); } }
+  /* richer screens: activity line, split layouts, KPI strips, heat matrix (container-aware, so they also fit narrow tiles) */
+  .sec-03 .ui { container-type: inline-size; }
+  .sec-03 .ui .act { display: flex; align-items: center; gap: 10px; padding: 10px 18px; background: #fff; border-bottom: 1px solid #ececec; color: #444; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .sec-03 .ui .act::before { content: ""; width: 6px; height: 6px; flex: none; background: linear-gradient(135deg, #24ff63, #00ffee); transform: rotate(45deg); }
+  .sec-03 .ui .act span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sec-03 .ui .act em { font-style: normal; color: #0b8a3a; }
+  .sec-03 .ui .two { flex: 1; min-height: 0; display: grid; grid-template-columns: 38% minmax(0, 1fr); }
+  .sec-03 .ui .lst { padding: 8px 0; border-right: 1px solid #e6e6e6; background: #f1f1f1; }
+  .sec-03 .ui .lst div { display: flex; flex-direction: column; gap: 6px; padding: 10px 16px; font-size: 13px; }
+  .sec-03 .ui .lst div.on { background: #fff; box-shadow: inset 2px 0 0 #24ff63; }
+  .sec-03 .ui .doc { padding: 16px 20px; display: grid; gap: 10px; align-content: start; }
+  .sec-03 .ui .kps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 14px 18px 0; }
+  .sec-03 .ui .kps div { padding: 10px 12px; background: #fff; border: 1px solid #ececec; border-radius: 6px; }
+  .sec-03 .ui .kps b { display: block; font-weight: 300; font-size: 22px; line-height: 1; letter-spacing: -.03em; }
+  .sec-03 .ui .kps b.warn { color: #d4491b; }
+  .sec-03 .ui .kps span { display: block; margin-top: 6px; color: #777; font-size: 12px; }
+  .sec-03 .ui .pad { padding: 12px 18px 0; display: grid; gap: 12px; }
+  .sec-03 .ui .heat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; align-content: center; padding: 16px; }
+  .sec-03 .ui .heat i { position: relative; display: block; aspect-ratio: 2; border-radius: 3px; background: rgba(36,255,99,.14); }
+  .sec-03 .ui .heat i.m { background: rgba(240,138,60,.2); }
+  .sec-03 .ui .heat i.h { background: rgba(212,73,27,.32); }
+  .sec-03 .ui .heat i.x::after { content: ""; position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; margin: -4.5px; transform: rotate(45deg); background: #161616; }
+  .sec-03 .ui .heatwrap { border-right: 1px solid #e6e6e6; background: #f1f1f1; display: grid; align-content: center; }
+  .sec-03 .ui .heatwrap .mono { padding: 0 16px; color: #777; }
+  @container (max-width: 560px) { .sec-03 .ui .two { grid-template-columns: minmax(0, 1fr); } .sec-03 .ui .lst, .sec-03 .ui .heatwrap { display: none; } .sec-03 .ui .kps b { font-size: 18px; } }
+  /* screens keep 16:9 (the page's product screen format); content is tightened to fit */
+  .sec-03 .ui .rw { min-height: 38px; }
+  .sec-03 .ui .ui-f { margin-top: auto; }
+  .sec-03 .shotd .ui .rw { min-height: 46px; }
+  .sec-03 .shotd .ui .pad { padding-top: 14px; }
+  .sec-03 .ui .kps { padding-top: 12px; }
+  .sec-03 .ui .pad { padding-top: 10px; gap: 10px; }
+  .sec-03 .ui .ui-b, .sec-03 .ui .doc { padding-top: 12px; }
+  .sec-03 .ui .ui-f { padding-top: 10px; padding-bottom: 10px; }
+  @media (max-width: 760px) { .sec-03 .ui { aspect-ratio: auto; } }
+  .sec-03 .stage { display: grid; width: min(100%, 100%); aspect-ratio: auto; height: auto; margin-top: 48px; }
+  .sec-03 .shotd { position: relative; grid-area: 1 / 1; inset: auto; display: grid; grid-template-columns: minmax(0, 880px) minmax(0, 1fr); gap: 48px; align-items: center; }
+  .sec-03 .shotd .ui { height: auto; aspect-ratio: 16 / 9; }
+  .sec-03 .scr { position: relative; }
+  .sec-03 .pin { position: absolute; z-index: 4; width: 24px; height: 24px; margin: -12px 0 0 -12px; display: grid; place-items: center; border-radius: 50%; background: #161616; color: #fff; font: 300 11px/1 var(--mono); box-shadow: 0 0 0 3px rgba(255,255,255,.9); opacity: 0; transform: scale(.4); transition: opacity .5s ease calc(.7s + var(--i) * .18s), transform .6s var(--ease) calc(.7s + var(--i) * .18s), box-shadow .3s; }
+  .sec-03 .pin::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 1px solid #24ff63; opacity: 0; }
+  .sec-03 .shotd.on .pin { opacity: 1; transform: none; }
+  .sec-03 .shotd.on .pin.hot { transform: scale(1.25); box-shadow: 0 0 0 3px #24ff63; }
+  .sec-03 .shotd.on .pin.hot::after { opacity: 1; animation: pinring 1.4s ease-out infinite; }
+  @keyframes pinring { from { transform: scale(.8); opacity: .9; } to { transform: scale(1.6); opacity: 0; } }
+  .sec-03 .co { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .sec-03 .co li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 14px; align-items: start; padding: 20px 0; border-top: 1px solid rgba(252,252,252,.14); color: rgba(252,252,252,.6); cursor: default; opacity: 0; transform: translateY(8px); filter: blur(5px); transition: opacity .6s ease calc(.9s + var(--i) * .15s), transform .7s var(--ease) calc(.9s + var(--i) * .15s), filter .7s ease calc(.9s + var(--i) * .15s), color .3s; }
+  .sec-03 .co li:last-child { border-bottom: 1px solid rgba(252,252,252,.14); }
+  .sec-03 .shotd.on .co li { opacity: 1; transform: none; filter: none; }
+  .sec-03 .co li.hot { color: var(--white); }
+  .sec-03 .co li i { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(252,252,252,.4); font: 300 11px/1 var(--mono); font-style: normal; transition: background .3s, color .3s, border-color .3s; }
+  .sec-03 .co li.hot i { background: var(--white); color: var(--ink); border-color: var(--white); }
+  @media (max-width: 1100px) { .sec-03 .shotd { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+  @media (max-width: 760px) { .sec-03 .pin { display: none; } }
+  /* combined: tabs, then who-does-what band, then screen (pins) + annotations + widget */
+  .sec-03 .shotd { grid-template-columns: minmax(0, 880px) minmax(0, 1fr); grid-template-rows: auto auto; align-items: start; gap: 0 48px; }
+  .sec-03 .side { display: grid; gap: 28px; align-content: start; }
+  .sec-03 .co li { padding: 16px 0; }
+  .sec-03 .side .fx { position: relative; right: auto; bottom: auto; width: auto; margin-left: -56px; box-shadow: 0 18px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.4); }
+  @media (max-width: 1100px) { .sec-03 .shotd { grid-template-columns: minmax(0, 1fr); } .sec-03 .side .fx { margin-left: 0; } .sec-03 .side { margin-top: 24px; } }
+  .sec-03 .fx { position: relative; z-index: 5; padding: 16px 18px 14px; background: #fff; color: #161616; border-radius: 6px; box-shadow: 0 24px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.5); font: 300 14px/1.4 var(--sans); opacity: 0; filter: blur(7px); transform: translate(24px, 18px); transition: opacity .7s ease 1.1s, filter .8s ease 1.1s, transform .9s var(--ease) 1.1s; }
+  .sec-03 .shotd.on .fx { opacity: 1; filter: none; transform: none; }
+  .sec-03 .fx .mono { display: flex; align-items: center; gap: 8px; color: #777; }
+  .sec-03 .fx .mono::before { content: ""; width: 6px; height: 6px; transform: rotate(45deg); background: linear-gradient(135deg, #24ff63, #00ffee); flex: none; }
+  .sec-03 .fx .who { margin-top: 10px; font-size: 15px; }
+  .sec-03 .fx p { margin: 6px 0 0; color: #444; }
+  .sec-03 .fx .bt { display: flex; gap: 8px; margin-top: 14px; }
+  .sec-03 .fx .bt button { padding: 9px 14px; border: 1px solid #ddd; background: #fff; color: #161616; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; transition: background .3s, color .3s; }
+  .sec-03 .fx .bt button:hover { background: #161616; color: #fff; }
+  .sec-03 .fx .bt button.done { background: #161616; color: #fff; pointer-events: none; }
+  .sec-03 .fx .ft { margin-top: 12px; color: #888; font-size: 12.5px; }
+  /* who-does-what: a plain two-column statement (not a control): no fill, no frame, no pointer */
+  /* widget keeps its own size and docks to the screen's edge, bottom-aligned */
+  .sec-03 .shotd { align-items: stretch; }
+  .sec-03 .side { display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
+  .sec-03 .side .fx { width: min(100%, 310px); margin-left: -14px; align-self: flex-start; }
+  .sec-03 .fx .bt button.done { background: #161616; color: #fff; pointer-events: none; }
+  .sec-03 .flash { animation: flash03 1.6s ease; }
+  @keyframes flash03 { 0% { box-shadow: inset 0 0 0 2px #24ff63; background-color: #eafff0; } 100% { box-shadow: inset 0 0 0 2px transparent; } }
+  @media (max-width: 1100px) { .sec-03 .side .fx { margin-left: 0; width: 100%; } }
+  /* buttons: solid, no gradient */
+  .sec-03 .fx .bt button.pri { border-color: transparent; background: #161616; color: #fff; }
+  .sec-03 .fx .bt button.pri:hover { background: #333; }
+  .sec-03 .fx .bt button.done, .sec-03 .fx .bt button.pri.done { background: var(--mint); color: #161616; }
+  /* compact chrome: tabs show number + title only; the whole interactive block fits one viewport on laptops */
+  .sec-03 .tabs { margin-top: 28px; gap: 16px; }
+  .sec-03 .tb { flex-direction: row; align-items: baseline; gap: 12px; padding: 16px 4px 0 0; }
+  .sec-03 .tb .n { margin-top: 0; }
+  .sec-03 .stage { margin-top: 22px; --sw: min(880px, calc((100svh - 290px) * 16 / 9), calc(100% - 340px)); }
+  .sec-03 .shotd { grid-template-columns: minmax(0, var(--sw)) minmax(0, 1fr); gap: 0 40px; }
+  .sec-03 .shotd .ui { width: 100%; }
+  .sec-03 .side { gap: 18px; }
+  .sec-03 .side .sd { margin: 0; color: rgba(252,252,252,.85); }
+  .sec-03 .co li { padding: 12px 0; }
+  .sec-03 .side .fx { padding: 14px 16px 12px; }
+  .sec-03 .side .fx .who { margin-top: 8px; }
+  .sec-03 .side .fx .bt { margin-top: 10px; }
+  @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .side .fx .ft { display: none; } .sec-03 .co li { padding: 9px 0; } .sec-03 .tb { padding-top: 12px; } }
+  @media (min-width: 1101px) and (max-height: 720px) { .sec-03 .side .fx p { display: none; } }
+  /* narrow screens: stacked, tabs stay pinned to the top of the section so you switch without scrolling back */
+  @media (max-width: 1100px) { .sec-03 .stage { --sw: 100%; } .sec-03 .shotd { grid-template-columns: minmax(0, 1fr); } .sec-03 .tabs { position: sticky; top: var(--nav-h, 74px); z-index: 25; display: flex; overflow-x: auto; gap: 22px; margin-inline: calc(var(--edge) * -1); padding: 0 var(--edge) 10px; background: rgba(0,0,0,.94); scrollbar-width: none; } .sec-03 .tabs::-webkit-scrollbar { display: none; } .sec-03 .tb { flex: none; padding-top: 14px; } .sec-03 .side { margin-top: 20px; } }
+  @media (max-width: 760px) { .sec-03 .co li { padding: 10px 0; } }
+  /* D6: the sentence runs the full width on one line; the description leads the numbered feature points; the widget floats off the screen edge */
+  .sec-03 .stage { margin-top: 38px; }
+  /* description = intro of the numbered points (they annotate the pins on the screen) */
+  .sec-03 .side .sd { margin: 0 0 4px; }
+  .sec-03 .sd .sdk { display: block; color: rgba(252,252,252,.55); }
+  .sec-03 .sd p { margin: 10px 0 0; color: rgba(252,252,252,.88); }
+  .sec-03 .side { justify-content: flex-start; gap: 14px; }
+  /* widget sits on the screen, in a free area chosen per screen so it never hides content; it floats gently */
+  .sec-03 .scr .fx { position: absolute; z-index: 6; margin: 0; width: 270px; padding: 12px 14px 10px; right: var(--fxr, 16%); bottom: var(--fxb, 11%); left: auto; }
+  .sec-03 .scr .fx p { font-size: 13.5px; line-height: 1.4; }
+  .sec-03 .scr .fx .ft { display: none; }
+  .sec-03 .scr .fx .bt { margin-top: 10px; }
+  .sec-03 .shotd[data-k="policy"] .fx { --fxr: 3%; --fxb: 12%; }
+  .sec-03 .shotd[data-k="risk"] .fx { right: auto; left: 3%; bottom: 11.5%; width: 250px; }
+  .sec-03 .shotd[data-k="risk"] .fx p { display: none; }
+  .sec-03 .shotd.on .fx { animation: fxfloat 6s ease-in-out 2s infinite alternate; }
+  @keyframes fxfloat { from { translate: 0 0; } to { translate: 0 -8px; } }
+  @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .sd p { margin-top: 8px; } .sec-03 .stage { margin-top: 30px; } }
+  @media (max-width: 1100px) { .sec-03 .scr .fx { position: relative; right: auto; left: auto; bottom: auto; width: auto; margin: 14px 0 0; } .sec-03 .shotd[data-k="risk"] .fx p { display: block; } .sec-03 .scr .fx .ft { display: block; } .sec-03 .side { margin-top: 20px; } }
+  @media (prefers-reduced-motion: reduce) { .sec-03 .shotd.on .fx { animation: none; } }
+  /* one persistent sentence; roles are the important element: they enter first and stay. Height is locked to the tallest variant. */
+  .sec-03 .sentbar { position: relative; margin-top: 38px; min-height: 1.1em; }
+  .sec-03 .sentbar .measure { position: absolute; left: 0; right: 0; top: 0; visibility: hidden; pointer-events: none; }
+  .sec-03 .stage { margin-top: 32px; }
+  .sec-03 .shotd { grid-template-rows: auto; }
+  .sec-03 .shotd .side { padding-top: 36px; }
+  .sec-03 .sent { margin: 0; color: rgba(252,252,252,.5); user-select: none; }
+  .sec-03 .sent .role { position: relative; display: inline-grid; vertical-align: top; font-weight: 300; color: var(--white); white-space: nowrap; padding-bottom: .1em; }
+  .sec-03 .sent .role .rl { grid-area: 1 / 1; display: block; }
+  .sec-03 .sent .role::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .8s var(--ease) .25s; }
+  .sec-03 .sentbar.in .sent .role::after { transform: scaleX(1); }
+  .sec-03 .sent .w { display: inline-block; opacity: 0; filter: blur(6px); transform: translateY(9px); }
+  .sec-03 .sent .go .w { opacity: 1; filter: none; transform: none; transition: opacity .7s cubic-bezier(.2,.7,.1,1) calc(var(--i) * 34ms + var(--base, 0s)), filter .8s ease calc(var(--i) * 34ms + var(--base, 0s)), transform .9s var(--ease) calc(var(--i) * 34ms + var(--base, 0s)); }
+  .sec-03 .sent .leave .w { opacity: 0; filter: blur(5px); transform: translateY(-7px); transition: opacity .14s ease, filter .14s ease, transform .14s ease; }
+  @media (min-width: 1101px) and (max-height: 800px) { .sec-03 .sentbar { margin-top: 30px; } .sec-03 .stage { margin-top: 24px; } .sec-03 .shotd .side { padding-top: 26px; } }
+  @media (max-width: 1100px) { .sec-03 .shotd .side { padding-top: 0; } }
+  @media (prefers-reduced-motion: reduce) { .sec-03 .sent .w { opacity: 1; filter: none; transform: none; transition: none; } .sec-03 .sent .role::after { transform: scaleX(1); transition: none; } }
+  /* roles: underline leads. Everything that changes layout happens while nothing is visible (all lines retracted, all words out), so nothing jumps */
+  .sec-03 .sent { --base: .42s; }
+  .sec-03 .sent .role .rl { transition: opacity .4s ease .12s; }
+  .sec-03 .sent .role.gone .rl { opacity: 0; transition: opacity .12s ease; }
+  .sec-03 .sentbar.in .sent .role.retract::after { transform: scaleX(0); transform-origin: right; transition: transform .24s ease-in; }
+  /* screens: no vertical move at all. The new screen is wiped in from the left while the old one fades; content fades in place (no rise) */
+  .sec-03 .shotd { transform: none; opacity: 0; filter: blur(10px); clip-path: none; transition: opacity .3s ease, filter .3s ease; }
+  .sec-03 .shotd.on { opacity: 1; filter: none; transition: opacity 1s var(--ease), filter 1.1s var(--ease); }
+  .js .sec-03 .ui .it { transform: none; }
+  .sec-03 .co li, .sec-03 .shotd.on .co li { transform: none; }
+  .sec-03 .fx { transform: none; }
+  @media (prefers-reduced-motion: reduce) { .sec-03 .shotd, .sec-03 .shotd.on { filter: none; transition: none; } }
+  /* sequence: Agent + first clause land first; the second role and clause follow ~0.22s later */
+  .sec-03 .sent .t1 { --base: .42s; }
+  .sec-03 .sent .t2 { --base: .64s; }
+  .sec-03 .sent .r2::after { transition-delay: .47s; }
+  .sec-03 .sent .r2 .rl { transition-delay: .34s; }
+  .sec-03 .sent .r2.gone .rl { transition-delay: 0s; }
+  /* the description beside the screen lands word by word, like the sentence (after the screen starts to wipe in) */
+  .sec-03 .sd .sdk { opacity: 0; filter: blur(5px); transition: opacity .16s ease, filter .16s ease; }
+  .sec-03 .shotd.on .sd .sdk { opacity: 1; filter: none; transition: opacity .6s ease .4s, filter .7s ease .4s; }
+  .sec-03 .sd .w { display: inline-block; opacity: 0; filter: blur(6px); transform: translateY(9px); transition: opacity .16s ease, filter .16s ease, transform .16s ease; }
+  .sec-03 .shotd.on .sd .w { opacity: 1; filter: none; transform: none; transition: opacity .7s cubic-bezier(.2,.7,.1,1) calc(var(--i) * 34ms + .55s), filter .8s ease calc(var(--i) * 34ms + .55s), transform .9s var(--ease) calc(var(--i) * 34ms + .55s); }
+  @media (prefers-reduced-motion: reduce) { .sec-03 .sd .sdk, .sec-03 .sd .w { opacity: 1; filter: none; transform: none; transition: none; } }
+  /* entrance choreography: the screen block only fades in (the wipe is its reveal), the tab progress line waits for the entrance to finish */
+  .js .sec-03 .stage.rv { transform: none; filter: none; }
+  .sec-03:not(.live) .tb.on::after { transform: scaleX(0); }
+  /* typography: Comp AI typography v0.1 (styleguide draft). Scale 1.272 on 16 px, desktop from 1024 px, weight 300 only.
+     Product UI text inside the mock screens is out of the system's scope and keeps its own sizes. */
+  .sec-03 { --t-label: 13px; --t-body: 16px; --t-lead-m: 20px; --t-display-m: 33px; --t-display-l: 53px; }
+  @media (max-width: 1023px) { .sec-03 { --t-lead-m: 16px; --t-display-m: 26px; --t-display-l: 33px; } }
+  /* label S: mono, uppercase, +4% */
+  .sec-03 .eyebrow-03, .sec-03 .tb .k, .sec-03 .integ, .sec-03 .sd .sdk { font-family: var(--mono); font-weight: 300; font-size: var(--t-label); line-height: 1.3; letter-spacing: .04em; text-transform: uppercase; }
+  /* display L (h2): 53 / 33, line-height 1, -4% */
+  .sec-03 h2 { font-size: var(--t-display-l); line-height: 1; letter-spacing: -.04em; }
+  /* lead M: 20 / 16, line-height 1.4, -1% (section lead, tab titles, the description beside the screen) */
+  .sec-03 .lead, .sec-03 .tb .n, .sec-03 .sd p { font-size: var(--t-lead-m); line-height: 1.4; letter-spacing: -.01em; }
+  /* body M: 16, line-height 1.55 (the numbered feature points) */
+  .sec-03 .co li { font-size: var(--t-body); line-height: 1.55; letter-spacing: 0; }
+  /* the Agent / You sentence has no role yet: scale step 3 (33 / 26), line-height 1.1, -4%, proposed as Display M */
+  .sec-03 .sent { font-size: var(--t-display-m); line-height: 1.1; letter-spacing: -.04em; }
+  /* handoff between the sections above and this one: section 2 is raised into the hero's empty foot and fades out while this section rises.
+     (Lives here so it integrates with the section; it can move to the Homepage layer later.) Section 2 has no controls, so it can let clicks through to the hero. */
+  #shift { pointer-events: none; }
+  @media (min-width: 1024px) { #shift { margin-top: -25svh; } }
+  @media (max-width: 1023px) { #shift { margin-top: -12svh; } }
+  /* @section:03 css:end */
+
+  /* mist: the hero's print after it dissolved (fixed behind the page, as on the homepage) */
+  #print { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; opacity: .32; transition: opacity 1.2s var(--ease); }
+</style>
+</head>
+<body>
+<canvas id="print" aria-hidden="true"></canvas>
+<main>
+<!-- @section:03 html:start -->
+<section class="sec-03" id="sec-03" aria-labelledby="sec-03-title">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow-03 rv" style="--d:0">What Comp AI does</p><h2 id="sec-03-title" class="rv" style="--d:1">Comp AI shows the work.</h2></div><p class="lead rv" style="--d:2">AI agents learn how your company works and use that context to write policies, gather evidence, review vendors and assess risk.</p></div>
+    <div class="tabs rv" style="--d:3" role="tablist"><button class="tb on" type="button" role="tab" aria-selected="true"><span class="k">01</span><span class="n">Policies</span></button><button class="tb" type="button" role="tab" aria-selected="false"><span class="k">02</span><span class="n">Evidence</span></button><button class="tb" type="button" role="tab" aria-selected="false"><span class="k">03</span><span class="n">Vendors</span></button><button class="tb" type="button" role="tab" aria-selected="false"><span class="k">04</span><span class="n">Risk</span></button><button class="tb" type="button" role="tab" aria-selected="false"><span class="k">05</span><span class="n">Proof</span></button></div>
+    <div class="sentbar rv" style="--d:3"><p class="sent" aria-live="polite"><b class="role r1"></b> <span class="t t1"></span> <b class="role r2"></b> <span class="t t2"></span></p></div>
+    <div class="stage rv" style="--d:4"><div class="shotd on" data-k="policy" role="tabpanel"><div class="scr"><div class="ui" data-ui><div class="ui-h"><span class="mono">Policies</span><span class="mono ui-tag">4 of 18 shown</span></div>
+  <div class="act it" style="--i:0"><span>Agent · drafting from your org context</span><em>Live</em></div>
+  <div class="two"><div class="lst it" style="--i:1"><div class="on"><span>Access control</span><span class="st" data-v="p"><em>Ready</em></span></div><div><span>Incident response</span><span class="st" data-v="c"><em>Drafting</em></span></div><div><span>Data retention</span><span class="st" data-v="p"><em>Ready</em></span></div><div><span>Vendor management</span><span class="st" data-v="n"><em>Needs you</em></span></div></div>
+  <div class="doc"><div class="t it" style="--i:2">Access control policy</div>
+   <p class="it" style="--i:3">Access to systems is granted on the principle of least privilege and reviewed every quarter.</p>
+   <p class="it" style="--i:4">New accounts are approved by the system owner before they are created.</p>
+   <div class="ln it" style="--i:5"><i style="width:94%"></i><i style="width:80%"></i><i style="width:58%"></i></div>
+   <div class="src it" style="--i:6"><span class="mono">Written from</span><b>Okta</b><b>Employee handbook</b><b>Your org context</b></div></div></div>
+  <div class="ui-f it" style="--i:7"><span class="mono ui-tag">Version 3 · 4 min ago</span><span class="st" data-v="p"><em>Ready for review</em></span></div></div><span class="pin" data-i="0" data-t=".lst div:nth-child(2)" style="--i:0">1</span><span class="pin" data-i="1" data-t=".doc p" style="--i:1">2</span><span class="pin" data-i="2" data-t=".src" style="--i:2">3</span><aside class="fx"><span class="mono">Approval request</span><div class="who">Marco D.</div><p>Vendor management policy is ready. Approve to publish it.</p><div class="bt"><button type="button" class="pri" data-act="approve" data-label="Approve">Approve</button></div><div class="ft">Drafted by agent · 4 min ago</div></aside></div><div class="side"><div class="sd"><span class="sdk">In the app · Policies</span><p>Agents write and update policies from how your company actually runs.</p></div><ol class="co"><li data-i="0" style="--i:0"><i>1</i><span>Picks the policies you need</span></li><li data-i="1" style="--i:1"><i>2</i><span>Drafts in your language, not a template</span></li><li data-i="2" style="--i:2"><i>3</i><span>Every line shows where it came from</span></li></ol></div></div><div class="shotd" data-k="evidence" role="tabpanel"><div class="scr"><div class="ui" data-ui><div class="ui-h"><span class="mono">Evidence</span><span class="mono ui-tag">Last 24 hours</span></div>
+  <div class="act it" style="--i:0"><span>Agent · collecting evidence from connected tools</span><em>Live</em></div><div class="kps it" style="--i:1"><div><b>1,284</b><span>Items collected</span></div><div><b>6</b><span>Connected tools</span></div><div><b>94%</b><span>Controls covered</span></div></div><div class="pad"><div class="bar it" style="--i:2;--w:94%"><b></b></div><div><div class="rw it" style="--i:3;grid-template-columns:128px minmax(0,1fr) auto"><span class="chip">Okta</span><span class="dsc">MFA is enforced for all users</span><span class="st" data-v="p"><em>Collected</em></span></div><div class="rw it" style="--i:4;grid-template-columns:128px minmax(0,1fr) auto"><span class="chip">GitHub</span><span class="dsc">Branch protection is on for main</span><span class="st" data-v="p"><em>Collected</em></span></div><div class="rw it" style="--i:5;grid-template-columns:128px minmax(0,1fr) auto"><span class="chip">AWS</span><span class="dsc">Backups enabled, restores tested</span><span class="st" data-v="p"><em>Collected</em></span></div><div class="rw it" style="--i:6;grid-template-columns:128px minmax(0,1fr) auto"><span class="chip">Google Workspace</span><span class="dsc">Offboarding done within 24 hours</span><span class="st" data-v="c"><em>Collecting</em></span></div></div></div>
+  <div class="ui-f it" style="--i:7"><span class="mono ui-tag">Collected by agent from 6 connected tools</span></div></div><span class="pin" data-i="0" data-t=".rw .chip" style="--i:0">1</span><span class="pin" data-i="1" data-t=".bar" style="--i:1">2</span><span class="pin" data-i="2" data-t=".pad .rw:last-child" style="--i:2">3</span><aside class="fx"><span class="mono">New evidence</span><div class="who">GitHub</div><p>12 items collected and timestamped. Branch protection confirmed for main.</p><div class="ft">Just now · stored with the audit trail</div></aside></div><div class="side"><div class="sd"><span class="sdk">In the app · Evidence</span><p>They collect proof from the tools you already use, continuously.</p></div><ol class="co"><li data-i="0" style="--i:0"><i>1</i><span>Proof pulled straight from your tools</span></li><li data-i="1" style="--i:1"><i>2</i><span>Coverage updates as it collects</span></li><li data-i="2" style="--i:2"><i>3</i><span>Gaps are flagged before the auditor finds them</span></li></ol></div></div><div class="shotd" data-k="vendor" role="tabpanel"><div class="scr"><div class="ui" data-ui><div class="ui-h"><span class="mono">Vendors</span><span class="mono ui-tag">New vendor</span></div>
+  <div class="act it" style="--i:0"><span>Agent · reviewing against your requirements</span><em>Live</em></div><div class="pad it" style="--i:1"><div class="t">Northwind Analytics</div></div><div class="kps it" style="--i:2"><div><b>3 of 4</b><span>Checks passed</span></div><div><b>7</b><span>Documents read</span></div><div><b>0</b><span>Waiting on vendor</span></div></div><div class="pad"><div class="rw it" style="--i:3;grid-template-columns:minmax(0,1fr) auto"><span class="dsc">SOC 2 report is on file</span><span class="st" data-v="p"><em>Verified</em></span></div><div class="rw it" style="--i:4;grid-template-columns:minmax(0,1fr) auto"><span class="dsc">Data processing agreement is signed</span><span class="st" data-v="p"><em>Verified</em></span></div><div class="rw it" style="--i:5;grid-template-columns:minmax(0,1fr) auto"><span class="dsc">Subprocessors are listed</span><span class="st" data-v="p"><em>Verified</em></span></div><div class="rw it" style="--i:6;grid-template-columns:minmax(0,1fr) auto"><span class="dsc">Penetration test summary</span><span class="st" data-v="n"><em>To request</em></span></div></div>
+  <div class="ui-f it" style="--i:7"><span>Low risk</span><span class="chip">Expert review requested</span></div></div><span class="pin" data-i="0" data-t=".pad .rw" style="--i:0">1</span><span class="pin" data-i="1" data-t=".pad .rw:last-child" style="--i:1">2</span><span class="pin" data-i="2" data-t=".ui-f .chip" style="--i:2">3</span><aside class="fx"><span class="mono">Email draft · to Northwind Analytics</span><div class="who">security@northwind.example</div><p>Hi, we are reviewing Northwind as a vendor. Could you share your latest penetration test summary?</p><div class="bt"><button type="button" class="pri" data-act="send" data-label="Send">Send</button><button type="button" class="pri" data-act="edit" data-label="Edit">Edit</button></div><div class="ft">Drafted by agent · sends after your OK</div></aside></div><div class="side"><div class="sd"><span class="sdk">In the app · Vendors</span><p>New vendors are reviewed against your requirements before they get access.</p></div><ol class="co"><li data-i="0" style="--i:0"><i>1</i><span>Reads reports and agreements for you</span></li><li data-i="1" style="--i:1"><i>2</i><span>Chases what is missing</span></li><li data-i="2" style="--i:2"><i>3</i><span>An expert makes the final call</span></li></ol></div></div><div class="shotd" data-k="risk" role="tabpanel"><div class="scr"><div class="ui" data-ui><div class="ui-h"><span class="mono">Risk</span><span class="mono ui-tag">Live register</span></div>
+  <div class="act it" style="--i:0"><span>Agent · assessing risk on the live picture</span><em>Live</em></div><div class="two"><div class="heatwrap it" style="--i:1"><span class="mono">Likelihood × impact</span><div class="heat"><i class=""></i><i class="m"></i><i class="h"></i><i class=""></i><i class="m x"></i><i class="h x"></i><i class=" x"></i><i class=""></i><i class="m x"></i></div></div>
+  <div class="pad" style="padding-top:8px"><div class="rw it" style="--i:2;grid-template-columns:44px minmax(0,1fr) auto"><span class="mono" style="color:#777">R-04</span><span class="dsc">Access not reviewed quarterly</span><span class="st" data-v="n"><em>High</em></span></div><div class="rw it" style="--i:3;grid-template-columns:44px minmax(0,1fr) auto"><span class="mono" style="color:#777">R-07</span><span class="dsc">Vendor has no recent SOC 2</span><span class="st" data-v="c"><em>Medium</em></span></div><div class="rw it" style="--i:4;grid-template-columns:44px minmax(0,1fr) auto"><span class="mono" style="color:#777">R-11</span><span class="dsc">Laptops without disk encryption</span><span class="st" data-v="c"><em>Medium</em></span></div><div class="rw it" style="--i:5;grid-template-columns:44px minmax(0,1fr) auto"><span class="mono" style="color:#777">R-02</span><span class="dsc">Unpatched dependencies</span><span class="st" data-v="p"><em>Low</em></span></div></div></div>
+  <div class="ui-f it" style="--i:7"><span class="mono ui-tag">Reassessed when your systems change</span><span class="chip">Expert reviews high risks</span></div></div><span class="pin" data-i="0" data-t=".heat" style="--i:0">1</span><span class="pin" data-i="1" data-t=".pad .rw:nth-child(2)" style="--i:1">2</span><span class="pin" data-i="2" data-t=".ui-f .chip" style="--i:2">3</span><aside class="fx"><span class="mono">Expert review</span><div class="who">R-04 · Production access</div><p>Assigned to a Comp AI expert. You will see the decision here.</p><div class="ft">Requested by agent · High risk</div></aside></div><div class="side"><div class="sd"><span class="sdk">In the app · Risk</span><p>Risk is assessed on the live picture. Experts review what needs a person.</p></div><ol class="co"><li data-i="0" style="--i:0"><i>1</i><span>Ranked on the live picture</span></li><li data-i="1" style="--i:1"><i>2</i><span>Every risk has an owner and a status</span></li><li data-i="2" style="--i:2"><i>3</i><span>Experts review the high ones</span></li></ol></div></div><div class="shotd" data-k="frame" role="tabpanel"><div class="scr"><div class="ui" data-ui><div class="ui-h"><span class="mono">Frameworks</span><span class="mono ui-tag">Acme · audit window Jan 12 to Feb 28</span></div>
+  <div class="act it" style="--i:0"><span>Agent · 94 controls proven, 6 need a person</span><em>Live</em></div><div class="pad it" style="--i:1;display:flex;justify-content:space-between;align-items:end;gap:12px;padding-top:14px"><span class="t">SOC 2 Type II</span><span class="mono pr">94 of 100 controls proven</span></div>
+  <div class="pad"><div class="bar it" style="--i:2;--w:94%"><b></b></div></div><div class="kps it" style="--i:3"><div><b>94</b><span>Controls proven</span></div><div><b>1,284</b><span>Evidence items</span></div><div><b class="warn">6</b><span>Need you</span></div></div><div class="pad" style="padding-bottom:12px"><div class="rw it" style="--i:4;grid-template-columns:52px minmax(0,1fr) auto"><span class="mono" style="color:#777">CC6.1</span><span class="dsc">Access limited to authorised users</span><span class="st" data-v="p"><em>Proven</em></span></div><div class="rw it" style="--i:5;grid-template-columns:52px minmax(0,1fr) auto"><span class="mono" style="color:#777">CC7.3</span><span class="dsc">Incidents are evaluated and handled</span><span class="st" data-v="c"><em>Collecting</em></span></div><div class="rw it" style="--i:6;grid-template-columns:52px minmax(0,1fr) auto"><span class="mono" style="color:#777">A1.2</span><span class="dsc">Backups and restores are tested</span><span class="st" data-v="n"><em>Needs you</em></span></div></div></div><span class="pin" data-i="0" data-t=".pad:last-child .rw:last-child" style="--i:0">1</span><span class="pin" data-i="1" data-t=".bar" style="--i:1">2</span><span class="pin" data-i="2" data-t=".kps div:last-child" style="--i:2">3</span><aside class="fx"><span class="mono">Audit pack</span><div class="who">SOC 2 Type II</div><p>94 controls with evidence attached. Ready to share with your auditor.</p><div class="ft">Updated automatically</div></aside></div><div class="side"><div class="sd"><span class="sdk">In the app · Proof</span><p>Every control shows its evidence, its owner and its status, ready for the audit.</p></div><ol class="co"><li data-i="0" style="--i:0"><i>1</i><span>Every control has its evidence attached</span></li><li data-i="1" style="--i:1"><i>2</i><span>Progress you can show at a glance</span></li><li data-i="2" style="--i:2"><i>3</i><span>What needs a person is never hidden</span></li></ol></div></div></div>
+    <div class="foot rv" style="--d:0"><div class="integ"><span class="l">Connected to your stack</span><ul><li>GitHub</li><li>AWS</li><li>Google Workspace</li><li>Okta</li><li>Slack</li><li>Jira</li></ul></div></div>
+  </div>
+</section>
+<!-- @section:03 html:end -->
+</main>
+
+<!-- @section:03 js:start -->
+<script>
+// 03 · D: tabs showcase; auto-advances every 7 s while in view (paused on hover), click to pick
+(() => {
+  const sec = document.getElementById('sec-03'); if (!sec) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reveal = (els, delay) => { if (reduced || !('IntersectionObserver' in window)) { els.forEach(g => g.classList.add('in')); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; e.target.classList.add('in'); const u = e.target.querySelector('.ui'); if (u) setTimeout(() => u.classList.add('on'), delay || 400); io.unobserve(e.target); }), { threshold: .1, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(g => io.observe(g)); };
+  const tabs = [...sec.querySelectorAll('.tb')], shots = [...sec.querySelectorAll('.shotd')];
+  let cur = 0, inView = false, ready = false, manual = false;   // ready: the entrance is over; manual: the visitor picked a tab (auto-advance ends)
+  const set = i => { resetAll(); cur = i; tabs.forEach((t, k) => { t.classList.toggle('on', k === i); t.setAttribute('aria-selected', k === i); });
+    shots.forEach((s, k) => { s.classList.toggle('on', k === i); const u = s.querySelector('.ui'); if (k === i) setTimeout(() => u.classList.add('on'), 250); else setTimeout(() => u.classList.remove('on'), 650); });
+    sec.classList.remove('run'); void sec.offsetWidth; if (inView && ready && !manual && !reduced && matchMedia('(min-width:1101px)').matches) sec.classList.add('run'); };
+  const setSt = (st, v, t) => { st.dataset.v = v; st.querySelector('em').textContent = t; };
+  const flash = el => { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); };
+  const actEl = sh => { const a = sh.querySelector('.act span'); if (!a.dataset.o) a.dataset.o = a.textContent; return a; };
+  const lastRow = sh => { const r = sh.querySelectorAll('.pad .rw'); return r[r.length - 1]; };
+  const ACT = {
+    approve: { on: sh => { const r = sh.querySelector('.lst div:nth-child(4)'); setSt(r.querySelector('.st'), 'p', 'Published'); flash(r); actEl(sh).textContent = 'Agent · vendor management policy published'; },
+               off: sh => { setSt(sh.querySelector('.lst div:nth-child(4) .st'), 'n', 'Needs you'); const a = actEl(sh); a.textContent = a.dataset.o; } },
+    send: { on: sh => { const r = lastRow(sh); setSt(r.querySelector('.st'), 'c', 'Requested'); flash(r);
+              const k = sh.querySelector('.kps div:last-child'); k.querySelector('b').textContent = '1'; k.querySelector('b').classList.add('warn'); flash(k); actEl(sh).textContent = 'Agent · request sent, waiting for the vendor'; },
+            off: sh => { setSt(lastRow(sh).querySelector('.st'), 'n', 'To request');
+              const b = sh.querySelector('.kps div:last-child b'); b.textContent = '0'; b.classList.remove('warn'); const a = actEl(sh); a.textContent = a.dataset.o; } } };
+  const DONE = { approve: ['Approved', 'Approved. The policy is now published.', 'Approved by you · just now'], send: ['Sent', 'Sent. The agent will check back and attach the summary.', 'Sent by you · just now'] };
+  const resetAll = () => sec.querySelectorAll('.fx .bt button.done').forEach(b => { const fx = b.closest('.fx'), sh = b.closest('.shotd'); ACT[b.dataset.act].off(sh);
+    fx.querySelector('p').textContent = fx.dataset.p; fx.querySelector('.ft').textContent = fx.dataset.ft; b.textContent = b.dataset.label; b.classList.remove('done'); });
+  sec.querySelectorAll('.fx .bt button').forEach(b => b.addEventListener('click', () => { const fx = b.closest('.fx'), sh = b.closest('.shotd'), d = DONE[b.dataset.act];
+    fx.dataset.p = fx.querySelector('p').textContent; fx.dataset.ft = fx.querySelector('.ft').textContent;
+    ACT[b.dataset.act].on(sh); fx.querySelector('p').textContent = d[1]; fx.querySelector('.ft').textContent = d[2]; b.textContent = '✓ ' + d[0]; b.classList.add('done'); }));
+  tabs.forEach((t, i) => t.addEventListener('click', () => { manual = true; sec.classList.add('live'); set(i); }));
+  const place = () => sec.querySelectorAll('.pin').forEach(p => { const sc = p.closest('.scr'), t = sc.querySelector(p.dataset.t); if (!t) return; const a = sc.getBoundingClientRect(), r = t.getBoundingClientRect();
+    let x = r.width > 200 ? r.right - 22 : r.right; const dsc = t.classList.contains('rw') && t.querySelector('.dsc'); if (dsc) { const rg = document.createRange(); rg.selectNodeContents(dsc); x = rg.getBoundingClientRect().right + 20; }
+    const y = r.width > 200 || t.classList.contains('rw') ? r.top + r.height / 2 : r.top + 2; p.style.left = (x - a.left) + 'px'; p.style.top = (y - a.top) + 'px'; });
+  tabs.forEach(t => t.addEventListener('click', () => setTimeout(place, 900)));
+  place(); addEventListener('resize', place); addEventListener('load', place); if (document.fonts) document.fonts.ready.then(place);
+  sec.querySelectorAll('.co li').forEach(li => { const sh = li.closest('.shotd'); const pin = () => sh.querySelector('.pin[data-i="' + li.dataset.i + '"]');
+    li.addEventListener('mouseenter', () => { li.classList.add('hot'); pin().classList.add('hot'); }); li.addEventListener('mouseleave', () => { li.classList.remove('hot'); pin().classList.remove('hot'); }); });
+  sec.querySelectorAll('.pin').forEach(p => { const sh = p.closest('.shotd'); const li = () => sh.querySelector('.co li[data-i="' + p.dataset.i + '"]');
+    p.addEventListener('mouseenter', () => { p.classList.add('hot'); li().classList.add('hot'); }); p.addEventListener('mouseleave', () => { p.classList.remove('hot'); li().classList.remove('hot'); }); });
+  tabs.forEach(t => t.addEventListener('animationend', () => { if (t.classList.contains('on')) set((cur + 1) % tabs.length); }));
+  // the heading block keeps its own reveals; tabs, sentence, screen and strip follow one choreography
+  reveal([...sec.querySelectorAll('.rv:not(.tabs):not(.sentbar):not(.stage):not(.foot)')], 500);
+  const tabsEl = sec.querySelector('.tabs'), sentEl = sec.querySelector('.sentbar'), stageEl = sec.querySelector('.stage'), footEl = sec.querySelector('.foot');
+  const goLive = () => { ready = true; sec.classList.add('live'); if (inView && !manual && !reduced && matchMedia('(min-width:1101px)').matches) sec.classList.add('run'); };
+  const instant = () => { [tabsEl, sentEl, stageEl, footEl].forEach(e => e.classList.add('in')); shots[0].classList.add('on'); shots[0].querySelector('.ui').classList.add('on'); goLive(); };
+  if (reduced || !('IntersectionObserver' in window)) instant();
+  else {
+    [tabsEl, sentEl, stageEl, footEl].forEach(e => e.style.setProperty('--d', '0'));
+    shots[0].classList.remove('on'); shots[0].querySelector('.ui').classList.remove('on');
+    const enter = () => {
+      setTimeout(() => tabsEl.classList.add('in'), 120);                                   // beat 1: the tabs (hero rhythm: start 0.3 s)
+      setTimeout(() => sentEl.classList.add('in'), 400);                                   // beat 2: the sentence (Agent first, the second role 0.22 s later)
+      setTimeout(() => { stageEl.classList.add('in'); shots[0].classList.add('on');        // beat 3: the screen wipes in, its parts follow
+        setTimeout(() => shots[0].querySelector('.ui').classList.add('on'), 350); }, 760);
+      setTimeout(() => footEl.classList.add('in'), 1300);
+      setTimeout(goLive, 2500); };                                                         // the tabs start their auto-advance only now
+    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); enter(); } }, { threshold: .12 });
+    io.observe(stageEl);
+  }
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { inView = e.isIntersecting; if (reduced || !matchMedia('(min-width:1101px)').matches) return; sec.classList.toggle('run', inView && ready && !manual); }), { threshold: .45 }).observe(sec.querySelector('.stage'));
+
+  const SENT = [{"r1": "Agent", "t1": "drafts from your handbook and tools.", "r2": "You", "t2": "approve before it goes live."}, {"r1": "Agent", "t1": "collects and timestamps the proof.", "r2": "You", "t2": "fix only what is flagged."}, {"r1": "Agent", "t1": "reads reports, chases the gaps.", "r2": "Expert", "t2": "makes the final call."}, {"r1": "Agent", "t1": "scores and ranks on the live picture.", "r2": "Expert", "t2": "reviews the high risks."}, {"r1": "Agent", "t1": "keeps every control current.", "r2": "You", "t2": "show it to the auditor."}], bar = sec.querySelector('.sentbar'), roles = [bar.querySelector('.r1'), bar.querySelector('.r2')], tt = [bar.querySelector('.t1'), bar.querySelector('.t2')];
+  const widthOf = (el, text) => { const m = el.cloneNode(false); m.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;width:auto;left:0;top:0'; m.textContent = text; el.parentNode.appendChild(m); const w = m.getBoundingClientRect().width; m.remove(); return w; };
+  const setW = (el, w0, w1) => { el.style.transition = 'none'; el.style.width = w0 + 'px'; void el.offsetWidth; el.style.transition = 'width .6s cubic-bezier(.2,.7,.1,1)'; el.style.width = w1 + 'px';
+    clearTimeout(el._wt); el._wt = setTimeout(() => { el.style.width = ''; el.style.transition = ''; }, 700); };
+  const EASE = 'cubic-bezier(.2,.7,.1,1)';
+  const build = (el, id, text) => { if (el._id !== id) return; el.classList.remove('go', 'leave'); el.innerHTML = text.split(' ').map((w, i) => '<span class="w" style="--i:' + i + '">' + w + '</span>').join(' ');
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('go'))); };
+  const swapText = (el, text) => { el._id = (el._id || 0) + 1; const id = el._id;
+    if (reduced || !el.firstChild) { build(el, id, text); if (reduced) el.classList.add('go'); return; }
+    el.classList.remove('go'); el.classList.add('leave'); setTimeout(() => build(el, id, text), 120); };
+  const lock = () => { const m = document.createElement('p'); m.className = 'sent measure'; bar.appendChild(m); let h = 0;
+    SENT.forEach(d => { m.innerHTML = '<b class="role">' + d.r1 + '</b> ' + d.t1 + ' <b class="role">' + d.r2 + '</b> ' + d.t2; h = Math.max(h, m.getBoundingClientRect().height); });
+    m.remove(); bar.style.minHeight = Math.ceil(h) + 'px'; };
+  lock(); addEventListener('resize', lock); if (document.fonts) document.fonts.ready.then(lock);
+  let sIdx = -1;
+
+  sec.querySelectorAll('.sd p').forEach(p => { p.innerHTML = p.textContent.trim().split(' ').map((w, k) => '<span class="w" style="--i:' + k + '">' + w + '</span>').join(' '); });
+  const current = el => el.querySelector('.rl');
+  let tok = 0;
+  const setRoleText = (el, text) => { let rl = el.querySelector('.rl'); if (!rl) { rl = document.createElement('span'); rl.className = 'rl'; el.appendChild(rl); } rl.textContent = text; };
+  const buildAll = d => { setRoleText(roles[0], d.r1); setRoleText(roles[1], d.r2);
+    [[tt[0], d.t1], [tt[1], d.t2]].forEach(([el, t]) => { el._id = (el._id || 0) + 1; build(el, el._id, t); }); };
+  const showSentence = i => { if (i === sIdx) return; const first = sIdx < 0; sIdx = i; const d = SENT[i], my = ++tok;
+    if (first || reduced) { buildAll(d); if (reduced) tt.forEach(t => t.classList.add('go')); return; }
+    roles.forEach(r => r.classList.add('retract', 'gone')); tt.forEach(t => { t.classList.remove('go'); t.classList.add('leave'); });
+    setTimeout(() => { if (my !== tok) return; buildAll(d); roles.forEach(r => r.classList.remove('retract')); void roles[0].offsetWidth; roles.forEach(r => r.classList.remove('gone')); }, 300); };
+  if (bar.classList.contains('in') || reduced) showSentence(0); else new MutationObserver((m, ob) => { if (bar.classList.contains('in')) { ob.disconnect(); showSentence(0); } }).observe(bar, { attributes: true, attributeFilter: ['class'] });
+  new MutationObserver(() => { const k = tabs.findIndex(t => t.classList.contains('on')); if (k >= 0 && sIdx >= 0) showSentence(k); })
+    .observe(sec.querySelector('.tabs'), { attributes: true, attributeFilter: ['class'], subtree: true });
+  // handoff: section 2 fades out as this section rises into view (opacity only: cheap while scrolling)
+  const prevStick = document.querySelector('#shift .stick');
+  if (prevStick) {
+    const fadePrev = () => { const r = sec.getBoundingClientRect(), p = Math.min(1, Math.max(0, (innerHeight * .9 - r.top) / (innerHeight * .55)));
+      prevStick.style.opacity = (1 - p).toFixed(3); prevStick.style.visibility = p >= 1 ? 'hidden' : ''; };
+    if (!reduced) { addEventListener('scroll', fadePrev, { passive: true }); addEventListener('resize', fadePrev); fadePrev(); }
+  }
+})();
+</script>
+<!-- @section:03 js:end -->
+<script src="../../hero/comp-ai-hero-v01/shapes-phase.js"></script>
+<script src="../shared/mist.js"></script>
+</body>
+</html>
