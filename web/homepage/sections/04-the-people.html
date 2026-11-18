@@ -51,30 +51,35 @@
   .sec-04 .grid-04 { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: stretch; min-height: min(84svh, 860px); }
   .sec-04 .art-04 { position: relative; border-radius: 6px; min-height: 440px; background: #000; }   /* fixed window; the dots (a fixed canvas behind .grid-04) fall into it */
   /* fragments of real messages float over the print: one conversation each, so there is clearly more going on than one chat */
-  .sec-04 .fc { position: absolute; z-index: 1; width: min(300px, 62%); padding: 11px 13px 12px; background: #fcfcfc; color: #161616; border-radius: 6px; box-shadow: 0 18px 44px rgba(0,0,0,.4); font: 300 14px/1.38 var(--sans); opacity: 0; filter: blur(7px); transform: translateY(12px); transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .9s var(--ease) calc(var(--d, 0) * .12s); }
+  .sec-04 .fc { position: absolute; z-index: 1; width: min(250px, 56%); padding: 9px 11px 10px; background: #fcfcfc; color: #161616; border: 1px solid #e6e6e6; border-radius: 6px; font: 300 13px/1.38 var(--sans); opacity: 0; filter: blur(7px); transform: translateY(12px); transition: opacity .7s ease, filter .8s ease, transform .9s var(--ease); }      /* flat: 1px outline, no shadow */
   .sec-04 .fc.in { opacity: 1; filter: none; transform: none; }
   .sec-04 .fc .who { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
   .sec-04 .fc .who svg { width: 18px; height: 18px; flex: none; }
   .sec-04 .fc .who time { margin-left: auto; }
   .sec-04 .fc p { margin: 0; }
-  .sec-04 .fc .re { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid #e6e6e6; color: #515151; }
-  .sec-04 .fc.a { left: 8%; top: 9%; } .sec-04 .fc.b { right: 7%; top: 31%; } .sec-04 .fc.c { left: 12%; top: 58%; }
+  .sec-04 .fc .re { margin: 7px 0 0; padding-top: 7px; border-top: 1px solid #e6e6e6; color: #515151; }
+  .sec-04 .fc.a { left: 5%; top: 5%; } .sec-04 .fc.b { right: 5%; top: 40%; } .sec-04 .fc.c { left: 5%; bottom: 5%; }      /* at the edges: the middle of the print stays free */
   .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 72px; min-width: 0; }
   .sec-04 .eyebrow-04 { margin: 0 0 24px; font: 300 var(--t-label)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
   .sec-04 h2 { margin: 0; font-weight: 300; font-size: var(--t-display-l); line-height: 1; letter-spacing: -.04em; }
   .sec-04 .lead-04 { margin: 20px 0 0; max-width: 28em; font-size: var(--t-lead-m); line-height: 1.4; letter-spacing: -.01em; color: #343434; text-wrap: pretty; }
   .sec-04 .tags-04 { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; padding: 0; list-style: none; }
-  .sec-04 .tags-04 li { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: 99px; color: #343434; }
+  .sec-04 .tags-04 li { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: 99px; color: #343434; transition: border-color .5s ease, color .5s ease, background-color .5s ease; }
+  .sec-04 .tags-04 li.on { border-color: #00988e; color: #006b63; background: rgba(0, 255, 238, .12); }
   /* the conversation overlaps the window; UI kept tight */
-  .sec-04 .chat-04 { margin: 36px 0 0 calc(-1 * clamp(48px, 9vw, 176px)); position: relative; z-index: 2; background: #fff; border: 1px solid #e6e6e6; border-radius: 6px; box-shadow: 0 24px 60px rgba(0,0,0,.14); overflow: hidden; font: 300 14px/1.4 var(--sans); }
+  .sec-04 .chat-04 { width: min(100%, 520px); margin: 36px 0 0 calc(-1 * clamp(48px, 5vw, 96px)); position: relative; z-index: 2; background: #fff; border: 1px solid #e6e6e6; border-radius: 6px; overflow: hidden; font: 300 14px/1.4 var(--sans); }      /* fixed max width: it does not stretch on wide screens */
   .sec-04 .chat-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #ececec; background: #f7f7f7; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #515151; }
   .sec-04 .chat-h .id { display: inline-flex; align-items: center; gap: 8px; }
-  .sec-04 .chat-h .id svg { width: 18px; height: 18px; }
+  .sec-04 .chat-h .id svg { width: 22px; height: 22px; }
+  .sec-04 .chat-h .id > span { display: grid; gap: 3px; } .sec-04 .chat-h .id em { font-style: normal; color: #848484; }
   .sec-04 .chat-h .live { display: inline-flex; align-items: center; gap: 6px; }
   .sec-04 .chat-h .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #00b640; }
   .sec-04 .chat-b { padding: 14px 16px 16px; display: grid; gap: 10px; }
   .sec-04 .msg { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; align-items: start; max-width: 88%; opacity: 0; filter: blur(7px); transform: translateY(10px); transition: opacity .6s ease, filter .7s ease, transform .8s var(--ease); }
   .sec-04 .msg.on { opacity: 1; filter: none; transform: none; }
+  .sec-04 .msg .bd { position: relative; } .sec-04 .msg.typing .bd > * { opacity: 0; } .sec-04 .msg .bd > * { transition: opacity .35s ease; }
+  .sec-04 .msg.typing .bd::after { content: ""; position: absolute; left: 14px; top: 50%; width: 22px; height: 4px; margin-top: -2px; background: radial-gradient(circle, #848484 1.6px, transparent 2px) 0 0 / 8px 4px repeat-x; animation: s04dots 1s steps(3) infinite; }
+  @keyframes s04dots { 0% { clip-path: inset(0 100% 0 0); } 34% { clip-path: inset(0 66% 0 0); } 67% { clip-path: inset(0 33% 0 0); } 100% { clip-path: inset(0); } }
   .sec-04 .msg .av { width: 24px; height: 24px; display: block; }
   .sec-04 .msg .bd { background: #f1f1f1; border-radius: 6px; padding: 8px 11px; }
   .sec-04 .msg .who { display: block; margin: 0 0 3px; font: 300 10px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
@@ -121,9 +126,9 @@
       <!-- WINDOW (fixed size): the flowing print is drawn into it by the script. Cards stay above the dots. -->
       <div class="art-04" data-slot="illustration">
         <!-- WORKING SAMPLE DATA (wording, times, names of tools): confirm before launch -->
-        <div class="fc a" style="--d:0"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>2 min ago</time></span><p>The vendor you added yesterday has no sub-processor list. I've asked them for it and will review it when it lands.</p></div>
-        <div class="fc b" style="--d:1"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>Mon 08:40</time></span><p>Your audit window opens today. The evidence is ready, and I checked it twice.</p></div>
-        <div class="fc c" style="--d:2"><span class="who"><svg class="av" aria-hidden="true"></svg>You<time>Wed</time></span><p>Can this wait until Friday?</p><p class="re">Yes. I'll hold it and ping you Thursday.</p></div>
+        <div class="fc a"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>2 min ago</time></span><p>Heads-up: the vendor you added yesterday hasn't shared its sub-processor list. I've asked for it.</p></div>
+        <div class="fc b"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>Mon 08:40</time></span><p>Your audit starts today. I went through the evidence twice, and it's all there.</p></div>
+        <div class="fc c"><span class="who"><svg class="av" aria-hidden="true"></svg>You<time>Wed</time></span><p>Can this wait until Friday?</p><p class="re">Of course. I'll keep it and remind you on Thursday.</p></div>
       </div>
       <div class="txt-04">
         <p class="eyebrow-04 rv" style="--d:0">The people</p>
@@ -131,12 +136,15 @@
         <p class="lead-04 rv" style="--d:2">Compliance experts work alongside the software. They reach out before you ask and answer within minutes.</p>
         <ul class="tags-04 rv" style="--d:3"><li>Real conversation</li><li>Response time</li></ul>
         <div class="chat-04 rv" style="--d:4" role="log" aria-label="Sample conversation with a compliance expert">
-          <div class="chat-h"><span class="id"><svg class="av" aria-hidden="true"></svg>Comp AI expert</span><span class="live">Online</span></div>
+          <div class="chat-h"><span class="id"><svg class="av" aria-hidden="true"></svg><span>Compliance expert<em>SOC 2 · Access reviews</em></span></span><span class="live">Online</span></div>
           <div class="chat-b">
-            <div class="msg ex"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:02</span><p>Your auditor asked for Q3 access reviews. I pulled them from Okta and flagged two stale accounts. Want me to open the removal tickets?</p></div></div>
+            <div class="msg ex" data-tag="0"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:02</span><p>Your auditor asked for Q3 access reviews. I pulled them from Okta and flagged two stale accounts. Want me to open the removal tickets?</p></div></div>
             <div class="msg me"><div class="bd"><span class="who">You · 09:03</span><p>Yes. Can you check contractors too?</p></div></div>
             <div class="msg ex"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:06</span><p>Done. Three contractor accounts were inactive. Tickets are open and I'll confirm when they close.</p></div></div>
-            <span class="reply-time">Replied in 3 min</span>
+            <span class="reply-time" data-tag="1">Replied in 3 min</span>
+            <div class="msg me"><div class="bd"><span class="who">You · 09:11</span><p>Does this affect the audit window?</p></div></div>
+            <div class="msg ex"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:13</span><p>No. The window opens Monday and the evidence is already in. I'll flag anything that changes before then.</p></div></div>
+            <span class="reply-time" data-tag="1">Replied in 2 min</span>
           </div>
         </div>
       </div>
@@ -165,7 +173,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const NS = 'http://www.w3.org/2000/svg', shared = document.getElementById('print');
   const art = sec.querySelector('.art-04'), rvs = [...sec.querySelectorAll('.rv')], fcs = [...sec.querySelectorAll('.fc')];
-  const msgs = [...sec.querySelectorAll('.msg')], rt = sec.querySelector('.reply-time');
+  const msgs = [...sec.querySelectorAll('.msg')], rts = [...sec.querySelectorAll('.reply-time')], tagEls = [...sec.querySelectorAll('.tags-04 li')], chatSteps = [...sec.querySelectorAll('.chat-b > *')];
   const TAU = Math.PI * 2, clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), lerp = (a, b, t) => a + (b - a) * t;
   const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -291,6 +299,7 @@
       const tA = phA ? now - phA.t0 : 1e9; if (phA && tA > phA.tEnd) phA = null;
       const relaxE = phA ? smooth(0, 1, tA / RELAX) : 1, target = phA ? 0 : goT;      // the pull waits until the print is back in its original form
       Ps += (target - Ps) * (1 - Math.exp(-dt * 10)); if (Math.abs(target - Ps) < .0004) Ps = target;      // follows the scroll position, the same way in both directions
+      syncCards(Ps);
       if (!prepOn && !phA && Ps === 0 && active) active = false;                                          // everything is home again
       const a = art.getBoundingClientRect(), sTop = sec.getBoundingClientRect().top, Cx = a.left + a.width / 2, Cy = a.top - sTop + a.height / 2, mistA = clamp(window.heroMist || .32, .15, 1);
       if (pointerIn && now - lastPtr > REST_MS) press.target = 0;
@@ -403,12 +412,23 @@
 
   // ---- entrance --------------------------------------------------------------------------
   let shown = false, raf = 0;
+  // the texts come in as the print arrives; the conversation then plays once: the expert types, writes, the tags light up on the first message and on each reply time
+  const lit = n => { const t = tagEls[n]; if (t) { t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2200); } };
   const reveal = () => {
     if (shown) return; shown = true;
-    rvs.forEach(e => e.classList.add('in')); fcs.forEach(e => e.classList.add('in'));
-    [1500, 2700, 4000].forEach((t, i) => setTimeout(() => msgs[i].classList.add('on'), reduced ? 0 : t));
-    setTimeout(() => rt.classList.add('on'), reduced ? 0 : 4900);
+    rvs.forEach(e => e.classList.add('in'));
+    let t = 1200;
+    chatSteps.forEach(el => {
+      const isMsg = el.classList.contains('msg'), isEx = el.classList.contains('ex'), tag = el.dataset.tag;
+      if (reduced) { el.classList.add('on'); return; }
+      if (isMsg && isEx) { setTimeout(() => el.classList.add('on', 'typing'), t); t += 800; setTimeout(() => { el.classList.remove('typing'); if (tag === '0') lit(0); }, t); t += 1000; }
+      else if (isMsg) { setTimeout(() => el.classList.add('on'), t); t += 1100; }
+      else { setTimeout(() => { el.classList.add('on'); lit(+tag); }, t - 400); t += 600; }
+    });
   };
+  // fragments in the window arrive one after the other as the print docks (tied to the transition, so they leave in reverse order when scrolling back)
+  const FC_AT = [.8, .88, .96];
+  const syncCards = Ps => fcs.forEach((c, i) => c.classList.toggle('in', reduced || Ps >= FC_AT[i]));
   // Section 03 is not pinned: its content scrolls away and fades like the rest of the page, the print stage (the shared fixed canvas) stays.
   // The transition is tied to the scroll and reversible: it starts when the top of section 04 appears in the viewport and is finished when the section is 50 %
   // visible; scrolling back plays it the other way with the same mapping. Before it starts (section 04 within 2 screens) the print is taken over and relaxes.
