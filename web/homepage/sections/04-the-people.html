@@ -344,12 +344,14 @@
         const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WS) : -Math.round(pai * away * DS);
         const band = clamp(Math.floor(y / H * BANDS), 0, BANDS - 1), dc = colourOf(band, heat), ic = initH[i] > 0 ? 1 - relaxE : 0;
         const cr = lerp(dc[0], initC[3*i], ic) >> 4, cg = lerp(dc[1], initC[3*i+1], ic) >> 4, cb = lerp(dc[2], initC[3*i+2], ic) >> 4;
-        const al = Math.round(lerp(mistA, 1, dock) * 5), key2 = (((cr << 4 | cg) << 4 | cb) << 3) + al;
+        const fadeA = 1 - smooth(0, .25, Ps) * smooth(0, .8 * H, sTop - y);      // dots left in section 03 fade the further they are from section 04, while the transition runs
+        const al = Math.round(lerp(mistA, 1, dock) * fadeA * 7); if (al < 1) continue;
+        const key2 = (((cr << 4 | cg) << 4 | cb) << 3) + al;
         let pt = paths.get(key2); if (!pt) { pt = new Path2D(); paths.set(key2, pt); }
         pt.moveTo(x, y - hh); pt.lineTo(x + hh, y); pt.lineTo(x, y + hh); pt.lineTo(x - hh, y); pt.closePath();
       }
       ctx.save(); ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(a.left, a.top, a.width, a.height, 6); else ctx.rect(a.left, a.top, a.width, a.height); ctx.clip();      // the window
-      for (const [k3, pt] of paths) { const al = (k3 & 7) / 5, col = `rgb(${((k3 >> 11) & 15) * 17},${((k3 >> 7) & 15) * 17},${((k3 >> 3) & 15) * 17})`;
+      for (const [k3, pt] of paths) { const al = (k3 & 7) / 7, col = `rgb(${((k3 >> 11) & 15) * 17},${((k3 >> 7) & 15) * 17},${((k3 >> 3) & 15) * 17})`;
         ctx.globalAlpha = al; ctx.fillStyle = col; ctx.fill(pt); ctxB.globalAlpha = al; ctxB.fillStyle = col; ctxB.fill(pt); }
       ctx.restore(); ctx.globalAlpha = 1; ctxB.globalAlpha = 1;
       if (active && (moving || hov || pa > .002 || press.target || Math.hypot(press.tx - press.x, press.ty - press.y) > .5)) raf = requestAnimationFrame(frame); else { last = 0; if (!active) cv.style.display = cvB.style.display = 'none', shared.style.visibility = ''; }
