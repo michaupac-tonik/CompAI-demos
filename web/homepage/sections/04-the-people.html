@@ -94,7 +94,14 @@
 
   :root { --s04-overlap: 100svh; }
   .dev-prev-wrap { position: relative; z-index: 1; height: 300svh; }
-  .dev-prev { position: sticky; top: 0; height: 100svh; }
+  .dev-prev { position: sticky; top: 0; height: 100svh; padding-top: 9svh; }      /* a stand-in for section 03 (pinned) */
+  .dev-prev .m-eyebrow { margin: 0 0 20px; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.6); }
+  .dev-prev .m-h { margin: 0; font-weight: 300; font-size: 53px; line-height: 1; letter-spacing: -.04em; }
+  .dev-prev .m-lead { margin: 18px 0 0; max-width: 28em; font-size: 20px; line-height: 1.4; color: rgba(252,252,252,.8); }
+  .dev-prev .m-tabs { display: flex; gap: 16px; margin-top: 36px; font: 300 16px/1 var(--sans); color: rgba(252,252,252,.5); }
+  .dev-prev .m-tabs span { flex: 1; padding-top: 14px; border-top: 1px solid rgba(252,252,252,.16); } .dev-prev .m-tabs .on { color: var(--white); border-color: var(--mint); }
+  .dev-prev .m-screen { margin: 32px auto 0; width: min(100%, 1040px); height: 46svh; border-radius: 6px; background: #f7f7f7; display: grid; grid-template-columns: 1fr 2fr; gap: 14px; padding: 18px; }
+  .dev-prev .m-screen i { display: block; background: #e8e8e8; border-radius: 4px; } .dev-prev .m-screen i:nth-child(2) { grid-row: span 3; } .dev-prev .m-screen i:nth-child(3), .dev-prev .m-screen i:nth-child(4) { grid-column: 1; }
   /* mist: the hero's print after it dissolved (fixed behind the page, as on the homepage) */
   #print { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; opacity: .32; transition: opacity 1.2s var(--ease); }
 </style>
@@ -102,7 +109,11 @@
 <body>
 <canvas id="print" aria-hidden="true"></canvas>
 <main>
-<div class="dev-prev-wrap" aria-hidden="true"><div class="dev-prev"></div></div>   <!-- preview only: stands in for section 03, pinned (sticky) while section 04 slides up over it -->
+<div class="dev-prev-wrap" aria-hidden="true"><div class="dev-prev"><div class="wrap">
+  <p class="m-eyebrow">What Comp AI does</p><h2 class="m-h">Comp AI shows the work.</h2>
+  <p class="m-lead">AI agents learn how your company works and use that context to write policies, gather evidence and chase the gaps.</p>
+  <div class="m-tabs"><span class="on">Policies</span><span>Evidence</span><span>Risks</span><span>Vendors</span><span>Audits</span></div>
+  <div class="m-screen"><i></i><i></i><i></i><i></i></div></div></div></div>   <!-- preview only: stands in for section 03, pinned (sticky) while section 04 slides up over it -->
 <!-- @section:04 html:start -->
 <section class="sec-04" id="sec-04" aria-labelledby="sec-04-title">
   <div class="wrap">
@@ -174,6 +185,9 @@
     const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
     cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;display:none;pointer-events:none';
     art.after(cv); const ctx = cv.getContext('2d');
+    // a black scrim over whatever section 03 shows, only in the dark band above the white sheet, below the dots: section 03's content dims out as the print takes the stage
+    const scrim = document.createElement('div'); scrim.setAttribute('aria-hidden', 'true');
+    scrim.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:0;background:#000;opacity:0;pointer-events:none'; cv.before(scrim);
     const dec = (b64, T) => { const s = atob(b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new T(u.buffer); };
     const N = D.pts.length / 2, A = (D.pts[2] - D.pts[0]) / 2 || 14, HMAX = D.hmax, RR = D.round;
     const F = D.order.map(k => { const c = Float32Array.from(dec(D.c[k], Int16Array), v => v / 1000), f = Float32Array.from(dec(D.f[k], Int16Array), v => v / 1000);
@@ -275,6 +289,7 @@
       if (hov && now > hov.tEnd) { From = copy(To); hov = null; }
       const pa = press.amt, d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2), R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
       const far = smooth(FAR_FROM, FAR_TO, d0) * pa, qNear = Math.exp(-Math.pow(Math.max(0, d0 - 560), 2) / pr2);
+      scrim.style.height = Math.max(0, sTop) + 'px'; scrim.style.opacity = active ? smooth(0, .55, Ps).toFixed(3) : 0;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       // white is masked: dots show over the dark page above the section and inside the window, never over the white
       ctx.save(); ctx.beginPath(); if (sTop > 0) ctx.rect(0, 0, W, sTop); if (ctx.roundRect) ctx.roundRect(a.left, a.top, a.width, a.height, 6); else ctx.rect(a.left, a.top, a.width, a.height); ctx.clip();
