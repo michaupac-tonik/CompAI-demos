@@ -63,10 +63,10 @@
   .sec-04 .fc p { margin: 0; }
   .sec-04 .fc .re { margin: 7px 0 0; padding-top: 7px; border-top: 1px solid #e6e6e6; color: #515151; }
   /* scattered along both axes on a straight grid (no rotation), some past the edge of the window; the middle of the print stays free. All neutral white: red only in details */
-  .sec-04 .fc.a { left: -7%; top: 24px; }
+  .sec-04 .fc.a { left: max(-7%, -36px); top: 24px; }      /* sticks out of the window, never out of the page */
   .sec-04 .fc.d { right: 6%; top: 138px; width: auto; padding: 6px 10px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; }
   .sec-04 .fc.d::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: #F5380E; }
-  .sec-04 .fc.b { right: -3%; top: 36%; width: min(222px, 50%); }
+  .sec-04 .fc.b { right: max(-3%, -24px); top: 36%; width: min(222px, 50%); }
   .sec-04 .fc.c { left: 4%; bottom: 24px; }
   .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 72px; min-width: 0; }
   .sec-04 .eyebrow-04::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 10px; background: #F5380E; transform: rotate(45deg) translateY(-1px); }
@@ -305,10 +305,11 @@
     const CR0 = [245, 56, 14], CR1 = [244, 153, 0], MINT = [36, 255, 99], CYAN = [0, 255, 238], wc = new Map();
     const invColour = (band, heat) => { const k = band * 16 + heat + DS; let c = wc.get(k); if (c) return c;
       let v = mix(CR0, CR1, band / (BANDS - 1));
-      if (heat > 0) { const u = heat / WS; v = u < .6 ? mix(v, MINT, u / .6) : mix(MINT, CYAN, (u - .6) / .4); } else if (heat < 0) v = v.map(x => Math.round(x * (1 - .16 * -heat)));
+      if (heat > 0) { const u = heat / WS; v = mix(v, MINT, Math.pow(u, 1.8) * .75); if (u > .85) v = mix(v, CYAN, (u - .85) / .15 * .3); }      // slow: red and orange stay dominant, mint only at the heart of the press, a touch of cyan at most
+      else if (heat < 0) v = v.map(x => Math.round(x * (1 - .16 * -heat)));
       wc.set(k, v); return v; };
     // hover tuning: the homepage's (shared/mist.js and the hero)
-    const P_RADIUS = 180, P_REACH = .75, P_DENSE = .24, P_SPILL = 1.5, P_SPREAD = .3, P_CRISP = .2, P_EDGE = 5.1, GRAVITY = .24, LIFT_W = .25, LIFT_M = .35;
+    const P_RADIUS = 110, P_REACH = .75, P_DENSE = .24, P_SPILL = 1.5, P_SPREAD = .3, P_CRISP = .2, P_EDGE = 5.1, GRAVITY = .24, LIFT_W = .25, LIFT_M = .35;
     const FAR_FROM = 120, FAR_TO = 640, FAR_W = .29, FAR_M = .47, P_IN = .27, P_OUT = .03, P_FOLLOW = .71, REST_MS = 3000, HOVER_ZONE = .5, SPEED = 3.3, LOCAL = 2300, SWELL = .94;
     const press = { x: D.W / 2, y: D.H / 2, tx: D.W / 2, ty: D.H / 2, amt: 0, target: 0 };
     // ---- capture of the shared print's last frame (exact start state) ----
