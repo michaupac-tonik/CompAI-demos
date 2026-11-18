@@ -48,8 +48,8 @@
     position: relative; z-index: 1; color: #161616; padding: 72px 0; min-height: 100svh; display: grid; align-items: center; }
   @media (max-width: 1023px) { .sec-04 { --t-lead-m: 16px; --t-display-l: 33px; padding: 40px 0 56px; } }
   .sec-04::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #f8f8f8; }
-  .sec-04 .grid-04 { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: stretch; min-height: min(84svh, 860px); }
-  .sec-04 .art-04 { position: relative; border-radius: 6px; min-height: 440px; background: #000; }   /* fixed window; the dots (a fixed canvas behind .grid-04) fall into it */
+  .sec-04 .grid-04 { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: stretch; --art-h: clamp(560px, 84svh, 880px); height: var(--art-h); }      /* the row height is fixed: neither the chat nor its conversation can change it */
+  .sec-04 .art-04 { position: relative; border-radius: 6px; height: 100%; background: #000; }   /* fixed window; the dots (a fixed canvas behind .grid-04) fall into it */
   /* fragments of real messages float over the print: one conversation each, so there is clearly more going on than one chat */
   .sec-04 { overflow-x: clip; }
   .sec-04 svg.av { color: #F5380E; }      /* brand coral: the experts' prints */
@@ -69,7 +69,7 @@
   .sec-04 .fc.d::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: #F5380E; }
   .sec-04 .fc.b { left: 24%; top: 40%; width: min(232px, 54%); }
   .sec-04 .fc.c { right: max(-3%, -24px); bottom: 24px; }
-  .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 72px; min-width: 0; }
+  .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; height: 100%; padding: 24px 0 0 72px; min-width: 0; }
   .sec-04 .eyebrow-04::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 10px; background: #F5380E; transform: rotate(45deg) translateY(-1px); }
   .sec-04 .eyebrow-04 { margin: 0 0 24px; font: 300 var(--t-label)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
   .sec-04 h2 { margin: 0; font-weight: 300; font-size: var(--t-display-l); line-height: 1; letter-spacing: -.04em; }
@@ -78,19 +78,20 @@
   .sec-04 .tags-04 li { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: 99px; color: #343434; transition: border-color .5s ease, color .5s ease, background-color .5s ease; }
   .sec-04 .tags-04 li.on { border-color: #F5380E; color: #C12000; background: rgba(245, 56, 14, .08); }
   /* the conversation, Slack-like: channel rail, header with the person and status, rows without bubbles (the expert's rows tinted orange), thread links, composer */
-  .sec-04 .chat-04 { --paper: #fff; --ink: #161616; --line: #cfcfcf; --tint: rgba(244, 153, 0, .14); --name: #161616; --muted: #696969; --field: #fff; --fieldline: #bdbdbd; --me: #161616; --meink: #fcfcfc;
+  .sec-04 .chat-04 { flex: 1 1 0; min-height: 260px; margin-bottom: clamp(40px, 7svh, 72px) !important; --paper: #fff; --ink: #161616; --line: #cfcfcf; --tint: rgba(244, 153, 0, .14); --name: #161616; --muted: #696969; --field: #fff; --fieldline: #bdbdbd; --me: #161616; --meink: #fcfcfc;
     display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 560px); margin: 36px 0 0 0; position: relative; z-index: 2; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font: 300 14px/1.4 var(--sans);
     box-shadow: 0 1px 2px rgba(22, 22, 22, .08), 0 24px 48px -14px rgba(22, 22, 22, .3); }      /* fixed max width: it does not stretch on wide screens, a little wider on very large ones (below) */
   .sec-04 .chat-04::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 1; background: linear-gradient(90deg, #F5380E, #F37300 55%, #F49900); }
   .sec-04 .chat-rail { display: none; }
-  .sec-04 .chat-main { min-width: 0; display: flex; flex-direction: column; }
+  .sec-04 .chat-main { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
   .sec-04 .chat-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px 10px; border-bottom: 1px solid var(--line); }
   .sec-04 .chat-h .id { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
   .sec-04 .chat-h .id > span { display: grid; gap: 3px; } .sec-04 .chat-h b { font-weight: 400; font-size: 15px; color: var(--name); }
   .sec-04 .chat-h em { font: 300 11px/1.2 var(--mono); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
   .sec-04 .chat-h .live { display: inline-flex; align-items: center; gap: 6px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
   .sec-04 .chat-h .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #F5380E; }
-  .sec-04 .chat-b { padding: 6px 0 4px; display: grid; }
+  .sec-04 .chat-b { position: relative; flex: 1 1 0; min-height: 0; overflow: hidden; padding: 6px 0 4px; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px); mask-image: linear-gradient(to bottom, transparent 0, #000 28px); }      /* older messages scroll up under a soft fade, like a real chat */
+  .sec-04 .chat-track { display: grid; transition: transform .5s var(--ease); }
   .sec-04 svg.av.sq, .sec-04 .av.me { width: 32px; height: 32px; border-radius: 6px; flex: none; box-sizing: border-box; }
   .sec-04 svg.av.sq { padding: 4px; background: #F49900; color: #1a0f00; }
   .sec-04 .av.me { display: grid; place-items: center; background: var(--me); color: var(--meink); font: 400 13px/1 var(--sans); }
@@ -111,7 +112,7 @@
   .sec-04 .chat-f { margin: 4px 14px 14px; padding: 10px 12px; background: var(--field); border: 1px solid var(--fieldline); border-radius: 8px; color: #848484; display: flex; justify-content: space-between; align-items: center; }
   .sec-04 .chat-f::after { content: ""; width: 14px; height: 14px; background: #F5380E; clip-path: polygon(0 0, 100% 50%, 0 100%, 20% 50%); opacity: .85; }
   /* channel rail (Slack-like), light: warm cream with an orange active channel, no black */
-  .sec-04 .chat-04 { grid-template-columns: 148px minmax(0, 1fr); --me: #e9e3d3; --meink: #161616; }
+  .sec-04 .chat-04 { grid-template-columns: 148px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); --me: #e9e3d3; --meink: #161616; }
   .sec-04 .chat-rail { display: block; background: #FFF8E4; border-right: 1px solid var(--line); color: #5a4a30; padding: 16px 10px 12px; font: 300 13px/1.3 var(--sans); }
   .sec-04 .chat-rail b { display: block; margin: 0 6px 14px; font-weight: 400; color: #161616; font-size: 14px; }
   .sec-04 .chat-rail p { margin: 12px 6px 6px; font: 300 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #8a7a60; }
@@ -126,7 +127,7 @@
   .js .sec-04 .rv.in { opacity: 1; filter: none; transform: none; }
   @media (min-width: 1600px) { .sec-04 .chat-04 { width: min(100%, 660px); font-size: 15px; } .sec-04 .chat-04 { grid-template-columns: 170px minmax(0, 1fr); } .sec-04 .msg { padding: 10px 18px; } .sec-04 .chat-h { padding: 14px 18px 12px; } .sec-04 .reply-time { padding-left: 60px; } }
   @media (max-width: 700px) { .sec-04 .chat-04 { grid-template-columns: minmax(0, 1fr); } .sec-04 .chat-rail { display: none; } }
-  @media (max-width: 1023px) { .sec-04 .fc.a { left: 3%; } .sec-04 .fc.b { right: 3%; } .sec-04 .grid-04 { grid-template-columns: minmax(0, 1fr); min-height: 0; } .sec-04 .art-04 { min-height: 480px; } .sec-04 .txt-04 { padding: 36px 0 0; } .sec-04 .chat-04 { margin-left: 0; } .sec-04 .msg { max-width: 100%; } .sec-04 .fc.c { display: none; } }
+  @media (max-width: 1023px) { .sec-04 .fc.a { left: 3%; } .sec-04 .fc.b { right: 3%; } .sec-04 .grid-04 { grid-template-columns: minmax(0, 1fr); height: auto; } .sec-04 .art-04 { height: 480px; } .sec-04 .txt-04 { padding: 36px 0 0; height: auto; } .sec-04 .chat-04 { flex: none; height: 440px; margin-bottom: 0 !important; } .sec-04 .chat-04 { margin-left: 0; } .sec-04 .msg { max-width: 100%; } .sec-04 .fc.c { display: none; } }
   @media (prefers-reduced-motion: reduce) { .js .sec-04 .rv, .sec-04 .msg, .sec-04 .reply-time, .sec-04 .fc { opacity: 1; filter: none; transform: none; transition: none; } }
   /* @section:04 css:end */
 
@@ -174,7 +175,7 @@
           <div class="chat-rail" role="group" aria-label="Channels"><b>Comp AI</b><p>Channels</p><button type="button" class="ch on" data-c="0"># access-reviews<i></i></button><button type="button" class="ch" data-c="1"># audit-prep<i></i></button><button type="button" class="ch" data-c="2"># vendors<i></i></button><p>Direct</p><span>Compliance expert<u></u></span></div>
           <div class="chat-main">
             <div class="chat-h"><span class="id"><svg class="av sq" aria-hidden="true"></svg><span><b>Compliance expert</b><em>SOC 2 · Access reviews</em></span></span><span class="live">Online</span></div>
-            <div class="chat-b">
+            <div class="chat-b"><div class="chat-track">
               <div class="msg ex" data-tag="0"><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>09:02</time></span><p>Your auditor asked for Q3 access reviews. I pulled them from Okta and flagged two stale accounts. Want me to open the removal tickets?</p></div></div>
               <div class="msg me"><span class="av me">Y</span><div class="bd"><span class="who"><b>You</b><time>09:03</time></span><p>Yes. Can you check contractors too?</p></div></div>
               <div class="msg ex"><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>09:06</time></span><p>Done. Three contractor accounts were inactive. Tickets are open and I'll confirm when they close.</p></div></div>
@@ -182,7 +183,8 @@
               <div class="msg me"><span class="av me">Y</span><div class="bd"><span class="who"><b>You</b><time>09:11</time></span><p>Does this affect the audit window?</p></div></div>
               <div class="msg ex"><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>09:13</time></span><p>No. The window opens Monday and the evidence is already in. I'll flag anything that changes before then.</p></div></div>
               <span class="reply-time" data-tag="1">Replied in 2 min</span>
-            </div>
+            
+            </div></div>
             <div class="chat-f" aria-hidden="true">Message Compliance expert</div>
           </div>
         </div>
@@ -476,6 +478,9 @@
   ];
   const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const chatB = sec.querySelector('.chat-b'), chatSub = sec.querySelector('.chat-h em'), chBtns = [...sec.querySelectorAll('.chat-rail .ch')];
+  let track = sec.querySelector('.chat-track');
+  // keep the newest message in view: the track slides up (rows still to come are invisible and sit below the visible area)
+  const follow = el => { if (!track) return; const over = el.offsetTop + el.offsetHeight + 8 - chatB.clientHeight; track.style.transform = `translateY(${-Math.max(0, over)}px)`; };
   let chCur = -1, chTimers = [], auto = !reduced, chView = false, shown = false, chReady = false;
   const later = (fn, ms) => chTimers.push(setTimeout(fn, ms));
   const lit = n => { const t = tagEls[n]; if (t) { t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2200); } };
@@ -483,13 +488,13 @@
     : st[0] === 'e' ? `<div class="msg ex"${first ? ' data-tag="0"' : ''}><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>${st[1]}</time></span><p>${esc(st[2])}</p></div></div>`
     : `<div class="msg me"><span class="av me">Y</span><div class="bd"><span class="who"><b>You</b><time>${st[1]}</time></span><p>${esc(st[2])}</p></div></div>`;
   const playChat = () => {
-    const els = [...chatB.children]; let t = 300;
-    if (reduced) { els.forEach(el => el.classList.add('on')); return 0; }
+    const els = [...track.children]; let t = 300;
+    if (reduced) { els.forEach(el => el.classList.add('on')); follow(els[els.length - 1]); return 0; }
     els.forEach(el => {
       const isMsg = el.classList.contains('msg'), isEx = el.classList.contains('ex'), tag = el.dataset.tag;
-      if (isMsg && isEx) { later(() => el.classList.add('on', 'typing'), t); t += 800; later(() => { el.classList.remove('typing'); if (tag === '0') lit(0); }, t); t += 1000; }
-      else if (isMsg) { later(() => el.classList.add('on'), t); t += 1100; }
-      else { later(() => { el.classList.add('on'); lit(+el.dataset.tag); }, t - 400); t += 600; }
+      if (isMsg && isEx) { later(() => { el.classList.add('on', 'typing'); follow(el); }, t); t += 800; later(() => { el.classList.remove('typing'); if (tag === '0') lit(0); }, t); t += 1000; }
+      else if (isMsg) { later(() => { el.classList.add('on'); follow(el); }, t); t += 1100; }
+      else { later(() => { el.classList.add('on'); follow(el); lit(+el.dataset.tag); }, t - 400); t += 600; }
     });
     return t;
   };
@@ -497,7 +502,7 @@
     chTimers.forEach(clearTimeout); chTimers = []; chCur = c;
     chBtns.forEach((b, i) => { b.classList.toggle('on', i === c); b.setAttribute('aria-current', i === c ? 'true' : 'false'); if (i === c) b.classList.add('seen'); });
     const draw = () => {
-      chatSub.textContent = CONV[c].sub; chatB.innerHTML = CONV[c].steps.map((st, i) => stepHTML(st, i === 0)).join('');
+      chatSub.textContent = CONV[c].sub; chatB.innerHTML = '<div class="chat-track">' + CONV[c].steps.map((st, i) => stepHTML(st, i === 0)).join('') + '</div>'; track = chatB.firstElementChild;
       chatB.querySelectorAll('svg.av').forEach((sv, i) => ridges(sv, 6, 1.3 + i * 1.9)); chatB.classList.remove('swap');
       const end = playChat();
       if (auto) later(function next() { if (!auto) return; if (!chView || document.hidden) { later(next, 1000); return; } selectCh((chCur + 1) % CONV.length); }, end + 4200);
