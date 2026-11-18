@@ -198,10 +198,11 @@
       for (let i = 0; i < N; i++) if (S.m[i] > .3) { const x = D.pts[2*i], y = D.pts[2*i+1]; sx += x; sy += y; n++; x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
       return { cx: sx / n, cy: sy / n, rx: (x1 - x0) / 2, ry: (y1 - y0) / 2 }; });
     const scx = ST[0].cx, scy = ST[0].cy, sry = ST[0].ry, CX = scx, CY = scy - sry * .28;
-    const X0 = new Float32Array(N), Y0 = new Float32Array(N), jit = new Float32Array(N), jit2 = new Float32Array(N);
+    const X0 = new Float32Array(N), Y0 = new Float32Array(N), jit = new Float32Array(N), jit2 = new Float32Array(N), nzv = new Float32Array(N);      // nzv: per-dot irregularity of the fade-out (random plus a slow ripple over the print)
     for (let i = 0; i < N; i++) { X0[i] = D.pts[2*i]; Y0[i] = D.pts[2*i+1];
       const h = Math.sin(X0[i] * .9285 + Y0[i] * 5.5881) * 43758.5453, h2 = Math.sin(X0[i] * 1.7 + Y0[i] * 3.1) * 12543.123;
-      jit[i] = (h - Math.floor(h)) * 2 - 1; jit2[i] = (h2 - Math.floor(h2)) * 2 - 1; }
+      jit[i] = (h - Math.floor(h)) * 2 - 1; jit2[i] = (h2 - Math.floor(h2)) * 2 - 1;
+      nzv[i] = .5 + .5 * (.65 * jit[i] + .35 * Math.sin(X0[i] * .0085 + Y0[i] * .006 + 1.3) * Math.cos(Y0[i] * .011 - X0[i] * .004)); }
     // lattice neighbours (as in the hero): diagonal ones and axis ones two steps away; used for the rule that squares never touch
     const key = (i, j) => i * 4096 + j, idx = new Map(), diag = new Int32Array(4 * N).fill(-1), axn = new Int32Array(4 * N).fill(-1);
     for (let n = 0; n < N; n++) idx.set(key(Math.round(X0[n] / A), Math.round(Y0[n] / A)), n);
@@ -344,7 +345,9 @@
         const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WS) : -Math.round(pai * away * DS);
         const band = clamp(Math.floor(y / H * BANDS), 0, BANDS - 1), dc = colourOf(band, heat), ic = initH[i] > 0 ? 1 - relaxE : 0;
         const cr = lerp(dc[0], initC[3*i], ic) >> 4, cg = lerp(dc[1], initC[3*i+1], ic) >> 4, cb = lerp(dc[2], initC[3*i+2], ic) >> 4;
-        const fadeA = 1 - smooth(0, .25, Ps) * smooth(0, .8 * H, sTop - y);      // dots left in section 03 fade the further they are from section 04, while the transition runs
+        // Dots left in section 03 fade out: the further from section 04, the earlier, with an irregular edge (no straight line); all are gone when 40 % of section 04 is
+        // in view (Ps = .8). Dots inside the window never fade.
+        const Dn = clamp((sTop - y) / (.9 * H)), th = lerp(.85, .05, clamp(Dn + (nzv[i] - .5) * .7)), fadeA = dIn > 0 ? 1 : 1 - smooth(th - .15, th + .15, clamp(Ps / .8));
         const al = Math.round(lerp(mistA, 1, dock) * fadeA * 7); if (al < 1) continue;
         const key2 = (((cr << 4 | cg) << 4 | cb) << 3) + al;
         let pt = paths.get(key2); if (!pt) { pt = new Path2D(); paths.set(key2, pt); }
