@@ -63,11 +63,12 @@
   .sec-04 .fc p { margin: 0; }
   .sec-04 .fc .re { margin: 7px 0 0; padding-top: 7px; border-top: 1px solid #e6e6e6; color: #515151; }
   /* scattered along both axes on a straight grid (no rotation), some past the edge of the window; the middle of the print stays free. All neutral white: red only in details */
-  .sec-04 .fc.a { left: max(-7%, -36px); top: 24px; }      /* sticks out of the window, never out of the page */
-  .sec-04 .fc.d { right: 6%; top: 138px; width: auto; padding: 6px 10px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; }
+  /* a staircase from top left to bottom right on an 8 px grid; the cards cover a good part of the print on purpose, the weight sits on the diagonal */
+  .sec-04 .fc.a { left: max(-5%, -32px); top: 24px; }
+  .sec-04 .fc.d { left: 32%; top: 128px; width: auto; padding: 6px 10px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; }
   .sec-04 .fc.d::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: #F5380E; }
-  .sec-04 .fc.b { right: max(-3%, -24px); top: 36%; width: min(222px, 50%); }
-  .sec-04 .fc.c { left: 4%; bottom: 24px; }
+  .sec-04 .fc.b { left: 24%; top: 40%; width: min(232px, 54%); }
+  .sec-04 .fc.c { right: max(-3%, -24px); bottom: 24px; }
   .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 72px; min-width: 0; }
   .sec-04 .eyebrow-04::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 10px; background: #F5380E; transform: rotate(45deg) translateY(-1px); }
   .sec-04 .eyebrow-04 { margin: 0 0 24px; font: 300 var(--t-label)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
@@ -114,9 +115,12 @@
   .sec-04 .chat-rail { display: block; background: #FFF8E4; border-right: 1px solid var(--line); color: #5a4a30; padding: 16px 10px 12px; font: 300 13px/1.3 var(--sans); }
   .sec-04 .chat-rail b { display: block; margin: 0 6px 14px; font-weight: 400; color: #161616; font-size: 14px; }
   .sec-04 .chat-rail p { margin: 12px 6px 6px; font: 300 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #8a7a60; }
-  .sec-04 .chat-rail span { display: flex; align-items: center; justify-content: space-between; padding: 5px 6px; border-radius: 5px; color: #5a4a30; }
-  .sec-04 .chat-rail span.on { background: #F49900; color: #1a0f00; }
-  .sec-04 .chat-rail span i { width: 7px; height: 7px; border-radius: 50%; background: #F5380E; } .sec-04 .chat-rail span.on i { background: #7a1500; }
+  .sec-04 .chat-rail span, .sec-04 .chat-rail .ch { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 5px 6px; border: 0; border-radius: 5px; background: transparent; color: #5a4a30; font: inherit; text-align: left; }
+  .sec-04 .chat-rail .ch { cursor: pointer; transition: background-color .2s ease, color .2s ease; } .sec-04 .chat-rail .ch:hover { background: rgba(244, 153, 0, .18); } .sec-04 .chat-rail .ch:focus-visible { outline: 1.5px solid #C12000; outline-offset: 1px; }
+  .sec-04 .chat-rail .ch.seen i { opacity: 0; }
+  .sec-04 .chat-b { transition: opacity .16s ease; } .sec-04 .chat-b.swap { opacity: 0; }
+  .sec-04 .chat-rail .ch.on { background: #F49900; color: #1a0f00; }
+  .sec-04 .chat-rail .ch i { width: 7px; height: 7px; border-radius: 50%; background: #F5380E; } .sec-04 .chat-rail .ch.on i { background: #7a1500; }
   .sec-04 .chat-rail span u { text-decoration: none; width: 7px; height: 7px; border-radius: 50%; background: #2fb457; }
   .js .sec-04 .rv { opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .9s var(--ease) calc(var(--d, 0) * .12s); }
   .js .sec-04 .rv.in { opacity: 1; filter: none; transform: none; }
@@ -157,8 +161,8 @@
       <div class="art-04" data-slot="illustration">
         <!-- WORKING SAMPLE DATA (wording, times, names of tools): confirm before launch -->
         <div class="fc a"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>2 min ago</time></span><p>Heads-up: the vendor you added yesterday hasn't shared its sub-processor list. I've asked for it.</p></div>
-        <div class="fc b"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>Mon 08:40</time></span><p>Your audit starts today. I went through the evidence twice, and it's all there.</p></div>
         <div class="fc d" aria-hidden="true">Answered in 2 min</div>
+        <div class="fc b"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>Mon 08:40</time></span><p>Your audit starts today. I went through the evidence twice, and it's all there.</p></div>
         <div class="fc c"><span class="who"><svg class="av" aria-hidden="true"></svg>You<time>Wed</time></span><p>Can this wait until Friday?</p><p class="re">Of course. I'll keep it and remind you on Thursday.</p></div>
       </div>
       <div class="txt-04">
@@ -167,7 +171,7 @@
         <p class="lead-04 rv" style="--d:2">Compliance experts work alongside the software. They reach out before you ask and answer within minutes.</p>
         <ul class="tags-04 rv" style="--d:3"><li>Real conversation</li><li>Response time</li></ul>
         <div class="chat-04 rv" style="--d:4" role="log" aria-label="Sample conversation with a compliance expert">
-          <div class="chat-rail" aria-hidden="true"><b>Comp AI</b><p>Channels</p><span class="on"># access-reviews<i></i></span><span># audit-prep</span><span># vendors<i></i></span><p>Direct</p><span>Compliance expert<u></u></span></div>
+          <div class="chat-rail" role="group" aria-label="Channels"><b>Comp AI</b><p>Channels</p><button type="button" class="ch on" data-c="0"># access-reviews<i></i></button><button type="button" class="ch" data-c="1"># audit-prep<i></i></button><button type="button" class="ch" data-c="2"># vendors<i></i></button><p>Direct</p><span>Compliance expert<u></u></span></div>
           <div class="chat-main">
             <div class="chat-h"><span class="id"><svg class="av sq" aria-hidden="true"></svg><span><b>Compliance expert</b><em>SOC 2 · Access reviews</em></span></span><span class="live">Online</span></div>
             <div class="chat-b">
@@ -208,7 +212,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const NS = 'http://www.w3.org/2000/svg', shared = document.getElementById('print');
   const art = sec.querySelector('.art-04'), rvs = [...sec.querySelectorAll('.rv')], fcs = [...sec.querySelectorAll('.fc')];
-  const msgs = [...sec.querySelectorAll('.msg')], rts = [...sec.querySelectorAll('.reply-time')], tagEls = [...sec.querySelectorAll('.tags-04 li')], chatSteps = [...sec.querySelectorAll('.chat-b > *')];
+  const tagEls = [...sec.querySelectorAll('.tags-04 li')];
   const TAU = Math.PI * 2, clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), lerp = (a, b, t) => a + (b - a) * t;
   const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -447,23 +451,68 @@
   };
 
   // ---- entrance --------------------------------------------------------------------------
-  let shown = false, raf = 0;
-  // the texts come in as the print arrives; the conversation then plays once: the expert types, writes, the tags light up on the first message and on each reply time
+  let raf = 0;
+  // The chat: three channels, each with its own conversation. They switch by themselves (auto) and by click (a click takes over for good, as in section 03).
+  // The conversation plays when it is shown: the expert types, writes, the tags light up on the first message and on each reply time. WORKING SAMPLE DATA.
+  const CONV = [
+    { sub: 'SOC 2 · Access reviews', steps: [
+      ['e', '09:02', 'Your auditor asked for Q3 access reviews. I pulled them from Okta and flagged two stale accounts. Want me to open the removal tickets?'],
+      ['m', '09:03', 'Yes. Can you check contractors too?'],
+      ['e', '09:06', "Done. Three contractor accounts were inactive. Tickets are open and I'll confirm when they close."], ['r', 'Replied in 3 min'],
+      ['m', '09:11', 'Does this affect the audit window?'],
+      ['e', '09:13', "No. The window opens Monday and the evidence is already in. I'll flag anything that changes before then."], ['r', 'Replied in 2 min']] },
+    { sub: 'SOC 2 · Audit prep', steps: [
+      ['e', '14:20', 'Your auditor wants the change-management evidence by Friday. I collected 14 pull requests with approvals. One was merged without a review.'],
+      ['m', '14:22', 'Which one? I can explain it.'],
+      ['e', '14:23', "PR #482 from Tuesday. If it was a hotfix, add one line of context and I'll attach it to the evidence."], ['r', 'Replied in 1 min'],
+      ['m', '14:25', 'It was a hotfix for the login bug. Added the note.'],
+      ['e', '14:27', 'Got it. The evidence is complete and in the audit folder.'], ['r', 'Replied in 2 min']] },
+    { sub: 'SOC 2 · Vendor management', steps: [
+      ['e', '10:40', 'Your new HR tool handles employee data but has no DPA on file. I drafted one from your template. Want me to send it to their security contact?'],
+      ['m', '10:44', 'Yes, please.'],
+      ['e', '10:46', "Sent. I'll review their answer and tell you if anything needs your sign-off."], ['r', 'Replied in 2 min'],
+      ['m', '10:52', 'Does this block onboarding?'],
+      ['e', '10:54', 'No. You can onboard them now. The DPA is only needed before real employee data goes in.'], ['r', 'Replied in 2 min']] }
+  ];
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const chatB = sec.querySelector('.chat-b'), chatSub = sec.querySelector('.chat-h em'), chBtns = [...sec.querySelectorAll('.chat-rail .ch')];
+  let chCur = -1, chTimers = [], auto = !reduced, chView = false, shown = false, chReady = false;
+  const later = (fn, ms) => chTimers.push(setTimeout(fn, ms));
   const lit = n => { const t = tagEls[n]; if (t) { t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2200); } };
+  const stepHTML = (st, first) => st[0] === 'r' ? `<span class="reply-time" data-tag="1">${esc(st[1])}</span>`
+    : st[0] === 'e' ? `<div class="msg ex"${first ? ' data-tag="0"' : ''}><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>${st[1]}</time></span><p>${esc(st[2])}</p></div></div>`
+    : `<div class="msg me"><span class="av me">Y</span><div class="bd"><span class="who"><b>You</b><time>${st[1]}</time></span><p>${esc(st[2])}</p></div></div>`;
+  const playChat = () => {
+    const els = [...chatB.children]; let t = 300;
+    if (reduced) { els.forEach(el => el.classList.add('on')); return 0; }
+    els.forEach(el => {
+      const isMsg = el.classList.contains('msg'), isEx = el.classList.contains('ex'), tag = el.dataset.tag;
+      if (isMsg && isEx) { later(() => el.classList.add('on', 'typing'), t); t += 800; later(() => { el.classList.remove('typing'); if (tag === '0') lit(0); }, t); t += 1000; }
+      else if (isMsg) { later(() => el.classList.add('on'), t); t += 1100; }
+      else { later(() => { el.classList.add('on'); lit(+el.dataset.tag); }, t - 400); t += 600; }
+    });
+    return t;
+  };
+  const selectCh = (c, instant) => {
+    chTimers.forEach(clearTimeout); chTimers = []; chCur = c;
+    chBtns.forEach((b, i) => { b.classList.toggle('on', i === c); b.setAttribute('aria-current', i === c ? 'true' : 'false'); if (i === c) b.classList.add('seen'); });
+    const draw = () => {
+      chatSub.textContent = CONV[c].sub; chatB.innerHTML = CONV[c].steps.map((st, i) => stepHTML(st, i === 0)).join('');
+      chatB.querySelectorAll('svg.av').forEach((sv, i) => ridges(sv, 6, 1.3 + i * 1.9)); chatB.classList.remove('swap');
+      const end = playChat();
+      if (auto) later(function next() { if (!auto) return; if (!chView || document.hidden) { later(next, 1000); return; } selectCh((chCur + 1) % CONV.length); }, end + 4200);
+    };
+    if (instant) draw(); else { chatB.classList.add('swap'); later(draw, 170); }
+  };
+  chBtns.forEach(b => b.addEventListener('click', () => { if (!chReady) return; auto = false; if (+b.dataset.c !== chCur) selectCh(+b.dataset.c); }));
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { chView = e.isIntersecting; }), { threshold: .3 }).observe(sec.querySelector('.chat-04')); else chView = true;
   const reveal = () => {
     if (shown) return; shown = true;
     rvs.forEach(e => e.classList.add('in'));
-    let t = 1200;
-    chatSteps.forEach(el => {
-      const isMsg = el.classList.contains('msg'), isEx = el.classList.contains('ex'), tag = el.dataset.tag;
-      if (reduced) { el.classList.add('on'); return; }
-      if (isMsg && isEx) { setTimeout(() => el.classList.add('on', 'typing'), t); t += 800; setTimeout(() => { el.classList.remove('typing'); if (tag === '0') lit(0); }, t); t += 1000; }
-      else if (isMsg) { setTimeout(() => el.classList.add('on'), t); t += 1100; }
-      else { setTimeout(() => { el.classList.add('on'); lit(+tag); }, t - 400); t += 600; }
-    });
+    setTimeout(() => { selectCh(0, true); chReady = true; }, reduced ? 0 : 1200);      // clicks count only once the first conversation is on screen
   };
   // fragments in the window arrive one after the other as the print docks (tied to the transition, so they leave in reverse order when scrolling back)
-  const FC_AT = [.8, .86, .91, .96];      // DOM order: a, b, d (chip), c
+  const FC_AT = [.8, .86, .91, .96];      // DOM order = the staircase: a, d (chip), b, c
   const syncCards = Ps => fcs.forEach((c, i) => c.classList.toggle('in', reduced || Ps >= FC_AT[i]));
   // Section 03 is not pinned: its content scrolls away and fades like the rest of the page, the print stage (the shared fixed canvas) stays.
   // The transition is tied to the scroll and reversible: it starts when the top of section 04 appears in the viewport and is finished when the section is 50 %
