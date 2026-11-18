@@ -47,6 +47,7 @@
   .sec-04 { --t-label: 13px; --t-body: 16px; --t-lead-m: 20px; --t-display-l: 53px;
     position: relative; z-index: 1; color: #161616; padding: 72px 0; min-height: 100svh; display: grid; align-items: center; }
   @media (max-width: 1023px) { .sec-04 { --t-lead-m: 16px; --t-display-l: 33px; padding: 40px 0 56px; } }
+  .sec-04 { margin-top: calc(-1 * var(--s04-overlap, 0px)); }      /* set to 100svh by the page when section 03 is pinned behind: section 04 then slides up over it */
   .sec-04::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #f8f8f8; }
   .sec-04 .grid-04 { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: stretch; min-height: min(84svh, 860px); }
   .sec-04 .art-04 { position: relative; border-radius: 6px; min-height: 440px; background: #000; }   /* fixed window; the dots (a fixed canvas behind .grid-04) fall into it */
@@ -91,7 +92,9 @@
   @media (prefers-reduced-motion: reduce) { .js .sec-04 .rv, .sec-04 .msg, .sec-04 .reply-time, .sec-04 .fc { opacity: 1; filter: none; transform: none; transition: none; } }
   /* @section:04 css:end */
 
-  .dev-prev { position: relative; z-index: 1; height: 110svh; display: flex; align-items: flex-end; padding: 32px var(--edge); font: 300 12px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.4); }
+  :root { --s04-overlap: 100svh; }
+  .dev-prev-wrap { position: relative; z-index: 1; height: 300svh; }
+  .dev-prev { position: sticky; top: 0; height: 100svh; }
   /* mist: the hero's print after it dissolved (fixed behind the page, as on the homepage) */
   #print { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; opacity: .32; transition: opacity 1.2s var(--ease); }
 </style>
@@ -99,7 +102,7 @@
 <body>
 <canvas id="print" aria-hidden="true"></canvas>
 <main>
-<div class="dev-prev" aria-hidden="true"></div>   <!-- preview only: stands in for sections 01-03 so the transition can be scrolled; not part of the section -->
+<div class="dev-prev-wrap" aria-hidden="true"><div class="dev-prev"></div></div>   <!-- preview only: stands in for section 03, pinned (sticky) while section 04 slides up over it -->
 <!-- @section:04 html:start -->
 <section class="sec-04" id="sec-04" aria-labelledby="sec-04-title">
   <div class="wrap">
@@ -139,10 +142,8 @@
 //  - the first scroll hands over from the shared print (its last frame is captured, so nothing jumps), then the print first relaxes to its original form
 //    (whatever a hover did to it fades, the shape morphs back to the first one, ~1.2 s, time-based); only then does the scroll-linked pull begin, from that
 //    known form, and it morphs into the next shape on the way
-//  - two gestures instead of a raw scroll mapping: the first scroll down stops the page just before section 04 shows and only relaxes the print to its
-//    original form; the second scroll runs a 3.4 s transition (page scrolls itself, slow at first, print pulled in step); input is blocked while either runs
-//  - scroll-linked and sequential, like stretching rubber: the dots nearest the left edge are pulled first and drag the rest after them; each dot
-//    is a spring (softer the further it starts from the left), so the distances between dots stretch and relax instead of the print being dragged along
+//  - section 04 slides up over a pinned section 03; no scroll takeover. The print relaxes and flows (time-driven) to the final place of the window,
+//    and the rising white sheet uncovers it through the window
 //  - dots stay small while they travel and grow only when they dock in the window; they never touch (the hero's rule)
 //  - white is masked: the print goes from the dark page into the dark window, hidden while it is over the white; what is left of it in the dark band
 //    above (section 03) fades out, so at the end the print lives only in the window
@@ -167,7 +168,7 @@
   sec.querySelectorAll('svg.av').forEach((s, i) => ridges(s, 6, 1.3 + i * 1.9));
 
   // ---- the flowing print ----------------------------------------------------------------
-  let on = null;            // set once the print data is there: { setP }
+  let on = null;            // set once the print data is there: { near, go }
   const initPrint = () => {
     const D = window.BLEND_FIELDS; if (!D || !shared || on) return;
     const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
@@ -202,8 +203,8 @@
     const px = new Float32Array(N), py = new Float32Array(N), vx = new Float32Array(N), vy = new Float32Array(N);
     const Xs = new Float32Array(N), Ys = new Float32Array(N), Hs = new Float32Array(N), Sx = new Float32Array(N), Sy = new Float32Array(N);   // S: where each dot starts its way (what the shared print showed)
     const initH = new Float32Array(N), initC = new Uint8Array(3 * N);    // what the shared print showed for each dot at the start: half-size (px) and colour
-    let Ps = 0;                                                         // scroll progress, smoothed
-    let W = 0, H = 0, dpr = 1, k0 = 1, lw = 0, lh = 0, P = 0, active = false;
+    let Ps = 0;                                                         // travel progress 0..1 (time-driven)
+    let W = 0, H = 0, dpr = 1, k0 = 1, lw = 0, lh = 0, active = false;
     const DM = .55;       // share of the scroll over which the pull front travels from the left edge to the right
     // where the shared canvas draws the print (same rule as the shader's place()): every dot starts here
     const layout = () => { W = document.documentElement.clientWidth; H = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
@@ -257,15 +258,17 @@
           initH[i] = h; initC[3*i] = +m[1]; initC[3*i+1] = +m[2]; initC[3*i+2] = +m[3]; px[i] = Sx[i] = (t.a * cx + t.e) / sc; py[i] = Sy[i] = (t.a * cy + t.f) / sc; got++; } }
       return got; };
     let raf = 0, last = 0, lastPtr = -1e9, armed = true, hov = null, pointerIn = false, haveInit = false, mp = 0, phA = null;   // phA: the relax-to-original phase
-    const RELAX = 1100, MORPH_A = 1500;
+    const RELAX = 1100, MORPH_A = 1500, TRAVEL = 2.8, BACK = 1.8;   // s
+    let goT = 0;      // 1 while the print should be in the window, 0 while it should be home
     const cursor = { x: -1e4, y: -1e4, t: -1e9, in: false };      // the cursor anywhere on the page: in flight the dots react to it as the mist does
     const toShape = (cx, cy) => { const a = art.getBoundingClientRect(); return [scx + (cx - (a.left + a.width / 2)) / k0, scy + (cy - (a.top + a.height / 2)) / k0]; };
     const frame = now => {
       raf = 0; const dt = Math.min(.033, (now - (last || now)) / 1000); last = now;
       const tA = phA ? now - phA.t0 : 1e9; if (phA && tA > phA.tEnd) phA = null;
-      const relaxE = phA ? smooth(0, 1, tA / RELAX) : 1, Pe = phA ? 0 : P;      // the pull waits until the print is back in its original form
-      Ps += (Pe - Ps) * (1 - Math.exp(-dt * 9)); if (Math.abs(Pe - Ps) < .0004) Ps = Pe;
-      const a = art.getBoundingClientRect(), sTop = sec.getBoundingClientRect().top, Cx = a.left + a.width / 2, Cy = a.top + a.height / 2, mistA = clamp(window.heroMist || .32, .15, 1);
+      const relaxE = phA ? smooth(0, 1, tA / RELAX) : 1, target = phA ? 0 : goT;      // the pull waits until the print is back in its original form
+      if (Ps < target) Ps = Math.min(target, Ps + dt / TRAVEL); else if (Ps > target) Ps = Math.max(target, Ps - dt / BACK);      // time-driven, not tied to the scroll speed
+      if (!goT && !phA && Ps === 0 && active) active = false;                                                                       // everything is home again
+      const a = art.getBoundingClientRect(), sTop = sec.getBoundingClientRect().top, Cx = a.left + a.width / 2, Cy = a.top - sTop + a.height / 2, mistA = clamp(window.heroMist || .32, .15, 1);
       if (pointerIn && now - lastPtr > REST_MS) press.target = 0;
       press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN : P_OUT);
       press.x += (press.tx - press.x) * P_FOLLOW; press.y += (press.ty - press.y) * P_FOLLOW;
@@ -276,7 +279,7 @@
       // white is masked: dots show over the dark page above the section and inside the window, never over the white
       ctx.save(); ctx.beginPath(); if (sTop > 0) ctx.rect(0, 0, W, sTop); if (ctx.roundRect) ctx.roundRect(a.left, a.top, a.width, a.height, 6); else ctx.rect(a.left, a.top, a.width, a.height); ctx.clip();
       const mT = cursor.in && now - cursor.t < REST_MS ? 1 : 0, MR2 = 300 * k0 * 300 * k0; mp += (mT - mp) * (mT > mp ? P_IN : P_OUT); if (mp < .004 && !mT) mp = 0;
-      const paths = new Map(), grid = new Map(), CELL = 28 * k0, bandA = 1 - smooth(.55, .95, Ps); let moving = Math.abs(Pe - Ps) > 0 || mp > 0 || !!phA;
+      const paths = new Map(), grid = new Map(), CELL = 28 * k0; let moving = Ps !== target || mp > 0 || !!phA;
       for (let i = 0; i < N; i++) {
         // the dot is a spring on its own target: where the pull front has taken it so far
         const u = clamp((Ps - dly[i]) / (1 - DM)), e = u * u * u * (u * (6 * u - 15) + 10), tx = Cx + Rx[i], ty = Cy + Ry[i], sx0 = lerp(Sx[i], Ox[i], relaxE), sy0 = lerp(Sy[i], Oy[i], relaxE), gx = lerp(sx0, tx, e), gy = lerp(sy0, ty, e);
@@ -292,7 +295,8 @@
         const b = FR.b[i] + (TO.b[i] - FR.b[i]) * tm;
         const zx = (1 - tm) * Math.cos(TAU * FR.f[i]) + tm * Math.cos(TAU * TO.f[i]), zy = (1 - tm) * Math.sin(TAU * FR.f[i]) + tm * Math.sin(TAU * TO.f[i]);
         const f = Math.atan2(zy, zx) / TAU; let w = lerp(FR.w[i], TO.w[i], tm), m = lerp(FR.m[i], TO.m[i], tm);
-        const swell = SWELL * Math.sin(Math.PI * tm), hl = m, dock = smooth(.8, 1, g), pai = pa * dock, r = RR * (.3 + .7 * dock);
+        const dIn = Math.min(px[i] - a.left, a.right - px[i], py[i] - a.top, a.bottom - py[i]);       // the window activates the print: dots grow once they are inside it
+        const swell = SWELL * Math.sin(Math.PI * tm), hl = m, dock = smooth(.8, 1, g) * smooth(0, 50, dIn), pai = pa * dock, r = RR * (.3 + .7 * dock);
         let c = b + f, x = px[i], y = py[i], p = 0, away = 0, gp = 0, soft = 1;
         if (pai > .001) {   // the homepage press, in shape units
           const dx = X0[i] - press.x, dy = Y0[i] - press.y, qq = Math.min(1, Math.exp(-(dx * dx + dy * dy) / pr2) / qNear);
@@ -316,7 +320,6 @@
         const flight = initH[i] > 0 ? lerp(initH[i], clean, relaxE) : clean;       // what the shared print showed relaxes to the clean form
         const fl = flight * (1 + .8 * qm);      // only dots that exist swell near the cursor; no new dots appear
         let hh = lerp(fl, (full + r) * k0, dock); if (hh < .5) continue;
-        const inside = x >= a.left && x <= a.right && y >= a.top && y <= a.bottom;
         // dots never touch: stay clear of every dot already drawn nearby (any dot, not only lattice neighbours)
         const gx0 = Math.floor(x / CELL), gy0 = Math.floor(y / CELL);
         for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) { const L = grid.get((gx0 + ox) * 20011 + gy0 + oy); if (!L) continue;
@@ -326,7 +329,7 @@
         const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WS) : -Math.round(pai * away * DS);
         const band = clamp(Math.floor(y / H * BANDS), 0, BANDS - 1), dc = colourOf(band, heat), ic = initH[i] > 0 ? 1 - relaxE : 0;
         const cr = lerp(dc[0], initC[3*i], ic) >> 4, cg = lerp(dc[1], initC[3*i+1], ic) >> 4, cb = lerp(dc[2], initC[3*i+2], ic) >> 4;
-        const al = Math.round(lerp(mistA, 1, dock) * (inside ? 1 : bandA) * 5), key2 = (((cr << 4 | cg) << 4 | cb) << 3) + al;
+        const al = Math.round(lerp(mistA, 1, dock) * 5), key2 = (((cr << 4 | cg) << 4 | cb) << 3) + al;
         let pt = paths.get(key2); if (!pt) { pt = new Path2D(); paths.set(key2, pt); }
         pt.moveTo(x, y - hh); pt.lineTo(x + hh, y); pt.lineTo(x, y + hh); pt.lineTo(x - hh, y); pt.closePath();
       }
@@ -337,7 +340,7 @@
     const kick = () => { if (!raf && cv.style.display !== 'none') raf = requestAnimationFrame(frame); };
     addEventListener('pointermove', e => {
       if (e.pointerType !== 'touch') { cursor.x = e.clientX; cursor.y = e.clientY; cursor.t = performance.now(); cursor.in = true; if (active) kick(); }
-      if (!active || P < .98 || e.pointerType === 'touch') return;      // the hero-style press works once the print has docked
+      if (!active || Ps < .98 || e.pointerType === 'touch') return;      // the hero-style press works once the print has docked
       pointerIn = true; lastPtr = performance.now(); const [x, y] = toShape(e.clientX, e.clientY);
       if (press.amt < .5) { press.x = x; press.y = y; }
       press.tx = x; press.ty = y; press.target = 1;
@@ -349,23 +352,22 @@
       const t0 = performance.now(); hov = { d, t0, tEnd: t0 + mx / SPEED + LOCAL }; };
     document.documentElement.addEventListener('pointerleave', () => { pointerIn = false; cursor.in = false; press.target = 0; kick(); });
     layout(); addEventListener('resize', () => { layout(); kick(); });
-    on = { setP: p => {
-      P = p; const top = sec.getBoundingClientRect().top;
-      if (!active) { if (top < innerHeight * 1.6 && p <= .001) capOn(); else if (top > innerHeight * 2.2) capOff(); }
-      if (p > .001 && !active) {             // the pull begins: take the shape the shared print has now, then morph into the next one on the way
-        layout(); const k = detect(), A0 = copy(F[k]), A1 = makeTo(0, A0), d = new Float32Array(N); let mx = 0;
-        for (let i = 0; i < N; i++) { d[i] = Math.hypot(X0[i] - scx, Y0[i] - scy); if (d[i] > mx) mx = d[i]; }
-        phA = { t0: performance.now(), from: A0, to: A1, d, tEnd: Math.max(RELAX, mx / SPEED + MORPH_A) + 60 };      // first: back to the original form
-        From = copy(A1); To = makeTo(1, From); cur = 1; hov = null;
-        mp = cursor.in && performance.now() - cursor.t < REST_MS ? 1 : 0;
-        haveInit = takeSnapshot() > 0; if (!haveInit) initH.fill(0); capOff(); Ps = 0;
-        active = true; cv.style.transition = 'none'; cv.style.opacity = '0'; cv.style.display = 'block';
-        requestAnimationFrame(() => { cv.style.transition = 'opacity .35s ease'; cv.style.opacity = '1'; });
-        setTimeout(() => { if (active) shared.style.visibility = 'hidden'; }, 400); }      // crossfade from the shared print
-      else if (p <= .001 && active) { active = false; }      // dots finish their way home, then the shared print takes over again
-      if (Math.abs(lw - art.offsetWidth) > 1 || Math.abs(lh - art.offsetHeight) > 1) layout();
-      if (p < .98) { press.target = 0; }
-      kick(); }, ready: () => active && !phA, kick };
+    const activate = () => {             // the pull begins: take the shape the shared print has now, then morph into the next one on the way
+      layout(); const k = detect(), A0 = copy(F[k]), A1 = makeTo(0, A0), d = new Float32Array(N); let mx = 0;
+      for (let i = 0; i < N; i++) { d[i] = Math.hypot(X0[i] - scx, Y0[i] - scy); if (d[i] > mx) mx = d[i]; }
+      phA = { t0: performance.now(), from: A0, to: A1, d, tEnd: Math.max(RELAX, mx / SPEED + MORPH_A) + 60 };      // first: back to the original form
+      From = copy(A1); To = makeTo(1, From); cur = 1; hov = null;
+      mp = cursor.in && performance.now() - cursor.t < REST_MS ? 1 : 0;
+      haveInit = takeSnapshot() > 0; if (!haveInit) initH.fill(0); capOff(); Ps = 0;
+      active = true; cv.style.transition = 'none'; cv.style.opacity = '0'; cv.style.display = 'block';
+      requestAnimationFrame(() => { cv.style.transition = 'opacity .35s ease'; cv.style.opacity = '1'; });
+      setTimeout(() => { if (active) shared.style.visibility = 'hidden'; }, 400); };      // crossfade from the shared print
+    on = {
+      near: n => { if (!active) { if (n) capOn(); else capOff(); } },      // section 04 is coming: record the shared print's last frame
+      go: f => { goT = f ? 1 : 0; if (f && !active) activate();
+        if (Math.abs(lw - art.offsetWidth) > 1 || Math.abs(lh - art.offsetHeight) > 1) layout();
+        if (!f) press.target = 0;
+        kick(); } };
     update();
   };
 
@@ -377,51 +379,16 @@
     [1500, 2700, 4000].forEach((t, i) => setTimeout(() => msgs[i].classList.add('on'), reduced ? 0 : t));
     setTimeout(() => rt.classList.add('on'), reduced ? 0 : 4900);
   };
-  // two gestures. 1st scroll down to the edge of the section: the page stops just before section 04 shows, the print relaxes to its original form.
-  // 2nd scroll: the page scrolls itself to the end of the section (3.4 s, slow at first) while the print is pulled into the window.
-  // states: idle -> relax (input blocked) -> ready (waits for a fresh scroll down) -> seq (input blocked) -> done (scroll-linked, reversible)
-  let st = 'idle', lockY = 0, seq = null, lastY = scrollY, lastWheel = 0, seqRaf = 0, tY = 0, tStart = 0, relaxT0 = 0, readyT0 = 0, queued = false;
-  const SEQ = 3400, DOWN = ['PageDown', 'ArrowDown', ' ', 'End'], KEYS = [...DOWN, 'PageUp', 'ArrowUp', 'Home'];
+  // Section 04 slides up over section 03, which stays pinned behind it. No scroll takeover: as section 04 approaches, the print relaxes to its original
+  // form and flows (time-driven, ~2.8 s) to where the window will be once the section covers the screen; the white sheet rises over it and the
+  // window uncovers the print. Scrolling back up sends the print home. Needs: section 03 pinned (sticky) and --s04-overlap on the section (see css).
+  const TRIG = 1.5, UNTRIG = 1.7;       // in viewport heights: start when the section's top is closer than TRIG, go home when it is further than UNTRIG
   const pOf = () => clamp((innerHeight - sec.getBoundingClientRect().top) / (innerHeight * .9));
-  const gate = e => {
-    let down = true; const now = performance.now();
-    if (e.type === 'keydown') { if (!KEYS.includes(e.key)) return; down = DOWN.includes(e.key) && !e.shiftKey; }
-    else if (e.type === 'wheel') down = e.deltaY > 0;
-    else if (e.type === 'touchmove') down = tY - e.touches[0].clientY > 6;
-    const gap = now - lastWheel; if (e.type === 'wheel') lastWheel = now;
-    if (st === 'seq') { e.preventDefault(); return; }
-    if (st === 'relax') { e.preventDefault();      // a fresh scroll down while the print is still relaxing counts as the second gesture: it is remembered and runs as soon as the print is ready
-      const long = now - relaxT0 > 1100;       // still scrolling after the tail of the first gesture must have died out: that is intent too
-      if (down && now - relaxT0 > 250 && (long || (e.type === 'wheel' ? gap > 140 : e.type === 'touchmove' ? tStart > relaxT0 : true))) queued = true; return; }
-    if (st === 'ready') { if (!down) return; e.preventDefault(); if (now - readyT0 > 60) startSeq(); } };
-  ['wheel', 'touchmove', 'keydown'].forEach(t => addEventListener(t, gate, { passive: false }));
-  addEventListener('touchstart', e => { tY = e.touches[0].clientY; tStart = performance.now(); }, { passive: true });
-  const tick = () => {
-    if (st !== 'seq') return; const t = clamp((performance.now() - seq.t0) / SEQ), q = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    scrollTo(0, lerp(seq.y0, seq.y1, q)); on.setP(Math.max(.002, q));
-    if (t >= 1) { st = 'done'; seq = null; update(); return; }
-    seqRaf = requestAnimationFrame(tick); };
-  const startSeq = () => { const top = sec.getBoundingClientRect().top; st = 'seq'; seq = { t0: performance.now(), y0: scrollY, y1: scrollY + Math.max(0, top - innerHeight * .1) }; tick(); };
-  const startRelax = () => { st = 'relax'; relaxT0 = performance.now(); queued = false;
-    const top = sec.getBoundingClientRect().top; lockY = top < innerHeight + 30 ? scrollY + top - (innerHeight + 30) : scrollY;   // if a fast scroll overshot, step back so section 04 stays hidden
-    if (Math.abs(lockY - scrollY) > 1) scrollTo(0, lockY);
-    on.setP(.002);
-    const w = () => { if (st !== 'relax') return; on.kick(); const now = performance.now();
-      if (on.ready() || now - relaxT0 > 2800) { st = 'ready'; readyT0 = now; if (queued) startSeq(); } else requestAnimationFrame(w); };
-    requestAnimationFrame(w); };      // the time limit above: never stay stuck
   const update = () => {
     raf = 0;
-    const s = sec.getBoundingClientRect(), p = reduced ? 1 : pOf();
-    if (st === 'seq') { /* the sequence drives everything */ }
-    else if (st === 'relax' || st === 'ready') {
-      if (scrollY > lockY + 1) scrollTo(0, lockY);                      // nothing but the second gesture moves the page on
-      else if (scrollY < lockY - 80) { st = 'idle'; on && on.setP(p); } }  // the reader went back up: start over
-    else {
-      if (st === 'done' && p < .02) st = 'idle';
-      if (st === 'idle' && on && !reduced && s.top < innerHeight + 60 && scrollY > lastY) startRelax();
-      else if (on) on.setP(p); }
-    lastY = scrollY;
-    if (p > .45) reveal();
+    const top = sec.getBoundingClientRect().top, vh = innerHeight;
+    if (on) { on.near(top < vh * 2.4); if (reduced) on.go(top < vh * 1.5); else if (top < vh * TRIG) on.go(true); else if (top > vh * UNTRIG) on.go(false); }
+    if (pOf() > .45) reveal();
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
   addEventListener('scroll', kick, { passive: true }); addEventListener('resize', kick);
