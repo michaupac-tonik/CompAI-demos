@@ -63,11 +63,11 @@
   .sec-04 .fc p { margin: 0; }
   .sec-04 .fc .re { margin: 7px 0 0; padding-top: 7px; border-top: 1px solid #e6e6e6; color: #515151; }
   /* scattered along both axes on a straight grid (no rotation), some past the edge of the window; the middle of the print stays free. All neutral white: red only in details */
-  .sec-04 .fc.a { left: -7%; top: 4%; }
-  .sec-04 .fc.b { right: -5%; top: 31%; width: min(222px, 50%); }
-  .sec-04 .fc.c { left: 4%; bottom: 7%; }
-  .sec-04 .fc.d { right: 7%; top: 9%; width: auto; padding: 6px 10px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; }
+  .sec-04 .fc.a { left: -7%; top: 24px; }
+  .sec-04 .fc.d { right: 6%; top: 138px; width: auto; padding: 6px 10px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; }
   .sec-04 .fc.d::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: #F5380E; }
+  .sec-04 .fc.b { right: -3%; top: 36%; width: min(222px, 50%); }
+  .sec-04 .fc.c { left: 4%; bottom: 24px; }
   .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 72px; min-width: 0; }
   .sec-04 .eyebrow-04::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 10px; background: #F5380E; transform: rotate(45deg) translateY(-1px); }
   .sec-04 .eyebrow-04 { margin: 0 0 24px; font: 300 var(--t-label)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
@@ -76,35 +76,57 @@
   .sec-04 .tags-04 { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; padding: 0; list-style: none; }
   .sec-04 .tags-04 li { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: 99px; color: #343434; transition: border-color .5s ease, color .5s ease, background-color .5s ease; }
   .sec-04 .tags-04 li.on { border-color: #F5380E; color: #C12000; background: rgba(245, 56, 14, .08); }
-  /* the conversation overlaps the window; UI kept tight */
-  .sec-04 .chat-04 { width: min(100%, 560px); margin: 36px 0 0 calc(-1 * clamp(48px, 5vw, 96px)); position: relative; z-index: 2; background: #fff; border: 1px solid #e6e6e6; border-radius: 6px; overflow: hidden; font: 300 14px/1.4 var(--sans); }      /* fixed max width: it does not stretch on wide screens */
-  .sec-04 .chat-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 0; background: #f7f7f7; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #515151; }
-  .sec-04 .chat-h .id { display: inline-flex; align-items: center; gap: 8px; }
-  .sec-04 .chat-h .id svg { width: 22px; height: 22px; }
-  .sec-04 .chat-h .id > span { display: grid; gap: 3px; } .sec-04 .chat-h .id em { font-style: normal; color: #848484; }
-  .sec-04 .chat-h .live { display: inline-flex; align-items: center; gap: 6px; }
-  .sec-04 .chat-h .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #F5380E; }
-  .sec-04 .chat-h { position: relative; } .sec-04 .chat-h::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, #F5380E, #F37300 55%, #F49900); }
-  .sec-04 .chat-b { padding: 14px 16px 16px; display: grid; gap: 10px; }
-  .sec-04 .msg { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; align-items: start; max-width: 88%; opacity: 0; filter: blur(7px); transform: translateY(10px); transition: opacity .6s ease, filter .7s ease, transform .8s var(--ease); }
+  /* the conversation, Slack-like: header with the person and status, rows without bubbles (the expert's rows tinted orange), thread links, composer.
+     Four looks via [data-v] on .chat-04 (1 light with shadow, 2 dark, 3 cream, 4 with a dark channel rail); the page keeps one. */
+  .sec-04 .chat-04 { --paper: #fff; --ink: #161616; --line: #cfcfcf; --tint: rgba(244, 153, 0, .14); --name: #161616; --muted: #696969; --field: #fff; --fieldline: #bdbdbd; --me: #161616; --meink: #fcfcfc;
+    display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 560px); margin: 36px 0 0 calc(-1 * clamp(32px, 3vw, 64px)); position: relative; z-index: 2; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font: 300 14px/1.4 var(--sans);
+    box-shadow: 0 1px 2px rgba(22, 22, 22, .08), 0 24px 48px -14px rgba(22, 22, 22, .3); }      /* fixed max width: it does not stretch on wide screens, a little wider on very large ones (below) */
+  .sec-04 .chat-04::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 1; background: linear-gradient(90deg, #F5380E, #F37300 55%, #F49900); }
+  .sec-04 .chat-rail { display: none; }
+  .sec-04 .chat-main { min-width: 0; display: flex; flex-direction: column; }
+  .sec-04 .chat-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px 10px; border-bottom: 1px solid var(--line); }
+  .sec-04 .chat-h .id { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+  .sec-04 .chat-h .id > span { display: grid; gap: 3px; } .sec-04 .chat-h b { font-weight: 400; font-size: 15px; color: var(--name); }
+  .sec-04 .chat-h em { font: 300 11px/1.2 var(--mono); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .sec-04 .chat-h .live { display: inline-flex; align-items: center; gap: 6px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .sec-04 .chat-h .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #F5380E; }
+  .sec-04 .chat-b { padding: 6px 0 4px; display: grid; }
+  .sec-04 svg.av.sq, .sec-04 .av.me { width: 32px; height: 32px; border-radius: 6px; flex: none; box-sizing: border-box; }
+  .sec-04 svg.av.sq { padding: 4px; background: #F49900; color: #1a0f00; }
+  .sec-04 .av.me { display: grid; place-items: center; background: var(--me); color: var(--meink); font: 400 13px/1 var(--sans); }
+  .sec-04 .msg { display: grid; grid-template-columns: 32px minmax(0, 1fr); column-gap: 10px; align-items: start; padding: 8px 14px; opacity: 0; filter: blur(7px); transform: translateY(10px); transition: opacity .6s ease, filter .7s ease, transform .8s var(--ease); }
   .sec-04 .msg.on { opacity: 1; filter: none; transform: none; }
-  .sec-04 .msg .bd { position: relative; } .sec-04 .msg.typing .bd > * { opacity: 0; } .sec-04 .msg .bd > * { transition: opacity .35s ease; }
-  .sec-04 .msg.typing .bd::after { content: ""; position: absolute; left: 14px; top: 50%; width: 22px; height: 4px; margin-top: -2px; background: radial-gradient(circle, #848484 1.6px, transparent 2px) 0 0 / 8px 4px repeat-x; animation: s04dots 1s steps(3) infinite; }
-  @keyframes s04dots { 0% { clip-path: inset(0 100% 0 0); } 34% { clip-path: inset(0 66% 0 0); } 67% { clip-path: inset(0 33% 0 0); } 100% { clip-path: inset(0); } }
-  .sec-04 .msg .av { width: 24px; height: 24px; display: block; }
-  .sec-04 .msg .bd { background: #F49900; border: 1px solid #F49900; color: #1a0f00; border-radius: 6px; padding: 7px 10px; }      /* the expert's bubbles: brand orange */
-  .sec-04 .msg.ex .who { color: #5a2600; }
-  .sec-04 .msg .who { display: block; margin: 0 0 3px; font: 300 10px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
+  .sec-04 .msg.ex { background: var(--tint); }      /* the expert's rows: brand orange tint */
+  .sec-04 .msg .bd { position: relative; min-width: 0; } .sec-04 .msg .bd > * { transition: opacity .35s ease; }
+  .sec-04 .msg .who { display: flex; align-items: baseline; gap: 8px; margin: 0 0 2px; } .sec-04 .msg .who b { font-weight: 400; color: var(--name); }
+  .sec-04 .msg .who i { font: 300 10px/1 var(--mono); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: #C12000; border: 1px solid currentColor; border-radius: 3px; padding: 2px 4px; }
+  .sec-04 .msg .who time { font: 300 11px/1 var(--mono); color: var(--muted); }
   .sec-04 .msg p { margin: 0; }
-  .sec-04 .msg.me { grid-template-columns: minmax(0, 1fr); justify-self: end; }
-  .sec-04 .msg.me .bd { background: #161616; border-color: #161616; color: #fcfcfc; }
-  .sec-04 .msg.me .who { color: #b5b5b5; }
-  .sec-04 .reply-time { justify-self: start; margin-left: 34px; display: inline-flex; align-items: center; gap: 6px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; opacity: 0; transition: opacity .6s ease .2s; }
+  .sec-04 .msg.typing .bd > * { opacity: 0; }
+  .sec-04 .msg.typing .bd::after { content: ""; position: absolute; left: 0; top: 24px; width: 24px; height: 4px; background: radial-gradient(circle, #848484 1.6px, transparent 2px) 0 0 / 8px 4px repeat-x; animation: s04dots 1s steps(3) infinite; }
+  @keyframes s04dots { 0% { clip-path: inset(0 100% 0 0); } 34% { clip-path: inset(0 66% 0 0); } 67% { clip-path: inset(0 33% 0 0); } 100% { clip-path: inset(0); } }
+  .sec-04 .reply-time { display: flex; align-items: center; gap: 8px; padding: 2px 14px 8px 56px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; opacity: 0; transition: opacity .6s ease .2s; }
   .sec-04 .reply-time.on { opacity: 1; }
-  .sec-04 .reply-time::before { content: ""; width: 14px; height: 1px; background: currentColor; }
+  .sec-04 .reply-time::before { content: ""; width: 12px; height: 10px; border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; border-bottom-left-radius: 4px; transform: translateY(-4px); }
+  .sec-04 .chat-f { margin: 4px 14px 14px; padding: 10px 12px; background: var(--field); border: 1px solid var(--fieldline); border-radius: 8px; color: #848484; display: flex; justify-content: space-between; align-items: center; }
+  .sec-04 .chat-f::after { content: ""; width: 14px; height: 14px; background: #F5380E; clip-path: polygon(0 0, 100% 50%, 0 100%, 20% 50%); opacity: .85; }
+  /* 2: dark */
+  .sec-04 .chat-04[data-v="2"] { --paper: #161616; --ink: #f1f1f1; --line: #2e2e2e; --tint: rgba(244, 153, 0, .16); --name: #fff; --muted: #a3a3a3; --field: #202020; --fieldline: #3a3a3a; --me: #f1f1f1; --meink: #161616; box-shadow: 0 24px 48px -14px rgba(22, 22, 22, .55); }
+  .sec-04 .chat-04[data-v="2"] .msg .who i, .sec-04 .chat-04[data-v="2"] .reply-time { color: #FF6A4A; }
+  /* 3: cream */
+  .sec-04 .chat-04[data-v="3"] { --paper: #FFF8E4; --line: rgba(245, 56, 14, .32); --tint: rgba(244, 153, 0, .24); --muted: #7a6a52; --field: #fff; --fieldline: rgba(245, 56, 14, .3); box-shadow: 0 1px 2px rgba(22, 22, 22, .06), 0 24px 48px -16px rgba(193, 32, 0, .28); }
+  /* 4: dark channel rail */
+  .sec-04 .chat-04[data-v="4"] { grid-template-columns: 148px minmax(0, 1fr); --line: #d6d6d6; }
+  .sec-04 .chat-04[data-v="4"] .chat-rail { display: block; background: #161616; color: #cfcfcf; padding: 16px 10px 12px; font: 300 13px/1.3 var(--sans); }
+  .sec-04 .chat-rail b { display: block; margin: 0 6px 14px; font-weight: 400; color: #fff; font-size: 14px; }
+  .sec-04 .chat-rail p { margin: 12px 6px 6px; font: 300 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #848484; }
+  .sec-04 .chat-rail span { display: flex; align-items: center; justify-content: space-between; padding: 5px 6px; border-radius: 5px; color: #b9b9b9; }
+  .sec-04 .chat-rail span.on { background: rgba(244, 153, 0, .22); color: #fff; }
+  .sec-04 .chat-rail span i { width: 7px; height: 7px; border-radius: 50%; background: #F5380E; }
+  .sec-04 .chat-rail span u { text-decoration: none; width: 7px; height: 7px; border-radius: 50%; background: #3ccf6a; }
   .js .sec-04 .rv { opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .9s var(--ease) calc(var(--d, 0) * .12s); }
   .js .sec-04 .rv.in { opacity: 1; filter: none; transform: none; }
-  @media (min-width: 1600px) { .sec-04 .chat-04 { width: min(100%, 640px); font-size: 15px; } .sec-04 .chat-b { padding: 16px 18px 18px; gap: 12px; } .sec-04 .msg .who { font-size: 11px; } .sec-04 .chat-h { padding: 13px 18px; } }
+  @media (min-width: 1600px) { .sec-04 .chat-04 { width: min(100%, 660px); font-size: 15px; } .sec-04 .chat-04[data-v="4"] { grid-template-columns: 170px minmax(0, 1fr); } .sec-04 .msg { padding: 10px 18px; } .sec-04 .chat-h { padding: 14px 18px 12px; } .sec-04 .reply-time { padding-left: 60px; } }
   @media (max-width: 1023px) { .sec-04 .fc.a { left: 3%; } .sec-04 .fc.b { right: 3%; } .sec-04 .grid-04 { grid-template-columns: minmax(0, 1fr); min-height: 0; } .sec-04 .art-04 { min-height: 480px; } .sec-04 .txt-04 { padding: 36px 0 0; } .sec-04 .chat-04 { margin-left: 0; } .sec-04 .msg { max-width: 100%; } .sec-04 .fc.c { display: none; } }
   @media (prefers-reduced-motion: reduce) { .js .sec-04 .rv, .sec-04 .msg, .sec-04 .reply-time, .sec-04 .fc { opacity: 1; filter: none; transform: none; transition: none; } }
   /* @section:04 css:end */
@@ -149,16 +171,20 @@
         <h2 id="sec-04-title" class="rv" style="--d:1">An extension of your team.</h2>
         <p class="lead-04 rv" style="--d:2">Compliance experts work alongside the software. They reach out before you ask and answer within minutes.</p>
         <ul class="tags-04 rv" style="--d:3"><li>Real conversation</li><li>Response time</li></ul>
-        <div class="chat-04 rv" style="--d:4" role="log" aria-label="Sample conversation with a compliance expert">
-          <div class="chat-h"><span class="id"><svg class="av" aria-hidden="true"></svg><span>Compliance expert<em>SOC 2 · Access reviews</em></span></span><span class="live">Online</span></div>
-          <div class="chat-b">
-            <div class="msg ex" data-tag="0"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:02</span><p>Your auditor asked for Q3 access reviews. I pulled them from Okta and flagged two stale accounts. Want me to open the removal tickets?</p></div></div>
-            <div class="msg me"><div class="bd"><span class="who">You · 09:03</span><p>Yes. Can you check contractors too?</p></div></div>
-            <div class="msg ex"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:06</span><p>Done. Three contractor accounts were inactive. Tickets are open and I'll confirm when they close.</p></div></div>
-            <span class="reply-time" data-tag="1">Replied in 3 min</span>
-            <div class="msg me"><div class="bd"><span class="who">You · 09:11</span><p>Does this affect the audit window?</p></div></div>
-            <div class="msg ex"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:13</span><p>No. The window opens Monday and the evidence is already in. I'll flag anything that changes before then.</p></div></div>
-            <span class="reply-time" data-tag="1">Replied in 2 min</span>
+        <div class="chat-04 rv" style="--d:4" data-v="1" role="log" aria-label="Sample conversation with a compliance expert">
+          <div class="chat-rail" aria-hidden="true"><b>Comp AI</b><p>Channels</p><span class="on"># access-reviews<i></i></span><span># audit-prep</span><span># vendors<i></i></span><p>Direct</p><span>Compliance expert<u></u></span></div>
+          <div class="chat-main">
+            <div class="chat-h"><span class="id"><svg class="av sq" aria-hidden="true"></svg><span><b>Compliance expert</b><em>SOC 2 · Access reviews</em></span></span><span class="live">Online</span></div>
+            <div class="chat-b">
+              <div class="msg ex" data-tag="0"><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>09:02</time></span><p>Your auditor asked for Q3 access reviews. I pulled them from Okta and flagged two stale accounts. Want me to open the removal tickets?</p></div></div>
+              <div class="msg me"><span class="av me">Y</span><div class="bd"><span class="who"><b>You</b><time>09:03</time></span><p>Yes. Can you check contractors too?</p></div></div>
+              <div class="msg ex"><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>09:06</time></span><p>Done. Three contractor accounts were inactive. Tickets are open and I'll confirm when they close.</p></div></div>
+              <span class="reply-time" data-tag="1">Replied in 3 min</span>
+              <div class="msg me"><span class="av me">Y</span><div class="bd"><span class="who"><b>You</b><time>09:11</time></span><p>Does this affect the audit window?</p></div></div>
+              <div class="msg ex"><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>09:13</time></span><p>No. The window opens Monday and the evidence is already in. I'll flag anything that changes before then.</p></div></div>
+              <span class="reply-time" data-tag="1">Replied in 2 min</span>
+            </div>
+            <div class="chat-f" aria-hidden="true">Message Compliance expert</div>
           </div>
         </div>
       </div>
@@ -461,6 +487,13 @@
 })();
 </script>
 <!-- @section:04 js:end -->
+<!-- preview only: switch the look of the chat (1 light, 2 dark, 3 cream, 4 with channel rail); also ?chat=N -->
+<div id="chat-switch" style="position:fixed;left:12px;bottom:12px;z-index:50;display:flex;gap:4px;align-items:center;padding:6px 8px;background:rgba(22,22,22,.88);color:#fcfcfc;border-radius:6px;font:300 11px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase">Chat
+  <button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button></div>
+<style>#chat-switch button { font: inherit; color: inherit; background: transparent; border: 1px solid rgba(252,252,252,.35); border-radius: 4px; padding: 4px 8px; cursor: pointer; } #chat-switch button.on { background: #fcfcfc; color: #161616; }</style>
+<script>(() => { const chat = document.querySelector('.chat-04'), btns = [...document.querySelectorAll('#chat-switch button')];
+  const set = v => { chat.dataset.v = v; btns.forEach(b => b.classList.toggle('on', b.dataset.v === String(v))); try { const u = new URL(location); u.searchParams.set('chat', v); history.replaceState(null, '', u); } catch (e) {} };
+  btns.forEach(b => b.addEventListener('click', () => set(b.dataset.v))); set(new URLSearchParams(location.search).get('chat') || '1'); })();</script>
 <script src="../../hero/comp-ai-hero-v01/shapes-phase.js"></script>
 <script src="../shared/mist.js"></script>
 </body>
