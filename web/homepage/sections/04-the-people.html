@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI · 04 the people</title>
+<link rel="icon" href="../../hero/comp-ai-hero-v01/img/logo-mark.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add('js')</script>
+<!--
+  Comp AI · homepage section 04 "the people", isolated from index.html for UI work.
+  Only the three @section:04 blocks (css, html, js) are carried into index.html by
+  tools/integrate-section.py; everything else here (head, base styles, mist, dev bits) is for previewing.
+  Rules: prefix your class names with .sec-04 (the blocks end up in one stylesheet with the other sections),
+  use the variables of the base :root (--mint, --cyan, --ink, --white, --mono, --sans, --ease, --edge, .wrap),
+  keep dev code outside the markers. Behind the section the mist from ../shared/mist.js stands in for the hero's print.
+-->
+<style>
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Light-Trial.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+
+  :root {
+    --black: #000;
+    --ink: #161616;
+    --white: #fcfcfc;
+    --mint: #24ff63;
+    --cyan: #00ffee;
+    --sans: "Favorit", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Favorit Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --edge: 64px;
+    --ease: cubic-bezier(.2, .7, .1, 1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--black); color: var(--white); }
+  body { font: 300 16px/1.45 var(--sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  :focus-visible { outline: 1.5px solid var(--mint); outline-offset: 3px; }
+  .wrap { width: min(1792px, 100% - 2 * var(--edge)); margin-inline: auto; }
+
+  /* inherited from the hero's .task (applies to the board's task cells on the homepage too) */
+  .task { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, filter .5s; }
+  @media (max-width: 1023px) { .task { white-space: normal; } }
+  @media (max-width: 600px) { :root { --edge: 16px; } .task { flex: 1; } }
+
+  /* @section:04 css:start */
+  /* ==== 04 · The people. The one light section (brand white, neutral-100). The dark of sections 02 and 03 does not end: it contracts
+     into a fixed-size window on the left; the print (dots on a canvas, see the script) falls into it. Type sizes follow the styleguide v0.1 used in section 03. ==== */
+  .sec-04 { --t-label: 13px; --t-body: 16px; --t-lead-m: 20px; --t-display-l: 53px;
+    position: relative; z-index: 1; color: #161616; padding: 72px 0; min-height: 100svh; display: grid; align-items: center; }
+  @media (max-width: 1023px) { .sec-04 { --t-lead-m: 16px; --t-display-l: 33px; padding: 40px 0 56px; } }
+  .sec-04::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #f8f8f8; }
+  .sec-04 .grid-04 { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: stretch; min-height: min(84svh, 860px); }
+  .sec-04 .art-04 { position: relative; border-radius: 6px; min-height: 440px; background: #000; }   /* fixed window; the dots (a fixed canvas behind .grid-04) fall into it */
+  /* fragments of real messages float over the print: one conversation each, so there is clearly more going on than one chat */
+  .sec-04 .fc { position: absolute; z-index: 1; width: min(300px, 62%); padding: 11px 13px 12px; background: #fcfcfc; color: #161616; border-radius: 6px; box-shadow: 0 18px 44px rgba(0,0,0,.4); font: 300 14px/1.38 var(--sans); opacity: 0; filter: blur(7px); transform: translateY(12px); transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .9s var(--ease) calc(var(--d, 0) * .12s); }
+  .sec-04 .fc.in { opacity: 1; filter: none; transform: none; }
+  .sec-04 .fc .who { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
+  .sec-04 .fc .who svg { width: 18px; height: 18px; flex: none; }
+  .sec-04 .fc .who time { margin-left: auto; }
+  .sec-04 .fc p { margin: 0; }
+  .sec-04 .fc .re { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid #e6e6e6; color: #515151; }
+  .sec-04 .fc.a { left: 8%; top: 9%; } .sec-04 .fc.b { right: 7%; top: 31%; } .sec-04 .fc.c { left: 12%; top: 58%; }
+  .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 72px; min-width: 0; }
+  .sec-04 .eyebrow-04 { margin: 0 0 24px; font: 300 var(--t-label)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
+  .sec-04 h2 { margin: 0; font-weight: 300; font-size: var(--t-display-l); line-height: 1; letter-spacing: -.04em; }
+  .sec-04 .lead-04 { margin: 20px 0 0; max-width: 28em; font-size: var(--t-lead-m); line-height: 1.4; letter-spacing: -.01em; color: #343434; text-wrap: pretty; }
+  .sec-04 .tags-04 { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; padding: 0; list-style: none; }
+  .sec-04 .tags-04 li { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: 99px; color: #343434; }
+  /* the conversation overlaps the window; UI kept tight */
+  .sec-04 .chat-04 { margin: 36px 0 0 calc(-1 * clamp(48px, 9vw, 176px)); position: relative; z-index: 2; background: #fff; border: 1px solid #e6e6e6; border-radius: 6px; box-shadow: 0 24px 60px rgba(0,0,0,.14); overflow: hidden; font: 300 14px/1.4 var(--sans); }
+  .sec-04 .chat-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #ececec; background: #f7f7f7; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #515151; }
+  .sec-04 .chat-h .id { display: inline-flex; align-items: center; gap: 8px; }
+  .sec-04 .chat-h .id svg { width: 18px; height: 18px; }
+  .sec-04 .chat-h .live { display: inline-flex; align-items: center; gap: 6px; }
+  .sec-04 .chat-h .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #00b640; }
+  .sec-04 .chat-b { padding: 14px 16px 16px; display: grid; gap: 10px; }
+  .sec-04 .msg { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; align-items: start; max-width: 88%; opacity: 0; filter: blur(7px); transform: translateY(10px); transition: opacity .6s ease, filter .7s ease, transform .8s var(--ease); }
+  .sec-04 .msg.on { opacity: 1; filter: none; transform: none; }
+  .sec-04 .msg .av { width: 24px; height: 24px; display: block; }
+  .sec-04 .msg .bd { background: #f1f1f1; border-radius: 6px; padding: 8px 11px; }
+  .sec-04 .msg .who { display: block; margin: 0 0 3px; font: 300 10px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
+  .sec-04 .msg p { margin: 0; }
+  .sec-04 .msg.me { grid-template-columns: minmax(0, 1fr); justify-self: end; }
+  .sec-04 .msg.me .bd { background: #161616; color: #fcfcfc; }
+  .sec-04 .msg.me .who { color: #b5b5b5; }
+  .sec-04 .reply-time { justify-self: start; margin-left: 34px; display: inline-flex; align-items: center; gap: 6px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #007a71; opacity: 0; transition: opacity .6s ease .2s; }
+  .sec-04 .reply-time.on { opacity: 1; }
+  .sec-04 .reply-time::before { content: ""; width: 14px; height: 1px; background: currentColor; }
+  .js .sec-04 .rv { opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .9s var(--ease) calc(var(--d, 0) * .12s); }
+  .js .sec-04 .rv.in { opacity: 1; filter: none; transform: none; }
+  @media (max-width: 1023px) { .sec-04 .grid-04 { grid-template-columns: minmax(0, 1fr); min-height: 0; } .sec-04 .art-04 { min-height: 480px; } .sec-04 .txt-04 { padding: 36px 0 0; } .sec-04 .chat-04 { margin-left: 0; } .sec-04 .msg { max-width: 100%; } .sec-04 .fc.c { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .js .sec-04 .rv, .sec-04 .msg, .sec-04 .reply-time, .sec-04 .fc { opacity: 1; filter: none; transform: none; transition: none; } }
+  /* @section:04 css:end */
+
+  .dev-prev { position: relative; z-index: 1; height: 110svh; display: flex; align-items: flex-end; padding: 32px var(--edge); font: 300 12px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.4); }
+  /* mist: the hero's print after it dissolved (fixed behind the page, as on the homepage) */
+  #print { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; opacity: .32; transition: opacity 1.2s var(--ease); }
+</style>
+</head>
+<body>
+<canvas id="print" aria-hidden="true"></canvas>
+<main>
+<div class="dev-prev" aria-hidden="true"></div>   <!-- preview only: stands in for sections 01-03 so the transition can be scrolled; not part of the section -->
+<!-- @section:04 html:start -->
+<section class="sec-04" id="sec-04" aria-labelledby="sec-04-title">
+  <div class="wrap">
+    <div class="grid-04">
+      <!-- WINDOW (fixed size): the flowing print is drawn into it by the script. Cards stay above the dots. -->
+      <div class="art-04" data-slot="illustration">
+        <!-- WORKING SAMPLE DATA (wording, times, names of tools): confirm before launch -->
+        <div class="fc a" style="--d:0"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>2 min ago</time></span><p>The vendor you added yesterday has no sub-processor list. I've asked them for it and will review it when it lands.</p></div>
+        <div class="fc b" style="--d:1"><span class="who"><svg class="av" aria-hidden="true"></svg>Expert<time>Mon 08:40</time></span><p>Your audit window opens today. The evidence is ready, and I checked it twice.</p></div>
+        <div class="fc c" style="--d:2"><span class="who"><svg class="av" aria-hidden="true"></svg>You<time>Wed</time></span><p>Can this wait until Friday?</p><p class="re">Yes. I'll hold it and ping you Thursday.</p></div>
+      </div>
+      <div class="txt-04">
+        <p class="eyebrow-04 rv" style="--d:0">The people</p>
+        <h2 id="sec-04-title" class="rv" style="--d:1">An extension of your team.</h2>
+        <p class="lead-04 rv" style="--d:2">Compliance experts work alongside the software. They reach out before you ask and answer within minutes.</p>
+        <ul class="tags-04 rv" style="--d:3"><li>Real conversation</li><li>Response time</li></ul>
+        <div class="chat-04 rv" style="--d:4" role="log" aria-label="Sample conversation with a compliance expert">
+          <div class="chat-h"><span class="id"><svg class="av" aria-hidden="true"></svg>Comp AI expert</span><span class="live">Online</span></div>
+          <div class="chat-b">
+            <div class="msg ex"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:02</span><p>Your auditor asked for Q3 access reviews. I pulled them from Okta and flagged two stale accounts. Want me to open the removal tickets?</p></div></div>
+            <div class="msg me"><div class="bd"><span class="who">You · 09:03</span><p>Yes. Can you check contractors too?</p></div></div>
+            <div class="msg ex"><svg class="av" aria-hidden="true"></svg><div class="bd"><span class="who">Expert · 09:06</span><p>Done. Three contractor accounts were inactive. Tickets are open and I'll confirm when they close.</p></div></div>
+            <span class="reply-time">Replied in 3 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- @section:04 html:end -->
+</main>
+
+<!-- @section:04 js:start -->
+<script>
+// 04 · the people. The print of sections 02/03 is pulled into the window on the left as the section rises; the end of the scroll is the end of the animation.
+// The dots are drawn here (own fixed canvas right after the window, same print data and look as the shared #print, which is hidden while this one is on):
+//  - the first scroll hands over from the shared print (its last frame is captured, so nothing jumps), then the print first relaxes to its original form
+//    (whatever a hover did to it fades, the shape morphs back to the first one, ~1.2 s, time-based); only then does the scroll-linked pull begin, from that
+//    known form, and it morphs into the next shape on the way
+//  - two gestures instead of a raw scroll mapping: the first scroll down stops the page just before section 04 shows and only relaxes the print to its
+//    original form; the second scroll runs a 3.4 s transition (page scrolls itself, slow at first, print pulled in step); input is blocked while either runs
+//  - scroll-linked and sequential, like stretching rubber: the dots nearest the left edge are pulled first and drag the rest after them; each dot
+//    is a spring (softer the further it starts from the left), so the distances between dots stretch and relax instead of the print being dragged along
+//  - dots stay small while they travel and grow only when they dock in the window; they never touch (the hero's rule)
+//  - white is masked: the print goes from the dark page into the dark window, hidden while it is over the white; what is left of it in the dark band
+//    above (section 03) fades out, so at the end the print lives only in the window
+//  - once docked the cursor works as on the homepage: pressed, pulled, spreads, warms, morphs on hover
+(() => {
+  const sec = document.getElementById('sec-04'); if (!sec) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS = 'http://www.w3.org/2000/svg', shared = document.getElementById('print');
+  const art = sec.querySelector('.art-04'), rvs = [...sec.querySelectorAll('.rv')], fcs = [...sec.querySelectorAll('.fc')];
+  const msgs = [...sec.querySelectorAll('.msg')], rt = sec.querySelector('.reply-time');
+  const TAU = Math.PI * 2, clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), lerp = (a, b, t) => a + (b - a) * t;
+  const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  // a person is a fingerprint, not a photo: every expert gets their own small print (avatar)
+  const ridges = (svg, n, seed) => {
+    svg.setAttribute('viewBox', '0 0 24 24');
+    for (let i = 1; i <= n; i++) { const t = i / n, p = document.createElementNS(NS, 'path'); let d = '';
+      for (let k = 0; k <= 48; k++) { const a = k / 48 * TAU, wob = 1 + .06 * Math.sin(a * 3 + seed + t * 5) + .04 * Math.sin(a * 5 - seed * 2 + t * 9);
+        d += (k ? 'L' : 'M') + (12 + Math.cos(a) * 10.5 * t * wob * .9).toFixed(1) + ' ' + (12.5 + Math.sin(a) * 11 * t * wob).toFixed(1); }
+      p.setAttribute('d', d + 'Z'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#161616'); p.setAttribute('stroke-width', '.9'); svg.appendChild(p); } };
+  sec.querySelectorAll('svg.av').forEach((s, i) => ridges(s, 6, 1.3 + i * 1.9));
+
+  // ---- the flowing print ----------------------------------------------------------------
+  let on = null;            // set once the print data is there: { setP }
+  const initPrint = () => {
+    const D = window.BLEND_FIELDS; if (!D || !shared || on) return;
+    const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
+    cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;display:none;pointer-events:none';
+    art.after(cv); const ctx = cv.getContext('2d');
+    const dec = (b64, T) => { const s = atob(b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new T(u.buffer); };
+    const N = D.pts.length / 2, A = (D.pts[2] - D.pts[0]) / 2 || 14, HMAX = D.hmax, RR = D.round;
+    const F = D.order.map(k => { const c = Float32Array.from(dec(D.c[k], Int16Array), v => v / 1000), f = Float32Array.from(dec(D.f[k], Int16Array), v => v / 1000);
+      return { b: c.map((v, i) => v - f[i]), f, w: Float32Array.from(dec(D.w[k], Uint8Array), v => v / 255), m: Float32Array.from(dec(D.m[k], Uint8Array), v => v / 255) }; });
+    const ST = F.map(S => { let sx = 0, sy = 0, n = 0, x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+      for (let i = 0; i < N; i++) if (S.m[i] > .3) { const x = D.pts[2*i], y = D.pts[2*i+1]; sx += x; sy += y; n++; x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+      return { cx: sx / n, cy: sy / n, rx: (x1 - x0) / 2, ry: (y1 - y0) / 2 }; });
+    const scx = ST[0].cx, scy = ST[0].cy, sry = ST[0].ry, CX = scx, CY = scy - sry * .28;
+    const X0 = new Float32Array(N), Y0 = new Float32Array(N), jit = new Float32Array(N), jit2 = new Float32Array(N);
+    for (let i = 0; i < N; i++) { X0[i] = D.pts[2*i]; Y0[i] = D.pts[2*i+1];
+      const h = Math.sin(X0[i] * .9285 + Y0[i] * 5.5881) * 43758.5453, h2 = Math.sin(X0[i] * 1.7 + Y0[i] * 3.1) * 12543.123;
+      jit[i] = (h - Math.floor(h)) * 2 - 1; jit2[i] = (h2 - Math.floor(h2)) * 2 - 1; }
+    // lattice neighbours (as in the hero): diagonal ones and axis ones two steps away; used for the rule that squares never touch
+    const key = (i, j) => i * 4096 + j, idx = new Map(), diag = new Int32Array(4 * N).fill(-1), axn = new Int32Array(4 * N).fill(-1);
+    for (let n = 0; n < N; n++) idx.set(key(Math.round(X0[n] / A), Math.round(Y0[n] / A)), n);
+    for (let n = 0; n < N; n++) { const i = Math.round(X0[n] / A), j = Math.round(Y0[n] / A);
+      [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([a, b], k) => { const v = idx.get(key(i + a, j + b)); if (v !== undefined) diag[4*n + k] = v; });
+      [[2, 0], [-2, 0], [0, 2], [0, -2]].forEach(([a, b], k) => { const v = idx.get(key(i + a, j + b)); if (v !== undefined) axn[4*n + k] = v; }); }
+    // which dots a shape draws (s > .4): used to recognise the shape the shared print is showing
+    const sOf = (S, i) => { const v = .5 + .5 * Math.cos(TAU * (S.b[i] + S.f[i])); return smooth(1 - S.w[i] - .34, 1 - S.w[i] + .30, v) * S.m[i]; };
+    const mem = F.map(S => { const a = new Uint8Array(N); for (let i = 0; i < N; i++) a[i] = sOf(S, i) > .4 ? 1 : 0; return a; });
+    const copy = s => ({ b: s.b.slice(), f: s.f.slice(), w: s.w.slice(), m: s.m.slice() });
+    const makeTo = (idx2, base) => { const d = []; for (let i = 0; i < N; i += 3) if (base.m[i] > .3 || F[idx2].m[i] > .3) d.push(base.b[i] - F[idx2].b[i]);
+      d.sort((a, b) => a - b); const sh = Math.round(d[d.length >> 1] || 0); return { b: F[idx2].b.map(v => v + sh), f: F[idx2].f, w: F[idx2].w, m: F[idx2].m }; };
+    let From = copy(F[0]), To = copy(F[0]), cur = 0;
+    const Ox = new Float32Array(N), Oy = new Float32Array(N), Rx = new Float32Array(N), Ry = new Float32Array(N), dly = new Float32Array(N), kst = new Float32Array(N);
+    const px = new Float32Array(N), py = new Float32Array(N), vx = new Float32Array(N), vy = new Float32Array(N);
+    const Xs = new Float32Array(N), Ys = new Float32Array(N), Hs = new Float32Array(N), Sx = new Float32Array(N), Sy = new Float32Array(N);   // S: where each dot starts its way (what the shared print showed)
+    const initH = new Float32Array(N), initC = new Uint8Array(3 * N);    // what the shared print showed for each dot at the start: half-size (px) and colour
+    let Ps = 0;                                                         // scroll progress, smoothed
+    let W = 0, H = 0, dpr = 1, k0 = 1, lw = 0, lh = 0, P = 0, active = false;
+    const DM = .55;       // share of the scroll over which the pull front travels from the left edge to the right
+    // where the shared canvas draws the print (same rule as the shader's place()): every dot starts here
+    const layout = () => { W = document.documentElement.clientWidth; H = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      let ox, oy; if (W >= 1024) { k0 = Math.max(.6, Math.min(W / 1440, H / 900)); ox = W * (.742 + clamp((1440 - W) / 416) * .1) - CX * k0; oy = H * .44 - CY * k0; }
+      else if (W > 600) { k0 = Math.max(.62, W / 1440 * 1.15); ox = W * .7 - CX * k0; oy = H * .3 - CY * k0; }
+      else { k0 = Math.max(.5, W / 1440 * 1.6); ox = W * .62 - CX * k0; oy = H * .2 - CY * k0; }
+      const a = art.getBoundingClientRect(); lw = a.width; lh = a.height;
+      for (let i = 0; i < N; i++) { Ox[i] = ox + X0[i] * k0; Oy[i] = oy + Y0[i] * k0;
+        const xn = clamp(Ox[i] / W); dly[i] = DM * xn + jit[i] * .015;     // the front: nearest the left edge first
+        kst[i] = 22 - 12 * xn;                                              // spring stiffness: soft far from the edge, so those dots are dragged along late
+        Rx[i] = (X0[i] - scx) * k0; Ry[i] = (Y0[i] - scy) * k0; if (!active) { px[i] = Sx[i] = Ox[i]; py[i] = Sy[i] = Oy[i]; vx[i] = vy[i] = 0; } } };
+    // read which of the shapes the shared print shows right now, from its pixels
+    const detect = () => { try {
+      const sc = shared.width / W, ctx2 = shared.getContext('2d'), img = ctx2.getImageData(0, 0, shared.width, shared.height).data, sw = shared.width, sh = shared.height;
+      const lum = new Float32Array(N);
+      for (let i = 0; i < N; i += 2) { const cx = Math.round(Ox[i] * sc), cy = Math.round(Oy[i] * sc); let m = 0;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const x = cx + dx, y = cy + dy; if (x < 0 || y < 0 || x >= sw || y >= sh) continue; const o = (y * sw + x) * 4; m = Math.max(m, img[o] + img[o+1] + img[o+2]); }
+        lum[i] = m; }
+      let best = 0, bs = -1e9;
+      F.forEach((S, k) => { let a = 0, na = 0, b = 0, nb = 0; for (let i = 0; i < N; i += 2) { if (mem[k][i]) { a += lum[i]; na++; } else { b += lum[i]; nb++; } }
+        const sc2 = a / (na || 1) - b / (nb || 1); if (sc2 > bs) { bs = sc2; best = k; } });
+      return best; } catch (e) { return cur; } };
+    // colours as on the homepage: mint to cyan by screen height, warm where pressed
+    const BT = [36, 255, 99], BB = [0, 255, 238], WARM = [[241, 188, 55], [245, 56, 14]], BANDS = 28, WS = 8, DS = 3, cc = new Map();
+    const mix = (a, b, u) => a.map((v, i) => Math.round(v + (b[i] - v) * u));
+    const colourOf = (band, heat) => { const k = band * 16 + heat + DS; let c = cc.get(k); if (c) return c;
+      let v = mix(BT, BB, band / (BANDS - 1));
+      if (heat > 0) { const u = heat / WS; v = u < .6 ? mix(v, WARM[0], u / .6) : mix(WARM[0], WARM[1], (u - .6) / .4); } else if (heat < 0) v = v.map(x => Math.round(x * (1 - .16 * -heat)));
+      cc.set(k, v); return v; };
+    // hover tuning: the homepage's (shared/mist.js and the hero)
+    const P_RADIUS = 180, P_REACH = .75, P_DENSE = .24, P_SPILL = 1.5, P_SPREAD = .3, P_CRISP = .2, P_EDGE = 5.1, GRAVITY = .24, LIFT_W = .25, LIFT_M = .35;
+    const FAR_FROM = 120, FAR_TO = 640, FAR_W = .29, FAR_M = .47, P_IN = .27, P_OUT = .03, P_FOLLOW = .71, REST_MS = 3000, HOVER_ZONE = .5, SPEED = 3.3, LOCAL = 2300, SWELL = .94;
+    const press = { x: D.W / 2, y: D.H / 2, tx: D.W / 2, ty: D.H / 2, amt: 0, target: 0 };
+    // ---- capture of the shared print's last frame (exact start state) ----
+    const sctx = shared.getContext('2d'), cap = { on: false, cur: [] }, PP = Path2D.prototype;
+    const capOn = () => { if (cap.on) return; cap.on = true; cap.m = PP.moveTo; cap.l = PP.lineTo; cap.fr = sctx.fillRect; cap.fi = sctx.fill;
+      PP.moveTo = function (x, y) { (this.c || (this.c = [])).push(x, y); return cap.m.call(this, x, y); };
+      PP.lineTo = function (x, y) { (this.c || (this.c = [])).push(x, y); return cap.l.call(this, x, y); };
+      sctx.fillRect = function (...a) { cap.cur = []; return cap.fr.apply(this, a); };
+      sctx.fill = function (p, ...r) { if (p && p.c) cap.cur.push({ c: p.c, s: this.fillStyle, lw: this.lineWidth, t: this.getTransform() }); return cap.fi.call(this, p, ...r); };
+      dispatchEvent(new Event('resize')); };                              // makes the shared print draw a frame we can record
+    const capOff = () => { if (!cap.on) return; cap.on = false; PP.moveTo = cap.m; PP.lineTo = cap.l; delete sctx.fillRect; delete sctx.fill; };
+    const nearDot = (x, y) => { let i = Math.round(x / A), j = Math.round(y / A);
+      if ((((i + j) % 2) + 2) % 2) { const fx = x / A - i, fy = y / A - j; if (Math.abs(fx) > Math.abs(fy)) i += fx > 0 ? 1 : -1; else j += fy > 0 ? 1 : -1; }
+      const v = idx.get(key(i, j)); return v === undefined ? -1 : v; };
+    const takeSnapshot = () => { initH.fill(0); let got = 0;
+      for (const e of cap.cur) { const m = /rgb\((\d+),(\d+),(\d+)\)/.exec(e.s); if (!m) continue; const sc = shared.width / W, t = e.t;
+        for (let k = 0; k + 7 < e.c.length; k += 8) { const cx = e.c[k], cy = e.c[k + 3], hh = e.c[k + 2] - e.c[k], i = nearDot(cx, cy); if (i < 0) continue;
+          const h = (hh + e.lw / 2) * t.a / sc; if (h <= initH[i]) continue;
+          initH[i] = h; initC[3*i] = +m[1]; initC[3*i+1] = +m[2]; initC[3*i+2] = +m[3]; px[i] = Sx[i] = (t.a * cx + t.e) / sc; py[i] = Sy[i] = (t.a * cy + t.f) / sc; got++; } }
+      return got; };
+    let raf = 0, last = 0, lastPtr = -1e9, armed = true, hov = null, pointerIn = false, haveInit = false, mp = 0, phA = null;   // phA: the relax-to-original phase
+    const RELAX = 1100, MORPH_A = 1500;
+    const cursor = { x: -1e4, y: -1e4, t: -1e9, in: false };      // the cursor anywhere on the page: in flight the dots react to it as the mist does
+    const toShape = (cx, cy) => { const a = art.getBoundingClientRect(); return [scx + (cx - (a.left + a.width / 2)) / k0, scy + (cy - (a.top + a.height / 2)) / k0]; };
+    const frame = now => {
+      raf = 0; const dt = Math.min(.033, (now - (last || now)) / 1000); last = now;
+      const tA = phA ? now - phA.t0 : 1e9; if (phA && tA > phA.tEnd) phA = null;
+      const relaxE = phA ? smooth(0, 1, tA / RELAX) : 1, Pe = phA ? 0 : P;      // the pull waits until the print is back in its original form
+      Ps += (Pe - Ps) * (1 - Math.exp(-dt * 9)); if (Math.abs(Pe - Ps) < .0004) Ps = Pe;
+      const a = art.getBoundingClientRect(), sTop = sec.getBoundingClientRect().top, Cx = a.left + a.width / 2, Cy = a.top + a.height / 2, mistA = clamp(window.heroMist || .32, .15, 1);
+      if (pointerIn && now - lastPtr > REST_MS) press.target = 0;
+      press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN : P_OUT);
+      press.x += (press.tx - press.x) * P_FOLLOW; press.y += (press.ty - press.y) * P_FOLLOW;
+      if (hov && now > hov.tEnd) { From = copy(To); hov = null; }
+      const pa = press.amt, d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2), R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
+      const far = smooth(FAR_FROM, FAR_TO, d0) * pa, qNear = Math.exp(-Math.pow(Math.max(0, d0 - 560), 2) / pr2);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      // white is masked: dots show over the dark page above the section and inside the window, never over the white
+      ctx.save(); ctx.beginPath(); if (sTop > 0) ctx.rect(0, 0, W, sTop); if (ctx.roundRect) ctx.roundRect(a.left, a.top, a.width, a.height, 6); else ctx.rect(a.left, a.top, a.width, a.height); ctx.clip();
+      const mT = cursor.in && now - cursor.t < REST_MS ? 1 : 0, MR2 = 300 * k0 * 300 * k0; mp += (mT - mp) * (mT > mp ? P_IN : P_OUT); if (mp < .004 && !mT) mp = 0;
+      const paths = new Map(), grid = new Map(), CELL = 28 * k0, bandA = 1 - smooth(.55, .95, Ps); let moving = Math.abs(Pe - Ps) > 0 || mp > 0 || !!phA;
+      for (let i = 0; i < N; i++) {
+        // the dot is a spring on its own target: where the pull front has taken it so far
+        const u = clamp((Ps - dly[i]) / (1 - DM)), e = u * u * u * (u * (6 * u - 15) + 10), tx = Cx + Rx[i], ty = Cy + Ry[i], sx0 = lerp(Sx[i], Ox[i], relaxE), sy0 = lerp(Sy[i], Oy[i], relaxE), gx = lerp(sx0, tx, e), gy = lerp(sy0, ty, e);
+        if (reduced) { px[i] = gx; py[i] = gy; vx[i] = vy[i] = 0; }
+        else { const ks = kst[i] * (1 + .12 * jit2[i]), c = 2 * Math.sqrt(ks);
+          for (let s = 0; s < 2; s++) { const h = dt / 2; vx[i] += (ks * (gx - px[i]) - c * vx[i]) * h; vy[i] += (ks * (gy - py[i]) - c * vy[i]) * h; px[i] += vx[i] * h; py[i] += vy[i] * h; }
+          if (Math.abs(gx - px[i]) + Math.abs(gy - py[i]) < .25 && Math.abs(vx[i]) + Math.abs(vy[i]) < 2) { px[i] = gx; py[i] = gy; vx[i] = vy[i] = 0; } else moving = true; }
+        // progress 0..1 of the dot along its way from the start to its place
+        const ex = tx - sx0, ey = ty - sy0, g = clamp(((px[i] - sx0) * ex + (py[i] - sy0) * ey) / (ex * ex + ey * ey || 1));
+        // field: arrival blends From to To by progress; a hover morph runs from the press point outward
+        const FR = phA ? phA.from : From, TO = phA ? phA.to : To;
+        const tm = phA ? smooth(0, 1, (tA - phA.d[i] / SPEED) / MORPH_A) : hov ? ease(clamp((now - hov.t0 - hov.d[i] / SPEED) / LOCAL)) : g;
+        const b = FR.b[i] + (TO.b[i] - FR.b[i]) * tm;
+        const zx = (1 - tm) * Math.cos(TAU * FR.f[i]) + tm * Math.cos(TAU * TO.f[i]), zy = (1 - tm) * Math.sin(TAU * FR.f[i]) + tm * Math.sin(TAU * TO.f[i]);
+        const f = Math.atan2(zy, zx) / TAU; let w = lerp(FR.w[i], TO.w[i], tm), m = lerp(FR.m[i], TO.m[i], tm);
+        const swell = SWELL * Math.sin(Math.PI * tm), hl = m, dock = smooth(.8, 1, g), pai = pa * dock, r = RR * (.3 + .7 * dock);
+        let c = b + f, x = px[i], y = py[i], p = 0, away = 0, gp = 0, soft = 1;
+        if (pai > .001) {   // the homepage press, in shape units
+          const dx = X0[i] - press.x, dy = Y0[i] - press.y, qq = Math.min(1, Math.exp(-(dx * dx + dy * dy) / pr2) / qNear);
+          p = pai * qq; away = 1 - qq;
+          w = Math.min(.9, w + P_SPREAD * p) - (LIFT_W * pai * away + FAR_W * far * dock * away);
+          m = (1 - Math.pow(1 - m, 1 + P_EDGE * p)) * (1 - LIFT_M * pai * away * (1 - m * m));
+          m *= 1 - FAR_M * far * dock * Math.pow(away, 1.6); m = Math.max(m, hl * P_SPILL * p * p);
+          c = b * (1 + P_DENSE * p) + f; gp = GRAVITY * p * Math.min(1, P_RADIUS / R);
+          x -= dx * gp * k0; y -= dy * gp * k0; soft = 1 - P_CRISP * p;
+        }
+        c -= swell;
+        const v = .5 + .5 * Math.cos(TAU * c); let s = smooth(1 - w - .34 * soft, 1 - w + .30 * soft, v) * Math.max(m, 0);
+        s *= 1 + .12 * jit[i] * (1 - s);
+        let qm = 0;
+        if (mp > 0 && dock < 1) {       // in flight: the dots near the cursor lean toward it and swell, as the mist does on the pages above
+          const dxm = x - cursor.x, dym = y - cursor.y; qm = Math.exp(-(dxm * dxm + dym * dym) / MR2) * mp * (1 - dock);
+          x -= dxm * GRAVITY * qm; y -= dym * GRAVITY * qm; }
+        const room = (A - r - .6) * (1 - 1.5 * gp), full = Math.max(0, Math.min(HMAX * s - r, room));
+        // small while travelling (what it was at the start, kept as the print morphs), grows only when it docks
+        const sm = smooth(.34, .46, s), base = 1.1 * k0 + RR * .3 * k0, clean = base * sm;
+        const flight = initH[i] > 0 ? lerp(initH[i], clean, relaxE) : clean;       // what the shared print showed relaxes to the clean form
+        const fl = flight * (1 + .8 * qm);      // only dots that exist swell near the cursor; no new dots appear
+        let hh = lerp(fl, (full + r) * k0, dock); if (hh < .5) continue;
+        const inside = x >= a.left && x <= a.right && y >= a.top && y <= a.bottom;
+        // dots never touch: stay clear of every dot already drawn nearby (any dot, not only lattice neighbours)
+        const gx0 = Math.floor(x / CELL), gy0 = Math.floor(y / CELL);
+        for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) { const L = grid.get((gx0 + ox) * 20011 + gy0 + oy); if (!L) continue;
+          for (let q = 0; q < L.length; q++) { const nb = L[q]; hh = Math.min(hh, Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) - Hs[nb] - .8); } }
+        if (hh < .5) continue;
+        Xs[i] = x; Ys[i] = y; Hs[i] = hh; { const kk = gx0 * 20011 + gy0, L = grid.get(kk); if (L) L.push(i); else grid.set(kk, [i]); }
+        const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WS) : -Math.round(pai * away * DS);
+        const band = clamp(Math.floor(y / H * BANDS), 0, BANDS - 1), dc = colourOf(band, heat), ic = initH[i] > 0 ? 1 - relaxE : 0;
+        const cr = lerp(dc[0], initC[3*i], ic) >> 4, cg = lerp(dc[1], initC[3*i+1], ic) >> 4, cb = lerp(dc[2], initC[3*i+2], ic) >> 4;
+        const al = Math.round(lerp(mistA, 1, dock) * (inside ? 1 : bandA) * 5), key2 = (((cr << 4 | cg) << 4 | cb) << 3) + al;
+        let pt = paths.get(key2); if (!pt) { pt = new Path2D(); paths.set(key2, pt); }
+        pt.moveTo(x, y - hh); pt.lineTo(x + hh, y); pt.lineTo(x, y + hh); pt.lineTo(x - hh, y); pt.closePath();
+      }
+      for (const [k3, pt] of paths) { ctx.globalAlpha = (k3 & 7) / 5; ctx.fillStyle = `rgb(${((k3 >> 11) & 15) * 17},${((k3 >> 7) & 15) * 17},${((k3 >> 3) & 15) * 17})`; ctx.fill(pt); }
+      ctx.restore(); ctx.globalAlpha = 1;
+      if (active && (moving || hov || pa > .002 || press.target || Math.hypot(press.tx - press.x, press.ty - press.y) > .5)) raf = requestAnimationFrame(frame); else { last = 0; if (!active) cv.style.display = 'none', shared.style.visibility = ''; }
+    };
+    const kick = () => { if (!raf && cv.style.display !== 'none') raf = requestAnimationFrame(frame); };
+    addEventListener('pointermove', e => {
+      if (e.pointerType !== 'touch') { cursor.x = e.clientX; cursor.y = e.clientY; cursor.t = performance.now(); cursor.in = true; if (active) kick(); }
+      if (!active || P < .98 || e.pointerType === 'touch') return;      // the hero-style press works once the print has docked
+      pointerIn = true; lastPtr = performance.now(); const [x, y] = toShape(e.clientX, e.clientY);
+      if (press.amt < .5) { press.x = x; press.y = y; }
+      press.tx = x; press.ty = y; press.target = 1;
+      const S = ST[cur], zx = (x - S.cx) / (S.rx * HOVER_ZONE), zy = (y - S.cy) / (S.ry * HOVER_ZONE), z = zx * zx + zy * zy;
+      if (z < 1 && armed && !hov) { armed = false; startHover(x, y); } else if (z > 1.3) armed = true;
+      kick(); }, { passive: true });
+    const startHover = (x, y) => { const nx = (cur + 1) % F.length; From = copy(To); To = makeTo(nx, From); cur = nx;
+      const d = new Float32Array(N); let mx = 0; for (let i = 0; i < N; i++) { d[i] = Math.hypot(X0[i] - x, Y0[i] - y); if (d[i] > mx) mx = d[i]; }
+      const t0 = performance.now(); hov = { d, t0, tEnd: t0 + mx / SPEED + LOCAL }; };
+    document.documentElement.addEventListener('pointerleave', () => { pointerIn = false; cursor.in = false; press.target = 0; kick(); });
+    layout(); addEventListener('resize', () => { layout(); kick(); });
+    on = { setP: p => {
+      P = p; const top = sec.getBoundingClientRect().top;
+      if (!active) { if (top < innerHeight * 1.6 && p <= .001) capOn(); else if (top > innerHeight * 2.2) capOff(); }
+      if (p > .001 && !active) {             // the pull begins: take the shape the shared print has now, then morph into the next one on the way
+        layout(); const k = detect(), A0 = copy(F[k]), A1 = makeTo(0, A0), d = new Float32Array(N); let mx = 0;
+        for (let i = 0; i < N; i++) { d[i] = Math.hypot(X0[i] - scx, Y0[i] - scy); if (d[i] > mx) mx = d[i]; }
+        phA = { t0: performance.now(), from: A0, to: A1, d, tEnd: Math.max(RELAX, mx / SPEED + MORPH_A) + 60 };      // first: back to the original form
+        From = copy(A1); To = makeTo(1, From); cur = 1; hov = null;
+        mp = cursor.in && performance.now() - cursor.t < REST_MS ? 1 : 0;
+        haveInit = takeSnapshot() > 0; if (!haveInit) initH.fill(0); capOff(); Ps = 0;
+        active = true; cv.style.transition = 'none'; cv.style.opacity = '0'; cv.style.display = 'block';
+        requestAnimationFrame(() => { cv.style.transition = 'opacity .35s ease'; cv.style.opacity = '1'; });
+        setTimeout(() => { if (active) shared.style.visibility = 'hidden'; }, 400); }      // crossfade from the shared print
+      else if (p <= .001 && active) { active = false; }      // dots finish their way home, then the shared print takes over again
+      if (Math.abs(lw - art.offsetWidth) > 1 || Math.abs(lh - art.offsetHeight) > 1) layout();
+      if (p < .98) { press.target = 0; }
+      kick(); }, ready: () => active && !phA, kick };
+    update();
+  };
+
+  // ---- entrance --------------------------------------------------------------------------
+  let shown = false, raf = 0;
+  const reveal = () => {
+    if (shown) return; shown = true;
+    rvs.forEach(e => e.classList.add('in')); fcs.forEach(e => e.classList.add('in'));
+    [1500, 2700, 4000].forEach((t, i) => setTimeout(() => msgs[i].classList.add('on'), reduced ? 0 : t));
+    setTimeout(() => rt.classList.add('on'), reduced ? 0 : 4900);
+  };
+  // two gestures. 1st scroll down to the edge of the section: the page stops just before section 04 shows, the print relaxes to its original form.
+  // 2nd scroll: the page scrolls itself to the end of the section (3.4 s, slow at first) while the print is pulled into the window.
+  // states: idle -> relax (input blocked) -> ready (waits for a fresh scroll down) -> seq (input blocked) -> done (scroll-linked, reversible)
+  let st = 'idle', lockY = 0, seq = null, lastY = scrollY, lastWheel = 0, seqRaf = 0, tY = 0, tStart = 0, relaxT0 = 0, readyT0 = 0, queued = false;
+  const SEQ = 3400, DOWN = ['PageDown', 'ArrowDown', ' ', 'End'], KEYS = [...DOWN, 'PageUp', 'ArrowUp', 'Home'];
+  const pOf = () => clamp((innerHeight - sec.getBoundingClientRect().top) / (innerHeight * .9));
+  const gate = e => {
+    let down = true; const now = performance.now();
+    if (e.type === 'keydown') { if (!KEYS.includes(e.key)) return; down = DOWN.includes(e.key) && !e.shiftKey; }
+    else if (e.type === 'wheel') down = e.deltaY > 0;
+    else if (e.type === 'touchmove') down = tY - e.touches[0].clientY > 6;
+    const gap = now - lastWheel; if (e.type === 'wheel') lastWheel = now;
+    if (st === 'seq') { e.preventDefault(); return; }
+    if (st === 'relax') { e.preventDefault();      // a fresh scroll down while the print is still relaxing counts as the second gesture: it is remembered and runs as soon as the print is ready
+      const long = now - relaxT0 > 1100;       // still scrolling after the tail of the first gesture must have died out: that is intent too
+      if (down && now - relaxT0 > 250 && (long || (e.type === 'wheel' ? gap > 140 : e.type === 'touchmove' ? tStart > relaxT0 : true))) queued = true; return; }
+    if (st === 'ready') { if (!down) return; e.preventDefault(); if (now - readyT0 > 60) startSeq(); } };
+  ['wheel', 'touchmove', 'keydown'].forEach(t => addEventListener(t, gate, { passive: false }));
+  addEventListener('touchstart', e => { tY = e.touches[0].clientY; tStart = performance.now(); }, { passive: true });
+  const tick = () => {
+    if (st !== 'seq') return; const t = clamp((performance.now() - seq.t0) / SEQ), q = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    scrollTo(0, lerp(seq.y0, seq.y1, q)); on.setP(Math.max(.002, q));
+    if (t >= 1) { st = 'done'; seq = null; update(); return; }
+    seqRaf = requestAnimationFrame(tick); };
+  const startSeq = () => { const top = sec.getBoundingClientRect().top; st = 'seq'; seq = { t0: performance.now(), y0: scrollY, y1: scrollY + Math.max(0, top - innerHeight * .1) }; tick(); };
+  const startRelax = () => { st = 'relax'; relaxT0 = performance.now(); queued = false;
+    const top = sec.getBoundingClientRect().top; lockY = top < innerHeight + 30 ? scrollY + top - (innerHeight + 30) : scrollY;   // if a fast scroll overshot, step back so section 04 stays hidden
+    if (Math.abs(lockY - scrollY) > 1) scrollTo(0, lockY);
+    on.setP(.002);
+    const w = () => { if (st !== 'relax') return; on.kick(); const now = performance.now();
+      if (on.ready() || now - relaxT0 > 2800) { st = 'ready'; readyT0 = now; if (queued) startSeq(); } else requestAnimationFrame(w); };
+    requestAnimationFrame(w); };      // the time limit above: never stay stuck
+  const update = () => {
+    raf = 0;
+    const s = sec.getBoundingClientRect(), p = reduced ? 1 : pOf();
+    if (st === 'seq') { /* the sequence drives everything */ }
+    else if (st === 'relax' || st === 'ready') {
+      if (scrollY > lockY + 1) scrollTo(0, lockY);                      // nothing but the second gesture moves the page on
+      else if (scrollY < lockY - 80) { st = 'idle'; on && on.setP(p); } }  // the reader went back up: start over
+    else {
+      if (st === 'done' && p < .02) st = 'idle';
+      if (st === 'idle' && on && !reduced && s.top < innerHeight + 60 && scrollY > lastY) startRelax();
+      else if (on) on.setP(p); }
+    lastY = scrollY;
+    if (p > .45) reveal();
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('scroll', kick, { passive: true }); addEventListener('resize', kick);
+  update();
+  if (window.BLEND_FIELDS) initPrint(); else addEventListener('load', initPrint);
+})();
+</script>
+<!-- @section:04 js:end -->
+<script src="../../hero/comp-ai-hero-v01/shapes-phase.js"></script>
+<script src="../shared/mist.js"></script>
+</body>
+</html>
