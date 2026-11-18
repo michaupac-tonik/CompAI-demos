@@ -153,8 +153,9 @@
 //  - the first scroll hands over from the shared print (its last frame is captured, so nothing jumps), then the print first relaxes to its original form
 //    (whatever a hover did to it fades, the shape morphs back to the first one, ~1.2 s, time-based); only then does the scroll-linked pull begin, from that
 //    known form, and it morphs into the next shape on the way
-//  - no scroll takeover: section 03 scrolls away and fades, the print stage stays. The print relaxes and flows (time-driven) to the final place of the
-//    window, and the rising white sheet uncovers it
+//  - no scroll takeover: section 03 scrolls away and fades, the print stage stays. Once section 04 is near, the print relaxes to its original form; the
+//    transition itself is tied to the scroll (starts when the top of section 04 appears, done at 50 % visible, reversible), and the swarm keeps exactly the
+//    dots of the original form while it flies
 //  - dots stay small while they travel and grow only when they dock in the window; they never touch (the hero's rule)
 //  - white is masked: the print goes from the dark page into the dark window, hidden while it is over the white; what is left of it in the dark band
 //    above (section 03) fades out, so at the end the print lives only in the window
@@ -179,7 +180,7 @@
   sec.querySelectorAll('svg.av').forEach((s, i) => ridges(s, 6, 1.3 + i * 1.9));
 
   // ---- the flowing print ----------------------------------------------------------------
-  let on = null;            // set once the print data is there: { near, go }
+  let on = null;            // set once the print data is there: { near, set }
   const initPrint = () => {
     const D = window.BLEND_FIELDS; if (!D || !shared || on) return;
     const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
@@ -272,16 +273,16 @@
           initH[i] = h; initC[3*i] = +m[1]; initC[3*i+1] = +m[2]; initC[3*i+2] = +m[3]; px[i] = Sx[i] = (t.a * cx + t.e) / sc; py[i] = Sy[i] = (t.a * cy + t.f) / sc; got++; } }
       return got; };
     let raf = 0, last = 0, lastPtr = -1e9, armed = true, hov = null, pointerIn = false, haveInit = false, mp = 0, phA = null;   // phA: the relax-to-original phase
-    const RELAX = 1100, MORPH_A = 1500, TRAVEL = 2.8, BACK = 1.8;   // s
-    let goT = 0;      // 1 while the print should be in the window, 0 while it should be home
+    const RELAX = 1100, MORPH_A = 1500;   // ms
+    let goT = 0, prepOn = false;      // goT: scroll progress of the transition 0..1; prepOn: the print is taken over and relaxed, waiting for it
     const cursor = { x: -1e4, y: -1e4, t: -1e9, in: false };      // the cursor anywhere on the page: in flight the dots react to it as the mist does
     const toShape = (cx, cy) => { const a = art.getBoundingClientRect(); return [scx + (cx - (a.left + a.width / 2)) / k0, scy + (cy - (a.top + a.height / 2)) / k0]; };
     const frame = now => {
       raf = 0; const dt = Math.min(.033, (now - (last || now)) / 1000); last = now;
       const tA = phA ? now - phA.t0 : 1e9; if (phA && tA > phA.tEnd) phA = null;
       const relaxE = phA ? smooth(0, 1, tA / RELAX) : 1, target = phA ? 0 : goT;      // the pull waits until the print is back in its original form
-      if (Ps < target) Ps = Math.min(target, Ps + dt / TRAVEL); else if (Ps > target) Ps = Math.max(target, Ps - dt / BACK);      // time-driven, not tied to the scroll speed
-      if (!goT && !phA && Ps === 0 && active) active = false;                                                                       // everything is home again
+      Ps += (target - Ps) * (1 - Math.exp(-dt * 10)); if (Math.abs(target - Ps) < .0004) Ps = target;      // follows the scroll position, the same way in both directions
+      if (!prepOn && !phA && Ps === 0 && active) active = false;                                          // everything is home again
       const a = art.getBoundingClientRect(), sTop = sec.getBoundingClientRect().top, Cx = a.left + a.width / 2, Cy = a.top - sTop + a.height / 2, mistA = clamp(window.heroMist || .32, .15, 1);
       if (pointerIn && now - lastPtr > REST_MS) press.target = 0;
       press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN : P_OUT);
@@ -332,10 +333,11 @@
           x -= dxm * GRAVITY * qm; y -= dym * GRAVITY * qm; }
         const room = (A - r - .6) * (1 - 1.5 * gp), full = Math.max(0, Math.min(HMAX * s - r, room));
         // small while travelling (what it was at the start, kept as the print morphs), grows only when it docks
-        const sm = smooth(.34, .46, s), base = 1.1 * k0 + RR * .3 * k0, clean = base * sm;
+        const base = 1.1 * k0 + RR * .3 * k0, clean = mem[0][i] ? base : 0;      // the same dots all the way: the set of the original form, none added in flight
         const flight = initH[i] > 0 ? lerp(initH[i], clean, relaxE) : clean;       // what the shared print showed relaxes to the clean form
         const fl = flight * (1 + .8 * qm);      // only dots that exist swell near the cursor; no new dots appear
-        let hh = lerp(fl, (full + r) * k0, dock); if (hh < .5) continue;
+        const gate = mem[0][i] ? 1 : smooth(.92, 1, Ps);      // dots that are not part of the original form only appear once the transition has ended
+        let hh = lerp(fl, (full + r) * k0 * gate, dock); if (hh < .5) continue;
         // dots never touch: stay clear of every dot already drawn nearby (any dot, not only lattice neighbours)
         const gx0 = Math.floor(x / CELL), gy0 = Math.floor(y / CELL);
         for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) { const L = grid.get((gx0 + ox) * 20011 + gy0 + oy); if (!L) continue;
@@ -380,9 +382,9 @@
       setTimeout(() => { if (active) shared.style.visibility = 'hidden'; }, 400); };      // crossfade from the shared print
     on = {
       near: n => { if (!active) { if (n) capOn(); else capOff(); } },      // section 04 is coming: record the shared print's last frame
-      go: f => { goT = f ? 1 : 0; if (f && !active) activate();
+      set: (pr, prep) => { goT = pr; prepOn = prep; if (prep && !active) activate();
         if (Math.abs(lw - art.offsetWidth) > 1 || Math.abs(lh - art.offsetHeight) > 1) layout();
-        if (!f) press.target = 0;
+        if (!prep) press.target = 0;
         kick(); } };
     update();
   };
@@ -395,16 +397,16 @@
     [1500, 2700, 4000].forEach((t, i) => setTimeout(() => msgs[i].classList.add('on'), reduced ? 0 : t));
     setTimeout(() => rt.classList.add('on'), reduced ? 0 : 4900);
   };
-  // Section 03 is not pinned: its content scrolls away and fades like the rest of the page, the print stage (the shared fixed canvas) stays. As section 04
-  // approaches, the print relaxes to its original form and flows (time-driven, ~2.8 s) to where the window will be once the section covers the screen;
-  // the white sheet rises and the window uncovers the print. Scrolling back up sends the print home.
-  const TRIG = 1.2, UNTRIG = 1.3;      // in viewport heights: start when the section's top is closer than TRIG, go home when it is further than UNTRIG (section 03 can be short: stay close)
-  const pOf = () => clamp((innerHeight - sec.getBoundingClientRect().top) / (innerHeight * .9));
+  // Section 03 is not pinned: its content scrolls away and fades like the rest of the page, the print stage (the shared fixed canvas) stays.
+  // The transition is tied to the scroll and reversible: it starts when the top of section 04 appears in the viewport and is finished when the section is 50 %
+  // visible; scrolling back plays it the other way with the same mapping. Before it starts (section 04 within 2 screens) the print is taken over and relaxes.
+  let prepOn = false;
   const update = () => {
     raf = 0;
-    const top = sec.getBoundingClientRect().top, vh = innerHeight;
-    if (on) { on.near(top < vh * 1.8); if (reduced) on.go(top < vh * 1.5); else if (top < vh * TRIG) on.go(true); else if (top > vh * UNTRIG) on.go(false); }
-    if (pOf() > .45) reveal();
+    const top = sec.getBoundingClientRect().top, vh = innerHeight, P = reduced ? 1 : clamp((vh - top) / (vh * .5));
+    prepOn = reduced ? true : prepOn ? top < vh * 2.4 : top < vh * 2;       // (hysteresis against flicker)
+    if (on) { on.near(top < vh * 2.6); on.set(P, prepOn); }
+    if (P > .35) reveal();
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
   addEventListener('scroll', kick, { passive: true }); addEventListener('resize', kick);
