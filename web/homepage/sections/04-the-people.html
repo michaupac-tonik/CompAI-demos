@@ -157,8 +157,8 @@
 //    transition itself is tied to the scroll (starts when the top of section 04 appears, done at 50 % visible, reversible), and the swarm keeps exactly the
 //    dots of the original form while it flies
 //  - dots stay small while they travel and grow only when they dock in the window; they never touch (the hero's rule)
-//  - white is masked: the print goes from the dark page into the dark window, hidden while it is over the white; what is left of it in the dark band
-//    above (section 03) fades out, so at the end the print lives only in the window
+//  - the dots are only background: one canvas at the layer of the shared #print (behind the content of section 03, hidden by the white sheet) and one above
+//    that only draws what is inside the window (opaque black); nothing is ever drawn over section 03's content
 //  - once docked the cursor works as on the homepage: pressed, pulled, spreads, warms, morphs on hover
 (() => {
   const sec = document.getElementById('sec-04'); if (!sec) return;
@@ -186,9 +186,10 @@
     const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
     cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;display:none;pointer-events:none';
     art.after(cv); const ctx = cv.getContext('2d');
-    // a black scrim over whatever section 03 shows, only in the dark band above the white sheet, below the dots: section 03's content dims out as the print takes the stage
-    const scrim = document.createElement('div'); scrim.setAttribute('aria-hidden', 'true');
-    scrim.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:0;background:#000;opacity:0;pointer-events:none'; cv.before(scrim);
+    // The dots are only background: a second canvas sits at the layer of the shared #print (behind the content of section 03, hidden by the white sheet);
+    // the canvas above only draws what falls inside the window, which is opaque black and hides everything behind it.
+    const cvB = document.createElement('canvas'); cvB.setAttribute('aria-hidden', 'true');
+    cvB.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;display:none;pointer-events:none'; shared.after(cvB); const ctxB = cvB.getContext('2d');
     const dec = (b64, T) => { const s = atob(b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new T(u.buffer); };
     const N = D.pts.length / 2, A = (D.pts[2] - D.pts[0]) / 2 || 14, HMAX = D.hmax, RR = D.round;
     const F = D.order.map(k => { const c = Float32Array.from(dec(D.c[k], Int16Array), v => v / 1000), f = Float32Array.from(dec(D.f[k], Int16Array), v => v / 1000);
@@ -220,17 +221,17 @@
     const initH = new Float32Array(N), initC = new Uint8Array(3 * N);    // what the shared print showed for each dot at the start: half-size (px) and colour
     let Ps = 0;                                                         // travel progress 0..1 (time-driven)
     let W = 0, H = 0, dpr = 1, k0 = 1, lw = 0, lh = 0, active = false;
-    const DM = .55;       // share of the scroll over which the pull front travels from the left edge to the right
+    const DM = .8;       // share of the scroll over which the pull front travels from the left edge to the right (long: the swarm is stretched out between the front and the rest)
     // where the shared canvas draws the print (same rule as the shader's place()): every dot starts here
     const layout = () => { W = document.documentElement.clientWidth; H = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
-      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      cv.width = cvB.width = Math.round(W * dpr); cv.height = cvB.height = Math.round(H * dpr);
       let ox, oy; if (W >= 1024) { k0 = Math.max(.6, Math.min(W / 1440, H / 900)); ox = W * (.742 + clamp((1440 - W) / 416) * .1) - CX * k0; oy = H * .44 - CY * k0; }
       else if (W > 600) { k0 = Math.max(.62, W / 1440 * 1.15); ox = W * .7 - CX * k0; oy = H * .3 - CY * k0; }
       else { k0 = Math.max(.5, W / 1440 * 1.6); ox = W * .62 - CX * k0; oy = H * .2 - CY * k0; }
       const a = art.getBoundingClientRect(); lw = a.width; lh = a.height;
       for (let i = 0; i < N; i++) { Ox[i] = ox + X0[i] * k0; Oy[i] = oy + Y0[i] * k0;
-        const xn = clamp(Ox[i] / W); dly[i] = DM * xn + jit[i] * .015;     // the front: nearest the left edge first
-        kst[i] = 22 - 12 * xn;                                              // spring stiffness: soft far from the edge, so those dots are dragged along late
+        const xn = clamp(Ox[i] / W); dly[i] = DM * Math.pow(xn, 1.2) + jit[i] * .012;     // the front: nearest the left edge first
+        kst[i] = 26 - 19 * xn;                                              // spring stiffness: soft far from the edge, so those dots are dragged along late
         Rx[i] = (X0[i] - scx) * k0; Ry[i] = (Y0[i] - scy) * k0; if (!active) { px[i] = Sx[i] = Ox[i]; py[i] = Sy[i] = Oy[i]; vx[i] = vy[i] = 0; } } };
     // read which of the shapes the shared print shows right now, from its pixels
     const detect = () => { try {
@@ -290,11 +291,7 @@
       if (hov && now > hov.tEnd) { From = copy(To); hov = null; }
       const pa = press.amt, d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2), R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
       const far = smooth(FAR_FROM, FAR_TO, d0) * pa, qNear = Math.exp(-Math.pow(Math.max(0, d0 - 560), 2) / pr2);
-      // the scrim only exists where the white sheet has entered the screen (its height is the band above the sheet, never more than the screen), so section 03 stays fully visible until then, in both directions
-      scrim.style.height = clamp(sTop, 0, H) + 'px'; scrim.style.opacity = active ? (smooth(0, .55, Ps) * smooth(0, .4, 1 - sTop / H)).toFixed(3) : 0;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      // white is masked: dots show over the dark page above the section and inside the window, never over the white
-      ctx.save(); ctx.beginPath(); if (sTop > 0) ctx.rect(0, 0, W, sTop); if (ctx.roundRect) ctx.roundRect(a.left, a.top, a.width, a.height, 6); else ctx.rect(a.left, a.top, a.width, a.height); ctx.clip();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ctxB.setTransform(dpr, 0, 0, dpr, 0, 0); ctxB.clearRect(0, 0, W, H);
       const mT = cursor.in && now - cursor.t < REST_MS ? 1 : 0, MR2 = 300 * k0 * 300 * k0; mp += (mT - mp) * (mT > mp ? P_IN : P_OUT); if (mp < .004 && !mT) mp = 0;
       const paths = new Map(), grid = new Map(), CELL = 28 * k0; let moving = Ps !== target || mp > 0 || !!phA;
       for (let i = 0; i < N; i++) {
@@ -351,9 +348,11 @@
         let pt = paths.get(key2); if (!pt) { pt = new Path2D(); paths.set(key2, pt); }
         pt.moveTo(x, y - hh); pt.lineTo(x + hh, y); pt.lineTo(x, y + hh); pt.lineTo(x - hh, y); pt.closePath();
       }
-      for (const [k3, pt] of paths) { ctx.globalAlpha = (k3 & 7) / 5; ctx.fillStyle = `rgb(${((k3 >> 11) & 15) * 17},${((k3 >> 7) & 15) * 17},${((k3 >> 3) & 15) * 17})`; ctx.fill(pt); }
-      ctx.restore(); ctx.globalAlpha = 1;
-      if (active && (moving || hov || pa > .002 || press.target || Math.hypot(press.tx - press.x, press.ty - press.y) > .5)) raf = requestAnimationFrame(frame); else { last = 0; if (!active) cv.style.display = 'none', shared.style.visibility = ''; }
+      ctx.save(); ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(a.left, a.top, a.width, a.height, 6); else ctx.rect(a.left, a.top, a.width, a.height); ctx.clip();      // the window
+      for (const [k3, pt] of paths) { const al = (k3 & 7) / 5, col = `rgb(${((k3 >> 11) & 15) * 17},${((k3 >> 7) & 15) * 17},${((k3 >> 3) & 15) * 17})`;
+        ctx.globalAlpha = al; ctx.fillStyle = col; ctx.fill(pt); ctxB.globalAlpha = al; ctxB.fillStyle = col; ctxB.fill(pt); }
+      ctx.restore(); ctx.globalAlpha = 1; ctxB.globalAlpha = 1;
+      if (active && (moving || hov || pa > .002 || press.target || Math.hypot(press.tx - press.x, press.ty - press.y) > .5)) raf = requestAnimationFrame(frame); else { last = 0; if (!active) cv.style.display = cvB.style.display = 'none', shared.style.visibility = ''; }
     };
     const kick = () => { if (!raf && cv.style.display !== 'none') raf = requestAnimationFrame(frame); };
     addEventListener('pointermove', e => {
@@ -377,8 +376,8 @@
       From = copy(A1); To = makeTo(1, From); cur = 1; hov = null;
       mp = cursor.in && performance.now() - cursor.t < REST_MS ? 1 : 0;
       haveInit = takeSnapshot() > 0; if (!haveInit) initH.fill(0); capOff(); Ps = 0;
-      active = true; cv.style.transition = 'none'; cv.style.opacity = '0'; cv.style.display = 'block';
-      requestAnimationFrame(() => { cv.style.transition = 'opacity .35s ease'; cv.style.opacity = '1'; });
+      active = true; for (const c of [cv, cvB]) { c.style.transition = 'none'; c.style.opacity = '0'; c.style.display = 'block'; }
+      requestAnimationFrame(() => { for (const c of [cv, cvB]) { c.style.transition = 'opacity .35s ease'; c.style.opacity = '1'; } });
       setTimeout(() => { if (active) shared.style.visibility = 'hidden'; }, 400); };      // crossfade from the shared print
     on = {
       near: n => { if (!active) { if (n) capOn(); else capOff(); } },      // section 04 is coming: record the shared print's last frame
