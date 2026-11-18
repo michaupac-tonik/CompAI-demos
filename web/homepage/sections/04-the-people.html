@@ -92,7 +92,7 @@
   /* @section:04 css:end */
 
   /* preview only: section 03 is not pinned; its content scrolls away with the page and fades out as it leaves, the print stage (the fixed canvas) stays */
-  .dev-prev-wrap { position: relative; z-index: 1; height: 130svh; }
+  .dev-prev-wrap { position: relative; z-index: 1; height: 150svh; }
   .dev-prev { position: relative; height: 100svh; padding-top: 9svh; }      /* a stand-in for section 03 */
   .dev-prev .m-eyebrow { margin: 0 0 20px; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.6); }
   .dev-prev .m-h { margin: 0; font-weight: 300; font-size: 53px; line-height: 1; letter-spacing: -.04em; }
@@ -289,7 +289,8 @@
       if (hov && now > hov.tEnd) { From = copy(To); hov = null; }
       const pa = press.amt, d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2), R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
       const far = smooth(FAR_FROM, FAR_TO, d0) * pa, qNear = Math.exp(-Math.pow(Math.max(0, d0 - 560), 2) / pr2);
-      scrim.style.height = Math.max(0, sTop) + 'px'; scrim.style.opacity = active ? smooth(0, .55, Ps).toFixed(3) : 0;
+      // the scrim only exists where the white sheet has entered the screen (its height is the band above the sheet, never more than the screen), so section 03 stays fully visible until then, in both directions
+      scrim.style.height = clamp(sTop, 0, H) + 'px'; scrim.style.opacity = active ? (smooth(0, .55, Ps) * smooth(0, .4, 1 - sTop / H)).toFixed(3) : 0;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       // white is masked: dots show over the dark page above the section and inside the window, never over the white
       ctx.save(); ctx.beginPath(); if (sTop > 0) ctx.rect(0, 0, W, sTop); if (ctx.roundRect) ctx.roundRect(a.left, a.top, a.width, a.height, 6); else ctx.rect(a.left, a.top, a.width, a.height); ctx.clip();
@@ -397,12 +398,12 @@
   // Section 03 is not pinned: its content scrolls away and fades like the rest of the page, the print stage (the shared fixed canvas) stays. As section 04
   // approaches, the print relaxes to its original form and flows (time-driven, ~2.8 s) to where the window will be once the section covers the screen;
   // the white sheet rises and the window uncovers the print. Scrolling back up sends the print home.
-  const TRIG = 1.5, UNTRIG = 1.7;       // in viewport heights: start when the section's top is closer than TRIG, go home when it is further than UNTRIG
+  const TRIG = 1.2, UNTRIG = 1.3;      // in viewport heights: start when the section's top is closer than TRIG, go home when it is further than UNTRIG (section 03 can be short: stay close)
   const pOf = () => clamp((innerHeight - sec.getBoundingClientRect().top) / (innerHeight * .9));
   const update = () => {
     raf = 0;
     const top = sec.getBoundingClientRect().top, vh = innerHeight;
-    if (on) { on.near(top < vh * 2.4); if (reduced) on.go(top < vh * 1.5); else if (top < vh * TRIG) on.go(true); else if (top > vh * UNTRIG) on.go(false); }
+    if (on) { on.near(top < vh * 1.8); if (reduced) on.go(top < vh * 1.5); else if (top < vh * TRIG) on.go(true); else if (top > vh * UNTRIG) on.go(false); }
     if (pOf() > .45) reveal();
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
