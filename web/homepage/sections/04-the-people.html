@@ -252,6 +252,13 @@
       let v = mix(BT, BB, band / (BANDS - 1));
       if (heat > 0) { const u = heat / WS; v = u < .6 ? mix(v, WARM[0], u / .6) : mix(WARM[0], WARM[1], (u - .6) / .4); } else if (heat < 0) v = v.map(x => Math.round(x * (1 - .16 * -heat)));
       cc.set(k, v); return v; };
+    // In this section the heat map is inverted: the print rests in reds and oranges (brand coral, by screen height) and turns mint and cyan where the cursor
+    // presses it. The colour changes with the dot's progress, so it shifts smoothly during the scroll.
+    const CR0 = [245, 56, 14], CR1 = [244, 153, 0], MINT = [36, 255, 99], CYAN = [0, 255, 238], wc = new Map();
+    const invColour = (band, heat) => { const k = band * 16 + heat + DS; let c = wc.get(k); if (c) return c;
+      let v = mix(CR0, CR1, band / (BANDS - 1));
+      if (heat > 0) { const u = heat / WS; v = u < .6 ? mix(v, MINT, u / .6) : mix(MINT, CYAN, (u - .6) / .4); } else if (heat < 0) v = v.map(x => Math.round(x * (1 - .16 * -heat)));
+      wc.set(k, v); return v; };
     // hover tuning: the homepage's (shared/mist.js and the hero)
     const P_RADIUS = 180, P_REACH = .75, P_DENSE = .24, P_SPILL = 1.5, P_SPREAD = .3, P_CRISP = .2, P_EDGE = 5.1, GRAVITY = .24, LIFT_W = .25, LIFT_M = .35;
     const FAR_FROM = 120, FAR_TO = 640, FAR_W = .29, FAR_M = .47, P_IN = .27, P_OUT = .03, P_FOLLOW = .71, REST_MS = 3000, HOVER_ZONE = .5, SPEED = 3.3, LOCAL = 2300, SWELL = .94;
@@ -343,18 +350,19 @@
         if (hh < .5) continue;
         Xs[i] = x; Ys[i] = y; Hs[i] = hh; { const kk = gx0 * 20011 + gy0, L = grid.get(kk); if (L) L.push(i); else grid.set(kk, [i]); }
         const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WS) : -Math.round(pai * away * DS);
-        const band = clamp(Math.floor(y / H * BANDS), 0, BANDS - 1), dc = colourOf(band, heat), ic = initH[i] > 0 ? 1 - relaxE : 0;
-        const cr = lerp(dc[0], initC[3*i], ic) >> 4, cg = lerp(dc[1], initC[3*i+1], ic) >> 4, cb = lerp(dc[2], initC[3*i+2], ic) >> 4;
+        const band = clamp(Math.floor(y / H * BANDS), 0, BANDS - 1), c0 = colourOf(band, 0), c1 = invColour(band, heat), cw = smooth(.5, 1, g), ic = initH[i] > 0 ? 1 - relaxE : 0;
+        const dc = [lerp(c0[0], c1[0], cw), lerp(c0[1], c1[1], cw), lerp(c0[2], c1[2], cw)];
+        const cr = lerp(dc[0], initC[3*i], ic) >> 3, cg = lerp(dc[1], initC[3*i+1], ic) >> 3, cb = lerp(dc[2], initC[3*i+2], ic) >> 3;
         // Dots left in section 03 fade out: the further from section 04, the earlier, with an irregular edge (no straight line); all are gone when 40 % of section 04 is
         // in view (Ps = .8). Dots inside the window never fade.
         const Dn = clamp((sTop - y) / (.9 * H)), th = lerp(.85, .05, clamp(Dn + (nzv[i] - .5) * .7)), fadeA = dIn > 0 ? 1 : 1 - smooth(th - .15, th + .15, clamp(Ps / .8));
         const al = Math.round(lerp(mistA, 1, dock) * fadeA * 7); if (al < 1) continue;
-        const key2 = (((cr << 4 | cg) << 4 | cb) << 3) + al;
+        const key2 = (((cr << 5 | cg) << 5 | cb) << 3) + al;
         let pt = paths.get(key2); if (!pt) { pt = new Path2D(); paths.set(key2, pt); }
         pt.moveTo(x, y - hh); pt.lineTo(x + hh, y); pt.lineTo(x, y + hh); pt.lineTo(x - hh, y); pt.closePath();
       }
       ctx.save(); ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(a.left, a.top, a.width, a.height, 6); else ctx.rect(a.left, a.top, a.width, a.height); ctx.clip();      // the window
-      for (const [k3, pt] of paths) { const al = (k3 & 7) / 7, col = `rgb(${((k3 >> 11) & 15) * 17},${((k3 >> 7) & 15) * 17},${((k3 >> 3) & 15) * 17})`;
+      for (const [k3, pt] of paths) { const al = (k3 & 7) / 7, col = `rgb(${((k3 >> 13) & 31) * 8},${((k3 >> 8) & 31) * 8},${((k3 >> 3) & 31) * 8})`;
         ctx.globalAlpha = al; ctx.fillStyle = col; ctx.fill(pt); ctxB.globalAlpha = al; ctxB.fillStyle = col; ctxB.fill(pt); }
       ctx.restore(); ctx.globalAlpha = 1; ctxB.globalAlpha = 1;
       if (active && (moving || hov || pa > .002 || press.target || Math.hypot(press.tx - press.x, press.ty - press.y) > .5)) raf = requestAnimationFrame(frame); else { last = 0; if (!active) cv.style.display = cvB.style.display = 'none', shared.style.visibility = ''; }
