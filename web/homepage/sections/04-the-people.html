@@ -47,7 +47,6 @@
   .sec-04 { --t-label: 13px; --t-body: 16px; --t-lead-m: 20px; --t-display-l: 53px;
     position: relative; z-index: 1; color: #161616; padding: 72px 0; min-height: 100svh; display: grid; align-items: center; }
   @media (max-width: 1023px) { .sec-04 { --t-lead-m: 16px; --t-display-l: 33px; padding: 40px 0 56px; } }
-  .sec-04 { margin-top: calc(-1 * var(--s04-overlap, 0px)); }      /* set to 100svh by the page when section 03 is pinned behind: section 04 then slides up over it */
   .sec-04::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #f8f8f8; }
   .sec-04 .grid-04 { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: stretch; min-height: min(84svh, 860px); }
   .sec-04 .art-04 { position: relative; border-radius: 6px; min-height: 440px; background: #000; }   /* fixed window; the dots (a fixed canvas behind .grid-04) fall into it */
@@ -92,11 +91,9 @@
   @media (prefers-reduced-motion: reduce) { .js .sec-04 .rv, .sec-04 .msg, .sec-04 .reply-time, .sec-04 .fc { opacity: 1; filter: none; transform: none; transition: none; } }
   /* @section:04 css:end */
 
-  :root { --s04-overlap: 100svh; }
-  /* preview only: ?flow = section 03 is NOT pinned; its content scrolls away with the page and fades out as it leaves, the print stage (fixed canvas) stays */
-  body.flow { --s04-overlap: 0px; } body.flow .dev-prev-wrap { height: 130svh; } body.flow .dev-prev { position: relative; }
-  .dev-prev-wrap { position: relative; z-index: 1; height: 300svh; }
-  .dev-prev { position: sticky; top: 0; height: 100svh; padding-top: 9svh; }      /* a stand-in for section 03 (pinned) */
+  /* preview only: section 03 is not pinned; its content scrolls away with the page and fades out as it leaves, the print stage (the fixed canvas) stays */
+  .dev-prev-wrap { position: relative; z-index: 1; height: 130svh; }
+  .dev-prev { position: relative; height: 100svh; padding-top: 9svh; }      /* a stand-in for section 03 */
   .dev-prev .m-eyebrow { margin: 0 0 20px; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.6); }
   .dev-prev .m-h { margin: 0; font-weight: 300; font-size: 53px; line-height: 1; letter-spacing: -.04em; }
   .dev-prev .m-lead { margin: 18px 0 0; max-width: 28em; font-size: 20px; line-height: 1.4; color: rgba(252,252,252,.8); }
@@ -110,13 +107,13 @@
 </head>
 <body>
 <canvas id="print" aria-hidden="true"></canvas>
-<script>if (/[?&]flow/.test(location.search)) { document.body.classList.add('flow'); addEventListener('scroll', () => { const w = document.querySelector('.dev-prev .wrap'); if (w) w.style.opacity = Math.max(0, 1 - Math.max(0, -w.parentElement.getBoundingClientRect().top) / (innerHeight * .55)).toFixed(3); }, { passive: true }); }</script>
+<script>addEventListener('scroll', () => { const w = document.querySelector('.dev-prev .wrap'); if (w) w.style.opacity = Math.max(0, 1 - Math.max(0, -w.parentElement.getBoundingClientRect().top) / (innerHeight * .55)).toFixed(3); }, { passive: true });   // preview only: the stand-in for section 03 fades as it leaves</script>
 <main>
 <div class="dev-prev-wrap" aria-hidden="true"><div class="dev-prev"><div class="wrap">
   <p class="m-eyebrow">What Comp AI does</p><h2 class="m-h">Comp AI shows the work.</h2>
   <p class="m-lead">AI agents learn how your company works and use that context to write policies, gather evidence and chase the gaps.</p>
   <div class="m-tabs"><span class="on">Policies</span><span>Evidence</span><span>Risks</span><span>Vendors</span><span>Audits</span></div>
-  <div class="m-screen"><i></i><i></i><i></i><i></i></div></div></div></div>   <!-- preview only: stands in for section 03, pinned (sticky) while section 04 slides up over it -->
+  <div class="m-screen"><i></i><i></i><i></i><i></i></div></div></div></div>   <!-- preview only: stands in for section 03 (scrolls away and fades; not pinned) -->
 <!-- @section:04 html:start -->
 <section class="sec-04" id="sec-04" aria-labelledby="sec-04-title">
   <div class="wrap">
@@ -156,8 +153,8 @@
 //  - the first scroll hands over from the shared print (its last frame is captured, so nothing jumps), then the print first relaxes to its original form
 //    (whatever a hover did to it fades, the shape morphs back to the first one, ~1.2 s, time-based); only then does the scroll-linked pull begin, from that
 //    known form, and it morphs into the next shape on the way
-//  - section 04 slides up over a pinned section 03; no scroll takeover. The print relaxes and flows (time-driven) to the final place of the window,
-//    and the rising white sheet uncovers it through the window
+//  - no scroll takeover: section 03 scrolls away and fades, the print stage stays. The print relaxes and flows (time-driven) to the final place of the
+//    window, and the rising white sheet uncovers it
 //  - dots stay small while they travel and grow only when they dock in the window; they never touch (the hero's rule)
 //  - white is masked: the print goes from the dark page into the dark window, hidden while it is over the white; what is left of it in the dark band
 //    above (section 03) fades out, so at the end the print lives only in the window
@@ -397,9 +394,9 @@
     [1500, 2700, 4000].forEach((t, i) => setTimeout(() => msgs[i].classList.add('on'), reduced ? 0 : t));
     setTimeout(() => rt.classList.add('on'), reduced ? 0 : 4900);
   };
-  // Section 04 slides up over section 03, which stays pinned behind it. No scroll takeover: as section 04 approaches, the print relaxes to its original
-  // form and flows (time-driven, ~2.8 s) to where the window will be once the section covers the screen; the white sheet rises over it and the
-  // window uncovers the print. Scrolling back up sends the print home. Needs: section 03 pinned (sticky) and --s04-overlap on the section (see css).
+  // Section 03 is not pinned: its content scrolls away and fades like the rest of the page, the print stage (the shared fixed canvas) stays. As section 04
+  // approaches, the print relaxes to its original form and flows (time-driven, ~2.8 s) to where the window will be once the section covers the screen;
+  // the white sheet rises and the window uncovers the print. Scrolling back up sends the print home.
   const TRIG = 1.5, UNTRIG = 1.7;       // in viewport heights: start when the section's top is closer than TRIG, go home when it is further than UNTRIG
   const pOf = () => clamp((innerHeight - sec.getBoundingClientRect().top) / (innerHeight * .9));
   const update = () => {
