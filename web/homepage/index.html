@@ -3240,8 +3240,8 @@
 <!-- @section:06 js:end -->
 <script>
 // ---- trial 04-06: the head of section 04 becomes the head behind section 05 ----
-// As section 05 comes up, the head in 04's black window scatters and fades inside the window (the window itself stays whole and is never
-// crossed); in section 05 the same dots come in scattered and settle into 05's head as small square pixels, dimmed to its mist strength.
+// As section 05 comes up, the head in 04's black window crumbles into pixels (the window itself stays whole, nothing dissolves it); the
+// scattered pixels travel to section 05 and settle into 05's head as small square pixels, dimmed to its mist strength.
 // Both heads are the same PERSON lattice. Scroll-linked and reversible; at the end 05's own canvas takes over.
 (() => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -3298,23 +3298,31 @@
     for (let i = 0; i < n; i++) {
       const sv = S[3*i], X = L[5*i], Y = L[5*i+1], rnd = S[3*i+2];
       const d = .1 * (Y - Y0) / (Y1 - Y0 || 1) + .12 * rnd, u = clamp((t - d) / (1 - .22));
-      // the scatter: every dot gets its own direction and distance (from its hash), the same on the way out and on the way in
+      // every dot gets its own direction and distance (from its hash)
       const ang0 = rnd * 97.3 % TAU, dist = 70 + 230 * ((rnd * 13.7) % 1), sx = Math.cos(ang0) * dist, sy = Math.sin(ang0) * dist;
-      // A · in the window: the diamond drifts out along its direction, shrinks and fades
-      const h4 = S[3*i+1] * k4;
-      if (h4 >= .5 && u < .6) { const a = smooth(0, .6, u), x = Cx + (X - a4.ax) * k4 + sx * a * .15, y = Cy + (Y - a4.ay) * k4 + sy * a * .15;      // crumbles in place: a short jitter, no slide
-        const band = Math.floor(clamp((Cy + (Y - a4.ay) * k4) / vh) * 27.99) / 27, col = CR0.map((v, j) => Math.round(v + (CR1[j] - v) * band));
-        put(inA, x, y, h4 * Math.SQRT2 * (1 - .5 * a), Math.PI / 4, col, 1 - a); }
-      // B · in section 05: the square pixel comes in from its scattered place and settles into the head
-      if (sv >= .35 && u > .25) { const bq = smooth(.25, 1, u), e = 1 - Math.pow(1 - bq, 3), y5s = b.oy + Y * k5;
-        const x = r5.left + b.ox + X * k5 + sx * (1 - e), y = r5.top + y5s + sy * (1 - e);
-        const col = CR0.map((v, j) => Math.round(v + (CR1[j] - v) * clamp(y5s / b.H)));
-        put(inB, x, y, sv > .75 ? q1 : q0, Math.PI / 4 * (1 - e), col, lerp(.85, (.45 + .55 * sv) * b.DIM, e) * Math.min(1, bq * 3) * fade); }      // clear while scattered, dimmed to 05's mist once settled
+      const h4 = S[3*i+1] * k4, x4 = Cx + (X - a4.ax) * k4, y4 = Cy + (Y - a4.ay) * k4;
+      const band = Math.floor(clamp(y4 / vh) * 27.99) / 27, c4 = CR0.map((v, j) => v + (CR1[j] - v) * band);
+      if (sv < .35) {      // the fine dots between the ridges are not part of 05's head: they crumble and go out inside the window
+        if (h4 >= .5 && u < .4) { const a = smooth(0, .4, u); put(inA, x4 + sx * a * .12, y4 + sy * a * .12, h4 * Math.SQRT2 * (1 - .5 * a), Math.PI / 4, c4.map(Math.round), 1 - a); }
+        continue; }
+      // the head's own dots: 1 · crumble in place (a short jitter, the diamond turns into a small square pixel), 2 · the scattered pixels travel
+      // to section 05 on loose arcs and settle into its head, dimming to 05's mist strength
+      const cr = smooth(0, .3, u), e0 = clamp((u - .18) / .82), e = e0 * e0 * e0 * (e0 * (6 * e0 - 15) + 10);
+      const y5s = b.oy + Y * k5, x5 = r5.left + b.ox + X * k5, y5 = r5.top + y5s, arc = Math.sin(Math.PI * e);
+      const x = lerp(x4 + sx * cr * .12, x5, e) + sx * arc * .9, y = lerp(y4 + sy * cr * .12, y5, e) + sy * arc * .9;
+      const side = lerp(Math.max(h4, .5) * Math.SQRT2, sv > .75 ? q1 : q0, cr), ang = Math.PI / 4 * (1 - cr);
+      const c5 = CR0.map((v, j) => v + (CR1[j] - v) * clamp(y5s / b.H)), col = c4.map((v, j) => Math.round(lerp(v, c5[j], e)));
+      const al = lerp(lerp(1, .85, cr), (.45 + .55 * sv) * b.DIM, smooth(.55, 1, e)) * fade;
+      // until it has left, a dot is seen only through the window (the head bleeds past its frame, as in 04)
+      put(e > 0 ? inB : inA, x, y, side, ang, col, al);
     }
     const paint = M => { for (const [k, pt] of M) { ctx.globalAlpha = (k & 15) / 15; ctx.fillStyle = `rgb(${((k >> 14) & 31) * 8},${((k >> 9) & 31) * 8},${((k >> 4) & 31) * 8})`; ctx.fill(pt); } };
     const rr = (c2) => { if (c2.roundRect) c2.roundRect(ar.left, ar.top, ar.width, ar.height, 6); else c2.rect(ar.left, ar.top, ar.width, ar.height); };
-    ctx.save(); ctx.beginPath(); rr(ctx); ctx.clip(); paint(inA); ctx.restore();
-    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, vh); rr(ctx); ctx.clip('evenodd'); paint(inB); ctx.restore();
+    // the message cards in the window stay above the pixels, as they do over 04's own print
+    const cards = [...art.querySelectorAll('.fc')].map(c => c.getBoundingClientRect()).filter(r => r.width && getComputedStyle(art).opacity !== '0');
+    const holes = c2 => cards.forEach(r => { if (c2.roundRect) c2.roundRect(r.left, r.top, r.width, r.height, 6); else c2.rect(r.left, r.top, r.width, r.height); });
+    ctx.save(); ctx.beginPath(); rr(ctx); holes(ctx); ctx.clip('evenodd'); paint(inA); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, vh); holes(ctx); ctx.clip('evenodd'); paint(inB); ctx.restore();      // the travelling pixels are free: they leave the window and fly over the page
     ctx.globalAlpha = 1;
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
