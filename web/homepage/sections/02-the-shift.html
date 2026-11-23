@@ -16,6 +16,7 @@
   @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
   @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
   @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Light-Trial.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Book-Trial.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 
   :root {
     --black: #000;
@@ -41,10 +42,10 @@
 
   /* @section:02 css:start */
   /* ==== 02 · The shift (structure v12): pinned for ~2.5 screens, scroll walks then → now ==== */
-  .shift { position: relative; z-index: 1; height: 260svh; background: transparent; }
-  .shift .stick { position: sticky; top: 0; height: 100svh; min-height: 640px; display: grid; align-items: center; overflow: hidden; }
+  .shift { position: relative; z-index: 1; height: auto; background: transparent; }   /* general updates: no scroll pin, the stages play on their own */
+  .shift .stick { position: relative; height: auto; min-height: 0; padding: 88px 0 96px; display: grid; align-items: center; overflow: hidden; }
   .shift-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: center; }
-  .eyebrow { margin: 0 0 24px; font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: rgba(252,252,252,.6); }
+  .eyebrow { margin: 0 0 24px; font: 400 14px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--eyebrow, #24ff63); }
   .shift h2 { margin: 0; font-weight: 300; font-size: clamp(38px, 3.55vw, 64px); line-height: 1.05; letter-spacing: -.04em; }
   .shift h2 span { display: block; transition: color .8s var(--ease); }
   .shift h2 .now { color: rgba(252,252,252,.32); }
@@ -61,7 +62,8 @@
   .steps { position: relative; list-style: none; margin: 40px 0 0; padding: 0 0 0 24px; display: grid; gap: 22px; }
   .steps::before, .steps::after { content: ""; position: absolute; left: 3px; top: 6px; height: var(--rh, calc(100% - 12px)); width: 1px; background: rgba(252,252,252,.14); }   /* ends at the last diamond */
   .steps::after { background: linear-gradient(180deg, var(--mint), var(--cyan)); transform-origin: top; transform: scaleY(var(--p, 0)); }
-  .steps li { position: relative; color: rgba(252,252,252,.35); transition: color .7s var(--ease); }
+  .steps li { position: relative; color: rgba(252,252,252,.35); transition: color .7s var(--ease); cursor: pointer; outline-offset: 6px; }
+  .steps li:not(.on):hover { color: rgba(252,252,252,.7); }
   .steps li::before, .steps li::after { content: ""; position: absolute; left: -24px; top: 4px; width: 7px; height: 7px; transform: rotate(45deg); background: #333; }
   .steps li::after { background: linear-gradient(135deg, var(--mint), var(--cyan)); opacity: var(--a, 0);
     transform: rotate(45deg) scale(calc(.4 + .6 * var(--a, 0) + .45 * var(--b, 0)));
@@ -70,7 +72,7 @@
   .steps .k { display: block; font: 300 12.5px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
   .steps .d { display: block; margin-top: 8px; font-size: 16px; line-height: 1.4; max-width: 30em; }
   /* board: who does the work */
-  .board { border: 1px solid rgba(252,252,252,.1); background: rgba(22,22,22,.92); font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .board { border: 1px solid rgba(252,252,252,.1); border-radius: var(--r, 6px); overflow: hidden; background: rgba(22,22,22,.92); font: 300 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
   .board .row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 236px; align-items: center; gap: 16px; min-height: 64px; padding: 0 20px; border-top: 1px solid rgba(252,252,252,.08); overflow: hidden; }
   .board .row.head { min-height: 44px; border-top: 0; color: rgba(252,252,252,.5); }
   .board .row.head > :last-child, .board .foot > :last-child { padding-left: 24px; }
@@ -182,7 +184,7 @@
 
 <!-- @section:02 js:start -->
 <script>
-// 02 · The shift: scroll progress through the pinned section picks the stage (spreadsheets, dashboards, Comp AI)
+// 02 · The shift: the stages follow the section into view and land when it reaches the centre of the screen; a click picks a stage
 (() => {
   const sec = document.getElementById('shift'); if (!sec) return;
   const steps = [...sec.querySelectorAll('.steps li')], rail = sec.querySelector('.steps');
@@ -249,14 +251,31 @@
   const loop = now => { raf = 0; const d = target - fill;
     fill = Math.abs(d) < .3 ? target : fill + d * .085;
     draw(now); if (fill !== target || pulsing) raf = requestAnimationFrame(loop); };
-  const update = () => { measure();
-    const r = sec.getBoundingClientRect(), span = Math.max(1, r.height - innerHeight);
-    target = toY(Math.min(1, Math.max(0, -r.top / span)));
-    if (r.top < innerHeight * .55) sec.classList.add('in');
-    if (fill < 0) { fill = target; passed = Y.reduce((n, y, k) => fill >= y - 1 ? k : n, 0); draw(performance.now()); }   // no pulse on load
-    else if (!raf) raf = requestAnimationFrame(loop); };
-  addEventListener('scroll', update, { passive: true });
-  addEventListener('resize', update); update();
+  // general updates: no scroll pin. The stages follow the section's position in the viewport: they start as it comes in
+  // from below and the final state (Comp AI, all bars in) is reached about when the section's centre meets the centre
+  // of the screen. Clicking a stage jumps there and takes over from the scroll.
+  let want = 0, manual = false;
+  const run = () => { if (!raf) raf = requestAnimationFrame(loop); };
+  const goTo = k => { measure(); want = Math.min(k, Y.length - 1); target = Y[want]; run(); };
+  const PS = [.2, .55, .9];                  // scroll progress at which each stage is fully reached (1 = centres aligned)
+  const fillAt = p => { if (p <= PS[0]) return Y[0];
+    for (let k = 0; k + 1 < PS.length; k++) if (p <= PS[k + 1]) return Y[k] + (Y[k + 1] - Y[k]) * (p - PS[k]) / (PS[k + 1] - PS[k]);
+    return Y[Y.length - 1]; };
+  const follow = () => { if (manual) return; measure();
+    const r = sec.getBoundingClientRect(), vh = innerHeight;
+    const p = Math.min(1, Math.max(0, (vh - r.top) / (vh / 2 + r.height / 2)));
+    if (r.top < vh * .85) sec.classList.add('in');
+    target = fillAt(p); run(); };
+  steps.forEach((li, k) => {
+    li.tabIndex = 0; li.setAttribute('role', 'button'); li.setAttribute('aria-label', 'Show ' + li.querySelector('.k').textContent);
+    const pick = () => { manual = true; sec.classList.add('in'); goTo(k); };
+    li.addEventListener('click', pick);
+    li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+  });
+  measure(); fill = target = Y[0]; passed = 0; draw(performance.now());
+  addEventListener('scroll', follow, { passive: true });
+  addEventListener('resize', () => { measure(); if (manual) { fill = target = Y[want]; draw(performance.now()); } else follow(); });
+  follow();
 
 })();
 </script>

@@ -18,6 +18,7 @@
   @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
   @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
   @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Light-Trial.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Book-Trial.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 
   :root {
     --black: #000;
@@ -45,15 +46,15 @@
   /* ==== 04 · The people. The one light section (brand white, neutral-100). The dark of sections 02 and 03 does not end: it contracts
      into a fixed-size window on the left; the print (dots on a canvas, see the script) falls into it. Type sizes follow the styleguide v0.1 used in section 03. ==== */
   .sec-04 { --t-label: 13px; --t-body: 16px; --t-lead-m: 20px; --t-display-l: 53px;
-    position: relative; z-index: 1; color: #161616; padding: 72px 0; min-height: 100svh; display: grid; align-items: center; }
+    position: relative; z-index: 1; color: #161616; padding: 96px 0; min-height: 100svh; display: grid; align-items: center; }
   @media (max-width: 1023px) { .sec-04 { --t-lead-m: 16px; --t-display-l: 33px; padding: 40px 0 56px; } }
   .sec-04::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #f8f8f8; }
   .sec-04 .grid-04 { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: stretch; --art-h: clamp(560px, 84svh, 880px); height: var(--art-h); }      /* the row height is fixed: neither the chat nor its conversation can change it */
-  .sec-04 .art-04 { position: relative; border-radius: 6px; height: 100%; background: #000; }   /* fixed window; the dots (a fixed canvas behind .grid-04) fall into it */
+  .sec-04 .art-04 { position: relative; border-radius: var(--r, 6px); height: 100%; background: #000; }   /* fixed window; the dots (a fixed canvas behind .grid-04) fall into it */
   /* fragments of real messages float over the print: one conversation each, so there is clearly more going on than one chat */
   .sec-04 { overflow-x: clip; }
   .sec-04 svg.av { color: #F5380E; }      /* brand coral: the experts' prints */
-  .sec-04 .fc { position: absolute; z-index: 1; width: min(250px, 56%); padding: 9px 11px 10px; background: #fcfcfc; color: #161616; border: 1px solid #e6e6e6; border-radius: 6px; font: 300 13px/1.38 var(--sans); opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease, filter .8s ease, transform .9s var(--ease); }      /* flat: 1px outline, no shadow */
+  .sec-04 .fc { position: absolute; z-index: 1; width: min(250px, 56%); padding: 9px 11px 10px; background: #fcfcfc; color: #161616; border: 1px solid #e6e6e6; border-radius: var(--r, 6px); font: 300 13px/1.38 var(--sans); opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease, filter .8s ease, transform .9s var(--ease); }      /* flat: 1px outline, no shadow */
   .sec-04 .fc.in { opacity: 1; filter: none; transform: none; animation: s04drift 7s ease-in-out infinite alternate; }
   @keyframes s04drift { from { translate: 0 0; } to { translate: 0 -6px; } }
   .sec-04 .fc.b.in { animation-duration: 9s; } .sec-04 .fc.c.in { animation-duration: 8s; animation-delay: -3s; } .sec-04 .fc.d.in { animation-duration: 6s; animation-delay: -2s; }
@@ -71,15 +72,15 @@
   .sec-04 .fc.c { right: max(-3%, -24px); bottom: 24px; }
   .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; height: 100%; padding: 24px 0 0 72px; min-width: 0; }
   .sec-04 .eyebrow-04::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 10px; background: #F5380E; transform: rotate(45deg) translateY(-1px); }
-  .sec-04 .eyebrow-04 { margin: 0 0 24px; font: 300 var(--t-label)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #696969; }
+  .sec-04 .eyebrow-04 { margin: 0 0 24px; font: 400 14px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: #C12000; }   /* the section's own coral (brand coral 040, AA on white) */
   .sec-04 h2 { margin: 0; font-weight: 300; font-size: var(--t-display-l); line-height: 1; letter-spacing: -.04em; }
   .sec-04 .lead-04 { margin: 20px 0 0; max-width: 28em; font-size: var(--t-lead-m); line-height: 1.4; letter-spacing: -.01em; color: #343434; text-wrap: pretty; }
   .sec-04 .tags-04 { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; padding: 0; list-style: none; }
-  .sec-04 .tags-04 li { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: 99px; color: #343434; transition: border-color .5s ease, color .5s ease, background-color .5s ease; }
+  .sec-04 .tags-04 li { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: var(--r-sm, 4px); color: #343434; transition: border-color .5s ease, color .5s ease, background-color .5s ease; }
   .sec-04 .tags-04 li.on { border-color: #F5380E; color: #C12000; background: rgba(245, 56, 14, .08); }
   /* the conversation, Slack-like: channel rail, header with the person and status, rows without bubbles (the expert's rows tinted orange), thread links, composer */
   .sec-04 .chat-04 { flex: 1 1 0; min-height: 260px; margin-bottom: clamp(40px, 7svh, 72px) !important; --paper: #fff; --ink: #161616; --line: #cfcfcf; --tint: rgba(244, 153, 0, .14); --name: #161616; --muted: #696969; --field: #fff; --fieldline: #bdbdbd; --me: #161616; --meink: #fcfcfc;
-    display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 560px); margin: 36px 0 0 0; position: relative; z-index: 2; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font: 300 14px/1.4 var(--sans);
+    display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 560px); margin: 36px 0 0 0; position: relative; z-index: 2; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: var(--r, 6px); overflow: hidden; font: 300 14px/1.4 var(--sans);
     box-shadow: 0 1px 2px rgba(22, 22, 22, .08), 0 24px 48px -14px rgba(22, 22, 22, .3); }      /* fixed max width: it does not stretch on wide screens, a little wider on very large ones (below) */
   .sec-04 .chat-04::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 1; background: linear-gradient(90deg, #F5380E, #F37300 55%, #F49900); }
   .sec-04 .chat-rail { display: none; }
@@ -92,7 +93,7 @@
   .sec-04 .chat-h .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #F5380E; }
   .sec-04 .chat-b { position: relative; flex: 1 1 0; min-height: 0; overflow: hidden; padding: 6px 0 4px; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px); mask-image: linear-gradient(to bottom, transparent 0, #000 28px); }      /* older messages scroll up under a soft fade, like a real chat */
   .sec-04 .chat-track { display: grid; transition: transform .5s var(--ease); }
-  .sec-04 svg.av.sq, .sec-04 .av.me { width: 32px; height: 32px; border-radius: 6px; flex: none; box-sizing: border-box; }
+  .sec-04 svg.av.sq, .sec-04 .av.me { width: 32px; height: 32px; border-radius: var(--r, 6px); flex: none; box-sizing: border-box; }
   .sec-04 svg.av.sq { padding: 4px; background: #F49900; color: #1a0f00; }
   .sec-04 .av.me { display: grid; place-items: center; background: var(--me); color: var(--meink); font: 400 13px/1 var(--sans); }
   .sec-04 .msg { display: grid; grid-template-columns: 32px minmax(0, 1fr); column-gap: 10px; align-items: start; padding: 8px 14px; opacity: 0; filter: blur(7px); transform: translateY(10px); transition: opacity .6s ease, filter .7s ease, transform .8s var(--ease); }
@@ -100,7 +101,7 @@
   .sec-04 .msg.ex { background: var(--tint); }      /* the expert's rows: brand orange tint */
   .sec-04 .msg .bd { position: relative; min-width: 0; } .sec-04 .msg .bd > * { transition: opacity .35s ease; }
   .sec-04 .msg .who { display: flex; align-items: baseline; gap: 8px; margin: 0 0 2px; } .sec-04 .msg .who b { font-weight: 400; color: var(--name); }
-  .sec-04 .msg .who i { font: 300 10px/1 var(--mono); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: #C12000; border: 1px solid currentColor; border-radius: 3px; padding: 2px 4px; }
+  .sec-04 .msg .who i { font: 300 10px/1 var(--mono); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: #C12000; border: 1px solid currentColor; border-radius: var(--r-sm, 4px); padding: 2px 4px; }
   .sec-04 .msg .who time { font: 300 11px/1 var(--mono); color: var(--muted); }
   .sec-04 .msg p { margin: 0; }
   .sec-04 .msg.typing .bd > * { opacity: 0; }
@@ -109,14 +110,14 @@
   .sec-04 .reply-time { display: flex; align-items: center; gap: 8px; padding: 2px 14px 8px 56px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; opacity: 0; transition: opacity .6s ease .2s; }
   .sec-04 .reply-time.on { opacity: 1; }
   .sec-04 .reply-time::before { content: ""; width: 12px; height: 10px; border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; border-bottom-left-radius: 4px; transform: translateY(-4px); }
-  .sec-04 .chat-f { margin: 4px 14px 14px; padding: 10px 12px; background: var(--field); border: 1px solid var(--fieldline); border-radius: 8px; color: #848484; display: flex; justify-content: space-between; align-items: center; }
+  .sec-04 .chat-f { margin: 4px 14px 14px; padding: 10px 12px; background: var(--field); border: 1px solid var(--fieldline); border-radius: var(--r, 6px); color: #848484; display: flex; justify-content: space-between; align-items: center; }
   .sec-04 .chat-f::after { content: ""; width: 14px; height: 14px; background: #F5380E; clip-path: polygon(0 0, 100% 50%, 0 100%, 20% 50%); opacity: .85; }
   /* channel rail (Slack-like), light: warm cream with an orange active channel, no black */
   .sec-04 .chat-04 { grid-template-columns: 148px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); --me: #e9e3d3; --meink: #161616; }
   .sec-04 .chat-rail { display: block; background: #FFF8E4; border-right: 1px solid var(--line); color: #5a4a30; padding: 16px 10px 12px; font: 300 13px/1.3 var(--sans); }
   .sec-04 .chat-rail b { display: block; margin: 0 6px 14px; font-weight: 400; color: #161616; font-size: 14px; }
   .sec-04 .chat-rail p { margin: 12px 6px 6px; font: 300 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #8a7a60; }
-  .sec-04 .chat-rail span, .sec-04 .chat-rail .ch { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 5px 6px; border: 0; border-radius: 5px; background: transparent; color: #5a4a30; font: inherit; text-align: left; }
+  .sec-04 .chat-rail span, .sec-04 .chat-rail .ch { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 5px 6px; border: 0; border-radius: var(--r-sm, 4px); background: transparent; color: #5a4a30; font: inherit; text-align: left; }
   .sec-04 .chat-rail .ch { cursor: pointer; transition: background-color .2s ease, color .2s ease; } .sec-04 .chat-rail .ch:hover { background: rgba(244, 153, 0, .18); } .sec-04 .chat-rail .ch:focus-visible { outline: 1.5px solid #C12000; outline-offset: 1px; }
   .sec-04 .chat-rail .ch.seen i { opacity: 0; }
   .sec-04 .chat-b { transition: opacity .16s ease; } .sec-04 .chat-b.swap { opacity: 0; }
@@ -534,8 +535,9 @@
   const update = () => {
     raf = 0;
     const top = sec.getBoundingClientRect().top, vh = innerHeight, P = reduced ? 1 : clamp((vh - top) / (vh * .5));
-    prepOn = reduced ? true : prepOn ? top < vh * 2.4 : top < vh * 2;       // (hysteresis against flicker)
-    if (on) { on.near(top < vh * 2.6); on.set(P, prepOn); }
+    // general updates: take the print over only just before section 04 shows, so section 03 keeps the same print behaviour as 02
+    prepOn = reduced ? true : prepOn ? top < vh * 1.3 : top < vh * 1.1;     // (hysteresis against flicker)
+    if (on) { on.near(top < vh * 1.6); on.set(P, prepOn); }
     if (P > .35) reveal();
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
