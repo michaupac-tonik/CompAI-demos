@@ -3240,9 +3240,9 @@
 <!-- @section:06 js:end -->
 <script>
 // ---- trial 04-06: the head of section 04 becomes the head behind section 05 ----
-// As section 05 comes up, the black window of 04 dissolves, the head breaks out of it and every dot travels to its place in the head of 05:
-// the diamonds turn into the small square pixels, shrink and dim to 05's mist strength, the colours follow 05's gradient. Both heads are
-// the same PERSON lattice, so dot i of one lands on dot i of the other. Scroll-linked and reversible; at the end 05's own canvas takes over.
+// As section 05 comes up, the head in 04's black window scatters and fades inside the window (the window itself stays whole and is never
+// crossed); in section 05 the same dots come in scattered and settle into 05's head as small square pixels, dimmed to its mist strength.
+// Both heads are the same PERSON lattice. Scroll-linked and reversible; at the end 05's own canvas takes over.
 (() => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const s4 = document.getElementById('sec-04'), s5 = document.getElementById('sec-05'); if (!s4 || !s5) return;
@@ -3267,7 +3267,7 @@
   let raf = 0, state = -1;      // state: -1 before, 0 running, 1 after
   const set = st => { if (st === state) return; state = st;
     const p4 = window.__p04, p5 = window.__p05;
-    if (st !== 0) { cv.style.display = 'none'; art.style.opacity = st === 1 ? '0' : ''; }
+    if (st !== 0) cv.style.display = 'none';
     if (p4) for (const c of [p4.cv, p4.cvB]) { c.style.visibility = st === 1 ? 'hidden' : ''; if (st === -1) c.style.opacity = ''; }
     if (p5) { p5.cv.style.transition = st === 0 ? 'none' : ''; p5.cv.style.opacity = st === 1 ? '' : st === -1 ? '0' : p5.cv.style.opacity; } };
   const frame = () => {
@@ -3279,39 +3279,43 @@
     if (!S && !prep()) return;
     set(0);
     const p4 = window.__p04, p5 = window.__p05, a4 = p4.st(), b = p5.st(), L = b.L;
-    // the window dissolves; 04's own canvases fade under the bridge (they also carry the fine dots around the head), 05's canvas fades in at the end
-    art.style.opacity = (1 - smooth(.02, .22, t)).toFixed(3);
-    const o4 = (1 - smooth(0, .2, t)).toFixed(3); p4.cv.style.opacity = o4; p4.cvB.style.opacity = o4;
-    p5.cv.style.opacity = smooth(.82, 1, t).toFixed(3);
+    // 04's own canvases fade under the bridge (they also carry the fine dots around the head); 05's canvas fades in at the end
+    const o4 = (1 - smooth(0, .15, t)).toFixed(3); p4.cv.style.opacity = o4; p4.cvB.style.opacity = o4;
+    p5.cv.style.opacity = smooth(.85, 1, t).toFixed(3);
     const dpr = Math.min(devicePixelRatio || 1, 2);
     if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(vh * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(vh * dpr); }
     cv.style.display = 'block'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, vh);
     const ar = art.getBoundingClientRect(), sTop = s4.getBoundingClientRect().top;
     const Cx = ar.left + ar.width / 2, Cy = ar.top - sTop + ar.height / 2;          // as in 04: the head is fixed to the viewport, the window scrolls over it
-    const g = smooth(.02, .45, t), grow = g * Math.max(W, vh);                       // the window's clip opens up
-    ctx.save(); ctx.beginPath(); ctx.rect(ar.left - grow, ar.top - grow, ar.width + 2 * grow, ar.height + 2 * grow); ctx.clip();
-    const fade = 1 - smooth(.9, 1, t), paths = new Map(), k4 = a4.kD, k5 = b.k, q0 = b.px / b.dpr, q1 = (b.px + b.dpr) / b.dpr;
+    const k4 = a4.kD, k5 = b.k, q0 = b.px / b.dpr, q1 = (b.px + b.dpr) / b.dpr, fade = 1 - smooth(.92, 1, t);
+    // The black window is never crossed: the head scatters inside it (clipped to the window) and fades; outside it, in section 05,
+    // the same dots come in scattered and settle into 05's head (clipped so nothing is drawn over the window).
+    const inA = new Map(), inB = new Map();
+    const put = (M, x, y, side, ang, col, al) => { const aq = Math.round(al * 15); if (!aq) return;
+      const key = (((col[0] >> 3 << 5 | col[1] >> 3) << 5 | col[2] >> 3) << 4) + aq; let pt = M.get(key); if (!pt) { pt = new Path2D(); M.set(key, pt); }
+      const hs = side / 2, cs = Math.cos(ang) * hs, sn = Math.sin(ang) * hs;
+      pt.moveTo(x - cs + sn, y - sn - cs); pt.lineTo(x + cs + sn, y + sn - cs); pt.lineTo(x + cs - sn, y + sn + cs); pt.lineTo(x - cs - sn, y - sn + cs); pt.closePath(); };
     for (let i = 0; i < n; i++) {
-      const sv = S[3*i], X = L[5*i], Y = L[5*i+1];
-      // each dot leaves on its own beat: the top of the head first, a little randomness so it reads as a swarm, not a slide
-      const d = .1 * (Y - Y0) / (Y1 - Y0 || 1) + .06 * S[3*i+2], u = clamp((t - d) / (1 - .16)), e = u * u * u * (u * (6 * u - 15) + 10);
-      const h4 = S[3*i+1] * k4, a4v = h4 >= .5 ? 1 : 0, a5v = sv >= .35 ? (.45 + .55 * sv) * b.DIM : 0;
-      // dots that are not part of 05's head (the fine ones between the ridges) leave first, so the ridges stay readable in flight;
-      // the strength drops early, before the head crosses 05's heading
-      const al = (a5v ? lerp(a4v, a5v, smooth(0, .55, e)) : a4v * (1 - smooth(0, .25, e))) * fade; if (al < .02) continue;
-      const x4 = Cx + (X - a4.ax) * k4, y4 = Cy + (Y - a4.ay) * k4, y5s = b.oy + Y * k5, x = lerp(x4, r5.left + b.ox + X * k5, e), y = lerp(y4, r5.top + y5s, e);
-      // arcs a little on the way (no straight slide), more for the dots that leave later
-      const lift = Math.sin(Math.PI * e) * (10 + 16 * S[3*i+2]);
-      const side = a5v ? lerp(h4 * Math.SQRT2, sv > .75 ? q1 : q0, e) : h4 * Math.SQRT2, ang = Math.PI / 4 * (1 - e), hs = side / 2;
-      const c4 = CR0.map((v, j) => v + (CR1[j] - v) * Math.floor(clamp(y4 / vh) * 27.99) / 27), c5 = CR0.map((v, j) => v + (CR1[j] - v) * clamp(y5s / b.H));
-      const cr = Math.round(lerp(c4[0], c5[0], e)) >> 3, cg = Math.round(lerp(c4[1], c5[1], e)) >> 3, cb = Math.round(lerp(c4[2], c5[2], e)) >> 3, aq = Math.round(al * 15);
-      if (!aq) continue;
-      const key = (((cr << 5 | cg) << 5 | cb) << 4) + aq; let pt = paths.get(key); if (!pt) { pt = new Path2D(); paths.set(key, pt); }
-      const cs = Math.cos(ang) * hs, sn = Math.sin(ang) * hs, yy = y - lift * .4;
-      pt.moveTo(x - cs + sn, yy - sn - cs); pt.lineTo(x + cs + sn, yy + sn - cs); pt.lineTo(x + cs - sn, yy + sn + cs); pt.lineTo(x - cs - sn, yy - sn + cs); pt.closePath();
+      const sv = S[3*i], X = L[5*i], Y = L[5*i+1], rnd = S[3*i+2];
+      const d = .1 * (Y - Y0) / (Y1 - Y0 || 1) + .12 * rnd, u = clamp((t - d) / (1 - .22));
+      // the scatter: every dot gets its own direction and distance (from its hash), the same on the way out and on the way in
+      const ang0 = rnd * 97.3 % TAU, dist = 70 + 230 * ((rnd * 13.7) % 1), sx = Math.cos(ang0) * dist, sy = Math.sin(ang0) * dist;
+      // A · in the window: the diamond drifts out along its direction, shrinks and fades
+      const h4 = S[3*i+1] * k4;
+      if (h4 >= .5 && u < .6) { const a = smooth(0, .6, u), x = Cx + (X - a4.ax) * k4 + sx * a * .6, y = Cy + (Y - a4.ay) * k4 + sy * a * .6;
+        const band = Math.floor(clamp((Cy + (Y - a4.ay) * k4) / vh) * 27.99) / 27, col = CR0.map((v, j) => Math.round(v + (CR1[j] - v) * band));
+        put(inA, x, y, h4 * Math.SQRT2 * (1 - .5 * a), Math.PI / 4, col, 1 - a); }
+      // B · in section 05: the square pixel comes in from its scattered place and settles into the head
+      if (sv >= .35 && u > .25) { const bq = smooth(.25, 1, u), e = 1 - Math.pow(1 - bq, 3), y5s = b.oy + Y * k5;
+        const x = r5.left + b.ox + X * k5 + sx * (1 - e), y = r5.top + y5s + sy * (1 - e);
+        const col = CR0.map((v, j) => Math.round(v + (CR1[j] - v) * clamp(y5s / b.H)));
+        put(inB, x, y, sv > .75 ? q1 : q0, Math.PI / 4 * (1 - e), col, lerp(.85, (.45 + .55 * sv) * b.DIM, e) * Math.min(1, bq * 3) * fade); }      // clear while scattered, dimmed to 05's mist once settled
     }
-    for (const [k, pt] of paths) { ctx.globalAlpha = (k & 15) / 15; ctx.fillStyle = `rgb(${((k >> 14) & 31) * 8},${((k >> 9) & 31) * 8},${((k >> 4) & 31) * 8})`; ctx.fill(pt); }
-    ctx.restore(); ctx.globalAlpha = 1;
+    const paint = M => { for (const [k, pt] of M) { ctx.globalAlpha = (k & 15) / 15; ctx.fillStyle = `rgb(${((k >> 14) & 31) * 8},${((k >> 9) & 31) * 8},${((k >> 4) & 31) * 8})`; ctx.fill(pt); } };
+    const rr = (c2) => { if (c2.roundRect) c2.roundRect(ar.left, ar.top, ar.width, ar.height, 6); else c2.rect(ar.left, ar.top, ar.width, ar.height); };
+    ctx.save(); ctx.beginPath(); rr(ctx); ctx.clip(); paint(inA); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, vh); rr(ctx); ctx.clip('evenodd'); paint(inB); ctx.restore();
+    ctx.globalAlpha = 1;
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
   addEventListener('scroll', kick, { passive: true }); addEventListener('resize', () => { S = null; kick(); });
