@@ -2450,7 +2450,7 @@
       Ps += (target - Ps) * (1 - Math.exp(-dt * 10)); if (Math.abs(target - Ps) < .0004) Ps = target;      // follows the scroll position, the same way in both directions
       syncCards(Ps);
       if (!prepOn && !phA && Ps === 0 && active) active = false;                                          // everything is home again
-      const a = art.getBoundingClientRect(), sTop = sec.getBoundingClientRect().top, Cx = a.left + a.width / 2, Cy = a.top - sTop + a.height / 2, mistA = clamp(window.heroMist || .32, .15, 1);
+      const a = art.getBoundingClientRect(), sTop = sec.getBoundingClientRect().top, Cx = a.left + a.width / 2, Cy = a.top + a.height / 2, mistA = clamp(window.heroMist || .32, .15, 1);
       if (pointerIn && now - lastPtr > REST_MS) press.target = 0;
       press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN : P_OUT);
       press.x += (press.tx - press.x) * P_FOLLOW; press.y += (press.ty - press.y) * P_FOLLOW;
@@ -3286,7 +3286,7 @@
     if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(vh * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(vh * dpr); }
     cv.style.display = 'block'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, vh);
     const ar = art.getBoundingClientRect(), sTop = s4.getBoundingClientRect().top;
-    const Cx = ar.left + ar.width / 2, Cy = ar.top - sTop + ar.height / 2;          // as in 04: the head is fixed to the viewport, the window scrolls over it
+    const Cx = ar.left + ar.width / 2, Cy = ar.top + ar.height / 2;          // as in 04 (trial): the head moves with its window
     const k4 = a4.kD, k5 = b.k, q0 = b.px / b.dpr, q1 = (b.px + b.dpr) / b.dpr, fade = 1 - smooth(.92, 1, t);
     // The black window is never crossed: the head scatters inside it (clipped to the window) and fades; outside it, in section 05,
     // the same dots come in scattered and settle into 05's head (clipped so nothing is drawn over the window).
@@ -3302,7 +3302,7 @@
       const ang0 = rnd * 97.3 % TAU, dist = 70 + 230 * ((rnd * 13.7) % 1), sx = Math.cos(ang0) * dist, sy = Math.sin(ang0) * dist;
       // A · in the window: the diamond drifts out along its direction, shrinks and fades
       const h4 = S[3*i+1] * k4;
-      if (h4 >= .5 && u < .6) { const a = smooth(0, .6, u), x = Cx + (X - a4.ax) * k4 + sx * a * .6, y = Cy + (Y - a4.ay) * k4 + sy * a * .6;
+      if (h4 >= .5 && u < .6) { const a = smooth(0, .6, u), x = Cx + (X - a4.ax) * k4 + sx * a * .15, y = Cy + (Y - a4.ay) * k4 + sy * a * .15;      // crumbles in place: a short jitter, no slide
         const band = Math.floor(clamp((Cy + (Y - a4.ay) * k4) / vh) * 27.99) / 27, col = CR0.map((v, j) => Math.round(v + (CR1[j] - v) * band));
         put(inA, x, y, h4 * Math.SQRT2 * (1 - .5 * a), Math.PI / 4, col, 1 - a); }
       // B · in section 05: the square pixel comes in from its scattered place and settles into the head
