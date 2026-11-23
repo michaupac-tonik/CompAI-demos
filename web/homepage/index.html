@@ -1156,6 +1156,14 @@
     .sec-06 .live::before, .sec-06 .win-f .dot, .sec-06 li.new, .sec-06 .ctl .ci.chk .ck, .sec-06 .try::before, .sec-06 .win button.star.pop, .sec-06 .tag.busy::before { animation: none; }
   }
   /* @section:06 css:end */
+
+  /* ---- trial 04-06 (branch homepage-trial-04-06): only sections 04, 05 and 06 are shown. The hero stays in the DOM, hidden,
+     because it owns the shared print and the print data that section 04 takes over. ---- */
+  .hero { min-height: 0 !important; height: 0; padding: 0; }
+  .hero > :not(#print) { display: none !important; }
+  #shift, #sec-03 { display: none !important; }
+  .site-nav::before { opacity: 1 !important; }      /* the nav's dark bar stays on: the page now opens on a light section */
+  #sec-04 { margin-top: calc(var(--bar) + 74px); }
 </style>
 </head>
 <body>
@@ -2548,6 +2556,7 @@
         if (Math.abs(lw - art.offsetWidth) > 1 || Math.abs(lh - art.offsetHeight) > 1) layout();
         if (!prep) press.target = 0;
         kick(); } };
+    window.__p04 = { cv, cvB, st: () => ({ kD, ax, ay, A, HMAX, RR }) };      // trial 04-06: read by the head bridge into section 05
     update();
   };
 
@@ -2842,6 +2851,7 @@
     sec.addEventListener('pointerleave', () => { press.target = 0; kick(); });
   }
   const draw = () => { if (!layout()) return; render(); cv.classList.add('on'); };
+  window.__p05 = { cv, st: () => ({ ox, oy, k, px, dpr, H, L, DIM }) };      // trial 04-06: read by the head bridge from section 04
   // the chart's axis (the line under the bars) lines up with the last rule of the steps on the left; offsets ignore the entrance transforms
   const steps = sec.querySelector('.steps-05'), bars = sec.querySelector('.bars-05');
   const align = () => { if (!steps || !bars) return; chart.style.setProperty('--chart-top', '0px');
@@ -3228,5 +3238,86 @@
 })();
 </script>
 <!-- @section:06 js:end -->
+<script>
+// ---- trial 04-06: the head of section 04 becomes the head behind section 05 ----
+// As section 05 comes up, the black window of 04 dissolves, the head breaks out of it and every dot travels to its place in the head of 05:
+// the diamonds turn into the small square pixels, shrink and dim to 05's mist strength, the colours follow 05's gradient. Both heads are
+// the same PERSON lattice, so dot i of one lands on dot i of the other. Scroll-linked and reversible; at the end 05's own canvas takes over.
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const s4 = document.getElementById('sec-04'), s5 = document.getElementById('sec-05'); if (!s4 || !s5) return;
+  const art = s4.querySelector('.art-04');
+  const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
+  cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;display:none';
+  document.body.append(cv); const ctx = cv.getContext('2d');
+  const TAU = Math.PI * 2, clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), lerp = (a, b, t) => a + (b - a) * t;
+  const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+  const CR0 = [245, 56, 14], CR1 = [244, 153, 0];
+  let S = null, n = 0, Y0 = 0, Y1 = 1;
+  const prep = () => {
+    const p4 = window.__p04, p5 = window.__p05; if (!p4 || !p5) return false;
+    const a4 = p4.st(), b = p5.st(), L = b.L; if (!L || !a4.kD) return false;
+    n = L.length / 5; S = new Float32Array(n * 3); Y0 = 1e9; Y1 = -1e9;
+    for (let i = 0; i < n; i++) { const c = L[5*i+2], w = L[5*i+3], m = L[5*i+4], v = .5 + .5 * Math.cos(TAU * c);
+      const sv = smooth(1 - w - .34, 1 - w + .30, v) * Math.max(m, 0), full = Math.max(0, Math.min(a4.HMAX * sv - a4.RR, a4.A - a4.RR - .6));
+      const h = Math.sin(L[5*i] * .9285 + L[5*i+1] * 5.5881) * 43758.5453;
+      S[3*i] = sv; S[3*i+1] = full + a4.RR; S[3*i+2] = h - Math.floor(h);
+      Y0 = Math.min(Y0, L[5*i+1]); Y1 = Math.max(Y1, L[5*i+1]); }
+    return true; };
+  let raf = 0, state = -1;      // state: -1 before, 0 running, 1 after
+  const set = st => { if (st === state) return; state = st;
+    const p4 = window.__p04, p5 = window.__p05;
+    if (st !== 0) { cv.style.display = 'none'; art.style.opacity = st === 1 ? '0' : ''; }
+    if (p4) for (const c of [p4.cv, p4.cvB]) { c.style.visibility = st === 1 ? 'hidden' : ''; if (st === -1) c.style.opacity = ''; }
+    if (p5) { p5.cv.style.transition = st === 0 ? 'none' : ''; p5.cv.style.opacity = st === 1 ? '' : st === -1 ? '0' : p5.cv.style.opacity; } };
+  const frame = () => {
+    raf = 0;
+    const vh = innerHeight, W = document.documentElement.clientWidth, r5 = s5.getBoundingClientRect();
+    const t = clamp((vh * .85 - r5.top) / (vh * .85));
+    if (t <= 0) return set(-1);
+    if (t >= 1) return set(1);
+    if (!S && !prep()) return;
+    set(0);
+    const p4 = window.__p04, p5 = window.__p05, a4 = p4.st(), b = p5.st(), L = b.L;
+    // the window dissolves; 04's own canvases fade under the bridge (they also carry the fine dots around the head), 05's canvas fades in at the end
+    art.style.opacity = (1 - smooth(.02, .22, t)).toFixed(3);
+    const o4 = (1 - smooth(0, .2, t)).toFixed(3); p4.cv.style.opacity = o4; p4.cvB.style.opacity = o4;
+    p5.cv.style.opacity = smooth(.82, 1, t).toFixed(3);
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(vh * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(vh * dpr); }
+    cv.style.display = 'block'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, vh);
+    const ar = art.getBoundingClientRect(), sTop = s4.getBoundingClientRect().top;
+    const Cx = ar.left + ar.width / 2, Cy = ar.top - sTop + ar.height / 2;          // as in 04: the head is fixed to the viewport, the window scrolls over it
+    const g = smooth(.02, .45, t), grow = g * Math.max(W, vh);                       // the window's clip opens up
+    ctx.save(); ctx.beginPath(); ctx.rect(ar.left - grow, ar.top - grow, ar.width + 2 * grow, ar.height + 2 * grow); ctx.clip();
+    const fade = 1 - smooth(.9, 1, t), paths = new Map(), k4 = a4.kD, k5 = b.k, q0 = b.px / b.dpr, q1 = (b.px + b.dpr) / b.dpr;
+    for (let i = 0; i < n; i++) {
+      const sv = S[3*i], X = L[5*i], Y = L[5*i+1];
+      // each dot leaves on its own beat: the top of the head first, a little randomness so it reads as a swarm, not a slide
+      const d = .1 * (Y - Y0) / (Y1 - Y0 || 1) + .06 * S[3*i+2], u = clamp((t - d) / (1 - .16)), e = u * u * u * (u * (6 * u - 15) + 10);
+      const h4 = S[3*i+1] * k4, a4v = h4 >= .5 ? 1 : 0, a5v = sv >= .35 ? (.45 + .55 * sv) * b.DIM : 0;
+      // dots that are not part of 05's head (the fine ones between the ridges) leave first, so the ridges stay readable in flight;
+      // the strength drops early, before the head crosses 05's heading
+      const al = (a5v ? lerp(a4v, a5v, smooth(0, .55, e)) : a4v * (1 - smooth(0, .25, e))) * fade; if (al < .02) continue;
+      const x4 = Cx + (X - a4.ax) * k4, y4 = Cy + (Y - a4.ay) * k4, y5s = b.oy + Y * k5, x = lerp(x4, r5.left + b.ox + X * k5, e), y = lerp(y4, r5.top + y5s, e);
+      // arcs a little on the way (no straight slide), more for the dots that leave later
+      const lift = Math.sin(Math.PI * e) * (10 + 16 * S[3*i+2]);
+      const side = a5v ? lerp(h4 * Math.SQRT2, sv > .75 ? q1 : q0, e) : h4 * Math.SQRT2, ang = Math.PI / 4 * (1 - e), hs = side / 2;
+      const c4 = CR0.map((v, j) => v + (CR1[j] - v) * Math.floor(clamp(y4 / vh) * 27.99) / 27), c5 = CR0.map((v, j) => v + (CR1[j] - v) * clamp(y5s / b.H));
+      const cr = Math.round(lerp(c4[0], c5[0], e)) >> 3, cg = Math.round(lerp(c4[1], c5[1], e)) >> 3, cb = Math.round(lerp(c4[2], c5[2], e)) >> 3, aq = Math.round(al * 15);
+      if (!aq) continue;
+      const key = (((cr << 5 | cg) << 5 | cb) << 4) + aq; let pt = paths.get(key); if (!pt) { pt = new Path2D(); paths.set(key, pt); }
+      const cs = Math.cos(ang) * hs, sn = Math.sin(ang) * hs, yy = y - lift * .4;
+      pt.moveTo(x - cs + sn, yy - sn - cs); pt.lineTo(x + cs + sn, yy + sn - cs); pt.lineTo(x + cs - sn, yy + sn + cs); pt.lineTo(x - cs - sn, yy - sn + cs); pt.closePath();
+    }
+    for (const [k, pt] of paths) { ctx.globalAlpha = (k & 15) / 15; ctx.fillStyle = `rgb(${((k >> 14) & 31) * 8},${((k >> 9) & 31) * 8},${((k >> 4) & 31) * 8})`; ctx.fill(pt); }
+    ctx.restore(); ctx.globalAlpha = 1;
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  addEventListener('scroll', kick, { passive: true }); addEventListener('resize', () => { S = null; kick(); });
+  addEventListener('load', () => setTimeout(kick, 500));
+  kick();
+})();
+</script>
 </body>
 </html>
