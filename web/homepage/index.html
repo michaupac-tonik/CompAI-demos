@@ -1550,6 +1550,30 @@
   }
   /* @section:09 css:end */
 
+  /* ---- review 24.11: one type system across the page -------------------------------------------------------------
+     Rules (Michał, 24.11): Favorit Medium (500) is parked; sans text, labels and links in Light (300). Mono stays for
+     eyebrows, numbers and UI meta. One display size (53px), one lead size (20px, 22px from 1680px), one eyebrow
+     (mono 400 14px, .05em, diamond marker on light sections), one rhythm between sections. */
+  .hero .lt-cell span, .hero .lt-cell i.lt-arrow,
+  #sec-04 .fc span.who, #sec-04 .chat-rail b, #sec-04 .id b, #sec-04 .who b, #sec-04 .msg span.av,
+  #sec-05 strong, #sec-05 .fw-05 span.lb, #sec-05 .ann-05 i, #sec-05 .ann-05 span, #sec-05 .ann-05 small, #sec-05 .hd h3,
+  #sec-05 .qb blockquote, #sec-05 .obj span.t, #sec-05 .lb span.nm, #sec-05 small,
+  #sec-06 .win-h span.ttl, #sec-06 .ttl i, #sec-06 .code span.fp, #sec-06 .cm span.m, #sec-06 .win-f span, #sec-06 .end span.live,
+  #sec-06 .tx b, #sec-06 .tx span, #sec-06 .rt span.tag, #sec-06 .more span, #sec-06 .url span, #sec-06 .tc-id b, #sec-06 .tc-id small,
+  #sec-06 .fw span, #sec-06 .ci span, #sec-06 .ci p.ev { font-weight: 300; }
+  #sec-06 span.num { font-weight: 400; }      /* mono numbers inside those blocks keep their weight */
+  /* The Shift: the same display and lead sizes as the other sections */
+  .shift h2 { font-size: 53px; line-height: 1; }
+  .shift .lead { font-size: 20px; line-height: 1.4; }
+  @media (min-width: 1680px) { .shift .lead { font-size: 22px; } }
+  @media (max-width: 1023px) { .shift h2 { font-size: 33px; } .shift .lead { font-size: 16px; } }
+  /* Proof: the same eyebrow as 04-06 */
+  .sec-07 .eyebrow-07 { font-size: 14px; letter-spacing: .05em; }
+  .sec-07 .eyebrow-07::before { width: 7px; height: 7px; border-radius: 0; background: #F5380E; transform: rotate(45deg); }
+  /* rhythm: Trust ends with the same 96px as the other sections, so Proof does not start closer than the rest */
+  .sec-06 { padding-bottom: 96px; }
+  @media (max-width: 1023px) { .sec-06 { padding-bottom: 64px; } }
+
   /* ---- nav test (24.11): full height only over the hero; lower after it; white with ink text over light sections ----
      html.nav-compact and html.nav-light are set by the "nav state" script at the end of the page. */
   :root { --nav-full: 74px; --nav-small: 44px; --nav-t: .55s; --nav-ease: cubic-bezier(.65, 0, .35, 1); }   /* one soft in-out curve for every size change, so bar, logo and buttons move together */
