@@ -499,6 +499,7 @@
     sec.addEventListener('pointerleave', () => { press.target = 0; kick(); });
   }
   const draw = () => { if (!layout()) return; render(); cv.classList.add('on'); };
+  window.__p05 = { cv, st: () => ({ ox, oy, k, px, dpr, H, L, DIM }) };      // trial 04-06: read by the head bridge from section 04
   // the chart's axis (the line under the bars) lines up with the last rule of the steps on the left; offsets ignore the entrance transforms
   const steps = sec.querySelector('.steps-05'), bars = sec.querySelector('.bars-05');
   const align = () => { if (!steps || !bars) return; chart.style.setProperty('--chart-top', '0px');

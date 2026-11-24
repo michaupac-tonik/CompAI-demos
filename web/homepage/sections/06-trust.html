@@ -84,7 +84,8 @@
   .sec-06 h2 u { text-decoration-thickness: from-font; text-underline-position: from-font; text-decoration-skip-ink: none; }
   .sec-06 .lead-06 { margin: 20px auto 0; max-width: 30em; font-size: var(--t-lead-m); line-height: 1.4; letter-spacing: -.01em; color: #343434; text-wrap: balance; }
   /* the small dots of the print reach under the head: a halo of the background keeps the type clean (as in 05) */
-  .sec-06 .eyebrow-06, .sec-06 h2, .sec-06 .lead-06 { text-shadow: 0 0 4px var(--white), 0 0 10px var(--white), 0 0 10px var(--white); }
+  /* no halo on the heading: no dots reach it, and a halo would also draw around the font's own underline of "Verify." */
+  .sec-06 .eyebrow-06, .sec-06 .lead-06 { text-shadow: 0 0 4px var(--white), 0 0 10px var(--white), 0 0 10px var(--white); }
   /* buttons as in 05: the homepage's buttons (mono, uppercase, 40px); main action ink with a warm arrow, hover wipes in
      flat orange; the second is the quiet outlined button on light */
   .sec-06 .acts-06 { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 30px; }

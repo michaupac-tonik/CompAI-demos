@@ -720,34 +720,49 @@
   /* fragments of real messages float over the print: one conversation each, so there is clearly more going on than one chat */
   .sec-04 { overflow-x: clip; }
   .sec-04 svg.av { color: #F5380E; }      /* brand coral: the experts' prints */
-  .sec-04 .fc { position: absolute; z-index: 1; width: min(250px, 56%); padding: 9px 11px 10px; background: #fcfcfc; color: #161616; border: 1px solid #e6e6e6; border-radius: var(--r, 6px); font: 300 13px/1.38 var(--sans); opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease, filter .8s ease, transform .9s var(--ease); }      /* flat: 1px outline, no shadow */
+  /* cards in the style of section 06 (trust): frosted white panels over the print, hairline border, a warm layered shadow, a gradient icon tile, a "proof object" row */
+  .sec-04 .fc { position: absolute; z-index: 1; width: min(268px, 58%); padding: 16px 16px 14px; border-radius: 6px; color: #161616; font: 300 14px/1.42 var(--sans);
+    /* as in sections 05 and 06: a light frost (white veil + blur) over a soft radial warm glow that lives inside the card; --gx / --gy move the glow per card */
+    background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, .7)),
+      radial-gradient(70% 60% at var(--gx, 70%) var(--gy, 0%), rgba(243, 115, 0, .38), rgba(243, 115, 0, 0) 100%),
+      radial-gradient(60% 55% at calc(100% - var(--gx, 70%)) 100%, rgba(245, 56, 14, .16), rgba(245, 56, 14, 0) 100%), rgba(255, 255, 255, .5);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6); backdrop-filter: blur(14px) saturate(1.6); border: 1px solid rgba(255, 255, 255, .9); overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(22, 22, 22, .06), 0 2px 4px rgba(22, 22, 22, .04), 0 24px 48px -24px rgba(120, 30, 0, .35);
+    opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease, filter .8s ease, transform .9s var(--ease); }
   .sec-04 .fc.in { opacity: 1; filter: none; transform: none; animation: s04drift 7s ease-in-out infinite alternate; }
   @keyframes s04drift { from { translate: 0 0; } to { translate: 0 -6px; } }
   .sec-04 .fc.b.in { animation-duration: 9s; } .sec-04 .fc.c.in { animation-duration: 8s; animation-delay: -3s; } .sec-04 .fc.d.in { animation-duration: 6s; animation-delay: -2s; }
-  .sec-04 .fc .who { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; }
-  .sec-04 .fc .who svg { width: 18px; height: 18px; flex: none; }
-  .sec-04 .fc .who time { margin-left: auto; }
-  .sec-04 .fc p { margin: 0; }
-  .sec-04 .fc .re { margin: 7px 0 0; padding-top: 7px; border-top: 1px solid #e6e6e6; color: #515151; }
+  .sec-04 .fc .who { display: flex; align-items: center; gap: 10px; margin: 0; font: 500 15px/1.15 var(--sans); letter-spacing: -.01em; color: #161616; }
+  .sec-04 .fc .who svg.av { width: 28px; height: 28px; flex: none; box-sizing: border-box; padding: 4px; border-radius: 6px; background: linear-gradient(135deg, #F37300, #F5380E); color: #161616; }
+  .sec-04 .fc .who time { margin-left: auto; align-self: flex-start; font: 400 12px/1 var(--mono); color: #848484; letter-spacing: 0; text-transform: none; }
+  .sec-04 .fc p { margin: 10px 0 0; color: #343434; text-wrap: pretty; }
+  .sec-04 .fc .re { margin: 12px 0 0; padding: 9px 11px; border-radius: 4px; background: rgba(248, 248, 248, .9); box-shadow: inset 0 0 0 1px #ececec; color: #161616; font-size: 13.5px; line-height: 1.35; }
   /* scattered along both axes on a straight grid (no rotation), some past the edge of the window; the middle of the print stays free. All neutral white: red only in details */
   /* a staircase from top left to bottom right on an 8 px grid; the cards cover a good part of the print on purpose, the weight sits on the diagonal */
-  .sec-04 .fc.a { left: max(-5%, -32px); top: 24px; }
-  .sec-04 .fc.d { left: 32%; top: 128px; width: auto; padding: 6px 10px; font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: #C12000; }
-  .sec-04 .fc.d::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: #F5380E; }
-  .sec-04 .fc.b { left: 24%; top: 40%; width: min(232px, 54%); }
-  .sec-04 .fc.c { right: max(-3%, -24px); bottom: 24px; }
+  .sec-04 .fc.a { left: max(-5%, -32px); top: 24px; --gx: 82%; --gy: 0%; }
+  .sec-04 .fc.d { left: 32%; top: 168px; width: auto; display: inline-flex; align-items: center; gap: 9px; padding: 8px 12px; font: 400 12px/1 var(--mono); letter-spacing: .02em; text-transform: uppercase; color: #161616; }
+  .sec-04 .fc.d::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: #F37300; animation: s04pulse 2s ease-out infinite; }
+  @keyframes s04pulse { 0% { box-shadow: 0 0 0 0 rgba(243, 115, 0, .5); } 80%, 100% { box-shadow: 0 0 0 7px rgba(243, 115, 0, 0); } }
+  .sec-04 .fc.b { left: 24%; top: max(40%, 224px); width: min(244px, 56%); --gx: 24%; --gy: 100%; }
+  .sec-04 .fc.c { right: max(-3%, -24px); bottom: 24px; --gx: 66%; --gy: 0%; }
   .sec-04 .txt-04 { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; height: 100%; padding: 24px 0 0 72px; min-width: 0; }
   .sec-04 .eyebrow-04::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 10px; background: #F5380E; transform: rotate(45deg) translateY(-1px); }
   .sec-04 .eyebrow-04 { margin: 0 0 24px; font: 400 14px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: #C12000; }   /* the section's own coral (brand coral 040, AA on white) */
   .sec-04 h2 { margin: 0; font-weight: 300; font-size: var(--t-display-l); line-height: 1; letter-spacing: -.04em; }
   .sec-04 .lead-04 { margin: 20px 0 0; max-width: 28em; font-size: var(--t-lead-m); line-height: 1.4; letter-spacing: -.01em; color: #343434; text-wrap: pretty; }
   .sec-04 .tags-04 { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; padding: 0; list-style: none; }
-  .sec-04 .tags-04 li { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: var(--r-sm, 4px); color: #343434; transition: border-color .5s ease, color .5s ease, background-color .5s ease; }
-  .sec-04 .tags-04 li.on { border-color: #F5380E; color: #C12000; background: rgba(245, 56, 14, .08); }
+  .sec-04 .tags-04 .tg { font: 300 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 10px; border: 1px solid #cbcbcb; border-radius: 5px; background: rgba(255, 255, 255, .6); color: #343434; cursor: pointer;
+    transition: border-color .25s ease, color .25s ease, background-color .25s ease; }      /* a two-way switch for the chat view: the pressed one is lit */
+  .sec-04 .tags-04 .tg:hover { border-color: #F37300; } .sec-04 .tags-04 .tg:focus-visible { outline: 1.5px solid #C12000; outline-offset: 2px; }
+  .sec-04 .tags-04 .tg.on { border-color: #F5380E; color: #C12000; background: rgba(245, 56, 14, .08); }
   /* the conversation, Slack-like: channel rail, header with the person and status, rows without bubbles (the expert's rows tinted orange), thread links, composer */
-  .sec-04 .chat-04 { flex: 1 1 0; min-height: 260px; margin-bottom: clamp(40px, 7svh, 72px) !important; --paper: #fff; --ink: #161616; --line: #cfcfcf; --tint: rgba(244, 153, 0, .14); --name: #161616; --muted: #696969; --field: #fff; --fieldline: #bdbdbd; --me: #161616; --meink: #fcfcfc;
-    display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 560px); margin: 36px 0 0 0; position: relative; z-index: 2; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: var(--r, 6px); overflow: hidden; font: 300 14px/1.4 var(--sans);
-    box-shadow: 0 1px 2px rgba(22, 22, 22, .08), 0 24px 48px -14px rgba(22, 22, 22, .3); }      /* fixed max width: it does not stretch on wide screens, a little wider on very large ones (below) */
+  .sec-04 .chat-04 { flex: 1 1 0; min-height: 260px; margin-bottom: clamp(40px, 7svh, 72px) !important; --paper: #fff; --ink: #161616; --line: #cfcfcf; --tint: rgba(244, 153, 0, .14); --name: #161616; --muted: #696969; --field: rgba(255, 255, 255, .75); --fieldline: #c9c9c9; --me: #161616; --meink: #fcfcfc;
+    display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 560px); margin: 36px 0 0 0; position: relative; z-index: 2; color: var(--ink); border-radius: 6px; overflow: hidden; font: 300 14px/1.4 var(--sans);
+    /* the same light frost and warm radial glow as the cards on the illustration */
+    background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, .7)), radial-gradient(70% 60% at 88% 0%, rgba(243, 115, 0, .3), rgba(243, 115, 0, 0) 100%),
+      radial-gradient(60% 55% at 12% 100%, rgba(245, 56, 14, .14), rgba(245, 56, 14, 0) 100%), rgba(255, 255, 255, .5);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6); backdrop-filter: blur(14px) saturate(1.6); border: 1px solid rgba(255, 255, 255, .9);
+    box-shadow: 0 0 0 1px rgba(22, 22, 22, .06), 0 2px 4px rgba(22, 22, 22, .04), 0 24px 48px -24px rgba(120, 30, 0, .35); }      /* fixed max width: it does not stretch on wide screens, a little wider on very large ones (below) */
   .sec-04 .chat-04::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 1; background: linear-gradient(90deg, #F5380E, #F37300 55%, #F49900); }
   .sec-04 .chat-rail { display: none; }
   .sec-04 .chat-main { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
@@ -780,12 +795,18 @@
   .sec-04 .chat-f::after { content: ""; width: 14px; height: 14px; background: #F5380E; clip-path: polygon(0 0, 100% 50%, 0 100%, 20% 50%); opacity: .85; }
   /* channel rail (Slack-like), light: warm cream with an orange active channel, no black */
   .sec-04 .chat-04 { grid-template-columns: 148px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); --me: #e9e3d3; --meink: #161616; }
-  .sec-04 .chat-rail { display: block; background: #FFF8E4; border-right: 1px solid var(--line); color: #5a4a30; padding: 16px 10px 12px; font: 300 13px/1.3 var(--sans); }
+  .sec-04 .chat-rail { display: block; background: rgba(255, 248, 228, .62); border-right: 1px solid var(--line); color: #5a4a30; padding: 16px 10px 12px; font: 300 13px/1.3 var(--sans); }
   .sec-04 .chat-rail b { display: block; margin: 0 6px 14px; font-weight: 400; color: #161616; font-size: 14px; }
   .sec-04 .chat-rail p { margin: 12px 6px 6px; font: 300 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #8a7a60; }
   .sec-04 .chat-rail span, .sec-04 .chat-rail .ch { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 5px 6px; border: 0; border-radius: var(--r-sm, 4px); background: transparent; color: #5a4a30; font: inherit; text-align: left; }
   .sec-04 .chat-rail .ch { cursor: pointer; transition: background-color .2s ease, color .2s ease; } .sec-04 .chat-rail .ch:hover { background: rgba(244, 153, 0, .18); } .sec-04 .chat-rail .ch:focus-visible { outline: 1.5px solid #C12000; outline-offset: 1px; }
   .sec-04 .chat-rail .ch.seen i { opacity: 0; }
+  /* the "Response time" view: the words step back, the time between a question and the answer comes forward */
+  .sec-04 .chat-04.rt .msg .bd p { opacity: .3; } .sec-04 .chat-04.rt .msg .bd p, .sec-04 .chat-04 .msg .bd p { transition: opacity .35s ease; }
+  .sec-04 .chat-04.rt .msg.ex { background: rgba(244, 153, 0, .26); }
+  .sec-04 .chat-04.rt .reply-time { font: 500 13px/1 var(--mono); padding-top: 4px; padding-bottom: 10px; }
+  .sec-04 .chat-04.rt .reply-time::after { content: ""; flex: 1; height: 1px; margin-right: 14px; background: linear-gradient(90deg, currentColor, transparent); opacity: .5; }
+  .sec-04 .chat-04.rt .chat-h em { color: #C12000; }
   .sec-04 .chat-b { transition: opacity .16s ease; } .sec-04 .chat-b.swap { opacity: 0; }
   .sec-04 .chat-rail .ch.on { background: #F49900; color: #1a0f00; }
   .sec-04 .chat-rail .ch i { width: 7px; height: 7px; border-radius: 50%; background: #F5380E; } .sec-04 .chat-rail .ch.on i { background: #7a1500; }
@@ -977,7 +998,8 @@
   .sec-06 h2 u { text-decoration-thickness: from-font; text-underline-position: from-font; text-decoration-skip-ink: none; }
   .sec-06 .lead-06 { margin: 20px auto 0; max-width: 30em; font-size: var(--t-lead-m); line-height: 1.4; letter-spacing: -.01em; color: #343434; text-wrap: balance; }
   /* the small dots of the print reach under the head: a halo of the background keeps the type clean (as in 05) */
-  .sec-06 .eyebrow-06, .sec-06 h2, .sec-06 .lead-06 { text-shadow: 0 0 4px var(--white), 0 0 10px var(--white), 0 0 10px var(--white); }
+  /* no halo on the heading: no dots reach it, and a halo would also draw around the font's own underline of "Verify." */
+  .sec-06 .eyebrow-06, .sec-06 .lead-06 { text-shadow: 0 0 4px var(--white), 0 0 10px var(--white), 0 0 10px var(--white); }
   /* buttons as in 05: the homepage's buttons (mono, uppercase, 40px); main action ink with a warm arrow, hover wipes in
      flat orange; the second is the quiet outlined button on light */
   .sec-06 .acts-06 { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 30px; }
@@ -1164,6 +1186,24 @@
   #shift, #sec-03 { display: none !important; }
   .site-nav::before { opacity: 1 !important; }      /* the nav's dark bar stays on: the page now opens on a light section */
   #sec-04 { margin-top: calc(var(--bar) + 74px); }
+
+  /* ---- trial 04-06: one style for the three light sections. The sections were designed in separate sessions; this layer (after
+     their own CSS) pulls them onto one system. Reference: section 05.
+     ground #f8f8f8 · eyebrow mono 400 14px, coral 040, diamond marker · display 53px light · lead 20px (22px from 1680px)
+     · mono labels at weight 400, 12px · status markers 8px squares (radius 2) · tags and chips radius 4px · panels radius 6px ---- */
+  .sec-06 { background: var(--paper); }
+  .sec-06 .eyebrow-06, .sec-06 .lead-06 { text-shadow: 0 0 4px var(--paper), 0 0 10px var(--paper), 0 0 10px var(--paper); }
+  .sec-06 .eyebrow-06 { font: 400 14px/1 var(--mono); letter-spacing: .05em; }
+  .sec-06 .eyebrow-06::before { width: 7px; height: 7px; border-radius: 0; background: var(--hot-06); transform: rotate(45deg); }
+  .sec-04 .eyebrow-04 { display: flex; align-items: center; gap: 10px; }
+  .sec-04 .eyebrow-04::before { margin: 0; transform: rotate(45deg); }
+  @media (min-width: 1680px) { .sec-04 { --t-lead-m: 22px; } .sec-06 { --t-lead-m: 22px; } }
+  .sec-04 .tags-04 .tg { font: 400 12px/1 var(--mono); border-radius: var(--r-sm, 4px); }
+  .sec-04 .chat-h em, .sec-04 .chat-h .live, .sec-04 .reply-time, .sec-04 .msg .who time, .sec-04 .msg .who i { font-weight: 400; }
+  .sec-04 .chat-rail p { font: 400 11px/1 var(--mono); letter-spacing: .05em; }
+  .sec-04 .chat-h .live::before, .sec-04 .chat-rail .ch i { width: 8px; height: 8px; border-radius: 2px; background: #F37300; }
+  .sec-04 .fc, .sec-04 .chat-04 { border-radius: var(--r, 6px); }
+  .sec-04 .fc .re { border-radius: var(--r-sm, 4px); }
 </style>
 </head>
 <body>
@@ -1422,7 +1462,7 @@
         <p class="eyebrow-04 rv" style="--d:0">The people</p>
         <h2 id="sec-04-title" class="rv" style="--d:1">An extension of your team.</h2>
         <p class="lead-04 rv" style="--d:2">Compliance experts work alongside the software. They reach out before you ask and answer within minutes.</p>
-        <ul class="tags-04 rv" style="--d:3"><li>Real conversation</li><li>Response time</li></ul>
+        <ul class="tags-04 rv" style="--d:3" role="group" aria-label="Chat view"><li><button type="button" class="tg on" data-m="conv" aria-pressed="true">Real conversation</button></li><li><button type="button" class="tg" data-m="rt" aria-pressed="false">Response time</button></li></ul>
         <div class="chat-04 rv" style="--d:4" role="log" aria-label="Sample conversation with a compliance expert">
           <div class="chat-rail" role="group" aria-label="Channels"><b>Comp AI</b><p>Channels</p><button type="button" class="ch on" data-c="0"># access-reviews<i></i></button><button type="button" class="ch" data-c="1"># audit-prep<i></i></button><button type="button" class="ch" data-c="2"># vendors<i></i></button><p>Direct</p><span>Compliance expert<u></u></span></div>
           <div class="chat-main">
@@ -2313,7 +2353,6 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const NS = 'http://www.w3.org/2000/svg', shared = document.getElementById('print');
   const art = sec.querySelector('.art-04'), rvs = [...sec.querySelectorAll('.rv')], fcs = [...sec.querySelectorAll('.fc')];
-  const tagEls = [...sec.querySelectorAll('.tags-04 li')];
   const TAU = Math.PI * 2, clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), lerp = (a, b, t) => a + (b - a) * t;
   const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -2591,7 +2630,6 @@
   const follow = el => { if (!track) return; const over = el.offsetTop + el.offsetHeight + 8 - chatB.clientHeight; track.style.transform = `translateY(${-Math.max(0, over)}px)`; };
   let chCur = -1, chTimers = [], auto = !reduced, chView = false, shown = false, chReady = false;
   const later = (fn, ms) => chTimers.push(setTimeout(fn, ms));
-  const lit = n => { const t = tagEls[n]; if (t) { t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2200); } };
   const stepHTML = (st, first) => st[0] === 'r' ? `<span class="reply-time" data-tag="1">${esc(st[1])}</span>`
     : st[0] === 'e' ? `<div class="msg ex"${first ? ' data-tag="0"' : ''}><svg class="av sq" aria-hidden="true"></svg><div class="bd"><span class="who"><b>Compliance expert</b><i>Expert</i><time>${st[1]}</time></span><p>${esc(st[2])}</p></div></div>`
     : `<div class="msg me"><span class="av me">Y</span><div class="bd"><span class="who"><b>You</b><time>${st[1]}</time></span><p>${esc(st[2])}</p></div></div>`;
@@ -2599,24 +2637,36 @@
     const els = [...track.children]; let t = 300;
     if (reduced) { els.forEach(el => el.classList.add('on')); follow(els[els.length - 1]); return 0; }
     els.forEach(el => {
-      const isMsg = el.classList.contains('msg'), isEx = el.classList.contains('ex'), tag = el.dataset.tag;
-      if (isMsg && isEx) { later(() => { el.classList.add('on', 'typing'); follow(el); }, t); t += 800; later(() => { el.classList.remove('typing'); if (tag === '0') lit(0); }, t); t += 1000; }
+      const isMsg = el.classList.contains('msg'), isEx = el.classList.contains('ex');
+      if (isMsg && isEx) { later(() => { el.classList.add('on', 'typing'); follow(el); }, t); t += 800; later(() => el.classList.remove('typing'), t); t += 1000; }
       else if (isMsg) { later(() => { el.classList.add('on'); follow(el); }, t); t += 1100; }
-      else { later(() => { el.classList.add('on'); follow(el); lit(+el.dataset.tag); }, t - 400); t += 600; }
+      else { later(() => { el.classList.add('on'); follow(el); }, t - 400); t += 600; }
     });
     return t;
   };
+  let mode = 'conv';
+  const avgLine = c => { const n = CONV[c].steps.filter(st => st[0] === 'r').map(st => +/\d+/.exec(st[1])[0]); return `Avg. reply ${(n.reduce((a, b) => a + b, 0) / n.length).toFixed(1).replace('.0', '')} min · ${n.length} replies`; };
+  const showAll = () => { [...track.children].forEach(el => { el.classList.add('on'); el.classList.remove('typing'); }); follow(track.lastElementChild); };
   const selectCh = (c, instant) => {
     chTimers.forEach(clearTimeout); chTimers = []; chCur = c;
     chBtns.forEach((b, i) => { b.classList.toggle('on', i === c); b.setAttribute('aria-current', i === c ? 'true' : 'false'); if (i === c) b.classList.add('seen'); });
     const draw = () => {
-      chatSub.textContent = CONV[c].sub; chatB.innerHTML = '<div class="chat-track">' + CONV[c].steps.map((st, i) => stepHTML(st, i === 0)).join('') + '</div>'; track = chatB.firstElementChild;
+      chatSub.textContent = mode === 'rt' ? avgLine(c) : CONV[c].sub; chatB.innerHTML = '<div class="chat-track">' + CONV[c].steps.map((st, i) => stepHTML(st, i === 0)).join('') + '</div>'; track = chatB.firstElementChild;
       chatB.querySelectorAll('svg.av').forEach((sv, i) => ridges(sv, 6, 1.3 + i * 1.9)); chatB.classList.remove('swap');
+      if (mode === 'rt') { showAll(); return; }      // response-time view: everything is there at once, no playback, no auto-advance
       const end = playChat();
       if (auto) later(function next() { if (!auto) return; if (!chView || document.hidden) { later(next, 1000); return; } selectCh((chCur + 1) % CONV.length); }, end + 4200);
     };
     if (instant) draw(); else { chatB.classList.add('swap'); later(draw, 170); }
   };
+  const setMode = m => {
+    if (!chReady || m === mode) return; mode = m; auto = false; chTimers.forEach(clearTimeout); chTimers = [];
+    sec.querySelectorAll('.tags-04 .tg').forEach(b => { const on = b.dataset.m === m; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    sec.querySelector('.chat-04').classList.toggle('rt', m === 'rt');
+    chatSub.textContent = m === 'rt' ? avgLine(chCur) : CONV[chCur].sub;
+    if (m === 'rt') showAll(); else selectCh(chCur, true);      // back to the conversation: it plays again from the start
+  };
+  sec.querySelectorAll('.tags-04 .tg').forEach(b => b.addEventListener('click', () => setMode(b.dataset.m)));
   chBtns.forEach(b => b.addEventListener('click', () => { if (!chReady) return; auto = false; if (+b.dataset.c !== chCur) selectCh(+b.dataset.c); }));
   if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { chView = e.isIntersecting; }), { threshold: .3 }).observe(sec.querySelector('.chat-04')); else chView = true;
   const reveal = () => {
