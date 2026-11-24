@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp AI · 08 next step</title>
+<link rel="icon" href="../../hero/comp-ai-hero-v01/img/logo-mark.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add('js')</script>
+<!--
+  Comp AI · homepage section 08 "next step", isolated from index.html for UI work.
+  Only the three @section:08 blocks (css, html, js) are carried into index.html by
+  tools/integrate-section.py; everything else here (head, base styles, mist, dev bits) is for previewing.
+  Rules: prefix your class names with .sec-08 (the blocks end up in one stylesheet with the other sections),
+  use the variables of the base :root (--mint, --cyan, --ink, --white, --mono, --sans, --ease, --edge, .wrap),
+  keep dev code outside the markers. Behind the section the mist from ../shared/mist.js stands in for the hero's print.
+-->
+<style>
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Light-Trial.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Favorit"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritPro-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+  @font-face { font-family: "Favorit Mono"; src: url("../../hero/comp-ai-hero-v01/fonts/ABCFavoritMono-Book-Trial.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+
+  :root {
+    --black: #000;
+    --ink: #161616;
+    --white: #fcfcfc;
+    --mint: #24ff63;
+    --cyan: #00ffee;
+    --sans: "Favorit", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Favorit Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --edge: 64px;
+    --ease: cubic-bezier(.2, .7, .1, 1);
+    --radius: 6px;
+    --radius-card: 10px;
+    --paper: #f8f8f8;
+  }
+  /* preview copy of the homepage buttons (index.html owns the real ones; see ../SYSTEM.md) */
+  .btn { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 16px;
+    border: 1.5px solid var(--white); border-radius: var(--radius); color: var(--white); font: 500 15px/1 var(--sans); letter-spacing: -.005em; white-space: nowrap; text-decoration: none; }
+  .btn-primary { height: 48px; padding: 0 18px 0 22px; font-size: 16.5px; background: var(--mint); border-color: var(--mint); color: var(--ink); }
+  .btn-secondary { height: 48px; padding: 0 22px; font-size: 16.5px; background: rgba(252,252,252,.1); border-color: var(--white); }
+  .btn { transition: transform .18s var(--ease), background-color .2s, color .2s, border-color .2s, box-shadow .3s; }
+  .btn .chev { width: 14px; height: 14px; flex: none; transition: transform .3s var(--ease); }
+  .chev path { stroke: currentColor; }
+  .btn::before { content: ""; position: absolute; inset: -1px; z-index: -1; background: var(--white); transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease); }
+  .btn:is(:hover, :focus-visible)::before { transform: scaleX(1); transform-origin: left; }
+  .btn:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--white); }
+  .btn-primary::before { background: linear-gradient(90deg, var(--cyan), var(--mint)); }
+  .btn-primary:is(:hover, :focus-visible) { border-color: var(--cyan); box-shadow: 0 0 0 4px rgba(36,255,99,.18), 0 8px 28px -8px rgba(0,255,238,.55); }
+  .btn:is(:hover, :focus-visible) .chev { transform: translateX(3px); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--black); color: var(--white); }
+  body { font: 300 16px/1.45 var(--sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  :focus-visible { outline: 1.5px solid var(--mint); outline-offset: 3px; }
+  .wrap { width: min(1792px, 100% - 2 * var(--edge)); margin-inline: auto; }
+
+  /* inherited from the hero's .task (applies to the board's task cells on the homepage too) */
+  .task { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .5s, filter .5s; }
+  @media (max-width: 1023px) { .task { white-space: normal; } }
+  @media (max-width: 600px) { :root { --edge: 16px; } .task { flex: 1; } }
+
+  /* @section:08 css:start */
+  /* ==== 08 · Next step (structure v12): the final CTA, dark. Book a demo with a live demo window,
+     what sets the price, FAQ. Everything that matters is readable at rest; the window's loop only adds to it. ==== */
+  .sec-08 { position: relative; z-index: 1; padding: 152px 0 160px; background: rgba(1,1,1,.92); color: var(--white); }
+  .sec-08-eyebrow { margin: 0 0 24px; font: 400 14px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--mint); }
+  .sec-08-top { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 80px; align-items: center; }
+  .sec-08 h2 { margin: 0; font-weight: 300; font-size: clamp(44px, 5.2vw, 96px); line-height: .98; letter-spacing: -.045em; text-wrap: balance; }
+  .sec-08 h2 em { font-style: normal; color: var(--mint); }
+  .sec-08-lead { margin: 28px 0 0; max-width: 29em; font-size: clamp(18px, 1.35vw, 22px); line-height: 1.42; letter-spacing: -.01em; color: rgba(252,252,252,.86); text-wrap: pretty; }
+  .sec-08-act { margin-top: 44px; display: grid; justify-items: start; gap: 24px; }
+  /* the page's strongest CTA: the homepage .btn-primary, one size up, with a mint halo at rest */
+  .sec-08 .sec-08-cta { height: 64px; padding: 0 26px 0 30px; gap: 10px; font-size: 19.5px;
+    box-shadow: 0 0 0 6px rgba(36,255,99,.16), 0 22px 60px -14px rgba(36,255,99,.6); }
+  .sec-08 .sec-08-cta:is(:hover, :focus-visible) { box-shadow: 0 0 0 6px rgba(0,255,238,.24), 0 24px 64px -12px rgba(0,255,238,.7); }
+  .sec-08 .sec-08-cta .chev { width: 17px; height: 17px; }
+  .sec-08-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 24px; font: 500 15.5px/1.2 var(--sans); color: var(--white); }
+  .sec-08-meta li { display: inline-flex; align-items: center; gap: 10px; }
+  .sec-08-meta li::before { content: ""; width: 7px; height: 7px; flex: none; transform: rotate(45deg); background: linear-gradient(135deg, var(--mint), var(--cyan)); }
+
+  /* live demo window: product UI, soft and premium (feedback 20.11) */
+  .sec-08-live { position: relative; border-radius: var(--radius-card); background: #131313; border: 1px solid rgba(252,252,252,.14);
+    box-shadow: 0 50px 120px -40px rgba(0,0,0,.95), 0 0 80px -30px rgba(0,255,238,.18); overflow: hidden; }
+  .sec-08-lhead { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid rgba(252,252,252,.1); }
+  .sec-08-onair { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border-radius: var(--radius); background: rgba(36,255,99,.14); color: var(--mint); font: 500 14px/1 var(--sans); }
+  .sec-08-onair i { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 0 rgba(36,255,99,.6); animation: sec08-pulse 1.8s var(--ease) infinite; }
+  @keyframes sec08-pulse { 70% { box-shadow: 0 0 0 7px rgba(36,255,99,0); } 100% { box-shadow: 0 0 0 0 rgba(36,255,99,0); } }
+  .sec-08-ltitle { min-width: 0; font: 500 15.5px/1.2 var(--sans); }
+  .sec-08-ltitle small { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 400; color: rgba(252,252,252,.62); }
+  .sec-08-clock { margin-left: auto; font: 400 14px/1 var(--mono); letter-spacing: .02em; color: rgba(252,252,252,.85); font-variant-numeric: tabular-nums; }
+  .sec-08-clock span { color: rgba(252,252,252,.45); }
+  .sec-08-tasks { list-style: none; margin: 0; padding: 8px; }
+  .sec-08-task { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 14px 12px; border-radius: var(--radius); transition: background-color .5s var(--ease); }
+  .sec-08-task[data-s="working"] { background: rgba(0,255,238,.07); }
+  .sec-08-ico { width: 40px; height: 40px; border-radius: var(--radius); display: grid; place-items: center; background: #222; border: 1px solid rgba(252,252,252,.1); font: 500 12.5px/1 var(--sans); color: var(--white); }
+  .sec-08-task b { display: block; font: 500 16.5px/1.25 var(--sans); letter-spacing: -.005em; }
+  .sec-08-src { display: block; margin-top: 4px; font-size: 14px; line-height: 1.3; color: rgba(252,252,252,.62); }
+  .sec-08-st { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 11px; border-radius: var(--radius); white-space: nowrap;
+    font: 500 14px/1 var(--sans); color: rgba(252,252,252,.6); border: 1px solid rgba(252,252,252,.18); transition: background-color .4s, color .4s, border-color .4s; }
+  [data-s="working"] .sec-08-st { color: var(--cyan); border-color: rgba(0,255,238,.4); background: rgba(0,255,238,.1); }
+  [data-s="working"] .sec-08-st::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid currentColor; border-right-color: transparent; animation: sec08-spin .9s linear infinite; }
+  @keyframes sec08-spin { to { transform: rotate(360deg); } }
+  [data-s="done"] .sec-08-st { color: var(--ink); background: var(--mint); border-color: var(--mint); }
+  [data-s="review"] .sec-08-st { color: #f49900; background: rgba(244,153,0,.12); border-color: rgba(244,153,0,.45); }
+  .sec-08-lfoot { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-top: 1px solid rgba(252,252,252,.1); font: 500 14.5px/1 var(--sans); color: rgba(252,252,252,.85); }
+  .sec-08-bar { flex: 1; height: 4px; border-radius: 2px; background: rgba(252,252,252,.12); overflow: hidden; }
+  .sec-08-bar i { display: block; height: 100%; width: calc(var(--p, .6) * 100%); background: linear-gradient(90deg, var(--mint), var(--cyan)); transition: width .8s var(--ease); }
+  .sec-08-count { font: 400 14px/1 var(--mono); color: var(--white); font-variant-numeric: tabular-nums; }
+
+  /* price factors + FAQ */
+  .sec-08-more { margin-top: 136px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 80px; align-items: start; }
+  .sec-08-more .sec-08-eyebrow { font-size: 13px; margin-bottom: 18px; }
+  .sec-08 h3 { margin: 0; font-weight: 400; font-size: clamp(28px, 2.3vw, 40px); line-height: 1.08; letter-spacing: -.03em; }
+  .sec-08-sub { margin: 14px 0 0; max-width: 30em; font-size: 17px; line-height: 1.45; color: rgba(252,252,252,.8); }
+  .sec-08-price { border-radius: var(--radius-card); background: #131313; border: 1px solid rgba(252,252,252,.14); padding: 40px; }
+  .sec-08-factors { list-style: none; margin: 32px 0 0; padding: 0; counter-reset: f; }
+  .sec-08-factors li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 6px 8px; padding: 20px 0; border-top: 1px solid rgba(252,252,252,.12); }
+  .sec-08-n { grid-row: span 2; padding-top: 4px; font: 400 14px/1 var(--mono); color: var(--mint); font-variant-numeric: tabular-nums; }
+  .sec-08-factors b { font: 500 18.5px/1.3 var(--sans); letter-spacing: -.005em; }
+  .sec-08-factors p { margin: 0; font-size: 15.5px; line-height: 1.45; color: rgba(252,252,252,.74); }
+  .sec-08-price .btn { margin-top: 12px; }
+  .sec-08-faq { margin-top: 32px; border-top: 1px solid rgba(252,252,252,.18); }
+  .sec-08-q { border-bottom: 1px solid rgba(252,252,252,.18); }
+  .sec-08-q summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0;
+    font: 500 clamp(17.5px, 1.35vw, 21px)/1.3 var(--sans); letter-spacing: -.01em; color: var(--white); }
+  .sec-08-q summary::-webkit-details-marker { display: none; }
+  .sec-08-q summary:focus-visible { outline-offset: 4px; border-radius: var(--radius); }
+  .sec-08-plus { position: relative; flex: none; width: 34px; height: 34px; border-radius: var(--radius); border: 1.5px solid rgba(252,252,252,.5); color: var(--white);
+    transition: background-color .3s, border-color .3s, color .3s; }
+  .sec-08-plus::before, .sec-08-plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.5px; margin: -.75px 0 0 -6px; background: currentColor; transition: transform .35s var(--ease); }
+  .sec-08-plus::after { transform: rotate(90deg); }
+  .sec-08-q summary:hover .sec-08-plus { border-color: var(--white); background: rgba(252,252,252,.1); }
+  .sec-08-q[open] .sec-08-plus { background: var(--mint); border-color: var(--mint); color: var(--ink); }
+  .sec-08-q[open] .sec-08-plus::after { transform: rotate(0); }
+  .sec-08-a { padding: 0 64px 28px 0; max-width: 46em; font-size: 17px; line-height: 1.5; color: rgba(252,252,252,.8); }
+  .sec-08-a p { margin: 0; }
+  .sec-08-nb { white-space: nowrap; }
+  .sec-08-ask { margin: 28px 0 0; font: 500 16.5px/1.4 var(--sans); color: var(--white); }
+  .sec-08-ask a { color: var(--mint); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+  .sec-08-ask a:hover { color: var(--cyan); }
+  @supports (interpolate-size: allow-keywords) {
+    .sec-08-faq { interpolate-size: allow-keywords; }
+    .sec-08-q::details-content { height: 0; overflow: clip; transition: height .45s var(--ease), content-visibility .45s allow-discrete; }
+    .sec-08-q[open]::details-content { height: auto; }
+  }
+
+  @media (max-width: 1199px) { .sec-08-top, .sec-08-more { gap: 56px; } .sec-08-price { padding: 32px; } }
+  @media (max-width: 1023px) {
+    .sec-08 { padding: 112px 0 120px; }
+    .sec-08-top, .sec-08-more { grid-template-columns: minmax(0, 1fr); }
+    .sec-08-more { margin-top: 104px; }
+    .sec-08-faq-col { order: 2; }
+  }
+  @media (max-width: 600px) {
+    .sec-08 { padding: 88px 0 96px; }
+    .sec-08-act { justify-items: stretch; }
+    .sec-08 .sec-08-cta { height: 58px; font-size: 18px; }
+    .sec-08-lhead { flex-wrap: wrap; padding: 14px 16px; gap: 10px 12px; }
+    .sec-08-ltitle { order: 3; flex-basis: 100%; }
+    .sec-08-tasks { padding: 6px; }
+    .sec-08-task { grid-template-columns: 34px minmax(0, 1fr); gap: 8px 12px; padding: 12px 10px; }
+    .sec-08-ico { width: 34px; height: 34px; font-size: 11.5px; }
+    .sec-08-st { grid-column: 2; justify-self: start; height: 28px; font-size: 13.5px; }
+    .sec-08-lfoot { padding: 14px 16px; }
+    .sec-08-more { margin-top: 88px; gap: 64px; }
+    .sec-08-price { padding: 24px 20px; }
+    .sec-08-price .btn { width: 100%; }
+    .sec-08-factors li { grid-template-columns: 36px minmax(0, 1fr); }
+    .sec-08-a { padding-right: 0; }
+    .sec-08-q summary { padding: 20px 0; gap: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sec-08 *, .sec-08 *::before, .sec-08 *::after { animation: none !important; transition: none !important; }
+  }
+  /* @section:08 css:end */
+
+  /* mist: the hero's print after it dissolved (fixed behind the page, as on the homepage) */
+  #print { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; opacity: .32; transition: opacity 1.2s var(--ease); }
+</style>
+</head>
+<body>
+<canvas id="print" aria-hidden="true"></canvas>
+<main>
+<!-- @section:08 html:start -->
+<section class="sec-08" id="sec-08" aria-labelledby="sec-08-title">
+  <div class="wrap">
+    <div class="sec-08-top" id="demo">
+      <div>
+        <p class="sec-08-eyebrow">Next step</p>
+        <h2 id="sec-08-title">See the work done, <em>live.</em></h2>
+        <p class="sec-08-lead">Watch Comp AI do the work on your own stack in a <span class="sec-08-nb">20-minute</span> call. See what sets your price, and get answers to the questions teams ask first.</p>
+        <div class="sec-08-act">
+          <!-- placeholder link: the Book a Demo page (in scope, not built yet) -->
+          <a class="btn btn-primary sec-08-cta" href="/book-a-demo">Book a demo <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <ul class="sec-08-meta">
+            <li>20-minute call</li>
+            <li>On your own stack</li>
+            <li>Your price on the call</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- illustration: what the visitor sees on the call. The loop (js) only animates it; at rest it shows a mid-demo state. -->
+      <div class="sec-08-live" role="img" aria-label="Illustration of a live demo: Comp AI agents collect evidence, check settings and draft a policy on your stack while an expert reviews a vendor.">
+        <div class="sec-08-lhead">
+          <span class="sec-08-onair"><i></i>Live demo</span>
+          <span class="sec-08-ltitle">Your stack<small>SOC 2 · ISO 27001</small></span>
+          <span class="sec-08-clock"><b data-clock>07:42</b> <span>/ 20:00</span></span>
+        </div>
+        <ul class="sec-08-tasks">
+          <li class="sec-08-task" data-s="done"><span class="sec-08-ico">AWS</span><span><b>Collect cloud evidence</b><span class="sec-08-src">AWS</span></span><span class="sec-08-st">Done</span></li>
+          <li class="sec-08-task" data-s="done"><span class="sec-08-ico">GH</span><span><b>Check branch protection</b><span class="sec-08-src">GitHub</span></span><span class="sec-08-st">Done</span></li>
+          <li class="sec-08-task" data-s="working"><span class="sec-08-ico">GW</span><span><b>Run the access review</b><span class="sec-08-src">Google Workspace</span></span><span class="sec-08-st">Working</span></li>
+          <li class="sec-08-task" data-s="queued"><span class="sec-08-ico">Doc</span><span><b>Draft the security policy</b><span class="sec-08-src">SOC 2 · ISO 27001</span></span><span class="sec-08-st">Queued</span></li>
+          <li class="sec-08-task" data-s="queued" data-end="review"><span class="sec-08-ico">V</span><span><b>Assess a new vendor</b><span class="sec-08-src">Vendor list</span></span><span class="sec-08-st">Queued</span></li>
+        </ul>
+        <div class="sec-08-lfoot"><span>Agent progress</span><span class="sec-08-bar"><i data-bar style="--p:.4"></i></span><span class="sec-08-count" data-count>2/5</span></div>
+      </div>
+    </div>
+
+    <div class="sec-08-more">
+      <div class="sec-08-price">
+        <p class="sec-08-eyebrow">Pricing</p>
+        <h3>What sets the price</h3>
+        <p class="sec-08-sub">Your price depends on four things. We go through them with you and give you a number on the call.</p>
+        <!-- working copy: confirm the four factors with Comp AI -->
+        <ul class="sec-08-factors">
+          <li><span class="sec-08-n">01</span><b>Frameworks</b><p>How many standards you need now, such as SOC 2, ISO 27001, HIPAA or GDPR.</p></li>
+          <li><span class="sec-08-n">02</span><b>Company size</b><p>How many people and devices are in scope.</p></li>
+          <li><span class="sec-08-n">03</span><b>Systems</b><p>How many cloud, code and identity tools Comp AI connects to.</p></li>
+          <li><span class="sec-08-n">04</span><b>Audit</b><p>Whether the audit is arranged with Comp AI or you bring your own auditor.</p></li>
+        </ul>
+        <a class="btn btn-secondary" href="/book-a-demo">Get your price <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      </div>
+
+      <div class="sec-08-faq-col">
+        <p class="sec-08-eyebrow">FAQ</p>
+        <h3>Common questions</h3>
+        <div class="sec-08-faq">
+          <details class="sec-08-q" name="sec-08-faq" open>
+            <summary><span>What happens in the <span class="sec-08-nb">20-minute</span> call?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>You tell us your stack and the frameworks you need. We show Comp AI doing the work on tools like yours, live: collecting evidence, checking settings, drafting policies. You leave with a plan and a price.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>Do I need to prepare anything?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>No. Bring the frameworks you need and the main tools you run on, like your cloud, code host and identity provider. That's enough to tailor the demo.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>Who does the work, agents or people?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>Agents do the work with your company's context. Experts review the decisions that need a person. You see every step.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>Which frameworks do you cover?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>SOC 2, ISO 27001, HIPAA and GDPR, plus XX more. When you need the next framework, you add it without starting over.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>How fast can we be <span class="sec-08-nb">audit-ready?</span></span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>Most teams are audit-ready in XX weeks. It depends on where you start, and we look at that with you on the call.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>Can our security team verify the work?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>Yes. The code is open source, evidence updates live, and your trust center is public. Your security lead can check the work instead of taking our word for it.</p></div>
+          </details>
+        </div>
+        <p class="sec-08-ask">Question not here? <a href="/book-a-demo">Ask it on the call</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- @section:08 html:end -->
+</main>
+
+<!-- @section:08 js:start -->
+<script>
+// 08 · next step: the live demo window loops through its tasks while in view (static under reduced motion)
+(() => {
+  const sec = document.getElementById('sec-08'); if (!sec) return;
+  const win = sec.querySelector('.sec-08-live'); if (!win) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const tasks = [...win.querySelectorAll('.sec-08-task')];
+  const bar = win.querySelector('[data-bar]'), count = win.querySelector('[data-count]'), clock = win.querySelector('[data-clock]');
+  const LABEL = { queued: 'Queued', working: 'Working', done: 'Done', review: 'Expert review' };
+  const set = (t, s) => { t.dataset.s = s; t.querySelector('.sec-08-st').textContent = LABEL[s]; };
+  const render = () => {
+    const n = tasks.filter(t => t.dataset.s === 'done' || t.dataset.s === 'review').length;
+    bar.style.setProperty('--p', n / tasks.length); count.textContent = n + '/' + tasks.length;
+  };
+  let step = tasks.findIndex(t => t.dataset.s === 'working'), timer = 0, sec0 = 7 * 60 + 42, tick = 0;
+  const next = () => {
+    if (step >= tasks.length) { step = -1; timer = setTimeout(next, 2600); return; }   // hold the finished state
+    if (step === -1) { tasks.forEach(t => set(t, 'queued')); step = 0; render(); timer = setTimeout(next, 700); return; }
+    const t = tasks[step];
+    if (t.dataset.s === 'working') { set(t, t.dataset.end || 'done'); step++; render(); timer = setTimeout(next, 450); }
+    else { set(t, 'working'); timer = setTimeout(next, 1700); }
+  };
+  const pad = n => String(n).padStart(2, '0');
+  const run = on => {
+    clearTimeout(timer); clearInterval(tick);
+    if (!on) return;
+    timer = setTimeout(next, 1200);
+    tick = setInterval(() => { sec0 = (sec0 + 1) % (20 * 60); clock.textContent = pad(Math.floor(sec0 / 60)) + ':' + pad(sec0 % 60); }, 1000);
+  };
+  new IntersectionObserver(([e]) => run(e.isIntersecting), { threshold: .25 }).observe(win);
+})();
+</script>
+<!-- @section:08 js:end -->
+<script src="../../hero/comp-ai-hero-v01/shapes-phase.js"></script>
+<script src="../shared/mist.js"></script>
+</body>
+</html>

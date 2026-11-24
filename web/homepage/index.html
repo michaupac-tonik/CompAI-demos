@@ -1179,13 +1179,6 @@
   }
   /* @section:06 css:end */
 
-  /* ---- trial 04-06 (branch homepage-trial-04-06): only sections 04, 05 and 06 are shown. The hero stays in the DOM, hidden,
-     because it owns the shared print and the print data that section 04 takes over. ---- */
-  .hero { min-height: 0 !important; height: 0; padding: 0; }
-  .hero > :not(#print) { display: none !important; }
-  #shift, #sec-03 { display: none !important; }
-  .site-nav::before { opacity: 1 !important; }      /* the nav's dark bar stays on: the page now opens on a light section */
-  #sec-04 { margin-top: calc(var(--bar) + 74px); }
 
   /* ---- trial 04-06: one style for the three light sections. The sections were designed in separate sessions; this layer (after
      their own CSS) pulls them onto one system. Reference: section 05.
@@ -1204,6 +1197,336 @@
   .sec-04 .chat-h .live::before, .sec-04 .chat-rail .ch i { width: 8px; height: 8px; border-radius: 2px; background: #F37300; }
   .sec-04 .fc, .sec-04 .chat-04 { border-radius: var(--r, 6px); }
   .sec-04 .fc .re { border-radius: var(--r-sm, 4px); }
+  /* @section:07 css:start */
+  /* ==== 07 · Proof. Light (paper), after the dark of 06. Expands the hero's proof row: the hero shows G2 + logos,
+     here every logo gets its story with hard numbers, and the wall lets a visitor find companies of their size.
+     ALL RESULTS, QUOTES, SEGMENTS AND LOGOS ARE PLACEHOLDERS (XX, "Logo"). Only Persona AI and Zernio are real names. ==== */
+  .sec-07 { --line-07: #dfdfdf; --muted-07: #515151; --lift-07: 0 1px 2px rgba(22,22,22,.06), 0 18px 44px -22px rgba(22,22,22,.28);
+    position: relative; z-index: 1; color: var(--ink); padding: 128px 0 144px; overflow-x: clip; }
+  .sec-07::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--paper); }
+  .sec-07 .head-07 { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 72px; align-items: end; }
+  .sec-07 .eyebrow-07 { display: flex; align-items: center; gap: 10px; margin: 0 0 24px; font: 400 14px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink); }
+  .sec-07 .eyebrow-07::before { content: ""; width: 9px; height: 9px; flex: none; background: var(--mint); outline: 1px solid var(--ink); outline-offset: -1px; }
+  .sec-07 h2 { margin: 0; font-weight: 400; font-size: clamp(40px, 4.4vw, 84px); line-height: 1; letter-spacing: -.045em; color: var(--ink); }
+  .sec-07 .lead-07 { margin: 0; max-width: 30em; font: 400 clamp(18px, 1.36vw, 22px)/1.4 var(--sans); letter-spacing: -.012em; color: #343434; text-wrap: pretty; }
+  .sec-07 .ctas-07 { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  /* buttons on light: the primary stays mint; the secondary turns ink (the homepage default is white on dark) */
+  .sec-07 .btn-secondary { background: transparent; border-color: var(--ink); color: var(--ink); }
+  .sec-07 .btn-secondary::before { background: var(--ink); }
+  .sec-07 .btn-secondary:is(:hover, :focus-visible) { color: var(--white); border-color: var(--ink); }
+  .sec-07 .btn-primary { border-color: var(--ink); }
+  .sec-07 .btn .chev { width: 14px; height: 14px; flex: none; } .sec-07 .btn .chev path { stroke: currentColor; }      /* mint on paper needs an edge to read as a button */
+  .sec-07 :focus-visible { outline-color: var(--ink); }
+
+  /* ---- stories: one featured (mint) + two compact, every one with its number, its logo and a visible link ---- */
+  .sec-07 .stories-07 { margin: 72px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-rows: auto auto; gap: 16px; }
+  .sec-07 .st-07 { position: relative; display: flex; flex-direction: column; gap: 28px; padding: 32px; border-radius: var(--radius-card); background: var(--white); border: 1px solid var(--line-07); box-shadow: var(--lift-07);
+    transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s; }
+  .sec-07 .st-07.feat { grid-row: 1 / span 2; padding: 40px; gap: 40px; background: var(--mint); border-color: var(--ink); }
+  .sec-07 .st-07:is(:hover, :focus-within) { transform: translateY(-4px); border-color: var(--ink); box-shadow: 0 1px 2px rgba(22,22,22,.08), 0 30px 60px -24px rgba(22,22,22,.38); }
+  .sec-07 .st-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  /* text wordmarks stand in for the logo files */
+  .sec-07 .mark-07 { display: inline-flex; align-items: center; gap: 10px; font: 500 20px/1 var(--sans); letter-spacing: -.02em; color: var(--ink); }
+  .sec-07 .mark-07 i { width: 22px; height: 22px; flex: none; border-radius: 5px; background: var(--ink); }
+  .sec-07 .feat .mark-07 { font-size: 24px; } .sec-07 .feat .mark-07 i { width: 26px; height: 26px; }
+  .sec-07 .tags-07 { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .sec-07 .tags-07 li { padding: 6px 9px; border: 1px solid rgba(22,22,22,.28); border-radius: var(--radius); font: 500 13px/1 var(--sans); color: var(--ink); white-space: nowrap; }
+  .sec-07 .feat .tags-07 li { border-color: var(--ink); }
+  .sec-07 .nums-07 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 0; }
+  .sec-07 .num-07 { margin: 0; padding-top: 18px; border-top: 1.5px solid var(--ink); }
+  .sec-07 .num-07 { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
+  .sec-07 .visually-hidden-07 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .sec-07 .num-07 dd { margin: 0; }
+  .sec-07 .num-07 b { display: block; font: 400 clamp(56px, 9.6vw, 176px)/.9 var(--mono); letter-spacing: -.06em; color: var(--ink); }
+  .sec-07 .num-07 b small { font-size: .36em; letter-spacing: -.02em; margin-left: .12em; }
+  .sec-07 .num-07 span { display: block; margin-top: 14px; font: 500 16px/1.3 var(--sans); color: var(--ink); }
+  .sec-07 .st-07:not(.feat) .num-07 b { font-size: clamp(48px, 4.2vw, 76px); }
+  .sec-07 .st-07:not(.feat) .num-07 { border-top-width: 1px; }
+  .sec-07 blockquote { margin: auto 0 0; }
+  .sec-07 .feat blockquote + .more-07 { margin-top: 0; }
+  .sec-07 .st-07:not(.feat) .nums-07 { grid-template-columns: minmax(0, 1fr); }
+  .sec-07 blockquote p { margin: 0; font: 400 clamp(20px, 1.8vw, 32px)/1.3 var(--sans); letter-spacing: -.02em; color: var(--ink); text-wrap: pretty; }
+  .sec-07 blockquote footer { margin-top: 16px; font: 500 15px/1.3 var(--sans); color: var(--ink); }
+  .sec-07 blockquote footer span { font-weight: 400; color: #343434; }
+  .sec-07 .st-07 p.sum { margin: 0; font: 400 16px/1.45 var(--sans); color: var(--muted-07); }
+  /* "Read the story": visible at rest (underlined, arrow); the whole card is its hit area */
+  .sec-07 .more-07 { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font: 500 16px/1 var(--sans); color: var(--ink); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+  .sec-07 .more-07::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+  .sec-07 .more-07 svg { width: 16px; height: 16px; transition: transform .3s var(--ease); }
+  .sec-07 .more-07 path { stroke: currentColor; }
+  .sec-07 .st-07:is(:hover, :focus-within) .more-07 svg { transform: translateX(4px); }
+  .sec-07 .more-07:focus-visible { outline: 0; }
+  .sec-07 .st-07:has(.more-07:focus-visible) { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+  /* ---- wall: 1,000+ and "companies like yours" (size filter, visible at rest as buttons) ---- */
+  .sec-07 .wall-07 { margin-top: 16px; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px; padding: 40px; border-radius: var(--radius-card); background: var(--white); border: 1px solid var(--line-07); box-shadow: var(--lift-07); }
+  .sec-07 .count-07 { margin: 0; font: 400 clamp(64px, 6.4vw, 120px)/.9 var(--mono); letter-spacing: -.06em; color: var(--ink); }
+  .sec-07 .count-cap { margin: 14px 0 0; max-width: 18em; font: 500 18px/1.3 var(--sans); color: var(--ink); }
+  .sec-07 .flt-07 { margin-top: 36px; }
+  .sec-07 .flt-07 > p { margin: 0 0 12px; font: 400 15px/1.3 var(--sans); color: var(--muted-07); }
+  .sec-07 .seg-07 { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sec-07 .seg-07 button { height: 40px; padding: 0 14px; border: 1px solid rgba(22,22,22,.3); border-radius: var(--radius); background: var(--white); color: var(--ink); font: 500 15px/1 var(--sans); cursor: pointer; transition: background-color .2s, border-color .2s, color .2s; }
+  .sec-07 .seg-07 button:hover { border-color: var(--ink); }
+  .sec-07 .seg-07 button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--white); }
+  .sec-07 .logos-07 { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; align-content: start; }
+  .sec-07 .logos-07 li { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; min-height: 104px; padding: 16px; border-radius: var(--radius); background: var(--paper); border: 1px solid transparent;
+    transition: opacity .45s var(--ease), border-color .3s, background-color .3s; }
+  .sec-07 .logos-07 .lg { display: inline-flex; align-items: center; gap: 8px; font: 500 17px/1 var(--sans); letter-spacing: -.015em; color: var(--ink); }
+  .sec-07 .logos-07 .lg i { width: 16px; height: 16px; border-radius: 4px; background: #343434; flex: none; }
+  .sec-07 .logos-07 .sz { font: 400 13px/1.2 var(--sans); color: var(--muted-07); }
+  .sec-07 .logos-07 li.hit { background: var(--white); border-color: var(--ink); }
+  .sec-07 .logos-07 li.hit::after { content: ""; position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; background: var(--mint); outline: 1px solid var(--ink); outline-offset: -1px; }
+  .sec-07 .logos-07 li.dim { opacity: .32; }
+
+  /* ---- reveal ---- */
+  .js .sec-07 .rv { opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .9s var(--ease) calc(var(--d, 0) * .12s); }
+  .js .sec-07 .rv.in { opacity: 1; filter: none; transform: none; }
+  .js .sec-07 .rv.in.st-07 { transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s; }
+
+  @media (max-width: 1023px) {
+    .sec-07 { padding: 88px 0 96px; }
+    .sec-07 .head-07 { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .sec-07 .stories-07 { grid-template-columns: minmax(0, 1fr); margin-top: 48px; }
+    .sec-07 .st-07.feat { grid-row: auto; }
+    .sec-07 .wall-07 { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .sec-07 .logos-07 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .sec-07 { padding: 64px 0 72px; }
+    .sec-07 .st-07, .sec-07 .st-07.feat, .sec-07 .wall-07 { padding: 22px 18px; gap: 26px; }
+    .sec-07 .nums-07 { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .sec-07 .st-07:not(.feat) .nums-07 { grid-template-columns: minmax(0, 1fr); }
+    .sec-07 .logos-07 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sec-07 .logos-07 li { min-height: 88px; padding: 12px; }
+    .sec-07 .logos-07 li:nth-child(n+9) { display: none; }      /* eight tiles are enough on a phone */
+    .sec-07 .ctas-07 .btn { flex: 1 1 100%; }
+    .sec-07 .seg-07 button { flex: 1 1 auto; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .sec-07 .rv, .js .sec-07 .rv.in.st-07 { opacity: 1; filter: none; transform: none; transition: none; }
+    .sec-07 .st-07, .sec-07 .logos-07 li, .sec-07 .more-07 svg { transition: none; }
+    .sec-07 .st-07:is(:hover, :focus-within) { transform: none; }
+  }
+  /* @section:07 css:end */
+  /* @section:08 css:start */
+  /* ==== 08 · Next step (structure v12): the final CTA, dark. Book a demo with a live demo window,
+     what sets the price, FAQ. Everything that matters is readable at rest; the window's loop only adds to it. ==== */
+  .sec-08 { position: relative; z-index: 1; padding: 152px 0 160px; background: rgba(1,1,1,.92); color: var(--white); }
+  .sec-08-eyebrow { margin: 0 0 24px; font: 400 14px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--mint); }
+  .sec-08-top { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 80px; align-items: center; }
+  .sec-08 h2 { margin: 0; font-weight: 300; font-size: clamp(44px, 5.2vw, 96px); line-height: .98; letter-spacing: -.045em; text-wrap: balance; }
+  .sec-08 h2 em { font-style: normal; color: var(--mint); }
+  .sec-08-lead { margin: 28px 0 0; max-width: 29em; font-size: clamp(18px, 1.35vw, 22px); line-height: 1.42; letter-spacing: -.01em; color: rgba(252,252,252,.86); text-wrap: pretty; }
+  .sec-08-act { margin-top: 44px; display: grid; justify-items: start; gap: 24px; }
+  /* the page's strongest CTA: the homepage .btn-primary, one size up, with a mint halo at rest */
+  .sec-08 .sec-08-cta { height: 64px; padding: 0 26px 0 30px; gap: 10px; font-size: 19.5px;
+    box-shadow: 0 0 0 6px rgba(36,255,99,.16), 0 22px 60px -14px rgba(36,255,99,.6); }
+  .sec-08 .sec-08-cta:is(:hover, :focus-visible) { box-shadow: 0 0 0 6px rgba(0,255,238,.24), 0 24px 64px -12px rgba(0,255,238,.7); }
+  .sec-08 .sec-08-cta .chev { width: 17px; height: 17px; }
+  .sec-08-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 24px; font: 500 15.5px/1.2 var(--sans); color: var(--white); }
+  .sec-08-meta li { display: inline-flex; align-items: center; gap: 10px; }
+  .sec-08-meta li::before { content: ""; width: 7px; height: 7px; flex: none; transform: rotate(45deg); background: linear-gradient(135deg, var(--mint), var(--cyan)); }
+
+  /* live demo window: product UI, soft and premium (feedback 20.11) */
+  .sec-08-live { position: relative; border-radius: var(--radius-card); background: #131313; border: 1px solid rgba(252,252,252,.14);
+    box-shadow: 0 50px 120px -40px rgba(0,0,0,.95), 0 0 80px -30px rgba(0,255,238,.18); overflow: hidden; }
+  .sec-08-lhead { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid rgba(252,252,252,.1); }
+  .sec-08-onair { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border-radius: var(--radius); background: rgba(36,255,99,.14); color: var(--mint); font: 500 14px/1 var(--sans); }
+  .sec-08-onair i { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 0 rgba(36,255,99,.6); animation: sec08-pulse 1.8s var(--ease) infinite; }
+  @keyframes sec08-pulse { 70% { box-shadow: 0 0 0 7px rgba(36,255,99,0); } 100% { box-shadow: 0 0 0 0 rgba(36,255,99,0); } }
+  .sec-08-ltitle { min-width: 0; font: 500 15.5px/1.2 var(--sans); }
+  .sec-08-ltitle small { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 400; color: rgba(252,252,252,.62); }
+  .sec-08-clock { margin-left: auto; font: 400 14px/1 var(--mono); letter-spacing: .02em; color: rgba(252,252,252,.85); font-variant-numeric: tabular-nums; }
+  .sec-08-clock span { color: rgba(252,252,252,.45); }
+  .sec-08-tasks { list-style: none; margin: 0; padding: 8px; }
+  .sec-08-task { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 14px 12px; border-radius: var(--radius); transition: background-color .5s var(--ease); }
+  .sec-08-task[data-s="working"] { background: rgba(0,255,238,.07); }
+  .sec-08-ico { width: 40px; height: 40px; border-radius: var(--radius); display: grid; place-items: center; background: #222; border: 1px solid rgba(252,252,252,.1); font: 500 12.5px/1 var(--sans); color: var(--white); }
+  .sec-08-task b { display: block; font: 500 16.5px/1.25 var(--sans); letter-spacing: -.005em; }
+  .sec-08-src { display: block; margin-top: 4px; font-size: 14px; line-height: 1.3; color: rgba(252,252,252,.62); }
+  .sec-08-st { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 11px; border-radius: var(--radius); white-space: nowrap;
+    font: 500 14px/1 var(--sans); color: rgba(252,252,252,.6); border: 1px solid rgba(252,252,252,.18); transition: background-color .4s, color .4s, border-color .4s; }
+  [data-s="working"] .sec-08-st { color: var(--cyan); border-color: rgba(0,255,238,.4); background: rgba(0,255,238,.1); }
+  [data-s="working"] .sec-08-st::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid currentColor; border-right-color: transparent; animation: sec08-spin .9s linear infinite; }
+  @keyframes sec08-spin { to { transform: rotate(360deg); } }
+  [data-s="done"] .sec-08-st { color: var(--ink); background: var(--mint); border-color: var(--mint); }
+  [data-s="review"] .sec-08-st { color: #f49900; background: rgba(244,153,0,.12); border-color: rgba(244,153,0,.45); }
+  .sec-08-lfoot { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-top: 1px solid rgba(252,252,252,.1); font: 500 14.5px/1 var(--sans); color: rgba(252,252,252,.85); }
+  .sec-08-bar { flex: 1; height: 4px; border-radius: 2px; background: rgba(252,252,252,.12); overflow: hidden; }
+  .sec-08-bar i { display: block; height: 100%; width: calc(var(--p, .6) * 100%); background: linear-gradient(90deg, var(--mint), var(--cyan)); transition: width .8s var(--ease); }
+  .sec-08-count { font: 400 14px/1 var(--mono); color: var(--white); font-variant-numeric: tabular-nums; }
+
+  /* price factors + FAQ */
+  .sec-08-more { margin-top: 136px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 80px; align-items: start; }
+  .sec-08-more .sec-08-eyebrow { font-size: 13px; margin-bottom: 18px; }
+  .sec-08 h3 { margin: 0; font-weight: 400; font-size: clamp(28px, 2.3vw, 40px); line-height: 1.08; letter-spacing: -.03em; }
+  .sec-08-sub { margin: 14px 0 0; max-width: 30em; font-size: 17px; line-height: 1.45; color: rgba(252,252,252,.8); }
+  .sec-08-price { border-radius: var(--radius-card); background: #131313; border: 1px solid rgba(252,252,252,.14); padding: 40px; }
+  .sec-08-factors { list-style: none; margin: 32px 0 0; padding: 0; counter-reset: f; }
+  .sec-08-factors li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 6px 8px; padding: 20px 0; border-top: 1px solid rgba(252,252,252,.12); }
+  .sec-08-n { grid-row: span 2; padding-top: 4px; font: 400 14px/1 var(--mono); color: var(--mint); font-variant-numeric: tabular-nums; }
+  .sec-08-factors b { font: 500 18.5px/1.3 var(--sans); letter-spacing: -.005em; }
+  .sec-08-factors p { margin: 0; font-size: 15.5px; line-height: 1.45; color: rgba(252,252,252,.74); }
+  .sec-08-price .btn { margin-top: 12px; }
+  .sec-08-faq { margin-top: 32px; border-top: 1px solid rgba(252,252,252,.18); }
+  .sec-08-q { border-bottom: 1px solid rgba(252,252,252,.18); }
+  .sec-08-q summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0;
+    font: 500 clamp(17.5px, 1.35vw, 21px)/1.3 var(--sans); letter-spacing: -.01em; color: var(--white); }
+  .sec-08-q summary::-webkit-details-marker { display: none; }
+  .sec-08-q summary:focus-visible { outline-offset: 4px; border-radius: var(--radius); }
+  .sec-08-plus { position: relative; flex: none; width: 34px; height: 34px; border-radius: var(--radius); border: 1.5px solid rgba(252,252,252,.5); color: var(--white);
+    transition: background-color .3s, border-color .3s, color .3s; }
+  .sec-08-plus::before, .sec-08-plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.5px; margin: -.75px 0 0 -6px; background: currentColor; transition: transform .35s var(--ease); }
+  .sec-08-plus::after { transform: rotate(90deg); }
+  .sec-08-q summary:hover .sec-08-plus { border-color: var(--white); background: rgba(252,252,252,.1); }
+  .sec-08-q[open] .sec-08-plus { background: var(--mint); border-color: var(--mint); color: var(--ink); }
+  .sec-08-q[open] .sec-08-plus::after { transform: rotate(0); }
+  .sec-08-a { padding: 0 64px 28px 0; max-width: 46em; font-size: 17px; line-height: 1.5; color: rgba(252,252,252,.8); }
+  .sec-08-a p { margin: 0; }
+  .sec-08-nb { white-space: nowrap; }
+  .sec-08-ask { margin: 28px 0 0; font: 500 16.5px/1.4 var(--sans); color: var(--white); }
+  .sec-08-ask a { color: var(--mint); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+  .sec-08-ask a:hover { color: var(--cyan); }
+  @supports (interpolate-size: allow-keywords) {
+    .sec-08-faq { interpolate-size: allow-keywords; }
+    .sec-08-q::details-content { height: 0; overflow: clip; transition: height .45s var(--ease), content-visibility .45s allow-discrete; }
+    .sec-08-q[open]::details-content { height: auto; }
+  }
+
+  @media (max-width: 1199px) { .sec-08-top, .sec-08-more { gap: 56px; } .sec-08-price { padding: 32px; } }
+  @media (max-width: 1023px) {
+    .sec-08 { padding: 112px 0 120px; }
+    .sec-08-top, .sec-08-more { grid-template-columns: minmax(0, 1fr); }
+    .sec-08-more { margin-top: 104px; }
+    .sec-08-faq-col { order: 2; }
+  }
+  @media (max-width: 600px) {
+    .sec-08 { padding: 88px 0 96px; }
+    .sec-08-act { justify-items: stretch; }
+    .sec-08 .sec-08-cta { height: 58px; font-size: 18px; }
+    .sec-08-lhead { flex-wrap: wrap; padding: 14px 16px; gap: 10px 12px; }
+    .sec-08-ltitle { order: 3; flex-basis: 100%; }
+    .sec-08-tasks { padding: 6px; }
+    .sec-08-task { grid-template-columns: 34px minmax(0, 1fr); gap: 8px 12px; padding: 12px 10px; }
+    .sec-08-ico { width: 34px; height: 34px; font-size: 11.5px; }
+    .sec-08-st { grid-column: 2; justify-self: start; height: 28px; font-size: 13.5px; }
+    .sec-08-lfoot { padding: 14px 16px; }
+    .sec-08-more { margin-top: 88px; gap: 64px; }
+    .sec-08-price { padding: 24px 20px; }
+    .sec-08-price .btn { width: 100%; }
+    .sec-08-factors li { grid-template-columns: 36px minmax(0, 1fr); }
+    .sec-08-a { padding-right: 0; }
+    .sec-08-q summary { padding: 20px 0; gap: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sec-08 *, .sec-08 *::before, .sec-08 *::after { animation: none !important; transition: none !important; }
+  }
+  /* @section:08 css:end */
+  /* @section:09 css:start */
+  /* 09 · Footer (global). Dark. Keeps every footer destination of trycomp.ai (feedback 20.11, D13), regrouped:
+     About holds Careers, Press, Partnerships; Trust gathers the security links; Legal sits in the bottom bar.
+     Mobile (< 768px): link groups become <details> accordions (all open without JS). */
+  .sec-09 { --f-line: rgba(252,252,252,.14); --f-dim: rgba(252,252,252,.72); --f-faint: rgba(252,252,252,.55);
+    position: relative; z-index: 1; background: var(--black); color: var(--white); border-top: 1px solid var(--f-line); }
+  .sec-09 a { color: inherit; text-decoration: none; }
+  .sec-09 ul { margin: 0; padding: 0; list-style: none; }
+
+  /* CTA band */
+  .sec-09 .cta-09 { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 32px 64px; padding: 96px 0 72px; border-bottom: 1px solid var(--f-line); }
+  .sec-09 .eyebrow-09 { margin: 0 0 20px; font: 400 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--mint); }
+  .sec-09 h2 { margin: 0; max-width: 15ch; font: 300 clamp(36px, 3.6vw, 56px)/1.04 var(--sans); letter-spacing: -.04em; }
+  .sec-09 .lead-09 { margin: 20px 0 0; max-width: 46ch; font: 400 17px/1.45 var(--sans); color: var(--f-dim); }
+  .sec-09 .acts-09 { display: flex; gap: 12px; flex-wrap: wrap; }
+  .sec-09 .btn .chev { width: 14px; height: 14px; flex: none; stroke: currentColor; transition: transform .3s var(--ease); }
+  .sec-09 .btn:is(:hover, :focus-visible) .chev { transform: translateX(3px); }
+
+  /* main grid: brand column + six link groups */
+  .sec-09 .grid-09 { display: grid; grid-template-columns: minmax(260px, 3fr) 9fr; gap: 48px; padding: 64px 0 56px; }
+  .sec-09 .brand-09 { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
+  .sec-09 .logo-09 { display: inline-flex; align-items: center; gap: 10px; }
+  .sec-09 .logo-09 img { display: block; }
+  .sec-09 .badges-09 { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sec-09 .badges-09 a { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border: 1px solid var(--f-line); border-radius: var(--radius);
+    font: 500 13px/1 var(--sans); color: var(--white); transition: border-color .25s, background-color .25s; }
+  .sec-09 .badges-09 svg { width: 12px; height: 12px; color: var(--mint); flex: none; }
+  .sec-09 .badges-09 a:is(:hover, :focus-visible) { border-color: var(--mint); background: rgba(36,255,99,.08); }
+  .sec-09 .social-09 { display: flex; gap: 4px; margin-left: -8px; }
+  .sec-09 .social-09 a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius); color: var(--f-dim); transition: color .25s, background-color .25s; }
+  .sec-09 .social-09 svg { width: 20px; height: 20px; }
+  .sec-09 .social-09 a:is(:hover, :focus-visible) { color: var(--white); background: rgba(252,252,252,.08); }
+
+  /* For Agents: a machine-readable version of the site */
+  .sec-09 .agents-09 { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; width: 100%; max-width: 320px; padding: 16px 18px; border: 1px solid var(--f-line);
+    border-radius: var(--radius-card); background: rgba(252,252,252,.04); transition: border-color .25s, background-color .25s; }
+  .sec-09 .agents-09 .ic { grid-row: span 2; display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius); background: var(--mint); color: var(--ink); font: 400 14px/1 var(--mono); }
+  .sec-09 .agents-09 b { font: 500 15px/1.3 var(--sans); display: flex; align-items: center; gap: 6px; }
+  .sec-09 .agents-09 b svg { width: 12px; height: 12px; stroke: currentColor; transition: transform .3s var(--ease); }
+  .sec-09 .agents-09 span:not(.ic) { font: 400 14px/1.35 var(--sans); color: var(--f-dim); }
+  .sec-09 .agents-09:is(:hover, :focus-visible) { border-color: var(--mint); background: rgba(36,255,99,.06); }
+  .sec-09 .agents-09:is(:hover, :focus-visible) b svg { transform: translateX(3px); }
+
+  .sec-09 .cols-09 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 32px 24px; }
+  .sec-09 .col-09 summary { list-style: none; margin-bottom: 18px; font: 500 15px/1.2 var(--sans); color: var(--white); cursor: default; }
+  .sec-09 .col-09 summary::-webkit-details-marker { display: none; }
+  .sec-09 .col-09 summary .pm { display: none; }
+  .sec-09 .col-09 li + li { margin-top: 10px; }
+  .sec-09 .col-09 a { display: inline-flex; align-items: baseline; gap: 6px; font: 400 15px/1.3 var(--sans); color: var(--f-dim);
+    text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; text-decoration-thickness: 1.5px; transition: color .2s, text-decoration-color .2s; }
+  .sec-09 .col-09 a:is(:hover, :focus-visible) { color: var(--white); text-decoration-color: var(--mint); }
+  .sec-09 .col-09 .new { padding: 2px 5px; border-radius: 4px; background: var(--mint); color: var(--ink); font: 500 11px/1.2 var(--sans); text-decoration: none; }
+  .sec-09 .col-09 .ext { width: 10px; height: 10px; stroke: currentColor; flex: none; align-self: center; opacity: .7; }
+
+  /* wordmark */
+  .sec-09 .mark-09 { display: block; width: 100%; aspect-ratio: 76.6925 / 21.0228; background: linear-gradient(180deg, #2b2b2b 0%, #161616 100%);
+    -webkit-mask: url("../hero/comp-ai-hero-v01/img/logo-wordmark.svg") center / 100% 100% no-repeat; mask: url("../hero/comp-ai-hero-v01/img/logo-wordmark.svg") center / 100% 100% no-repeat; }
+
+  /* bottom bar */
+  .sec-09 .bar-09 { display: flex; align-items: center; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap; padding: 28px 0 40px; margin-top: 40px; border-top: 1px solid var(--f-line); }
+  .sec-09 .copy-09 { margin: 0; font: 400 14px/1.4 var(--sans); color: var(--f-faint); }
+  .sec-09 .legal-09 { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+  .sec-09 .legal-09 a { font: 400 14px/1.4 var(--sans); color: var(--f-dim); transition: color .2s; }
+  .sec-09 .legal-09 a:is(:hover, :focus-visible) { color: var(--white); }
+  .sec-09 .status-09 { display: inline-flex; align-items: center; gap: 10px; height: 36px; padding: 0 12px; border: 1px solid var(--f-line); border-radius: var(--radius);
+    font: 500 14px/1 var(--sans); color: var(--white); transition: border-color .25s; }
+  .sec-09 .status-09:is(:hover, :focus-visible) { border-color: var(--mint); }
+  .sec-09 .status-09 .dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--mint); }
+  .sec-09 .status-09 .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--mint); animation: sec09-ping 2.4s var(--ease) infinite; }
+  @keyframes sec09-ping { 0% { transform: scale(1); opacity: .6; } 80%, 100% { transform: scale(2.8); opacity: 0; } }
+
+  @media (max-width: 1279px) {
+    .sec-09 .grid-09 { grid-template-columns: 1fr; gap: 56px; }
+    .sec-09 .brand-09 { display: grid; grid-template-columns: auto auto; justify-content: space-between; align-items: center; gap: 24px; }
+    .sec-09 .brand-09 .agents-09 { grid-column: 1 / -1; }
+  }
+  @media (max-width: 1023px) {
+    .sec-09 .cta-09 { grid-template-columns: 1fr; align-items: start; padding: 72px 0 56px; }
+    .sec-09 .cols-09 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; }
+  }
+  @media (max-width: 767px) {
+    .sec-09 .cta-09 { padding: 56px 0 40px; }
+    .sec-09 .lead-09 { font-size: 16px; }
+    .sec-09 .acts-09 { flex-direction: column; align-items: stretch; }
+    .sec-09 .grid-09 { padding: 40px 0 24px; gap: 32px; }
+    .sec-09 .brand-09 { display: flex; align-items: flex-start; gap: 24px; }
+    .sec-09 .agents-09 { max-width: none; }
+    .sec-09 .mark-09 { margin-top: 32px; }
+    .sec-09 .cols-09 { grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--f-line); }
+    .sec-09 .col-09 { border-bottom: 1px solid var(--f-line); }
+    .sec-09 .col-09 summary { display: flex; align-items: center; justify-content: space-between; min-height: 56px; margin: 0; font-size: 17px; cursor: pointer; }
+    .sec-09 .col-09 summary .pm { display: block; position: relative; width: 14px; height: 14px; }
+    .sec-09 .col-09 summary .pm::before, .sec-09 .col-09 summary .pm::after { content: ""; position: absolute; left: 0; top: 6px; width: 14px; height: 1.5px; background: var(--mint); transition: transform .3s var(--ease); }
+    .sec-09 .col-09 summary .pm::after { transform: rotate(90deg); }
+    .sec-09 .col-09[open] summary .pm::after { transform: rotate(0); }
+    .sec-09 .col-09 ul { padding: 0 0 20px; }
+    .sec-09 .col-09 li + li { margin-top: 0; }
+    .sec-09 .col-09 a { display: flex; padding: 9px 0; font-size: 16px; }
+    .sec-09 .bar-09 { flex-direction: column; align-items: flex-start; margin-top: 24px; padding-bottom: 32px; }
+    .sec-09 .status-09 { order: -1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sec-09 *, .sec-09 *::before, .sec-09 *::after { transition: none !important; animation: none !important; }
+  }
+  /* @section:09 css:end */
 </style>
 </head>
 <body>
@@ -1638,7 +1961,286 @@
   </div>
 </section>
 <!-- @section:06 html:end -->
+<!-- @section:07 html:start -->
+<!-- PLACEHOLDERS: every number (XX), quote, person, segment tag and logo below is a stand-in until the case studies
+     are in. Persona AI and Zernio are real customers, but their results are not known yet: do not fill them in by guess. -->
+<section class="sec-07" id="sec-07" aria-labelledby="sec-07-title">
+  <div class="wrap">
+    <div class="head-07">
+      <div>
+        <p class="eyebrow-07 rv" style="--d:0">Customer proof</p>
+        <h2 id="sec-07-title" class="rv" style="--d:1">Results, not claims.</h2>
+      </div>
+      <div class="rv" style="--d:2">
+        <p class="lead-07">More than 1,000 companies run compliance on Comp AI. Their stories come with the numbers, next to companies of your size.</p>
+        <div class="ctas-07">
+          <a class="btn btn-primary" href="#demo">Book a demo <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="btn btn-secondary" href="#customers">All customer stories</a>
+        </div>
+      </div>
+    </div>
+
+    <ul class="stories-07" aria-label="Customer stories">
+      <li class="st-07 feat rv" style="--d:3">
+        <div class="st-top"><span class="mark-07"><i aria-hidden="true"></i>Persona AI</span><ul class="tags-07" aria-label="Company"><li>Startup</li><li>SOC 2</li></ul></div>
+        <dl class="nums-07">
+          <div class="num-07"><dt><span>to audit-ready</span></dt><dd><b>XX<small>days</small></b></dd></div>
+          <div class="num-07"><dt><span>less time on evidence</span></dt><dd><b>XX<small>%</small></b></dd></div>
+        </dl>
+        <blockquote><p>“Quote from the customer story: what changed for the team, in one or two plain sentences.”</p>
+          <footer>Name Surname <span>· Role, Persona AI</span></footer></blockquote>
+        <a class="more-07" href="#story-persona-ai">Read the story<span class="visually-hidden-07">: Persona AI</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      </li>
+      <li class="st-07 rv" style="--d:4">
+        <div class="st-top"><span class="mark-07"><i aria-hidden="true"></i>Zernio</span><ul class="tags-07" aria-label="Company"><li>Mid-market</li><li>ISO 27001</li></ul></div>
+        <dl class="nums-07"><div class="num-07"><dt><span>saved every quarter</span></dt><dd><b>XX<small>hrs</small></b></dd></div></dl>
+        <p class="sum">One line from the story: the situation before Comp AI and what the team does now.</p>
+        <a class="more-07" href="#story-zernio">Read the story<span class="visually-hidden-07">: Zernio</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      </li>
+      <li class="st-07 rv" style="--d:5">
+        <div class="st-top"><span class="mark-07"><i aria-hidden="true"></i>Logo</span><ul class="tags-07" aria-label="Company"><li>Enterprise</li><li>SOC 2 · HIPAA</li></ul></div>
+        <dl class="nums-07"><div class="num-07"><dt><span>frameworks from one set of evidence</span></dt><dd><b>XX</b></dd></div></dl>
+        <p class="sum">One line from the story: the situation before Comp AI and what the team does now.</p>
+        <a class="more-07" href="#story-3">Read the story<span class="visually-hidden-07">: customer story</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      </li>
+    </ul>
+
+    <div class="wall-07 rv" style="--d:6">
+      <div>
+        <p class="count-07">1,000+</p>
+        <p class="count-cap">companies run compliance on Comp AI, from first audit to enterprise.</p>
+        <div class="flt-07">
+          <p id="sec-07-seg">Find companies your size</p>
+          <div class="seg-07" role="group" aria-labelledby="sec-07-seg">
+            <button type="button" data-seg="all" aria-pressed="true">All</button>
+            <button type="button" data-seg="startup" aria-pressed="false">Startup</button>
+            <button type="button" data-seg="mid" aria-pressed="false">Mid-market</button>
+            <button type="button" data-seg="ent" aria-pressed="false">Enterprise</button>
+          </div>
+        </div>
+      </div>
+      <ul class="logos-07" aria-label="Customers" aria-live="polite">
+          <li data-seg="startup"><span class="lg"><i aria-hidden="true"></i>Persona AI</span><span class="sz">Startup</span></li>
+          <li data-seg="mid"><span class="lg"><i aria-hidden="true"></i>Zernio</span><span class="sz">Mid-market</span></li>
+          <li data-seg="ent"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Enterprise</span></li>
+          <li data-seg="startup"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Startup</span></li>
+          <li data-seg="mid"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Mid-market</span></li>
+          <li data-seg="ent"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Enterprise</span></li>
+          <li data-seg="startup"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Startup</span></li>
+          <li data-seg="mid"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Mid-market</span></li>
+          <li data-seg="ent"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Enterprise</span></li>
+          <li data-seg="startup"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Startup</span></li>
+          <li data-seg="mid"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Mid-market</span></li>
+          <li data-seg="ent"><span class="lg"><i aria-hidden="true"></i>Logo</span><span class="sz">Enterprise</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- @section:07 html:end -->
+<!-- @section:08 html:start -->
+<section class="sec-08" id="sec-08" aria-labelledby="sec-08-title">
+  <div class="wrap">
+    <div class="sec-08-top" id="demo">
+      <div>
+        <p class="sec-08-eyebrow">Next step</p>
+        <h2 id="sec-08-title">See the work done, <em>live.</em></h2>
+        <p class="sec-08-lead">Watch Comp AI do the work on your own stack in a <span class="sec-08-nb">20-minute</span> call. See what sets your price, and get answers to the questions teams ask first.</p>
+        <div class="sec-08-act">
+          <!-- placeholder link: the Book a Demo page (in scope, not built yet) -->
+          <a class="btn btn-primary sec-08-cta" href="/book-a-demo">Book a demo <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <ul class="sec-08-meta">
+            <li>20-minute call</li>
+            <li>On your own stack</li>
+            <li>Your price on the call</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- illustration: what the visitor sees on the call. The loop (js) only animates it; at rest it shows a mid-demo state. -->
+      <div class="sec-08-live" role="img" aria-label="Illustration of a live demo: Comp AI agents collect evidence, check settings and draft a policy on your stack while an expert reviews a vendor.">
+        <div class="sec-08-lhead">
+          <span class="sec-08-onair"><i></i>Live demo</span>
+          <span class="sec-08-ltitle">Your stack<small>SOC 2 · ISO 27001</small></span>
+          <span class="sec-08-clock"><b data-clock>07:42</b> <span>/ 20:00</span></span>
+        </div>
+        <ul class="sec-08-tasks">
+          <li class="sec-08-task" data-s="done"><span class="sec-08-ico">AWS</span><span><b>Collect cloud evidence</b><span class="sec-08-src">AWS</span></span><span class="sec-08-st">Done</span></li>
+          <li class="sec-08-task" data-s="done"><span class="sec-08-ico">GH</span><span><b>Check branch protection</b><span class="sec-08-src">GitHub</span></span><span class="sec-08-st">Done</span></li>
+          <li class="sec-08-task" data-s="working"><span class="sec-08-ico">GW</span><span><b>Run the access review</b><span class="sec-08-src">Google Workspace</span></span><span class="sec-08-st">Working</span></li>
+          <li class="sec-08-task" data-s="queued"><span class="sec-08-ico">Doc</span><span><b>Draft the security policy</b><span class="sec-08-src">SOC 2 · ISO 27001</span></span><span class="sec-08-st">Queued</span></li>
+          <li class="sec-08-task" data-s="queued" data-end="review"><span class="sec-08-ico">V</span><span><b>Assess a new vendor</b><span class="sec-08-src">Vendor list</span></span><span class="sec-08-st">Queued</span></li>
+        </ul>
+        <div class="sec-08-lfoot"><span>Agent progress</span><span class="sec-08-bar"><i data-bar style="--p:.4"></i></span><span class="sec-08-count" data-count>2/5</span></div>
+      </div>
+    </div>
+
+    <div class="sec-08-more">
+      <div class="sec-08-price">
+        <p class="sec-08-eyebrow">Pricing</p>
+        <h3>What sets the price</h3>
+        <p class="sec-08-sub">Your price depends on four things. We go through them with you and give you a number on the call.</p>
+        <!-- working copy: confirm the four factors with Comp AI -->
+        <ul class="sec-08-factors">
+          <li><span class="sec-08-n">01</span><b>Frameworks</b><p>How many standards you need now, such as SOC 2, ISO 27001, HIPAA or GDPR.</p></li>
+          <li><span class="sec-08-n">02</span><b>Company size</b><p>How many people and devices are in scope.</p></li>
+          <li><span class="sec-08-n">03</span><b>Systems</b><p>How many cloud, code and identity tools Comp AI connects to.</p></li>
+          <li><span class="sec-08-n">04</span><b>Audit</b><p>Whether the audit is arranged with Comp AI or you bring your own auditor.</p></li>
+        </ul>
+        <a class="btn btn-secondary" href="/book-a-demo">Get your price <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      </div>
+
+      <div class="sec-08-faq-col">
+        <p class="sec-08-eyebrow">FAQ</p>
+        <h3>Common questions</h3>
+        <div class="sec-08-faq">
+          <details class="sec-08-q" name="sec-08-faq" open>
+            <summary><span>What happens in the <span class="sec-08-nb">20-minute</span> call?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>You tell us your stack and the frameworks you need. We show Comp AI doing the work on tools like yours, live: collecting evidence, checking settings, drafting policies. You leave with a plan and a price.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>Do I need to prepare anything?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>No. Bring the frameworks you need and the main tools you run on, like your cloud, code host and identity provider. That's enough to tailor the demo.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>Who does the work, agents or people?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>Agents do the work with your company's context. Experts review the decisions that need a person. You see every step.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>Which frameworks do you cover?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>SOC 2, ISO 27001, HIPAA and GDPR, plus XX more. When you need the next framework, you add it without starting over.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>How fast can we be <span class="sec-08-nb">audit-ready?</span></span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>Most teams are audit-ready in XX weeks. It depends on where you start, and we look at that with you on the call.</p></div>
+          </details>
+          <details class="sec-08-q" name="sec-08-faq">
+            <summary><span>Can our security team verify the work?</span><span class="sec-08-plus" aria-hidden="true"></span></summary>
+            <div class="sec-08-a"><p>Yes. The code is open source, evidence updates live, and your trust center is public. Your security lead can check the work instead of taking our word for it.</p></div>
+          </details>
+        </div>
+        <p class="sec-08-ask">Question not here? <a href="/book-a-demo">Ask it on the call</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- @section:08 html:end -->
 </main>
+<!-- @section:09 html:start -->
+<footer class="sec-09" id="sec-09" aria-labelledby="sec-09-title">
+  <div class="wrap">
+  <div class="cta-09">
+    <div>
+      <p class="eyebrow-09">Comp AI</p>
+      <h2 id="sec-09-title">Compliance that helps you close deals.</h2>
+      <p class="lead-09">AI-powered compliance platform. Get SOC 2, ISO 27001, HIPAA and GDPR audit-ready in record time.</p>
+    </div>
+    <div class="acts-09">
+      <a class="btn btn-primary" href="/demo">Book a demo <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      <a class="btn btn-secondary" href="https://security.trycomp.ai" target="_blank" rel="noopener">Visit the Trust Center</a>
+    </div>
+  </div>
+
+  <div class="grid-09">
+    <div class="brand-09">
+      <a class="logo-09" href="/" aria-label="Comp AI home"><img src="../hero/comp-ai-hero-v01/img/logo-mark.svg" alt="" width="30" height="28"><img src="../hero/comp-ai-hero-v01/img/logo-wordmark.svg" alt="" width="84" height="23"></a>
+      <div class="badges-09" aria-label="Frameworks we're certified for">
+        <a href="https://security.trycomp.ai" target="_blank" rel="noopener" aria-label="SOC 2: see the evidence in our Trust Center"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.8 9 10 3" stroke="currentColor" stroke-width="1.6"/></svg>SOC 2</a>
+        <a href="https://security.trycomp.ai" target="_blank" rel="noopener" aria-label="ISO 27001: see the evidence in our Trust Center"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.8 9 10 3" stroke="currentColor" stroke-width="1.6"/></svg>ISO 27001</a>
+        <a href="https://security.trycomp.ai" target="_blank" rel="noopener" aria-label="HIPAA: see the evidence in our Trust Center"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.8 9 10 3" stroke="currentColor" stroke-width="1.6"/></svg>HIPAA</a>
+        <a href="https://security.trycomp.ai" target="_blank" rel="noopener" aria-label="GDPR: see the evidence in our Trust Center"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.8 9 10 3" stroke="currentColor" stroke-width="1.6"/></svg>GDPR</a>
+      </div>
+      <div class="social-09">
+        <a href="https://github.com/trycompai/comp" target="_blank" rel="noopener" aria-label="Comp AI on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></a>
+        <a href="https://x.com/compai" target="_blank" rel="noopener" aria-label="Comp AI on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.488 14.651L15.25 21h7l-7.858-10.478L20.93 3h-2.65l-5.117 5.886L8.75 3h-7l7.51 10.015L2.32 21h2.65zM16.25 19L5.75 5h2l10.5 14z"/></svg></a>
+        <a href="https://www.linkedin.com/company/trycompai" target="_blank" rel="noopener" aria-label="Comp AI on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z"/></svg></a>
+        <a href="https://www.youtube.com/@trycompai" target="_blank" rel="noopener" aria-label="Comp AI on YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9c.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83c-.25.9-.83 1.48-1.73 1.73c-.47.13-1.33.22-2.65.28c-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44c-.9-.25-1.48-.83-1.73-1.73c-.13-.47-.22-1.1-.28-1.9c-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83c.25-.9.83-1.48 1.73-1.73c.47-.13 1.33-.22 2.65-.28c1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44c.9.25 1.48.83 1.73 1.73"/></svg></a>
+      </div>
+      <!-- For Agents (feedback 20.11): target to confirm with the client; /llms.txt is the working placeholder -->
+      <a class="agents-09" href="/llms.txt"><span class="ic" aria-hidden="true">&gt;_</span><b>For Agents <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.6"/></svg></b><span>This site as Markdown, ready for AI agents and LLMs.</span></a>
+    </div>
+
+    <nav class="cols-09" aria-label="Footer">
+    <details class="col-09" open>
+      <summary>Product<span class="pm" aria-hidden="true"></span></summary>
+      <ul>
+        <li><a href="/#how-it-works">How it works</a></li>
+        <li><a href="/#product">Platform</a></li>
+        <li><a href="/demo">Book a demo</a></li>
+      </ul>
+    </details>
+    <details class="col-09" open>
+      <summary>Resources<span class="pm" aria-hidden="true"></span></summary>
+      <ul>
+        <li><a href="/case-studies">Case studies</a></li>
+        <li><a href="/hub">Compliance Hub</a></li>
+        <li><a href="/tools">Tools &amp; templates</a></li>
+        <li><a href="/docs">Documentation</a></li>
+        <li><a href="https://github.com/trycompai/comp" target="_blank" rel="noopener">GitHub<svg class="ext" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4 2.5h5.5V8M9.5 2.5 2.5 9.5" stroke-width="1.4"/></svg></a></li>
+      </ul>
+    </details>
+    <details class="col-09" open>
+      <summary>Guides<span class="pm" aria-hidden="true"></span></summary>
+      <ul>
+        <li><a href="/soc-2-cost">SOC 2 cost</a></li>
+        <li><a href="/soc-2-checklist">SOC 2 checklist</a></li>
+        <li><a href="/soc-2-for-startups">SOC 2 for startups</a></li>
+        <li><a href="/soc-1-vs-soc-2">SOC 1 vs SOC 2</a></li>
+        <li><a href="/iso-42001">ISO 42001</a></li>
+        <li><a href="/grc-automation">GRC automation</a></li>
+      </ul>
+    </details>
+    <details class="col-09" open>
+      <summary>Compare<span class="pm" aria-hidden="true"></span></summary>
+      <ul>
+        <li><a href="/vanta-pricing">Vanta pricing</a></li>
+        <li><a href="/drata-pricing">Drata pricing</a></li>
+        <li><a href="/secureframe-pricing">Secureframe pricing</a></li>
+        <li><a href="/drata-vs-vanta">Drata vs Vanta</a></li>
+        <li><a href="/vanta-competitors">Vanta competitors</a></li>
+        <li><a href="/drata-competitors">Drata competitors</a></li>
+      </ul>
+    </details>
+    <details class="col-09" open>
+      <summary>About<span class="pm" aria-hidden="true"></span></summary>
+      <ul>
+        <li><a href="/about">About us<span class="new">New</span></a></li>
+        <li><a href="/careers">Careers</a></li>
+        <li><a href="/press">Press</a></li>
+        <li><a href="/partnerships">Partnerships</a></li>
+      </ul>
+    </details>
+    <details class="col-09" open>
+      <summary>Trust<span class="pm" aria-hidden="true"></span></summary>
+      <ul>
+        <li><a href="https://security.trycomp.ai" target="_blank" rel="noopener">Trust Center<svg class="ext" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4 2.5h5.5V8M9.5 2.5 2.5 9.5" stroke-width="1.4"/></svg></a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/disclosure">Responsible disclosure</a></li>
+        <li><a href="https://status.trycomp.ai" target="_blank" rel="noopener">System status<svg class="ext" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4 2.5h5.5V8M9.5 2.5 2.5 9.5" stroke-width="1.4"/></svg></a></li>
+      </ul>
+    </details>
+    </nav>
+  </div>
+
+  <span class="mark-09" aria-hidden="true"></span>
+
+  <div class="bar-09">
+    <p class="copy-09">© 2026 Bubba AI, Inc. d/b/a Comp AI. All rights reserved.</p>
+    <nav aria-label="Legal">
+      <ul class="legal-09">
+        <li><a href="/legal">Legal overview</a></li>
+        <li><a href="/legal/terms-of-service">Terms</a></li>
+        <li><a href="/legal/privacy-policy">Privacy</a></li>
+        <li><a href="/legal/cookie-policy">Cookies</a></li>
+        <li><a href="/legal/dpa">DPA</a></li>
+        <li><a href="/legal/sla">SLA</a></li>
+        <li><a href="/legal/subprocessors">Subprocessors</a></li>
+      </ul>
+    </nav>
+    <a class="status-09" href="https://status.trycomp.ai" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"></span>All systems normal</a>
+  </div>
+  </div>
+</footer>
+<!-- @section:09 html:end -->
 
 <div class="sheet" id="sheet" hidden>
   <a href="#">Product</a><a href="#">Frameworks</a><a href="#">Customers</a><a href="#">Pricing</a><a href="#">About</a>
@@ -3381,5 +3983,71 @@
   kick();
 })();
 </script>
+<!-- @section:07 js:start -->
+<script>
+// 07 · proof: reveal on scroll + "companies your size" filter (the wall reads in full without it)
+(() => {
+  const sec = document.getElementById('sec-07'); if (!sec) return;
+  const rv = sec.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+    rv.forEach(el => io.observe(el));
+  } else rv.forEach(el => el.classList.add('in'));
+  const btns = [...sec.querySelectorAll('.seg-07 button')], tiles = [...sec.querySelectorAll('.logos-07 li')];
+  btns.forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.seg;
+    btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    tiles.forEach(t => { const on = k === 'all' || t.dataset.seg === k; t.classList.toggle('hit', k !== 'all' && on); t.classList.toggle('dim', !on); });
+  }));
+})();
+</script>
+<!-- @section:07 js:end -->
+<!-- @section:08 js:start -->
+<script>
+// 08 · next step: the live demo window loops through its tasks while in view (static under reduced motion)
+(() => {
+  const sec = document.getElementById('sec-08'); if (!sec) return;
+  const win = sec.querySelector('.sec-08-live'); if (!win) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const tasks = [...win.querySelectorAll('.sec-08-task')];
+  const bar = win.querySelector('[data-bar]'), count = win.querySelector('[data-count]'), clock = win.querySelector('[data-clock]');
+  const LABEL = { queued: 'Queued', working: 'Working', done: 'Done', review: 'Expert review' };
+  const set = (t, s) => { t.dataset.s = s; t.querySelector('.sec-08-st').textContent = LABEL[s]; };
+  const render = () => {
+    const n = tasks.filter(t => t.dataset.s === 'done' || t.dataset.s === 'review').length;
+    bar.style.setProperty('--p', n / tasks.length); count.textContent = n + '/' + tasks.length;
+  };
+  let step = tasks.findIndex(t => t.dataset.s === 'working'), timer = 0, sec0 = 7 * 60 + 42, tick = 0;
+  const next = () => {
+    if (step >= tasks.length) { step = -1; timer = setTimeout(next, 2600); return; }   // hold the finished state
+    if (step === -1) { tasks.forEach(t => set(t, 'queued')); step = 0; render(); timer = setTimeout(next, 700); return; }
+    const t = tasks[step];
+    if (t.dataset.s === 'working') { set(t, t.dataset.end || 'done'); step++; render(); timer = setTimeout(next, 450); }
+    else { set(t, 'working'); timer = setTimeout(next, 1700); }
+  };
+  const pad = n => String(n).padStart(2, '0');
+  const run = on => {
+    clearTimeout(timer); clearInterval(tick);
+    if (!on) return;
+    timer = setTimeout(next, 1200);
+    tick = setInterval(() => { sec0 = (sec0 + 1) % (20 * 60); clock.textContent = pad(Math.floor(sec0 / 60)) + ':' + pad(sec0 % 60); }, 1000);
+  };
+  new IntersectionObserver(([e]) => run(e.isIntersecting), { threshold: .25 }).observe(win);
+})();
+</script>
+<!-- @section:08 js:end -->
+<!-- @section:09 js:start -->
+<script>
+// 09 · footer: link groups are open lists on desktop and accordions on mobile (< 768px)
+(() => {
+  const sec = document.getElementById('sec-09'); if (!sec) return;
+  const groups = [...sec.querySelectorAll('.col-09')];
+  const mq = matchMedia('(max-width: 767px)');
+  const sync = () => groups.forEach(g => { g.open = !mq.matches; });
+  groups.forEach(g => g.querySelector('summary').addEventListener('click', e => { if (!mq.matches) e.preventDefault(); }));
+  sync(); mq.addEventListener('change', sync);
+})();
+</script>
+<!-- @section:09 js:end -->
 </body>
 </html>
