@@ -1529,6 +1529,69 @@
     .sec-09 *, .sec-09 *::before, .sec-09 *::after { transition: none !important; animation: none !important; }
   }
   /* @section:09 css:end */
+
+  /* ---- nav test (24.11): full height only over the hero; lower after it; white with ink text over light sections ----
+     html.nav-compact and html.nav-light are set by the "nav state" script at the end of the page. */
+  :root { --nav-full: 74px; --nav-small: 44px; --nav-t: .55s; --nav-ease: cubic-bezier(.65, 0, .35, 1); }   /* one soft in-out curve for every size change, so bar, logo and buttons move together */
+  .nav-row { transition: height var(--nav-t) var(--nav-ease); }
+  .site-nav::before { transition: opacity .4s, height var(--nav-t) var(--nav-ease), background-color .35s, border-color .35s; }
+  .mark { transform-origin: left center; transition: transform var(--nav-t) var(--nav-ease); }
+  .mark img, .links img { transition: filter .35s; }
+  .links, .links a, .links > button, .nav-ic, .menu-btn { transition: color .35s, background-color .2s; }
+  .site-nav .btn { transition: transform .18s var(--ease), background-color .35s, color .35s, border-color .35s; }
+  /* one label size in the nav: links and buttons share the same mono size and tracking (was 14.5px links, 12.5px buttons) */
+  .site-nav { --nav-type: 13px; }
+  @media (min-width: 1680px) { .site-nav { --nav-type: 13.5px; } }
+  .site-nav .links, .site-nav .nav-actions .btn { font-size: var(--nav-type); letter-spacing: .04em; }
+  html.nav-compact { --nav-h: var(--nav-small); }
+  html.nav-compact .nav-row { height: var(--nav-small); }
+  html.nav-compact .site-nav::before { height: var(--nav-small); }
+  html.nav-compact .site-nav .mark[data-ui][data-ui] { transform: scale(.8); }   /* beats the entrance's transform: none */
+  /* after the entrance, html.ui-done switches transitions off on every [data-ui] (nav items included): give the nav its own back */
+  html.ui-done .site-nav .mark[data-ui] { transition: transform var(--nav-t) var(--nav-ease) !important; }
+  html.ui-done .site-nav .mark[data-ui] > img { transition: filter .35s !important; }
+  html.ui-done .site-nav .links > [data-ui] { transition: color .35s !important; }
+  html.ui-done .site-nav .links > [data-ui] > img { transition: filter .35s, transform .3s var(--ease) !important; }
+  html.ui-done .site-nav .nav-actions > [data-ui] { transition: transform .18s var(--ease), height var(--nav-t) var(--nav-ease), width var(--nav-t) var(--nav-ease),
+    padding var(--nav-t) var(--nav-ease), background-color .35s, color .35s, border-color .35s !important; }
+  html.ui-done .site-nav .nav-actions > [data-ui] .chev { transition: transform .3s var(--ease) !important; }
+  html.ui-done .site-nav .nav-ic[data-ui] > svg { transition: opacity .2s, transform .3s var(--ease) !important; }
+  /* buttons and icons shrink with the bar: 28px in a 44px bar leaves 8px above and below */
+  .site-nav .nav-actions .btn, .site-nav .nav-ic { transition: transform .18s var(--ease), height var(--nav-t) var(--nav-ease), width var(--nav-t) var(--nav-ease), padding var(--nav-t) var(--nav-ease), background-color .35s, color .35s, border-color .35s; }
+  html.nav-compact .site-nav .nav-actions .btn { height: 28px; padding: 0 10px; }
+  html.nav-compact .site-nav .nav-ic { width: 28px; height: 28px; }
+  html.nav-compact .mega { top: calc(var(--bar) + var(--nav-small)); }
+  /* white bar, ink text (the mega menu stays dark: while it is open the bar goes back to dark) */
+  html.nav-light:not(.mega-on) .site-nav::before { opacity: 1; background: rgba(252,252,252,.86); border-bottom-color: rgba(22,22,22,.1); }
+  html.nav-light:not(.mega-on) .mark img { filter: brightness(0) invert(.09); }
+  html.nav-light:not(.mega-on) .links { color: rgba(22,22,22,.72); }
+  html.nav-light:not(.mega-on) .links img { filter: brightness(0) invert(.09); }
+  html.nav-light:not(.mega-on) .links :is(a, button):is(:hover, :focus-visible) { color: var(--ink); }
+  html.nav-light:not(.mega-on) .nav-ic { color: rgba(22,22,22,.72); }
+  html.nav-light:not(.mega-on) .nav-ic:is(:hover, :focus-visible) { color: var(--ink); background: rgba(22,22,22,.06); }
+  html.nav-light:not(.mega-on) .menu-btn { color: var(--ink); }
+  html.nav-light:not(.mega-on) .site-nav .btn { color: var(--ink); border-color: var(--ink); }
+  html.nav-light:not(.mega-on) .site-nav .btn-quiet { border-color: rgba(22,22,22,.3); }
+  html.nav-light:not(.mega-on) .site-nav .btn::before { background: var(--ink); }
+  html.nav-light:not(.mega-on) .site-nav .btn:is(:hover, :focus-visible) { color: var(--white); border-color: var(--ink); }
+  html.nav-light:not(.mega-on) .site-nav :focus-visible { outline-color: var(--ink); }
+  /* announcement bar: an X on the right closes it; the bar folds up and the nav moves to the top (kept closed for the visit) */
+  @property --bar { syntax: "<length>"; inherits: true; initial-value: 40px; }
+  html { transition: --bar .45s var(--ease); }
+  html.bar-closed { --bar: 0px; }
+  html.bar-closed .announce { overflow: hidden; }
+  html.bar-closed .announce > * { opacity: 0; transition: opacity .2s; }
+  .bar-x { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0;
+    border-radius: var(--r-sm, 4px); background: none; color: var(--ink); cursor: pointer; transition: opacity .5s ease .9s; }
+  /* hover: no fill; the X turns a quarter and draws a little larger */
+  .bar-x svg { transition: transform .4s var(--ease); }
+  .bar-x:is(:hover, :focus-visible) svg { transform: rotate(90deg) scale(1.2); }
+  .bar-x:focus-visible { outline-color: var(--ink); }
+  .bar-x svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+  @media (prefers-reduced-motion: reduce) { .bar-x:is(:hover, :focus-visible) svg { transform: scale(1.2); } }
+  .js .announce[data-ui] > .bar-x { opacity: 0; }
+  html.ui-on .announce[data-ui] > .bar-x { opacity: 1; }
+  @media (pointer: coarse) { .bar-x { width: 40px; height: 40px; right: -8px; } }
 </style>
 </head>
 <body>
@@ -1536,6 +1599,7 @@
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
     <a href="#"><span class="tag">New</span><span class="t"><span class="full">Comp AI raises $34M to build agentic compliance</span><span class="short">Comp AI raises $34M</span></span><span class="more">Read the news</span><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 3.5 8.5 7 5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+    <button class="bar-x" type="button" aria-label="Close announcement"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7"/></svg></button>
   </div>
   <div class="wrap nav-row">
     <a class="mark" href="#" aria-label="Comp AI home"><img class="m" src="../hero/comp-ai-hero-v01/img/logo-mark.svg" alt="" width="28" height="26"><img class="w" src="../hero/comp-ai-hero-v01/img/logo-wordmark.svg" alt="" width="77" height="21"></a>
@@ -4053,5 +4117,34 @@
 })();
 </script>
 <!-- @section:09 js:end -->
+<script>
+/* nav test (24.11): the nav is full height only at the top of the page, lower from the first scroll; over the light
+   sections (04 People to 07 Proof) it turns white with ink text. The line it reads is the nav's middle. */
+(() => {
+  const root = document.documentElement, hero = document.querySelector('.hero'), row = document.querySelector('.site-nav .nav-row');
+  if (!hero || !row) return;
+  const light = ['sec-04', 'sec-05', 'sec-06', 'sec-07'].map(id => document.getElementById(id)).filter(Boolean);
+  let raf = 0;
+  function update() {
+    raf = 0;
+    const nb = row.getBoundingClientRect(), mid = nb.top + nb.height / 2;
+    // full height only at the very top; a gap between the two thresholds stops small trackpad moves from flipping it back and forth
+    const y = scrollY, c = root.classList.contains('nav-compact');
+    if (!c && y > 24) root.classList.add('nav-compact'); else if (c && y < 4) root.classList.remove('nav-compact');
+    root.classList.toggle('nav-light', light.some(s => { const r = s.getBoundingClientRect(); return r.top <= mid && r.bottom > mid; }));
+  }
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+  addEventListener('resize', update);
+  update();
+  // the X on the announcement bar closes it for this visit
+  const KEY = 'compai-bar-closed', x = document.querySelector('.bar-x');
+  try { if (sessionStorage.getItem(KEY)) root.classList.add('bar-closed'); } catch (e) {}
+  if (x) x.addEventListener('click', () => {
+    root.classList.add('bar-closed');
+    try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+    dispatchEvent(new Event('scroll')); setTimeout(() => dispatchEvent(new Event('scroll')), 500);
+  });
+})();
+</script>
 </body>
 </html>
