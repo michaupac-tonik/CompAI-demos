@@ -8,7 +8,7 @@ This branch holds only what development needs; exploration and earlier rounds li
 ```
 homepage/
   index.html            the homepage: all sections, styles and scripts in one file
-  assets/img/           logo (mark + wordmark), nav chevron, share image (og:image)
+  assets/img/           logo (mark + wordmark), nav chevron, share image (og:image), G2 mark (official, white)
   assets/js/            shapes-phase.js: data for the hero's fingerprint print
   assets/fonts/         Favorit fonts (not in git, see Fonts)
 tokens/

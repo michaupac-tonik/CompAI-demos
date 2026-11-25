@@ -1757,7 +1757,7 @@
       font-family: var(--sans); font-size: var(--fs-display-l); line-height: 1; letter-spacing: -.04em; font-weight: 300; text-transform: none; }
     /* title-m: module and featured-card titles, key figures */
     .sec-06 .cap h3, .sec-07 .st-07.feat h3, .sec-08-mod-h h3, .hero .lt-lead b, .sec-05 .steps-05 li > b, .sec-05 .ann-05 b,
-    .sec-07 .nums-07 dd, .sec-07 .logos-07 .lead b {
+    .sec-07 .nums-07 dd, .sec-07 .logos-07 .lead b, .g2-rating .g2-score {
       font-family: var(--sans); font-size: var(--fs-title-m); line-height: 1.05; letter-spacing: -.04em; font-weight: 300; text-transform: none; }
     /* lead-l: the hero subline */
     .hero-text .sub { font-family: var(--sans); font-size: var(--fs-lead-l); line-height: 1.4; letter-spacing: -.01em; font-weight: 300; text-transform: none; }
@@ -1784,7 +1784,7 @@
     .site-nav .announce .tag, .mega-col h3, .mega-feat h3, .mega-col .new, .mega-col .all, .hero .chip .fw b, .shift .steps .k,
     .sec-03 .tb .k, .sec-03 .sd .sdk, .sec-03 .integ .l, .sec-04 .tags-04 .tg, .sec-05 .steps-05 .n, .sec-05 .top-05 b,
     .sec-05 .legend-05 li, .sec-05 .x-05 li > em, .sec-05 button.fw-05.next em, .sec-05 .q-05 .go, .sec-06 .cap .k, .sec-06 .cap .go,
-    .sec-07 .k-07, .sec-07 .nums-07 dt, .sec-07 .go-07, .sec-07 .logos-07 .all a, .sec-08-tb .sec-08-k, .sec-09 .col-09 summary {
+    .sec-07 .k-07, .sec-07 .nums-07 dt, .sec-07 .go-07, .sec-07 .logos-07 .all a, .sec-08-tb .sec-08-k, .sec-09 .col-09 summary, .g2-rating .g2-go {
       font-family: var(--mono); font-size: var(--fs-label-s); line-height: 1.3; letter-spacing: .04em; font-weight: 400; font-style: normal; text-transform: uppercase; }
     /* button: primary, secondary and quiet buttons, nav links */
     .btn, .site-nav .links > a, .site-nav .links > button, html:not(#_) .site-nav .nav-actions .btn {
@@ -1804,6 +1804,17 @@
   .sec-09 .certs-09, .sec-09 .bar-09 p { color: var(--text-2); }
   .sec-09 { --f-dim: var(--text-2); }      /* footer links and small print at text-2; they light up to white on hover */
   .sec-05 .steps-05 strong { color: var(--text-1); }      /* the audience name leads its line */
+  /* G2 rating in the hero, next to the buttons (Michał, 25.11): G2 mark 32px with at least its chevron's height of
+     clear space (8px) around it, the score in title-m, stars, and a label-s link. Brand rules: company.g2.com/brand-resources */
+  .hero .ctas { align-items: center; }
+  .g2-rating { display: inline-grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto; align-items: center; column-gap: 12px; row-gap: 4px;
+    margin-left: 12px; padding-left: 24px; box-shadow: inset 1px 0 rgba(252,252,252,.18); color: var(--text-1); text-decoration: none; }
+  .g2-rating .g2-mark { grid-row: 1 / 3; width: 32px; height: 32px; margin-right: 4px; }
+  .g2-rating .g2-score { grid-row: 1 / 3; }
+  .g2-rating .g2-stars { width: 84px; height: 14px; fill: currentColor; }
+  .g2-rating .g2-go { color: var(--text-2); transition: color .2s; }
+  .g2-rating:is(:hover, :focus-visible) .g2-go { color: var(--text-1); }
+  @media (max-width: 1023px) { .g2-rating { margin-left: 0; padding-left: 0; box-shadow: none; } }
 </style>
 </head>
 <body>
@@ -1963,6 +1974,11 @@
       <div class="ctas">
         <a class="btn btn-primary" href="#demo">Book a demo <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         <a class="btn btn-secondary" href="#product">See the product</a>
+        <!-- G2 rating (25.11): the official G2 mark, unaltered and in its circle; the rating links to the G2 profile, as G2 asks
+             when a rating is republished. The rating comes from the CMS in production (4.7 on 25.11). -->
+        <a class="g2-rating" href="https://www.g2.com/products/comp-ai/reviews" aria-label="Comp AI is rated 4.7 out of 5 on G2. Read the reviews">
+          <img class="g2-mark" src="assets/img/g2-logo-white.svg" alt="" width="32" height="32"><b class="g2-score">4.7</b><svg class="g2-stars" viewBox="0 0 84 14" aria-hidden="true" focusable="false"><defs><path id="g2-st" d="M7 .6l1.9 4.2 4.5.4-3.4 3 1 4.5L7 10.4 3 12.7l1-4.5-3.4-3 4.5-.4z"/><clipPath id="g2-47"><rect width="79.8" height="14"/></clipPath></defs><g opacity=".28"><use href="#g2-st"/><use href="#g2-st" x="17.5"/><use href="#g2-st" x="35"/><use href="#g2-st" x="52.5"/><use href="#g2-st" x="70"/></g><g clip-path="url(#g2-47)"><use href="#g2-st"/><use href="#g2-st" x="17.5"/><use href="#g2-st" x="35"/><use href="#g2-st" x="52.5"/><use href="#g2-st" x="70"/></g></svg><span class="g2-go">Read the reviews</span>
+        </a>
       </div>
       <div class="chip">
         <span class="fw" aria-label="Frameworks"><b>Frameworks</b><span>SOC 2 · ISO 27001 · HIPAA · GDPR</span></span>
@@ -2943,7 +2959,7 @@
   let rz = 0;
   addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { place(); draw(performance.now()); kick(); }); });
   // ---- UI entrance: one element at a time, top left to bottom right ----------------------------
-  const UI = [...document.querySelectorAll('.site-nav .mark, .site-nav .links > *, .site-nav .nav-actions > *, .site-nav .announce, h1 .kicker, h1 .line, .hero .sub, .hero .ctas .btn, .hero .logos-tbl')];
+  const UI = [...document.querySelectorAll('.site-nav .mark, .site-nav .links > *, .site-nav .nav-actions > *, .site-nav .announce, h1 .kicker, h1 .line, .hero .sub, .hero .ctas .btn, .hero .g2-rating, .hero .logos-tbl')];
   const chip = document.querySelector('.hero .chip');
   [...UI, chip].forEach(el => el.setAttribute('data-ui', ''));
   function startUI() {
