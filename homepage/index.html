@@ -2143,11 +2143,19 @@
      the stories as before); a click unfolds the quote, the result and the link to the case study */
   html.v05-d .sec-05 .q-05[data-q] { display: block !important; align-self: stretch; width: auto; }
   html.v05-d .sec-05 .q-05 .hd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 10px; row-gap: 2px; align-items: center; cursor: pointer; }
-  html.v05-d .sec-05 .q-05 .hd .ic { grid-row: 1 / span 2; }
+  /* the quote mark: no box, larger, black; its top on the name's cap height, the head's two lines beside it */
+  html.v05-d .sec-05 .q-05 .hd .ic { grid-row: 1 / span 2; align-self: start; width: 26px; height: 26px; margin: -1px 0 0 -5px; background: none; color: var(--ink); }      /* the glyph sits 5px inside its box: pulled back to the text's edge */
+  html.v05-d .sec-05 .q-05 .hd .ic svg { width: 26px; height: 26px; }
   html.v05-d .sec-05 .q-05 .hd h3 { grid-column: 2 / span 2; grid-row: 1; }
   html.v05-d .sec-05 .q-05 .hd .n { grid-column: 2; grid-row: 2; margin: 0; justify-self: start; }
-  html.v05-d .sec-05 .q-05 .hd .tg { grid-column: 3; grid-row: 2; justify-self: end; }
+  html.v05-d .sec-05 .q-05 .hd .tg { grid-column: 3; grid-row: 2; justify-self: end; align-self: center; }
+  html.v05-d .sec-05 .q-05 .hd .n { align-self: center; }
   html.v05-d .sec-05 .q-05 .hd { row-gap: 6px; }
+  /* Story and Close take the same width, so the button does not move when the label changes */
+  html.v05-d .sec-05 .q-05 .tg .tl { display: inline-block; min-width: 5ch; text-align: left; }
+  /* frameworks new at a stage: a quiet NEW label instead of the +, which read as a button (the + stays only on Next framework) */
+  html.v05-d .sec-05 .fw-05.new > svg { display: none; }
+  html.v05-d .sec-05 .fw-05.new::after { content: "New"; font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: color-mix(in srgb, var(--ink) 64%, transparent); }
   html.v05-d .sec-05 .q-05 .obj .t { white-space: normal; }
   html.v05-d .sec-05 .q-05 .tg { all: unset; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px 0 10px; flex: none; cursor: pointer;
     background: var(--ink); color: var(--white); font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; transition: background-color .25s ease, color .25s ease; }
@@ -2156,7 +2164,6 @@
   html.v05-d .sec-05 .q-05 { position: relative; z-index: 2; transition: box-shadow .3s ease; }
   html.v05-d .sec-05 .q-05:not(.open):hover { box-shadow: 0 0 0 1px var(--ink), 0 24px 48px -24px rgba(22,22,22,.25); }
   html.v05-d .sec-05 .q-05.open .tg svg { transform: rotate(45deg); }
-  html.v05-d .sec-05 .q-05 .tg .tl { display: inline; }
   html.v05-d .sec-05 .q-05 .tg:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
   html.v05-d .sec-05 .q-05:not(.open) .qb > :not(.hd), html.v05-d .sec-05 .q-05:not(.open) .ft { display: none; }
   html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: s05unfold .45s ease .12s both; }
@@ -5003,14 +5010,22 @@
       if (was) { card.classList.add('open'); card.style.marginTop = -(card.offsetHeight - c.h) + 'px'; } };
     c.measure();
     // a click pins the story open (also one already unfolded by pointing); on a pinned one it folds it
-    hd.addEventListener('click', () => { const open = !c.pinned; c.pinned = open; cards.forEach(o => { if (o !== c && o.pinned) { o.pinned = false; o.set(false); } }); c.set(open); });
+    // a click on a folded story opens and pins it; on an open one (pinned or opened by pointing) it always folds it, and pointing
+    // at the same type does not open it again until the pointer has left
+    hd.addEventListener('click', () => { if (c.on) { c.pinned = false; c.muted = true; c.set(false); return; }
+      cards.forEach(o => { if (o !== c && o.pinned) { o.pinned = false; o.set(false); } }); c.pinned = true; c.muted = false; c.set(true); });
     // the stories differ a little in length: while open, the card keeps growing upwards only
     if ('ResizeObserver' in window) new ResizeObserver(() => { if (c.on && !card.getAnimations().length) card.style.marginTop = -(card.offsetHeight - c.h) + 'px'; }).observe(card);
     return c; });
   // pointing at a customer type on the chart unfolds its story; the others fold unless pinned
-  const hover = k => cards.forEach(c => c.set(c.pinned || c.col === k));
-  [cols, xs].forEach(list => list.forEach((el, k) => el.addEventListener('mouseenter', () => hover(k))));
-  chart.addEventListener('mouseleave', () => cards.forEach(c => c.set(c.pinned)));
+  // the customer types on the left (the list) and on the right (the bars, the axis) all point at the same stories
+  const steps = [...sec.querySelectorAll('.steps-05 li')];
+  let at = -1;
+  const hover = k => { if (k !== at) cards.forEach(c => { if (c.col !== k) c.muted = false; }); at = k;
+    cards.forEach(c => c.set(c.pinned || (c.col === k && !c.muted))); };
+  const leave = () => { at = -1; cards.forEach(c => { c.muted = false; c.set(c.pinned); }); };
+  [cols, xs, steps].forEach(list => list.forEach((el, k) => el.addEventListener('mouseenter', () => hover(k))));
+  chart.addEventListener('mouseleave', leave); const stepsEl = sec.querySelector('.steps-05'); if (stepsEl) stepsEl.addEventListener('mouseleave', leave);
   // the space over the bars is kept tall enough for the tallest open story, so opening one never moves the section
   const bars = sec.querySelector('.bars-05');
   const fit = () => { bars.style.paddingTop = ''; let need = 0;
