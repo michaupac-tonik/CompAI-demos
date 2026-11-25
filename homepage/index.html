@@ -1836,6 +1836,24 @@
     .sec-08-head { padding-bottom: var(--sp-5); }
     .sec-04 .tags-04 { margin-top: var(--sp-4); }
     .sec-05 .steps-05 { margin: var(--sp-4) 0; }
+
+    /* one eyebrow box everywhere (04 and 05 were flex boxes left from their markers) */
+    .sec-04 .eyebrow-04, .sec-05 .eyebrow-05 { display: block; }
+
+    /* split head, where the content below runs the full width (03, 06, 07, 08): the eyebrow on its own row, then
+       the h2 on columns 1-6 and the lead with the buttons on columns 8-12, both starting on the same line */
+    .sec-03 .head, .sec-06 .head-06, .sec-07 .head-07, .sec-08-head {
+      display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3); row-gap: 0; align-items: start; text-align: left; }
+    .sec-03 .head > :first-child, .sec-06 .head-06 > :first-child, .sec-07 .head-07 > :first-child, .sec-08-head > :first-child { display: contents; }
+    .sec-03 .head .eyebrow-03, .sec-06 .head-06 .eyebrow-06, .sec-07 .head-07 .eyebrow-07, .sec-08-head .sec-08-eyebrow { grid-column: 1 / -1; grid-row: 1; }
+    .sec-03 .head h2, .sec-06 .head-06 h2, .sec-07 .head-07 h2, .sec-08-head h2 { grid-column: 1 / span 6; grid-row: 2; }
+    .sec-03 .head > :last-child, .sec-06 .head-06 > :last-child, .sec-07 .head-07 > :last-child, .sec-08-head > :last-child { grid-column: 8 / span 5; grid-row: 2; align-self: start; }
+    .sec-03 .head .lead, .sec-06 .lead-06, .sec-07 .lead-07, .sec-08-head .sec-08-lead { margin: 0; max-width: none; text-wrap: pretty; }
+    .sec-06 .acts-06 { justify-content: flex-start; }
+
+    /* stacked head, where the section is two columns (04, 05): text on the left, the visual on the right */
+    .sec-04 .txt-04 { order: 1; padding: 0 var(--sp-5) 0 0; }
+    .sec-04 .art-04 { order: 2; }
   }
 </style>
 </head>
@@ -2189,13 +2207,17 @@
 <section class="sec-06" id="sec-06" aria-labelledby="sec-06-title">
   <div class="wrap">
     <div class="head-06">
+      <div class="head-06-l">
       <p class="eyebrow-06 rv" style="--d:0">Trust</p>
       <h2 id="sec-06-title" class="rv" style="--d:1">Don't trust us. <u>Verify.</u></h2>
+      </div>
+      <div class="head-06-r">
       <p class="lead-06 rv" style="--d:2">Security leaders have heard enough big AI claims. So don't take ours on faith: the code is open source, the evidence updates live, and our trust center is public.</p>
       <!-- PLACEHOLDER LINKS: confirm the trust center URL and the GitHub repository before launch -->
       <div class="acts-06 rv" style="--d:3">
         <a class="btn btn-primary" href="#trust-center">Visit the trust center <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         <a class="btn link-06" href="https://github.com/trycompai/comp">View the code on GitHub <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      </div>
       </div>
     </div>
 

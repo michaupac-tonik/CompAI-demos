@@ -1,0 +1,40 @@
+# Layout v0.1 (test)
+
+Spacing and section layout of the Comp AI homepage, desktop (from 1024 px). Implemented in `homepage/index.html`
+as tokens (`--sp-*` on `:root`) and the block “Layout system v0.1” at the end of the stylesheet.
+Hero and 02 (the shift) are outside this first pass; mobile is not defined yet.
+
+## Spacing scale
+
+φ × 8: each step is about 1.6 × the one before (the type scale uses its square root, 1.272). All values sit on the 8 px grid.
+
+| Token | Value |
+|---|---|
+| `--sp-1` | 8 |
+| `--sp-2` | 16 |
+| `--sp-3` | 24 |
+| `--sp-4` | 40 |
+| `--sp-5` | 64 |
+| `--sp-6` | 104 |
+| `--sp-7` | 168 |
+
+## Roles
+
+| Role | Value |
+|---|---|
+| Section padding, top and bottom | `--sp-6` 104 |
+| Eyebrow → h2 | `--sp-3` 24 |
+| h2 → lead (stacked head) | `--sp-3` 24 |
+| Lead → buttons | `--sp-4` 40 |
+| Section head → content | `--sp-5` 64 |
+| Blocks inside a text column | `--sp-4` 40 |
+| Between cards | `--sp-3` 24 |
+
+## Section head
+
+The head follows the content under it. Everything is aligned left on the page's 12-column grid (24 px gutters).
+
+- **Split head** where the content below runs the full width (03, 06, 07, 08): the eyebrow on its own row; the h2 on
+  columns 1–6; the lead and buttons on columns 8–12, starting on the h2's top line.
+- **Stacked head** where the section is two columns (04, 05): eyebrow, h2, lead and buttons in the text column on the left,
+  the visual on the right.
