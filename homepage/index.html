@@ -2166,7 +2166,19 @@
   html.v05-d .sec-05 .q-05.open .tg svg { transform: rotate(45deg); }
   html.v05-d .sec-05 .q-05 .tg:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
   html.v05-d .sec-05 .q-05:not(.open) .qb > :not(.hd), html.v05-d .sec-05 .q-05:not(.open) .ft { display: none; }
-  html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: s05unfold .45s ease .12s both; }
+  html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: s05unfold .5s cubic-bezier(.2,.7,.1,1) .14s both; }
+  html.v05-d .sec-05 .q-05.closing .qb > :not(.hd), html.v05-d .sec-05 .q-05.closing .ft { animation: s05fold .22s ease-in both; }
+  @keyframes s05fold { from { opacity: 1; filter: none; } to { opacity: 0; filter: blur(4px); } }
+  /* the list on the left: rows with a story show a quote mark and "Story" at the end; pointing at one (or its story being open)
+     tints the row and brings the mark to full ink */
+  html.v05-d .sec-05 .steps-05 li.has-st > b { justify-self: start; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; }
+  html.v05-d .sec-05 .steps-05 .hint { display: inline-flex; align-items: center; gap: 8px; color: color-mix(in srgb, var(--ink) 40%, transparent); transition: color .35s ease; }
+  html.v05-d .sec-05 .steps-05 .hint svg { width: 20px; height: 20px; }
+  html.v05-d .sec-05 .steps-05 li.has-nx .hint svg { width: 14px; height: 14px; margin: 0 3px; }
+  html.v05-d .sec-05 .steps-05 .hint em { font-family: var(--mono); font-size: 11px; font-style: normal; font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase;
+    opacity: 0; transform: translateX(-6px); transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.1,1); }
+  html.v05-d .sec-05 .steps-05 li.has-st > b:hover .hint, html.v05-d .sec-05 .steps-05 li.has-st.on .hint { color: var(--ink); }
+  html.v05-d .sec-05 .steps-05 li.has-st > b:hover .hint em, html.v05-d .sec-05 .steps-05 li.has-st.on .hint em { opacity: 1; transform: none; }
   @keyframes s05unfold { from { opacity: 0; filter: blur(4px); } to { opacity: 1; filter: none; } }
   html.v05-d .sec-05 .q-05.open .bar.run { animation-play-state: paused; }
   @media (prefers-reduced-motion: reduce) { html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: none; } }
@@ -4987,49 +4999,64 @@
 })();
 </script>
 <script>
-/* 05 test D (Michał, 25.11): the story cards above the bars, folded to who they are. They unfold upwards, into the free space over
-   the bars, so nothing else moves (the column keeps its height). A click on the head pins one open (again to fold it); pointing at a
-   customer type on the chart (its bars or its name on the axis) unfolds that type's story while the pointer stays on the chart.
-   Open, a card stops turning through stories */
+/* 05 test D (Michał, 25.11): the story cards above the bars, folded to who they are. They unfold upwards, into space kept free over
+   the bars, so nothing else moves. Pointing at a customer type (the list on the left, the bars, the axis) unfolds its story after a short
+   pause (a quick pass over the list opens nothing); a click on a card or on a type pins it open, a click on an open one folds it.
+   Each fold or unfold starts from where the card is now (an interrupted one never stacks). Open, a card stops turning through stories */
 (() => {
   const sec = document.getElementById('sec-05'); if (!sec || !document.documentElement.classList.contains('v05-d')) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PLUS = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.6"/></svg>';
-  const chart = sec.querySelector('.chart-05'), cols = [...sec.querySelectorAll('.col-05')], xs = [...sec.querySelectorAll('.x-05 li')];
+  const QM = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 11.5c0-3.4 1.6-5.6 4.4-6.5l.5 1.4C7.3 7 6.5 8.2 6.4 9.8H8.6V15H4zm7.6 0c0-3.4 1.6-5.6 4.4-6.5l.5 1.4c-1.6.6-2.4 1.8-2.5 3.4h2.2V15h-4.6z" fill="currentColor"/></svg>';
+  const OPEN = { duration: 560, easing: 'cubic-bezier(.2,.7,.1,1)' }, FOLD = { duration: 420, easing: 'cubic-bezier(.55,0,.25,1)' }, INTENT = 140;
+  const chart = sec.querySelector('.chart-05'), cols = [...sec.querySelectorAll('.col-05')], xs = [...sec.querySelectorAll('.x-05 li')], steps = [...sec.querySelectorAll('.steps-05 li')];
   const cards = [...sec.querySelectorAll('.q-05[data-q]')].map((card, j) => {
     const hd = card.querySelector('.hd'), tg = document.createElement('button'); tg.type = 'button'; tg.className = 'tg'; tg.innerHTML = '<span class="tl">Story</span>' + PLUS;
     const id = 'q05-' + j; card.querySelector('.qb').id = id; tg.setAttribute('aria-controls', id); tg.setAttribute('aria-expanded', 'false'); tg.setAttribute('aria-label', 'Show the story');
     hd.append(tg);
-    const c = { card, tg, col: cols.indexOf(card.closest('.col-05')), pinned: false, on: false };
-    c.set = on => { if (on === c.on) return; c.on = on; const h0 = card.offsetHeight, m0 = parseFloat(card.style.marginTop) || 0;
-      card.classList.toggle('open', on); tg.setAttribute('aria-expanded', on); tg.setAttribute('aria-label', on ? 'Hide the story' : 'Show the story');
-      tg.querySelector('.tl').textContent = on ? 'Close' : 'Story';
-      card.style.marginTop = ''; const h1 = card.offsetHeight, m1 = on ? -(h1 - c.h) : 0; card.style.marginTop = m1 + 'px';      // grows upwards by what it adds
-      if (!reduced) card.animate([{ height: h0 + 'px', marginTop: m0 + 'px' }, { height: h1 + 'px', marginTop: m1 + 'px' }], { duration: 450, easing: 'cubic-bezier(.2,.7,.1,1)' }); };
-    c.measure = () => { const was = c.on; if (was) card.classList.remove('open'); card.style.marginTop = ''; c.h = card.offsetHeight;
-      if (was) { card.classList.add('open'); card.style.marginTop = -(card.offsetHeight - c.h) + 'px'; } };
-    c.measure();
-    // a click pins the story open (also one already unfolded by pointing); on a pinned one it folds it
-    // a click on a folded story opens and pins it; on an open one (pinned or opened by pointing) it always folds it, and pointing
-    // at the same type does not open it again until the pointer has left
-    hd.addEventListener('click', () => { if (c.on) { c.pinned = false; c.muted = true; c.set(false); return; }
-      cards.forEach(o => { if (o !== c && o.pinned) { o.pinned = false; o.set(false); } }); c.pinned = true; c.muted = false; c.set(true); });
+    const c = { card, tg, col: cols.indexOf(card.closest('.col-05')), pinned: false, on: false, anim: null, h: 0 };
+    c.set = on => { if (on === c.on) return; c.on = on;
+      // where the card is right now (mid-way through a fold or an unfold, too), then the end state
+      const h0 = card.offsetHeight, m0 = parseFloat(getComputedStyle(card).marginTop) || 0;
+      if (c.anim) { c.anim.cancel(); c.anim = null; }
+      card.classList.remove('closing'); card.classList.toggle('open', on); card.style.marginTop = '';
+      const h1 = on ? card.offsetHeight : c.h, m1 = on ? -(h1 - c.h) : 0; card.style.marginTop = m1 + 'px';      // grows upwards by what it adds
+      tg.setAttribute('aria-expanded', on); tg.setAttribute('aria-label', on ? 'Hide the story' : 'Show the story'); tg.querySelector('.tl').textContent = on ? 'Close' : 'Story';
+      if (steps[c.col]) steps[c.col].classList.toggle('on', on);
+      if (reduced) return;
+      if (!on) card.classList.add('open', 'closing');      // the story stays in while it fades and the card folds
+      c.anim = card.animate([{ height: h0 + 'px', marginTop: m0 + 'px' }, { height: h1 + 'px', marginTop: m1 + 'px' }], on ? OPEN : FOLD);
+      c.anim.onfinish = () => { c.anim = null; if (!c.on) card.classList.remove('open', 'closing'); }; };
+    // a click on a folded story opens and pins it; on an open one it always folds it, and pointing at the same type
+    // does not open it again until the pointer has left
+    c.click = () => { if (c.on) { c.pinned = false; c.muted = true; c.set(false); return; }
+      cards.forEach(o => { if (o !== c && o.pinned) { o.pinned = false; o.set(false); } }); c.pinned = true; c.muted = false; c.set(true); };
+    hd.addEventListener('click', c.click);
     // the stories differ a little in length: while open, the card keeps growing upwards only
-    if ('ResizeObserver' in window) new ResizeObserver(() => { if (c.on && !card.getAnimations().length) card.style.marginTop = -(card.offsetHeight - c.h) + 'px'; }).observe(card);
+    if ('ResizeObserver' in window) new ResizeObserver(() => { if (c.on && !c.anim) card.style.marginTop = -(card.offsetHeight - c.h) + 'px'; }).observe(card);
     return c; });
-  // pointing at a customer type on the chart unfolds its story; the others fold unless pinned
-  // the customer types on the left (the list) and on the right (the bars, the axis) all point at the same stories
-  const steps = [...sec.querySelectorAll('.steps-05 li')];
-  let at = -1;
-  const hover = k => { if (k !== at) cards.forEach(c => { if (c.col !== k) c.muted = false; }); at = k;
+  // the list on the left: the types with a story get a quote mark and "Story" at the end of the row; hover and the open story light the row
+  // only the headings (Startups, Mid-market, Enterprise) are interactive, not the whole row
+  const heads = steps.map(li => li.querySelector(':scope > b'));
+  steps.forEach((li, k) => { const c = cards.find(x => x.col === k); if (!c || !heads[k]) return;
+    li.classList.add('has-st'); const h = document.createElement('span'); h.className = 'hint'; h.setAttribute('aria-hidden', 'true'); h.innerHTML = QM + '<em>Story</em>'; heads[k].append(h);
+    heads[k].addEventListener('click', c.click); });
+  // Enterprise has no story: pointing at it (the list, its bars, its name on the axis) plays the "Next framework" drop in its column
+  const nb = sec.querySelector('button.fw-05.next'), EK = 2;
+  if (nb && heads[EK]) { steps[EK].classList.add('has-st', 'has-nx'); const h = document.createElement('span'); h.className = 'hint'; h.setAttribute('aria-hidden', 'true');
+    h.innerHTML = PLUS + '<em>Next</em>'; heads[EK].append(h); heads[EK].addEventListener('click', () => nb.click()); }
+  // pointing: a short pause before anything opens, so a quick pass over the types does nothing
+  let at = -1, wait = 0;
+  const hover = k => { if (k !== at) { cards.forEach(c => { if (c.col !== k) c.muted = false; }); if (k === EK && nb) nb.click(); } at = k;
     cards.forEach(c => c.set(c.pinned || (c.col === k && !c.muted))); };
-  const leave = () => { at = -1; cards.forEach(c => { c.muted = false; c.set(c.pinned); }); };
-  [cols, xs, steps].forEach(list => list.forEach((el, k) => el.addEventListener('mouseenter', () => hover(k))));
-  chart.addEventListener('mouseleave', leave); const stepsEl = sec.querySelector('.steps-05'); if (stepsEl) stepsEl.addEventListener('mouseleave', leave);
+  const point = k => { clearTimeout(wait); wait = setTimeout(() => hover(k), INTENT); };
+  const leave = () => { clearTimeout(wait); wait = setTimeout(() => { at = -1; cards.forEach(c => { c.muted = false; c.set(c.pinned); }); }, INTENT); };
+  [cols, xs, heads].forEach(list => list.forEach((el, k) => el && el.addEventListener('mouseenter', () => point(k))));
+  chart.addEventListener('mouseleave', leave); heads.forEach(el => el && el.addEventListener('mouseleave', leave));
   // the space over the bars is kept tall enough for the tallest open story, so opening one never moves the section
   const bars = sec.querySelector('.bars-05');
-  const fit = () => { bars.style.paddingTop = ''; let need = 0;
-    cards.forEach(c => { c.card.classList.remove('open'); c.card.style.marginTop = ''; });      // measure everything folded
+  const fit = () => { cards.forEach(c => { if (c.anim) { c.anim.finish(); } }); bars.style.paddingTop = ''; let need = 0;
+    cards.forEach(c => { c.card.classList.remove('open', 'closing'); c.card.style.marginTop = ''; });      // measure everything folded
     cards.forEach(c => { c.h = c.card.offsetHeight; const free = c.card.offsetTop - bars.offsetTop;
       c.card.classList.add('open'); need = Math.max(need, c.card.offsetHeight - c.h - free + 8); c.card.classList.remove('open'); });
     if (need > 0) bars.style.paddingTop = need + 'px';
