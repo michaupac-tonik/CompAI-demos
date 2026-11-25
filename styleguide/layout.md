@@ -1,4 +1,4 @@
-# Layout v0.1 (test)
+# Layout v0.1
 
 Spacing and section layout of the Comp AI homepage, desktop (from 1024 px). Implemented in `homepage/index.html`
 as tokens (`--sp-*` on `:root`) and the block “Layout system v0.1” at the end of the stylesheet.
@@ -43,10 +43,10 @@ The hero is outside this first pass; mobile is not defined yet.
 
 The head follows the content under it. Everything is aligned left on the page's 12-column grid (24 px gutters).
 
-- **Split head** where the content below runs the full width (02, 03, 05, 06, 07, 08): the eyebrow on its own row; the h2
-  on columns 1–6; the lead on columns 8–12 with its last line on the h2's last baseline; the buttons 40 under the lead.
-  Then a hairline 64 under the head (16% white on dark, 12% ink on light) and the content 40 under the line. In 03 the
-  tabs are the line; in 08 each module opens with its own line.
+- **Section head** where the content below runs the full width (02, 03, 05, 06, 07, 08): eyebrow, h2 (columns 1–7) and
+  lead (columns 1–6) stacked on the left, h2 → lead 24; the buttons alone on the right (columns 9–12), on the lead's last
+  baseline. Then a hairline 64 under the head (16% white on dark, 12% ink on light) and the content 40 under the line.
+  In 03 the tabs are the line; in 08 each module opens with its own line.
 - **Stacked head** where the section is two columns (04): eyebrow, h2, lead and buttons in the text column on the left,
   the visual on the right.
 

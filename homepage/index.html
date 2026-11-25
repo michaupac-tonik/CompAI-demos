@@ -1836,19 +1836,19 @@
     /* one eyebrow box everywhere (04 and 05 were flex boxes left from their markers) */
     .sec-04 .eyebrow-04, .sec-05 .eyebrow-05 { display: block; }
 
-    /* split head, where the content below runs the full width (02, 03, 05, 06, 07, 08): the eyebrow on its own row; the h2
-       on columns 1-6 and the lead on columns 8-12, the lead's last line on the h2's last baseline; the buttons under the lead (40);
-       then a hairline 64 under the head, and the content 40 under the line (03: its tabs are the line) */
+    /* section head where the content below runs the full width (02, 03, 05, 06, 07, 08), option C (Michał, 25.11): eyebrow,
+       h2 (columns 1-7) and lead (1-6) stacked on the left; the buttons alone on the right (columns 9-12), on the lead's last
+       baseline; then a hairline 64 under the head, and the content 40 under the line (03: its tabs are the line) */
     .sec-03 .head, .sec-06 .head-06, .sec-07 .head-07, .sec-08-head, .shift-grid, .sec-05 .grid-05 {
       display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3); row-gap: 0; align-items: start; text-align: left; }
     .sec-03 .head > div, .sec-06 .head-06 > div, .sec-07 .head-07 > div, .sec-08-head > div, .shift-grid > :first-child { display: contents; }
     /* 05: the text column stays a real box (its script measures it), as a subgrid over the whole section grid */
     .sec-05 .txt-05 { grid-column: 1 / -1; grid-row: 1 / 6; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
     .sec-03 .head .eyebrow-03, .sec-06 .head-06 .eyebrow-06, .sec-07 .head-07 .eyebrow-07, .sec-08-head .sec-08-eyebrow, .shift-grid .eyebrow, .sec-05 .eyebrow-05 { grid-column: 1 / -1; grid-row: 1; }
-    .sec-03 .head h2, .sec-06 .head-06 h2, .sec-07 .head-07 h2, .sec-08-head h2, .shift-grid h2, .sec-05 .grid-05 h2 { grid-column: 1 / span 6; grid-row: 2; align-self: last baseline; }
+    .sec-03 .head h2, .sec-06 .head-06 h2, .sec-07 .head-07 h2, .sec-08-head h2, .shift-grid h2, .sec-05 .grid-05 h2 { grid-column: 1 / span 7; grid-row: 2; align-self: start; }
     .sec-03 .head .lead, .sec-06 .lead-06, .sec-07 .lead-07, .sec-08-head .sec-08-lead, .shift-grid .lead, .sec-05 .lead-05 {
-      grid-column: 8 / span 5; grid-row: 2; align-self: last baseline; margin: 0; max-width: none; text-wrap: pretty; }
-    .sec-06 .acts-06, .sec-07 .acts-07, .sec-08-head .sec-08-acts, .sec-05 .acts-05 { grid-column: 8 / span 5; grid-row: 3; margin-top: var(--sp-4); justify-content: flex-start; }
+      grid-column: 1 / span 6; grid-row: 3; align-self: last baseline; margin: var(--sp-3) 0 0; max-width: none; text-wrap: pretty; }
+    .sec-06 .acts-06, .sec-07 .acts-07, .sec-08-head .sec-08-acts, .sec-05 .acts-05 { grid-column: 9 / span 4; grid-row: 3; align-self: last baseline; justify-content: flex-end; margin-top: 0; }
     .sec-06 .head-06::after, .sec-07 .head-07::after, .shift-grid::after, .sec-05 .grid-05::after {
       content: ""; grid-column: 1 / -1; grid-row: 4; height: 1px; margin-top: var(--sp-5); background: rgba(252,252,252,.16); }
     .sec-05 .grid-05::after, .sec-06 .head-06::after, .sec-07 .head-07::after { background: rgba(22,22,22,.12); }      /* the hairline on the light sections */
@@ -1983,16 +1983,6 @@
   .sec-03 .side .integ .l { flex-basis: 100%; }
   .sec-03 .side .integ ul { gap: var(--sp-1) var(--sp-3); }
 
-  /* option C for comparison (?head=c): the head stacked on the left (eyebrow, h2, lead), the buttons alone on the right,
-     on the lead's last baseline */
-  @media (min-width: 1024px) {
-    html.head-c .sec-03 .head h2, html.head-c .sec-06 .head-06 h2, html.head-c .sec-07 .head-07 h2, html.head-c .sec-08-head h2,
-    html.head-c .shift-grid h2, html.head-c .sec-05 .grid-05 h2 { grid-column: 1 / span 7; grid-row: 2; align-self: start; }
-    html.head-c .sec-03 .head .lead, html.head-c .sec-06 .lead-06, html.head-c .sec-07 .lead-07, html.head-c .sec-08-head .sec-08-lead,
-    html.head-c .shift-grid .lead, html.head-c .sec-05 .lead-05 { grid-column: 1 / span 6; grid-row: 3; align-self: last baseline; margin-top: var(--sp-3); }
-    html.head-c .sec-06 .acts-06, html.head-c .sec-07 .acts-07, html.head-c .sec-08-head .sec-08-acts, html.head-c .sec-05 .acts-05 {
-      grid-column: 9 / span 4; grid-row: 3; align-self: last baseline; justify-content: flex-end; margin-top: 0; }
-  }
 </style>
 </head>
 <body>
@@ -4643,6 +4633,5 @@
   collect(); update();
 })();
 </script>
-<script>/* comparison only: ?head=c shows option C of the section head */ if (new URLSearchParams(location.search).get('head') === 'c') document.documentElement.classList.add('head-c');</script>
 </body>
 </html>
