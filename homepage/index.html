@@ -2144,7 +2144,9 @@
   html.v05-d .sec-05 .q-05[data-q] { display: block !important; align-self: stretch; width: auto; }
   html.v05-d .sec-05 .q-05 .hd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 10px; row-gap: 2px; align-items: center; cursor: pointer; }
   /* the quote mark: no box, larger, black; its top on the name's cap height, the head's two lines beside it */
-  html.v05-d .sec-05 .q-05 .hd .ic { grid-row: 1 / span 2; align-self: start; width: 26px; height: 26px; margin: -1px 0 0 -5px; background: none; color: var(--ink); }      /* the glyph sits 5px inside its box: pulled back to the text's edge */
+  /* the quote mark sits beside the name it belongs to: its bottom edge on the name's baseline (the glyph fills 5-15 of its 20 box,
+     so the box hangs below the line by what the script measures, --qb) */
+  html.v05-d .sec-05 .q-05 .hd .ic { grid-row: 1; align-self: center; width: 26px; height: 26px; margin: 0 0 0 -5px; transform: translateY(calc(-1 * var(--qb, 0px))); background: none; color: var(--ink); }      /* the glyph sits 5px inside its box: pulled back to the text's edge */
   html.v05-d .sec-05 .q-05 .hd .ic svg { width: 26px; height: 26px; }
   html.v05-d .sec-05 .q-05 .hd h3 { grid-column: 2 / span 2; grid-row: 1; }
   html.v05-d .sec-05 .q-05 .hd .n { grid-column: 2; grid-row: 2; margin: 0; justify-self: start; }
@@ -2172,13 +2174,15 @@
   /* the list on the left: rows with a story show a quote mark and "Story" at the end; pointing at one (or its story being open)
      tints the row and brings the mark to full ink */
   html.v05-d .sec-05 .steps-05 li.has-st > b { justify-self: start; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; }
-  html.v05-d .sec-05 .steps-05 .hint { display: inline-flex; align-items: center; gap: 8px; color: color-mix(in srgb, var(--ink) 40%, transparent); transition: color .35s ease; }
-  html.v05-d .sec-05 .steps-05 .hint svg { width: 20px; height: 20px; }
-  html.v05-d .sec-05 .steps-05 li.has-nx .hint svg { width: 14px; height: 14px; margin: 0 3px; }
-  html.v05-d .sec-05 .steps-05 .hint em { font-family: var(--mono); font-size: 11px; font-style: normal; font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase;
-    opacity: 0; transform: translateX(-6px); transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.1,1); }
-  html.v05-d .sec-05 .steps-05 li.has-st > b:hover .hint, html.v05-d .sec-05 .steps-05 li.has-st.on .hint { color: var(--ink); }
-  html.v05-d .sec-05 .steps-05 li.has-st > b:hover .hint em, html.v05-d .sec-05 .steps-05 li.has-st.on .hint em { opacity: 1; transform: none; }
+  /* on the left, beside each heading: a small button (the label, and the quote mark or the +), outlined at rest, filled when the
+     heading is pointed at or its story is open */
+  html.v05-d .sec-05 .steps-05 .sb { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px;
+    box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); font-family: var(--mono); font-size: 11px; font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase;
+    cursor: pointer; transition: background-color .3s ease, color .3s ease; }
+  html.v05-d .sec-05 .steps-05 .sb svg { width: 14px; height: 14px; flex: none; margin: 0 -2px; transform: translateY(calc(-1 * var(--qs, 0px))); }
+  html.v05-d .sec-05 .steps-05 li.has-nx .sb svg { width: 10px; height: 10px; margin: 0; }
+  html.v05-d .sec-05 .steps-05 li.has-st > b:hover .sb, html.v05-d .sec-05 .steps-05 li.has-st.on .sb { background: var(--ink); color: var(--white); }
+  html.v05-d .sec-05 .steps-05 .sb:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
   @keyframes s05unfold { from { opacity: 0; filter: blur(4px); } to { opacity: 1; filter: none; } }
   html.v05-d .sec-05 .q-05.open .bar.run { animation-play-state: paused; }
   @media (prefers-reduced-motion: reduce) { html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: none; } }
@@ -5039,12 +5043,13 @@
   // only the headings (Startups, Mid-market, Enterprise) are interactive, not the whole row
   const heads = steps.map(li => li.querySelector(':scope > b'));
   steps.forEach((li, k) => { const c = cards.find(x => x.col === k); if (!c || !heads[k]) return;
-    li.classList.add('has-st'); const h = document.createElement('span'); h.className = 'hint'; h.setAttribute('aria-hidden', 'true'); h.innerHTML = QM + '<em>Story</em>'; heads[k].append(h);
+    li.classList.add('has-st'); const h = document.createElement('button'); h.type = 'button'; h.className = 'sb'; h.setAttribute('aria-label', heads[k].firstChild.textContent.trim() + ': show the customer story');
+    h.innerHTML = '<span>Story</span>' + QM; heads[k].append(h);
     heads[k].addEventListener('click', c.click); });
   // Enterprise has no story: pointing at it (the list, its bars, its name on the axis) plays the "Next framework" drop in its column
   const nb = sec.querySelector('button.fw-05.next'), EK = 2;
-  if (nb && heads[EK]) { steps[EK].classList.add('has-st', 'has-nx'); const h = document.createElement('span'); h.className = 'hint'; h.setAttribute('aria-hidden', 'true');
-    h.innerHTML = PLUS + '<em>Next</em>'; heads[EK].append(h); heads[EK].addEventListener('click', () => nb.click()); }
+  if (nb && heads[EK]) { steps[EK].classList.add('has-st', 'has-nx'); const h = document.createElement('button'); h.type = 'button'; h.className = 'sb'; h.setAttribute('aria-label', 'Add the next framework');
+    h.innerHTML = '<span>Next</span>' + PLUS; heads[EK].append(h); heads[EK].addEventListener('click', () => nb.click()); }
   // pointing: a short pause before anything opens, so a quick pass over the types does nothing
   let at = -1, wait = 0;
   const hover = k => { if (k !== at) { cards.forEach(c => { if (c.col !== k) c.muted = false; }); if (k === EK && nb) nb.click(); } at = k;
@@ -5061,7 +5066,15 @@
       c.card.classList.add('open'); need = Math.max(need, c.card.offsetHeight - c.h - free + 8); c.card.classList.remove('open'); });
     if (need > 0) bars.style.paddingTop = need + 'px';
     cards.forEach(c => { if (c.on) { c.card.classList.add('open'); c.card.style.marginTop = -(c.card.offsetHeight - c.h) + 'px'; } }); };
-  fit(); addEventListener('resize', fit); if (document.fonts) document.fonts.ready.then(fit);
+  // the quote marks: bottom of the glyph (15/20 of its box) on the baseline of the text it belongs to
+  const baseline = el => { const r = document.createRange(), t = el.firstChild && el.firstChild.nodeType === 3 ? el.firstChild : el; const m = document.createElement('i');
+    m.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'; el.insertBefore(m, el.firstChild); const y = m.getBoundingClientRect().top; m.remove(); return y; };
+  const settle = () => {
+    cards.forEach(c => { const ic = c.card.querySelector('.hd .ic'), svg = ic && ic.querySelector('svg'), h3 = c.card.querySelector('.hd h3'); if (!svg || !h3) return;
+      ic.style.setProperty('--qb', '0px'); const r = svg.getBoundingClientRect(); ic.style.setProperty('--qb', (r.top + r.height * 15 / 20 - baseline(h3)) + 'px'); });
+    sec.querySelectorAll('.steps-05 .sb').forEach(b => { const svg = b.querySelector('svg'), t = b.querySelector('span'); if (!svg || b.closest('.has-nx')) return;
+      b.style.setProperty('--qs', '0px'); const r = svg.getBoundingClientRect(); b.style.setProperty('--qs', (r.top + r.height * 15 / 20 - baseline(t)) + 'px'); }); };
+  fit(); settle(); addEventListener('resize', () => { fit(); settle(); }); if (document.fonts) document.fonts.ready.then(() => { fit(); settle(); });
 })();
 </script>
 </body>
