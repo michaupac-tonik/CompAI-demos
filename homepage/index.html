@@ -114,7 +114,7 @@
     transition: transform .18s var(--ease), background-color .2s, color .2s, border-color .2s; }
   .btn:active { transform: scale(.98); }
   .btn .chev { width: 13px; height: 13px; flex: none; transition: transform .3s var(--ease); }
-  .btn-quiet { border-color: rgba(252,252,252,.4); }
+  .btn-quiet { border-color: var(--white); }      /* Sign in: the same outline as the secondary buttons (Michał, 25.11) */
   .btn-primary { height: 40px; padding: 0 13px 0 16px; gap: 8px; font-size: 13px; background: var(--white); border-color: var(--white); color: var(--ink); }
   .btn-secondary { height: 40px; padding: 0 16px; font-size: 13px; background: rgba(252,252,252,.06); border-color: rgba(252,252,252,.6); }
   /* hover: wipe (web/hero/hover-states-v01, variant 01). An inverse fill slides in from the left and leaves
@@ -1693,7 +1693,7 @@
   html.nav-light:not(.mega-on) .nav-ic:is(:hover, :focus-visible) { color: var(--ink); background: rgba(22,22,22,.06); }
   html.nav-light:not(.mega-on) .menu-btn { color: var(--ink); }
   html.nav-light:not(.mega-on) .site-nav .btn { color: var(--ink); border-color: var(--ink); }
-  html.nav-light:not(.mega-on) .site-nav .btn-quiet { border-color: rgba(22,22,22,.3); }
+  html.nav-light:not(.mega-on) .site-nav .btn-quiet { border-color: var(--ink); }
   html.nav-light:not(.mega-on) .site-nav .btn::before { background: var(--ink); }
   html.nav-light:not(.mega-on) .site-nav .btn:is(:hover, :focus-visible) { color: var(--white); border-color: var(--ink); }
   html.nav-light:not(.mega-on) .site-nav :focus-visible { outline-color: var(--ink); }
