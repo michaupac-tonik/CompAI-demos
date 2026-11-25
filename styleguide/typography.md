@@ -21,7 +21,21 @@ Ratio 1.272 (√φ) on a 16 px base, rounded to whole pixels:
   and keeps the small text closer to the light character of the page.
 - Medium (500) is not used.
 
-## Roles (desktop, from 1024 px)
+## Fluid sizes (from 1024 px)
+
+1920 px is the reference: the table below gives the sizes at 1920 px and wider. From 1920 down to 1280 px the large roles
+slide to the step below them on the scale, and stay there below 1280 px:
+
+| Role | 1920 px | 1280 px |
+|---|---|---|
+| `display-xl` | 68 | 53 |
+| `display-l` | 53 | 42 |
+| `title-m` | 33 | 26 |
+| `lead-l` | 26 | 20 |
+
+Roles of 20 px and less do not scale. In CSS: `clamp(lo, lo + (hi − lo) × (100vw − 1280px) / 640, hi)`.
+
+## Roles (desktop, at 1920 px)
 
 | Role | Font | Size | Line-height | Letter-spacing | Weight | Case | Used for |
 |---|---|---|---|---|---|---|---|
