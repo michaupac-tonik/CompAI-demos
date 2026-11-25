@@ -1993,6 +1993,42 @@
     .sec-07 .st-07.sm .tx-07 { order: 1; padding: 14px 14px var(--sp-3); }
     .sec-07 .st-07.sm .art-07 { order: 2; min-height: 88px; }
   }
+  /* 02: the stage switch, on the right of the head where other sections have their buttons (Michał, 25.11) */
+  .shift-switch { display: inline-flex; gap: 0; border: 1px solid rgba(252,252,252,.24); }
+  .shift-switch button { appearance: none; border: 0; background: none; color: var(--text-2); padding: 12px 16px; cursor: pointer;
+    font-family: var(--mono); font-size: var(--fs-label-s); line-height: 1; letter-spacing: .04em; text-transform: uppercase; font-weight: 400; transition: background-color .3s, color .3s; }
+  .shift-switch button + button { border-left: 1px solid rgba(252,252,252,.24); }
+  .shift-switch button:hover { color: var(--text-1); }
+  .shift-switch button[aria-pressed="true"] { background: var(--white); color: var(--ink); }
+  .shift-switch button:focus-visible { outline: 1px solid var(--white); outline-offset: 2px; }
+  @media (min-width: 1024px) { .shift-grid .shift-switch { grid-column: 8 / span 5; grid-row: 3; align-self: last baseline; justify-self: end; } }
+  @media (max-width: 1023px) { .shift-switch { margin-top: 24px; justify-self: start; } }
+  /* dividers (Michał, 25.11, list 42): no line where the content under it already starts with its own edge.
+     05: the steps and the chart open with their own rules; 06, 07: the cards' top edges sit 28px under the head's line;
+     03: the points end on a rule, so "Connected to your stack" needs no second one. 02 keeps its line (nothing under it has one). */
+  .sec-05 .grid-05::after, .sec-06 .head-06::after, .sec-07 .head-07::after { content: none; }
+  .sec-03 .side .integ { border-top: 0; padding-top: 0; }
+  /* 08, the black section after the light ones (Michał, 25.11, list 46): more room where it opens and where it closes,
+     the largest step of the scale (168 at 1920, 104 at 1280) */
+  @media (min-width: 1024px) {
+    .sec-08 { padding-top: var(--sp-7); }
+    .sec-08-close { padding-bottom: var(--sp-7); }
+  }
+  /* 07: the small cards differ (Michał, 25.11, list 47): Zernio keeps the visual beside the text; RiskInMind leads with its
+     figure and no visual; Anodes AI is a dark card with its print behind the text; Luthor AI has the visual on top */
+  .sec-07 .st-07.v-fig { grid-template-columns: minmax(0, 1fr); }
+  .sec-07 .st-07.v-fig .art-07 { display: none; }
+  .sec-07 .st-07.v-fig .tx-07 { padding: 14px; }
+  .sec-07 .fig-07 { display: block; font-family: var(--sans); font-size: var(--fs-title-m); line-height: 1.05; letter-spacing: -.04em; font-weight: 300; color: var(--text-1); }
+  .sec-07 .st-07.v-dark { --fg: var(--white); --text-1: var(--white); --text-2: color-mix(in srgb, var(--white) 72%, transparent);
+    background: var(--black); color: var(--white); grid-template-columns: minmax(0, 1fr); box-shadow: none; }
+  .sec-07 .st-07.v-dark .art-07 { position: absolute; inset: 10px; opacity: .42; z-index: 0; min-height: 0; }
+  .sec-07 .st-07.v-dark .tx-07 { position: relative; z-index: 1; padding: 14px; }
+  .sec-07 .st-07.v-dark :is(.nm-07, h3, .k-07, .go-07) { color: var(--text-1); }
+  .sec-07 .st-07.v-dark .k-07 { color: var(--text-2); }
+  .sec-07 .st-07.v-top { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(88px, 1fr) auto; }
+  .sec-07 .st-07.v-top .art-07 { order: 0; min-height: 88px; }
+  .sec-07 .st-07.v-top .tx-07 { order: 1; padding: var(--sp-3) 14px 14px; }
 </style>
 </head>
 <body>
@@ -2182,7 +2218,6 @@
       <a class="lt-cell lt-all" href="https://www.trycomp.ai/case-studies"><span>All customer stories</span><i class="lt-arrow" aria-hidden="true">↗</i></a>
     </div>
     </div>
-  </div>
 </section>
 
 <!-- @section:02 html:start -->
@@ -2193,6 +2228,7 @@
         <p class="eyebrow">The shift</p>
         <h2 id="shift-title"><span>Same standards.</span> <span class="now">Different work.</span></h2>
         <p class="lead">Compliance software moved from spreadsheets to dashboards, but the work stayed with your team. Comp AI changes who does the work.</p>
+        <div class="shift-switch" role="group" aria-label="Show a stage"><button type="button" aria-pressed="true" data-k="0">Spreadsheets</button><button type="button" aria-pressed="false" data-k="1">Dashboards</button><button type="button" aria-pressed="false" data-k="2">Comp AI</button></div>
         <ol class="steps">
           <li class="on"><span class="k">Spreadsheets</span><span class="d">Your team chases every policy, screenshot and vendor form by hand.</span></li>
           <li><span class="k">Dashboards</span><span class="d">The tracking moved into an app. The work stayed with your team.</span></li>
@@ -2478,16 +2514,17 @@
           <a class="go-07" href="https://www.trycomp.ai/case-studies/zernio">Read the story<span class="vh-07">: Zernio</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
-      <li class="st-07 sm rv" style="--d:5;--gx:80%">
+      <li class="st-07 sm v-fig rv" style="--d:5;--gx:80%">
         <div class="art-07" data-scale="large" aria-hidden="true"></div>
         <div class="tx-07">
           <span class="nm-07">RiskInMind</span>
           <p class="k-07">SOC 2</p>
+          <b class="fig-07" aria-hidden="true">20 days</b>
           <h3>SOC 2 passed in 20 days, and a $100K first customer landed.</h3>
           <a class="go-07" href="https://www.trycomp.ai/case-studies/riskinmind">Read the story<span class="vh-07">: RiskInMind</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
-      <li class="st-07 sm rv" style="--d:6">
+      <li class="st-07 sm v-dark rv" style="--d:6">
         <div class="art-07" data-scale="fine" aria-hidden="true"></div>
         <div class="tx-07">
           <span class="nm-07">Anodes AI</span>
@@ -2496,7 +2533,7 @@
           <a class="go-07" href="https://www.trycomp.ai/case-studies/anodes-ai">Read the story<span class="vh-07">: Anodes AI</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
-      <li class="st-07 sm rv" style="--d:7;--gx:80%">
+      <li class="st-07 sm v-top rv" style="--d:7;--gx:80%">
         <div class="art-07" data-scale="medium" data-at="-.22,.2" aria-hidden="true"></div>
         <div class="tx-07">
           <span class="nm-07">Luthor AI</span>
@@ -3217,6 +3254,7 @@
 (() => {
   const sec = document.getElementById('shift'); if (!sec) return;
   const steps = [...sec.querySelectorAll('.steps li')], rail = sec.querySelector('.steps');
+  const sw = [...sec.querySelectorAll('.shift-switch button')];      // the stage switch in the head (Michał, 25.11)
   const tools = [...sec.querySelectorAll('.tool i')], TOOL = ['a spreadsheet', 'a dashboard', 'Comp AI'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let stage = -1;
@@ -3244,7 +3282,8 @@
   const set = s => { if (s === stage) return; const first = stage < 0; stage = s;
     sec.dataset.stage = s;
     window.heroMist = s === 2 ? .5 : .32; dispatchEvent(new Event('heromist'));   // the mist livens when Comp AI takes over
-    steps.forEach((li, i) => li.classList.toggle('on', i === s)); };
+    steps.forEach((li, i) => li.classList.toggle('on', i === s));
+    sw.forEach((b, i) => b.setAttribute('aria-pressed', i === s)); };
   // entrance: the section lands like the hero UI, one element at a time, from soft to sharp
   const IN = [sec.querySelector('.eyebrow'), ...sec.querySelectorAll('h2 span'), sec.querySelector('.lead'), ...steps, ...sec.querySelectorAll('.board .row, .board .foot')];
   IN.forEach((el, i) => { el.setAttribute('data-in', ''); el.style.setProperty('--d', (.3 + i * .12).toFixed(2) + 's'); });   // the hero's rhythm
@@ -3298,7 +3337,7 @@
   steps.forEach((li, k) => {
     li.tabIndex = 0; li.setAttribute('role', 'button'); li.setAttribute('aria-label', 'Show ' + li.querySelector('.k').textContent);
     const pick = () => { manual = true; sec.classList.add('in'); goTo(k); };
-    li.addEventListener('click', pick);
+    li.addEventListener('click', pick); if (sw[k]) sw[k].addEventListener('click', pick);
     li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
   });
   measure(); fill = target = Y[0]; passed = 0; draw(performance.now());
