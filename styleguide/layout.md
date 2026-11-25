@@ -18,6 +18,11 @@ The hero is outside this first pass; mobile is not defined yet.
 | `--sp-6` | 104 |
 | `--sp-7` | 168 |
 
+## Page margins
+
+32 px on each side on desktop (was 64); the content runs up to 1856 px wide, so a 1920 px screen keeps 32 px a side too.
+Mobile (16 px) is unchanged for now.
+
 ## Fluid spacing
 
 As the type: 1920 px is the reference. From 1920 down to 1280 px the large steps slide one step down the scale

@@ -42,7 +42,7 @@
     --cyan: #00ffee;
     --sans: "Favorit", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
     --mono: "Favorit Mono", ui-monospace, "SF Mono", Menlo, monospace;
-    --edge: 64px;
+    --edge: 32px; --wrap-max: 1856px;      /* side margins halved (Michał, 25.11: was 64); the content may run to 1856px, so a 1920 screen keeps 32 a side too */
     --ease: cubic-bezier(.2, .7, .1, 1);
     /* general updates (feedback 20.11) */
     --eyebrow: var(--mint);          /* eyebrows on dark */
@@ -64,7 +64,7 @@
     font: 400 14.5px/1 var(--sans); clip-path: inset(50%); width: 1px; height: 1px; overflow: hidden; white-space: nowrap; }
   .skip:focus { clip-path: none; width: auto; height: auto; overflow: visible; }
   :focus-visible { outline: 1.5px solid var(--mint); outline-offset: 3px; }
-  .wrap { width: min(1792px, 100% - 2 * var(--edge)); margin-inline: auto; }
+  .wrap { width: min(var(--wrap-max), 100% - 2 * var(--edge)); margin-inline: auto; }
 
   /* type: mono label (nav, buttons, small print) */
   .mono { font: 400 14.5px/1 var(--sans); }
@@ -152,7 +152,7 @@
   .mega.open .mega-card { opacity: 1; transform: none; }
   html.mega-on .site-nav::before { opacity: 1; background: #0c0c0c; }
   /* the pane spans the viewport; its columns line up with the page grid (.wrap) */
-  .mega-pane { position: absolute; left: 0; top: 0; width: 100%; padding-inline: max(var(--edge), (100% - 1792px) / 2);
+  .mega-pane { position: absolute; left: 0; top: 0; width: 100%; padding-inline: max(var(--edge), (100% - var(--wrap-max)) / 2);
     display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)) minmax(300px, 22%);
     opacity: 0; transform: translateX(var(--from, 0px)); pointer-events: none; transition: opacity .22s ease, transform .38s var(--ease); }
   .mega-pane.on { opacity: 1; transform: none; pointer-events: auto; transition-delay: .04s; }
