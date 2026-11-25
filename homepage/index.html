@@ -2222,7 +2222,7 @@
 <body>
 <script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
 (() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
-  if (/^[abcd]$/.test(v || '')) r.classList.add('v05-' + v); if (q.get('only') === '05') r.classList.add('only-05'); })();</script>
+  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
