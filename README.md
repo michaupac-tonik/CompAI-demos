@@ -27,19 +27,14 @@ Then open http://localhost:8800/.
 
 ## Fonts
 
-The page uses ABC Favorit Pro (Light 300, Book 400, Medium 500; Regular only for the type test below) and ABC Favorit Mono (Light, Book).
+The page uses ABC Favorit Pro (Light 300 for text above 16px, Regular for text at 16px and below, Book 400, Medium 500) and ABC Favorit Mono (Light, Book).
+Regular is registered as weight 450 so it does not replace Book; in the CSS, `450` means Favorit Regular.
 The font files are licensed and are not committed. Put these files into `homepage/assets/fonts/`:
 
 - `ABCFavoritPro-Light.woff2`, `ABCFavoritPro-Book.woff2`, `ABCFavoritPro-Medium.woff2`, `ABCFavoritPro-Regular.woff2`
 - `ABCFavoritMono-Light-Trial.woff2`, `ABCFavoritMono-Book-Trial.woff2`
 
 Favorit Mono is a trial cut in this reference; production needs the licensed files.
-
-### Type test
-
-Open the page with `?type=regular` to see text at 16px and below in Favorit Regular instead of Light
-(mono Light in Book). A switch in the bottom left corner flips between the two. Without the parameter the page is unchanged.
-This is a review aid only: once a version is chosen, the weights move into the CSS and the script goes.
 
 ## Versions
 
