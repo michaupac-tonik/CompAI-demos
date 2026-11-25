@@ -2177,6 +2177,10 @@
   html.v05-d .sec-05 .steps-05 li.has-st > b { justify-self: start; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; }
   /* on the left, beside each heading: a small button (the label, and the quote mark or the +), outlined at rest, filled when the
      heading is pointed at or its story is open */
+  /* the button sits at the end of its row, centred on the row's height (it stays inside the heading, so pointing at it is pointing at the heading) */
+  html.v05-d .sec-05 .steps-05 li.has-st { position: relative; padding-right: calc(var(--sbw, 80px) + var(--sp-3)); }      /* room for its button (--sbw, set by the script) */
+  html.v05-d .sec-05 .steps-05 li.has-st > b .sb { position: absolute; right: 0; top: 50%; translate: 0 -50%; }
+  html.v05-d .sec-05 .steps-05 li.has-st > span:not(.n) { text-wrap: balance; }      /* with the button beside it the line breaks in two: even lines */
   html.v05-d .sec-05 .steps-05 .sb { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px;
     box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); font-family: var(--mono); font-size: 11px; font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase;
     cursor: pointer; transition: background-color .3s ease, color .3s ease; }
@@ -5092,6 +5096,7 @@
   const centre = () => [...cards.map(c => c.tg), ...sec.querySelectorAll('.steps-05 .sb')].forEach(b => { const svg = b.querySelector('svg'), t = b.querySelector('span'); if (!svg || !t) return;
     b.style.setProperty('--pc', '0px'); const r = svg.getBoundingClientRect(); b.style.setProperty('--pc', (r.top + r.height / 2 - (baseline(t) - capH(t) / 2)) + 'px'); });
   const settle0 = settle; settle = () => { settle0(); centre(); };
+  sec.querySelectorAll('.steps-05 li.has-st').forEach(li => { const b = li.querySelector('.sb'); if (b) li.style.setProperty('--sbw', Math.ceil(b.offsetWidth) + 'px'); });
   fit(); settle(); addEventListener('resize', () => { fit(); settle(); }); if (document.fonts) document.fonts.ready.then(() => { fit(); settle(); });
 })();
 </script>
