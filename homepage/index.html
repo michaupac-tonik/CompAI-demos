@@ -1924,7 +1924,9 @@
   .sec-08-qsum .btn-primary:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--white); }
   /* H1: the highlighted word is underlined with Favorit's own underline (post table: position -100, thickness 50 per
      1000 units), not the browser's default line (Michał, 25.11) */
-  h1 u { text-decoration-line: underline; text-decoration-thickness: .05em; text-underline-position: from-font; text-underline-offset: auto; text-decoration-skip-ink: none; }
+  h1 u, h2 u, .sec-06 h2 u, .sec-08 h2 u { text-decoration-line: underline; text-decoration-thickness: .05em; text-underline-position: auto; text-underline-offset: .1em; text-decoration-skip-ink: none; }
+  /* one underline for every highlighted word in a headline, set from the font: thickness .05em and .1em under the
+     baseline (Favorit's post table: 50 and -100 per 1000 units). Explicit values, so every browser draws the same line */
 
   /* light sections: where there is a visual, it sits on black, as the dark sections (Michał, 25.11). 04: the window
      with the print; 07: the prints on the customer cards */
@@ -1933,6 +1935,33 @@
   .sec-04 .fc { background: rgba(252, 252, 252, .94); }      /* the glass cards were see-through on white; on black they need their own light ground to stay readable */
   .sec-07 .art-07 { background: var(--black); box-shadow: none; }
   .sec-07 .art-07:not(.on) { background: radial-gradient(circle, rgba(252, 252, 252, .16) 1px, transparent 1.5px) 0 0 / 10px 10px, var(--black); }
+  /* the nav over the light sections is light, its menu too (Michał, 25.11): the bar stays white while a menu is open,
+     and the menu panel turns paper with ink text; the featured visual stays on black */
+  html.nav-light.mega-on .site-nav::before { opacity: 1; background: rgba(252,252,252,.96); border-bottom-color: rgba(22,22,22,.1); }
+  html.nav-light.mega-on .mark img, html.nav-light.mega-on .links img { filter: brightness(0) invert(.09); }
+  html.nav-light.mega-on .links { color: rgba(22,22,22,.72); }
+  html.nav-light.mega-on .links :is(a, button):is(:hover, :focus-visible, [aria-expanded="true"]) { color: var(--ink); }
+  html.nav-light.mega-on .nav-ic { color: rgba(22,22,22,.72); }
+  html.nav-light.mega-on .site-nav .btn { color: var(--ink); border-color: var(--ink); }
+  html.nav-light.mega-on:not(#_) .site-nav .nav-actions .btn-outline { background: var(--ink); border-color: var(--ink); color: var(--white); }
+  html.nav-light.mega-on:not(#_) .site-nav .nav-actions .btn-outline::before { background: var(--paper); }
+  html.nav-light.mega-on:not(#_) .site-nav .nav-actions .btn-outline:is(:hover, :focus-visible) { color: var(--ink); }
+  html.nav-light .site-nav { --fg: var(--ink); --text-1: var(--ink); --text-2: color-mix(in srgb, var(--ink) 72%, transparent); --eyebrow: var(--ink); }
+  html.nav-light .mega-card { background: var(--paper); color: var(--ink); border-color: rgba(22,22,22,.1); box-shadow: 0 40px 80px -30px rgba(0,0,0,.25); }
+  html.nav-light .mega-col + .mega-col { border-left-color: rgba(22,22,22,.1); }
+  html.nav-light .mega-col h3, html.nav-light .mega-feat h3 { color: var(--ink); }
+  html.nav-light .mega-col a:is(:hover, :focus-visible) { background: rgba(22,22,22,.04); }
+  html.nav-light .mega-col .ic { border-color: rgba(22,22,22,.16); color: rgba(22,22,22,.72); }
+  html.nav-light .mega-col a:is(:hover, :focus-visible) .ic { border-color: var(--ink); color: var(--ink); }
+  html.nav-light .mega-col b, html.nav-light .mega-feat p b, html.nav-light .mega-col .all { color: var(--ink); }
+  html.nav-light .mega-feat { background: var(--white); border-color: rgba(22,22,22,.1); }
+  html.nav-light .mega-feat .mini:hover { background: rgba(22,22,22,.04); }
+  html.nav-light .mega-feat .btn { background: var(--ink); border-color: var(--ink); color: var(--white); }
+  html.nav-light .mega-feat .btn::before { background: var(--paper); }
+  html.nav-light .mega-feat .btn:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--ink); }
+  html.nav-light .mega-scrim { background: rgba(248,248,248,.5); }
+  html.nav-light.mega-on .site-nav .mega-feat .btn { color: var(--white); }      /* the bar's ink-button rule must not reach the menu's filled button */
+  html.nav-light.mega-on .site-nav .mega-feat .btn:is(:hover, :focus-visible) { color: var(--ink); }
 </style>
 </head>
 <body>
@@ -2287,7 +2316,7 @@
     <div class="head-06">
       <div class="head-06-l">
       <p class="eyebrow-06 rv" style="--d:0">Trust</p>
-      <h2 id="sec-06-title" class="rv" style="--d:1">Don't trust us. <u>Verify.</u></h2>
+      <h2 id="sec-06-title" class="rv" style="--d:1">Don't trust us. <u>Verify</u>.</h2>
       </div>
       <div class="head-06-r">
       <p class="lead-06 rv" style="--d:2">Security leaders have heard enough big AI claims. So don't take ours on faith: the code is open source, the evidence updates live, and our trust center is public.</p>
@@ -2467,7 +2496,7 @@
     <div class="sec-08-head" id="demo">
       <div>
         <p class="sec-08-eyebrow">Next step</p>
-        <h2 id="sec-08-title">See the work done, <u>live.</u></h2>
+        <h2 id="sec-08-title">See the work done, <u>live</u>.</h2>
       </div>
       <div>
         <p class="sec-08-lead">Watch Comp AI do the work on your own stack in a <span class="sec-08-nb">20-minute</span> call. See what sets your price, and get answers to the questions teams ask first.</p>
@@ -3934,8 +3963,11 @@
   const steps = sec.querySelector('.steps-05'), bars = sec.querySelector('.bars-05');
   // layout v0.1 (25.11): the steps and the chart start together under the line; the steps stretch so that their last rule
   // meets the chart's axis (the rows share the height, each with its rule at the bottom)
-  const align = () => { if (!steps || !bars) return; chart.style.setProperty('--chart-top', '0px'); steps.style.minHeight = '';
+  const align = () => { if (!steps || !bars) return; chart.style.setProperty('--chart-top', '0px'); steps.style.minHeight = ''; steps.style.marginTop = '';
     if (innerWidth < 1024) return;
+    steps.style.marginTop = '';
+    const top = sec.querySelector('.top-05'), headLine = chart.offsetTop + top.offsetTop + top.offsetHeight - 1;      // the rule under "Frameworks as you grow"
+    steps.style.marginTop = (parseFloat(getComputedStyle(steps).marginTop) + headLine - steps.offsetTop) + 'px';
     const axis = chart.offsetTop + bars.offsetTop + bars.offsetHeight;
     steps.style.minHeight = Math.max(0, axis - steps.offsetTop) + 'px'; };
   let t = 0; const later = () => { cancelAnimationFrame(t); t = requestAnimationFrame(() => { align(); draw(); }); };
@@ -4391,14 +4423,18 @@
         const p = paths[g]; p.moveTo(x, y - d); p.lineTo(x + d, y); p.lineTo(x, y + d); p.lineTo(x - d, y); p.closePath();
       }
     }
-    paths.forEach((p, g) => { const u = g / (BUCKETS - 1), col = `rgb(${WARM.map((v, i) => Math.round(v + (HOT[i] - v) * u)).join(',')})`;
+    const [C0, C1] = art._pal || [WARM, HOT];
+    paths.forEach((p, g) => { const u = g / (BUCKETS - 1), col = `rgb(${C0.map((v, i) => Math.round(v + (C1[i] - v) * u)).join(',')})`;
       ctx.fillStyle = col; ctx.fill(p);
       if (P.round) { ctx.strokeStyle = col; ctx.lineJoin = 'round'; ctx.lineWidth = 5; ctx.stroke(p); } });
   };
   const arts = [...sec.querySelectorAll('.art-07')];
   const start = () => {
     if (field || !(field = buildField())) return;
-    arts.forEach(a => { const cv = document.createElement('canvas'); a.prepend(cv); a._cv = cv; a._t = 0; a.classList.add('on'); draw(a, 0); });
+    /* brand colours across the cards (Michał, 25.11; client feedback 24.11: some cool, some warm, some mixed):
+       mint -> cyan, yellow -> coral, cyan -> yellow, orange -> yellow, mint -> orange (green 080, cyan 080, coral 080, 050, 060) */
+    const PALS = [[[36, 255, 99], [0, 255, 238]], [[241, 188, 55], [245, 56, 14]], [[0, 255, 238], [241, 188, 55]], [[243, 115, 0], [241, 188, 55]], [[36, 255, 99], [243, 115, 0]]];
+    arts.forEach((a, i) => { a._pal = PALS[i % PALS.length]; const cv = document.createElement('canvas'); a.prepend(cv); a._cv = cv; a._t = 0; a.classList.add('on'); draw(a, 0); });
     let tm; new ResizeObserver(() => { clearTimeout(tm); tm = setTimeout(() => arts.forEach(a => draw(a, a._t)), 120); }).observe(sec);
     if (reduced) return;
     arts.forEach(a => { const card = a.closest('.st-07'); let raf = 0, last = 0;
