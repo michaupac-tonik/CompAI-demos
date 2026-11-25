@@ -2179,12 +2179,11 @@
   html.v05-d .sec-05 .steps-05 .sb { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px;
     box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); font-family: var(--mono); font-size: 11px; font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase;
     cursor: pointer; transition: background-color .3s ease, color .3s ease; }
-  html.v05-d .sec-05 .steps-05 .sb svg { width: 14px; height: 14px; flex: none; margin: 0 -2px; transform: translateY(calc(-1 * var(--qs, 0px))); }
-  html.v05-d .sec-05 .steps-05 li.has-nx .sb svg { width: 12px; height: 12px; margin: 0; }
+  html.v05-d .sec-05 .steps-05 .sb svg { width: 12px; height: 12px; flex: none; margin: 0; }      /* one sign everywhere: the + */
   /* the label takes the button's type (the rows' own rule for their text, .steps-05 span, made it 16px and grey) */
   html.v05-d .sec-05 .steps-05 .sb > span { grid-column: auto; font: inherit; letter-spacing: inherit; color: inherit; }
   /* the + and × centred on the capitals of the label, not on its line box (set by the script, --pc) */
-  html.v05-d .sec-05 .q-05 .tg svg, html.v05-d .sec-05 .steps-05 li.has-nx .sb svg { translate: 0 calc(-1 * var(--pc, 0px)); }
+  html.v05-d .sec-05 .q-05 .tg svg, html.v05-d .sec-05 .steps-05 .sb svg { translate: 0 calc(-1 * var(--pc, 0px)); }
   html.v05-d .sec-05 .steps-05 li.has-st > b:hover .sb, html.v05-d .sec-05 .steps-05 li.has-st.on .sb { background: var(--ink); color: var(--white); }
   html.v05-d .sec-05 .steps-05 .sb:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
   @keyframes s05unfold { from { opacity: 0; filter: blur(4px); } to { opacity: 1; filter: none; } }
@@ -5048,7 +5047,7 @@
   const heads = steps.map(li => li.querySelector(':scope > b'));
   steps.forEach((li, k) => { const c = cards.find(x => x.col === k); if (!c || !heads[k]) return;
     li.classList.add('has-st'); const h = document.createElement('button'); h.type = 'button'; h.className = 'sb'; h.setAttribute('aria-label', heads[k].firstChild.textContent.trim() + ': show the customer story');
-    h.innerHTML = '<span>Story</span>' + QM; heads[k].append(h);
+    h.innerHTML = '<span>Story</span>' + PLUS; heads[k].append(h);
     heads[k].addEventListener('click', c.click); });
   // Enterprise has no story: pointing at it (the list, its bars, its name on the axis) plays the "Next framework" drop in its column
   const nb = sec.querySelector('button.fw-05.next'), EK = 2;
@@ -5076,11 +5075,10 @@
   let settle = () => {
     cards.forEach(c => { const ic = c.card.querySelector('.hd .ic'), svg = ic && ic.querySelector('svg'), h3 = c.card.querySelector('.hd h3'); if (!svg || !h3) return;
       ic.style.setProperty('--qb', '0px'); const r = svg.getBoundingClientRect(); ic.style.setProperty('--qb', (r.top + r.height * 15 / 20 - baseline(h3)) + 'px'); });
-    sec.querySelectorAll('.steps-05 .sb').forEach(b => { const svg = b.querySelector('svg'), t = b.querySelector('span'); if (!svg || b.closest('.has-nx')) return;
-      b.style.setProperty('--qs', '0px'); const r = svg.getBoundingClientRect(); b.style.setProperty('--qs', (r.top + r.height * 15 / 20 - baseline(t)) + 'px'); }); };
+  };
   // + and ×: their centre on the middle of the capitals (the label is all capitals: no descenders under the line's centre)
   const capH = el => { const cs = getComputedStyle(el), g = document.createElement('canvas').getContext('2d'); g.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily; return g.measureText('H').actualBoundingBoxAscent; };
-  const centre = () => [...cards.map(c => c.tg), ...sec.querySelectorAll('.steps-05 li.has-nx .sb')].forEach(b => { const svg = b.querySelector('svg'), t = b.querySelector('span'); if (!svg || !t) return;
+  const centre = () => [...cards.map(c => c.tg), ...sec.querySelectorAll('.steps-05 .sb')].forEach(b => { const svg = b.querySelector('svg'), t = b.querySelector('span'); if (!svg || !t) return;
     b.style.setProperty('--pc', '0px'); const r = svg.getBoundingClientRect(); b.style.setProperty('--pc', (r.top + r.height / 2 - (baseline(t) - capH(t) / 2)) + 'px'); });
   const settle0 = settle; settle = () => { settle0(); centre(); };
   fit(); settle(); addEventListener('resize', () => { fit(); settle(); }); if (document.fonts) document.fonts.ready.then(() => { fit(); settle(); });
