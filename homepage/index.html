@@ -2139,31 +2139,24 @@
   html:is(.v05-b, .v05-c, .v05-d) .sec-05 .q-05, html:is(.v05-b, .v05-c) .sec-05 .fw-05.next, html:is(.v05-b, .v05-c, .v05-d) .sec-05 .x-05 small { display: none !important; }
   /* B: the chart and one figure per stage. Reused frameworks without the dashed links and dots */
   html:is(.v05-b, .v05-d) .sec-05 .fw-05.kept::before, html:is(.v05-b, .v05-d) .sec-05 .fw-05.kept::after { display: none; }
-  /* D = B + the "Next framework" game + customer stories on the frameworks: a framework with a story carries a quote mark; a click
-     unfolds the story above it (the customer, their words, one result, a link to the case study) */
-  html.v05-d .sec-05 .fw-05.st { cursor: pointer; transition: box-shadow .3s ease, transform .3s var(--ease); }
-  html.v05-d .sec-05 .fw-05.st:is(:hover, :focus-visible) { outline: none; box-shadow: 0 0 0 1px var(--ink), 0 10px 22px -14px rgba(22,22,22,.275); }
-  html.v05-d .sec-05 .fw-05.st[aria-expanded="true"] { box-shadow: 0 0 0 1px var(--ink); }
-  html.v05-d .sec-05 .fw-05.st .qm { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
-  html.v05-d .sec-05 .fw-05.st .qm svg { width: 14px; height: 14px; }
-  .sec-05 .pop-05 { position: absolute; z-index: 6; width: min(360px, 100%); padding: var(--sp-3); background: #fff; color: var(--ink);
-    box-shadow: 0 0 0 1px rgba(22,22,22,.14), 0 2px 4px rgba(22,22,22,.04), 0 32px 64px -28px rgba(22,22,22,.3);
-    clip-path: inset(100% 0 0 0); visibility: hidden; transition: clip-path .5s var(--ease), visibility 0s linear .5s; }
-  .sec-05 .pop-05.down { clip-path: inset(0 0 100% 0); }
-  .sec-05 .pop-05.open { clip-path: inset(0 0 0 0); visibility: visible; transition: clip-path .55s var(--ease), visibility 0s; }
-  .sec-05 .pop-05 > * { opacity: 0; transition: opacity .2s ease; }
-  .sec-05 .pop-05.open > * { opacity: 1; transition: opacity .4s ease .18s; }
-  .sec-05 .pop-05 .ph { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); margin: 0; }
-  .sec-05 .pop-05 .ph b { font-family: var(--sans); font-weight: 300; font-size: var(--fs-title-s); line-height: 1.3; letter-spacing: -.01em; }
-  .sec-05 .pop-05 .ph span, .sec-05 .pop-05 .pm span { font-family: var(--mono); font-size: var(--fs-label-s); line-height: 1.3; letter-spacing: .04em; text-transform: uppercase; color: color-mix(in srgb, var(--ink) 72%, transparent); }
-  .sec-05 .pop-05 blockquote { margin: var(--sp-2) 0 0; font-family: var(--sans); font-size: var(--fs-body-m); font-weight: 400; line-height: 1.55; color: var(--ink); text-wrap: pretty; }
-  .sec-05 .pop-05 .pm { display: flex; align-items: baseline; gap: var(--sp-1); margin: var(--sp-3) 0 0; padding-top: var(--sp-2); border-top: 1px solid rgba(22,22,22,.12); }
-  .sec-05 .pop-05 .pm b { font-family: var(--sans); font-weight: 300; font-size: var(--fs-title-m); line-height: 1; letter-spacing: -.03em; }
-  .sec-05 .pop-05 .pc { display: inline-flex; align-items: center; gap: 6px; margin-top: var(--sp-3); font-family: var(--mono); font-size: var(--fs-label-s); line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
-  .sec-05 .pop-05 .pc .chev { width: 12px; height: 12px; stroke: currentColor; transition: transform .3s var(--ease); }
-  .sec-05 .pop-05 .pc:is(:hover, :focus-visible) { color: var(--accent-05); }
-  .sec-05 .pop-05 .pc:is(:hover, :focus-visible) .chev { transform: translateX(3px); }
-  @media (prefers-reduced-motion: reduce) { .sec-05 .pop-05, .sec-05 .pop-05 > * { transition: none; } }
+  /* D = B + the "Next framework" game + the customer stories back above the bars, folded: the card shows who (and turns through
+     the stories as before); a click unfolds the quote, the result and the link to the case study */
+  html.v05-d .sec-05 .q-05[data-q] { display: block !important; align-self: stretch; width: auto; }
+  html.v05-d .sec-05 .q-05 .hd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 10px; row-gap: 2px; align-items: center; cursor: pointer; }
+  html.v05-d .sec-05 .q-05 .hd .ic { grid-row: 1 / span 2; }
+  html.v05-d .sec-05 .q-05 .hd h3 { grid-column: 2; grid-row: 1; }
+  html.v05-d .sec-05 .q-05 .hd .n { grid-column: 2; grid-row: 2; margin: 0; justify-self: start; }
+  html.v05-d .sec-05 .q-05 .hd .tg { grid-column: 3; grid-row: 1 / span 2; }
+  html.v05-d .sec-05 .q-05 .obj .t { white-space: normal; }
+  html.v05-d .sec-05 .q-05 .tg { all: unset; display: grid; place-items: center; width: 24px; height: 24px; margin-left: 4px; flex: none; cursor: pointer; color: var(--ink); }
+  html.v05-d .sec-05 .q-05 .tg svg { width: 14px; height: 14px; transition: transform .45s var(--ease); }
+  html.v05-d .sec-05 .q-05.open .tg svg { transform: rotate(45deg); }
+  html.v05-d .sec-05 .q-05 .tg:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
+  html.v05-d .sec-05 .q-05:not(.open) .qb > :not(.hd), html.v05-d .sec-05 .q-05:not(.open) .ft { display: none; }
+  html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: s05unfold .45s ease .12s both; }
+  @keyframes s05unfold { from { opacity: 0; filter: blur(4px); } to { opacity: 1; filter: none; } }
+  html.v05-d .sec-05 .q-05.open .bar.run { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) { html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: none; } }
   /* C: the bars alone; one story at a time under the axis, for the stage that is open (it follows the list on the left, the bars and the axis) */
   html.v05-c .sec-05 .ann-05, html.v05-c .sec-05 .fw-05.kept::before, html.v05-c .sec-05 .fw-05.kept::after { display: none !important; }
   html.v05-c .sec-05 .col-05, html.v05-c .sec-05 .x-05 li { cursor: pointer; transition: opacity .45s ease; }
@@ -4981,44 +4974,20 @@
 })();
 </script>
 <script>
-/* 05 test D (Michał, 25.11): customer stories on the frameworks. A framework with a story carries a quote mark; a click (Enter, Space)
-   unfolds the story above it; one at a time; Esc, a click outside or on the framework again closes it */
+/* 05 test D (Michał, 25.11): the story cards above the bars, folded to who they are; a click on the head (or the + button) unfolds
+   the quote, the result and the link, the card growing in height; again to fold it. Open, the card stops turning through stories */
 (() => {
   const sec = document.getElementById('sec-05'); if (!sec || !document.documentElement.classList.contains('v05-d')) return;
-  const chart = sec.querySelector('.chart-05'), cols = [...sec.querySelectorAll('.col-05')];
-  const CHEV = '<svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg>';
-  const QM = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 11.5c0-3.4 1.6-5.6 4.4-6.5l.5 1.4C7.3 7 6.5 8.2 6.4 9.8H8.6V15H4zm7.6 0c0-3.4 1.6-5.6 4.4-6.5l.5 1.4c-1.6.6-2.4 1.8-2.5 3.4h2.2V15h-4.6z" fill="currentColor"/></svg>';
-  // verbatim from trycomp.ai/case-studies (q: false = the case study's headline, not a quote); which framework each one hangs on is a proposal
-  const STORIES = [
-    { col: 0, fw: 'SOC 2', n: 'Persona AI', f: 'SOC 2', q: true, t: 'Comp AI got us audit-ready in days and cleared the path for our largest enterprise contracts.', v: '$400K+', o: 'ARR unlocked', h: '/case-studies/persona-ai' },
-    { col: 1, fw: 'ISO 27001', n: 'Narrative AI', f: 'ISO 27001', q: true, t: 'We went from non-compliant to a successful pass first time with Comp AI’s help.', v: '<2 weeks', o: 'to certified', h: '/case-studies/narrative-ai' },
-    { col: 1, fw: 'HIPAA', n: 'Anodes AI', f: 'SOC 2 · HIPAA', q: false, t: 'HIPAA and SOC 2 audit-ready in five weeks, to unlock pilots.', v: '103 h', o: 'saved', h: '/case-studies/anodes-ai' },
-    { col: 2, fw: 'GDPR', n: 'Zernio', f: 'SOC 2 · GDPR', q: false, t: 'Audit-ready in days, then SOC 2 and GDPR compliant in three months, from a standing start.', v: '~200 h', o: 'saved', h: '/case-studies/zernio' } ];
-  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-  const pop = document.createElement('div'); pop.className = 'pop-05'; pop.id = 'pop-05'; pop.setAttribute('role', 'dialog'); chart.append(pop);
-  let open = null;
-  const place = chip => { const c = chart.getBoundingClientRect(), r = chip.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
-    const left = Math.max(0, Math.min(c.width - w, r.left - c.left)); let top = r.top - c.top - h - 8, down = false;
-    if (top < 0) { top = r.bottom - c.top + 8; down = true; }
-    pop.style.left = left + 'px'; pop.style.top = top + 'px'; pop.classList.toggle('down', down); };
-  const close = () => { if (!open) return; open.setAttribute('aria-expanded', 'false'); open = null; pop.classList.remove('open'); };
-  const show = (chip, s) => { if (open === chip) { close(); return; } if (open) open.setAttribute('aria-expanded', 'false');
-    pop.setAttribute('aria-label', s.n + ' story');
-    pop.innerHTML = '<p class="ph"><b>' + esc(s.n) + '</b><span>' + esc(s.f) + '</span></p><blockquote>' + esc(s.q ? '“' + s.t + '”' : s.t) + '</blockquote>'
-      + '<p class="pm"><b>' + esc(s.v) + '</b><span>' + esc(s.o) + '</span></p><a class="pc" href="' + s.h + '">Read the story ' + CHEV + '</a>';
-    const wasOpen = !!open; open = chip; chip.setAttribute('aria-expanded', 'true');
-    if (wasOpen) { pop.classList.remove('open'); void pop.offsetWidth; }
-    place(chip); requestAnimationFrame(() => pop.classList.add('open')); };
-  STORIES.forEach(s => { const chip = cols[s.col] && cols[s.col].querySelector('.fw-05.new[data-fw="' + s.fw + '"]'); if (!chip) return;
-    chip.classList.add('st'); chip.tabIndex = 0; chip.setAttribute('role', 'button'); chip.setAttribute('aria-expanded', 'false'); chip.setAttribute('aria-controls', 'pop-05');
-    chip.setAttribute('aria-label', s.fw + ': ' + s.n + ' story');
-    const plus = chip.querySelector(':scope > svg'); const qm = document.createElement('span'); qm.className = 'qm'; qm.innerHTML = QM + 'Story'; if (plus) plus.replaceWith(qm); else chip.append(qm);
-    chip.addEventListener('click', e => { e.stopPropagation(); show(chip, s); });
-    chip.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(chip, s); } }); });
-  pop.addEventListener('click', e => e.stopPropagation());
-  document.addEventListener('click', close);
-  addEventListener('keydown', e => { if (e.key === 'Escape' && open) { const c = open; close(); c.focus(); } });
-  addEventListener('resize', () => { if (open) place(open); });
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PLUS = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg>';
+  sec.querySelectorAll('.q-05[data-q]').forEach((card, j) => {
+    const hd = card.querySelector('.hd'), tg = document.createElement('button'); tg.type = 'button'; tg.className = 'tg'; tg.innerHTML = PLUS;
+    const id = 'q05-' + j; card.querySelector('.qb').id = id; tg.setAttribute('aria-controls', id); tg.setAttribute('aria-expanded', 'false'); tg.setAttribute('aria-label', 'Show the story');
+    hd.append(tg);
+    const toggle = () => { const h0 = card.offsetHeight, on = card.classList.toggle('open'); tg.setAttribute('aria-expanded', on); tg.setAttribute('aria-label', on ? 'Hide the story' : 'Show the story');
+      if (reduced) return; const h1 = card.offsetHeight; card.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }], { duration: 450, easing: 'cubic-bezier(.2,.7,.1,1)' }); };
+    hd.addEventListener('click', toggle);
+  });
 })();
 </script>
 </body>
