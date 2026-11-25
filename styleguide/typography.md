@@ -39,6 +39,18 @@ Ratio 1.272 (√φ) on a 16 px base, rounded to whole pixels:
 
 Mono is used only in `eyebrow` and `label-s`. Nav links and buttons are in sans.
 
+## Text colour
+
+Two levels, set from the ground's full-strength text colour (`--fg`: white on dark, ink on the light sections):
+
+| Token | Value | Roles |
+|---|---|---|
+| `--text-1` | 100% of `--fg` | `display-xl`, `display-l`, `title-m`, `title-s`, `button`; menu item titles |
+| `--text-2` | 72% of `--fg` | `lead-l`, `lead-m`, `body-m`, `body-s` |
+
+Contrast: about 10:1 on black and 7:1 on the light grey ground, both above WCAG AA.
+Interactive states (inactive tabs and steps, hover) keep their own values. Eyebrows and labels keep their own colours.
+
 ## Mobile
 
 Not defined yet: below 1024 px the page still uses each section's own sizes. To be decided in a later round.

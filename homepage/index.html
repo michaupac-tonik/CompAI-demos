@@ -1792,6 +1792,20 @@
     .btn, .site-nav .links > a, .site-nav .links > button, html:not(#_) .site-nav .nav-actions .btn {
       font-family: var(--sans); font-size: var(--fs-button); line-height: 1; letter-spacing: 0; font-weight: 450; text-transform: none; }
   }
+  /* ==== Text colour: two levels (Michał, 25.11) =====================================================================
+     text-1 (100% of the ground's ink or white): headings and titles (display, title-m, title-s), buttons, menu titles.
+     text-2 (72%): subheadings and running text (lead-l, lead-m, body-m, body-s), so they sit a step behind the headings.
+     --fg is the full-strength text colour of the ground: white on dark, ink on the light sections 04 to 07.
+     Interactive states (inactive tabs and steps, hover) keep their own values; text on the announcement bar stays ink. */
+  :root { --fg: var(--white); --text-1: var(--fg); --text-2: color-mix(in srgb, var(--fg) 72%, transparent); }
+  .sec-04, .sec-05, .sec-06, .sec-07 { --fg: var(--ink); --text-1: var(--fg); --text-2: color-mix(in srgb, var(--fg) 72%, transparent); }
+  .hero-text .sub, .shift .lead, .sec-03 .head .lead, .sec-04 .lead-04, .sec-05 .lead-05, .sec-06 .lead-06, .sec-07 .lead-07, .sec-08-lead, .sec-09 .line-09,
+  .sec-03 .co li, .sec-05 .steps-05 li > span:not(.n), .sec-06 .cap p, .sec-07 .tx-07 blockquote p, .sec-08-note,
+  .mega-col li a small, .mega-feat > p, .mega-feat .mini p, .hero .chip .fw span, .hero .lt-lead span, .sec-03 .integ li,
+  .sec-05 .ann-05 span, .sec-05 .ann-05 small, .sec-05 .x-05 small, .sec-07 .logos-07 .lead span, .sec-08-a p,
+  .sec-09 .certs-09, .sec-09 .bar-09 p { color: var(--text-2); }
+  .sec-09 { --f-dim: var(--text-2); }      /* footer links and small print at text-2; they light up to white on hover */
+  .sec-05 .steps-05 strong { color: var(--text-1); }      /* the audience name leads its line */
 </style>
 </head>
 <body>
