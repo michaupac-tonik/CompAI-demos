@@ -1828,42 +1828,46 @@
 
     /* section head: eyebrow -> h2 24, h2 -> lead 24 (stacked), lead -> buttons 40 */
     .sec-04 .lead-04, .sec-05 .lead-05, .sec-06 .lead-06 { margin-top: var(--sp-3); }
-    .sec-06 .acts-06, .sec-07 .acts-07, .sec-08-head .sec-08-acts { margin-top: var(--sp-4); }
     /* head -> content 64; inside a text column, blocks 40 apart */
     .sec-03 .tabs { margin-top: var(--sp-5); }
-    .sec-06 .stage-06 { margin-top: var(--sp-5); padding-top: 0; }
-    .sec-07 .bento-07 { margin-top: var(--sp-5); }
-    .sec-08-head { padding-bottom: var(--sp-5); }
     .sec-04 .tags-04 { margin-top: var(--sp-4); }
-    .sec-05 .steps-05 { margin: var(--sp-4) 0; }
 
     /* one eyebrow box everywhere (04 and 05 were flex boxes left from their markers) */
     .sec-04 .eyebrow-04, .sec-05 .eyebrow-05 { display: block; }
 
-    /* split head, where the content below runs the full width (03, 06, 07, 08): the eyebrow on its own row, then
-       the h2 on columns 1-6 and the lead with the buttons on columns 8-12, both starting on the same line */
-    .sec-03 .head, .sec-06 .head-06, .sec-07 .head-07, .sec-08-head {
+    /* split head, where the content below runs the full width (02, 03, 05, 06, 07, 08): the eyebrow on its own row; the h2
+       on columns 1-6 and the lead on columns 8-12, the lead's last line on the h2's last baseline; the buttons under the lead (40);
+       then a hairline 64 under the head, and the content 40 under the line (03: its tabs are the line) */
+    .sec-03 .head, .sec-06 .head-06, .sec-07 .head-07, .sec-08-head, .shift-grid, .sec-05 .grid-05 {
       display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3); row-gap: 0; align-items: start; text-align: left; }
-    .sec-03 .head > :first-child, .sec-06 .head-06 > :first-child, .sec-07 .head-07 > :first-child, .sec-08-head > :first-child { display: contents; }
-    .sec-03 .head .eyebrow-03, .sec-06 .head-06 .eyebrow-06, .sec-07 .head-07 .eyebrow-07, .sec-08-head .sec-08-eyebrow { grid-column: 1 / -1; grid-row: 1; }
-    .sec-03 .head h2, .sec-06 .head-06 h2, .sec-07 .head-07 h2, .sec-08-head h2 { grid-column: 1 / span 6; grid-row: 2; }
-    .sec-03 .head > :last-child, .sec-06 .head-06 > :last-child, .sec-07 .head-07 > :last-child, .sec-08-head > :last-child { grid-column: 8 / span 5; grid-row: 2; align-self: start; }
-    .sec-03 .head .lead, .sec-06 .lead-06, .sec-07 .lead-07, .sec-08-head .sec-08-lead { margin: 0; max-width: none; text-wrap: pretty; }
-    .sec-06 .acts-06 { justify-content: flex-start; }
+    .sec-03 .head > div, .sec-06 .head-06 > div, .sec-07 .head-07 > div, .sec-08-head > div, .shift-grid > :first-child { display: contents; }
+    /* 05: the text column stays a real box (its script measures it), as a subgrid over the whole section grid */
+    .sec-05 .txt-05 { grid-column: 1 / -1; grid-row: 1 / 6; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+    .sec-03 .head .eyebrow-03, .sec-06 .head-06 .eyebrow-06, .sec-07 .head-07 .eyebrow-07, .sec-08-head .sec-08-eyebrow, .shift-grid .eyebrow, .sec-05 .eyebrow-05 { grid-column: 1 / -1; grid-row: 1; }
+    .sec-03 .head h2, .sec-06 .head-06 h2, .sec-07 .head-07 h2, .sec-08-head h2, .shift-grid h2, .sec-05 .grid-05 h2 { grid-column: 1 / span 6; grid-row: 2; align-self: last baseline; }
+    .sec-03 .head .lead, .sec-06 .lead-06, .sec-07 .lead-07, .sec-08-head .sec-08-lead, .shift-grid .lead, .sec-05 .lead-05 {
+      grid-column: 8 / span 5; grid-row: 2; align-self: last baseline; margin: 0; max-width: none; text-wrap: pretty; }
+    .sec-06 .acts-06, .sec-07 .acts-07, .sec-08-head .sec-08-acts, .sec-05 .acts-05 { grid-column: 8 / span 5; grid-row: 3; margin-top: var(--sp-4); justify-content: flex-start; }
+    .sec-06 .head-06::after, .sec-07 .head-07::after, .shift-grid::after, .sec-05 .grid-05::after {
+      content: ""; grid-column: 1 / -1; grid-row: 4; height: 1px; margin-top: var(--sp-5); background: rgba(252,252,252,.16); }
+    .sec-05 .grid-05::after, .sec-06 .head-06::after, .sec-07 .head-07::after { background: rgba(22,22,22,.12); }      /* the hairline on the light sections */
+    .sec-06 .stage-06 { margin-top: var(--sp-4); padding-top: 0; }
+    .sec-07 .bento-07 { margin-top: var(--sp-4); }
+    .sec-08-head { padding-bottom: var(--sp-5); }
+    .sec-08-mod { padding-top: var(--sp-4); }      /* 08: each module opens with its own line (border-top), the content 40 under it */
 
     /* stacked head, where the section is two columns (04, 05): text on the left, the visual on the right */
     .sec-04 .txt-04 { order: 1; padding: 0 var(--sp-5) 0 0; }
     .sec-04 .art-04 { order: 2; }
 
-    /* 02 the shift: the same split head (eyebrow; h2 on 1-6, lead on 8-12), the steps and the board below it, 64 under the head */
+    /* 02 the shift: split head; the steps and the board under the line */
     .shift .stick { padding: var(--sp-6) 0; align-items: start; }
-    .shift-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3); row-gap: 0; align-items: start; }
-    .shift-grid > :first-child { display: contents; }
-    .shift-grid .eyebrow { grid-column: 1 / -1; grid-row: 1; }
-    .shift-grid h2 { grid-column: 1 / span 6; grid-row: 2; }
-    .shift-grid .lead { grid-column: 8 / span 5; grid-row: 2; margin: 0; max-width: none; }
-    .shift-grid .steps { grid-column: 1 / span 5; grid-row: 3; margin-top: var(--sp-5); }
-    .shift-grid .board { grid-column: 7 / span 6; grid-row: 3; margin-top: var(--sp-5); }
+    .shift-grid .steps { grid-column: 1 / span 5; grid-row: 5; margin-top: var(--sp-4); }
+    .shift-grid .board { grid-column: 7 / span 6; grid-row: 5; margin-top: var(--sp-4); }
+    /* 05 who it's for: split head; the steps and the chart under the line */
+    .sec-05 .grid-05 { gap: 0 var(--sp-3); grid-template-rows: repeat(5, auto); }
+    .sec-05 .steps-05 { grid-column: 1 / span 5; grid-row: 5; margin: var(--sp-4) 0 0; }
+    .sec-05 .chart-05 { grid-column: 7 / span 6; grid-row: 5; margin-top: var(--sp-4) !important; }      /* top-aligned with the steps under the line; overrides the script's axis alignment (--chart-top) */
 
     /* inside a section: more air. Visual -> the text under or beside it 40; card label -> title 16; title -> text 16;
        text -> its link 24; card text 24 from the card's edge; blocks of content 40 apart; cards 24 apart */
@@ -1878,12 +1882,19 @@
     .sec-07 .nums-07 { grid-template-columns: repeat(3, auto); justify-content: space-between; gap: var(--sp-3); padding-top: var(--sp-2); }      /* each figure as wide as it needs */
     .sec-07 .bento-07 { gap: var(--sp-3); }
     .sec-07 .logos-07 { margin-top: var(--sp-4); }
-    .sec-03 .sentbar { margin-top: var(--sp-4); }
-    .sec-03 .stage { margin-top: var(--sp-4); }
-    .sec-03 .foot { margin-top: var(--sp-5); }
+    /* 03: more air between its parts: tabs 24 apart (line -> label 24, number -> title 16), tabs -> sentence 64,
+       sentence -> product UI 64, UI -> its side column 64, the side column's items 40 apart, UI -> the integrations strip 104 */
+    .sec-03 .tabs { gap: var(--sp-3); }
+    .sec-03 .tb { padding-top: var(--sp-3); }
+    .sec-03 .tb .n { margin-top: var(--sp-2); }
+    .sec-03 .sentbar { margin-top: var(--sp-5); }
+    .sec-03 .stage { margin-top: var(--sp-5); }
+    .sec-03 .shotd { column-gap: var(--sp-5); }
+    .sec-03 .side { gap: var(--sp-4); }
+    .sec-03 .co li { padding: var(--sp-3) 0; }
+    .sec-03 .foot { margin-top: var(--sp-6); }
     .sec-04 .chat-04 { margin-top: var(--sp-4); }
     .sec-05 .chart-05 .bars-05 { margin-top: var(--sp-4); }
-    .sec-08-mod { padding-top: var(--sp-5); }
     .sec-08-mod-h .sec-08-eyebrow { margin-bottom: var(--sp-3); }
     .sec-08-mod-h h3 { margin-bottom: var(--sp-3); }
 
