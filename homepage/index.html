@@ -2046,7 +2046,7 @@
   }
   /* 05: the buttons under the list of customer types (Michał, 25.11) */
   @media (min-width: 1024px) {
-    .sec-05 .acts-05 { grid-column: 1 / span 5; grid-row: 6; align-self: start; justify-content: flex-start; margin-top: var(--sp-4); }
+    .sec-05 .acts-05 { grid-column: 1 / span 5; grid-row: 6; align-self: end; justify-content: flex-start; margin-top: var(--sp-3); }      /* on the bottom of the chart (its labels' line), not glued to the list */
     .sec-05 .txt-05 { grid-row: 1 / 7; }
     .sec-05 .chart-05 { grid-row: 5 / span 2; }      /* the chart spans the steps' row and the buttons' row, so the buttons sit right under the list */
   }
@@ -2056,6 +2056,14 @@
   .sec-07 .lg-07.lg-img img { display: block; height: 22px; width: auto; filter: brightness(0) invert(.09); }
   .sec-07 .nm-07.nm-icon { gap: 10px; }
   .sec-07 .nm-07.nm-icon img { width: 28px; height: 28px; flex: none; }
+  /* 07, the logo strip (Michał, 25.11): "1,000+" and its caption must fit at every width; the cells grow with their content
+     (at least 80 high, 16 above and below) instead of a fixed height, and the caption breaks in balanced lines */
+  @media (min-width: 1024px) {
+    .sec-07 .logos-07 li { height: auto; min-height: 80px; padding-block: var(--sp-2); }
+    .sec-07 .logos-07 .lead span { text-wrap: balance; }
+  }
+  /* 07: the featured card's figures sit close together, from the left, 64 apart (were spread over the card) (Michał, 25.11) */
+  .sec-07 .nums-07 { justify-content: start; column-gap: var(--sp-5); }
 </style>
 </head>
 <body>
