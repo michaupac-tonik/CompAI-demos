@@ -29,6 +29,8 @@
   @font-face { font-family: "Favorit"; src: url("assets/fonts/ABCFavoritPro-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
   @font-face { font-family: "Favorit"; src: url("assets/fonts/ABCFavoritPro-Book.woff2") format("woff2"); font-weight: 400; font-display: swap; }
   @font-face { font-family: "Favorit"; src: url("assets/fonts/ABCFavoritPro-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+  /* Regular, for the type test (?type=regular): registered at 450 so it does not replace Book (400) */
+  @font-face { font-family: "Favorit"; src: url("assets/fonts/ABCFavoritPro-Regular.woff2") format("woff2"); font-weight: 450; font-display: swap; }
   @font-face { font-family: "Favorit Mono"; src: url("assets/fonts/ABCFavoritMono-Light-Trial.woff2") format("woff2"); font-weight: 300; font-display: swap; }
   @font-face { font-family: "Favorit Mono"; src: url("assets/fonts/ABCFavoritMono-Book-Trial.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 
@@ -1716,6 +1718,25 @@
   @media (pointer: coarse) { .bar-x { width: 40px; height: 40px; right: -8px; } }
   /* section 08 (24.11): module titles sit still in their modules (no sticky), on every screen size */
   .sec-08 .sec-08-mod-h { position: static; }
+  /* mono for labels and functional text (Michał, 25.11): eyebrows stay as they are; short labels (status tags, table and
+     column heads, card categories, badges, legends, metric labels, step numbers, timestamps) and tertiary actions on cards
+     and panels go back to Favorit Mono. Nav links and the primary and secondary buttons stay in sans (client, 24.11). */
+  .chip .fw b, .steps .k, .board .row.head, .sec-03 .ui .chip, .sec-03 .tb .k, .sec-03 .sd .sdk, .sec-03 .integ .l,
+  .sec-03 .ui .st em, .sec-03 .ui .act em, .sec-04 .tags-04 .tg, .sec-04 .msg .who i, .sec-04 .fc.d, .sec-04 .chat-rail p,
+  .sec-04 .chat-h .live, .sec-05 .top-05 b, .sec-05 .legend-05, .sec-05 button.fw-05.next em, .sec-05 .q-05 .obj .t,
+  .sec-05 .steps-05 .n, .sec-06 .try, .sec-06 .cap .k, .sec-06 .win-h .live, .sec-06 .rt .tag, .sec-07 .k-07,
+  .sec-07 .nums-07 dt, .sec-08-tb .sec-08-k, .sec-08-mono, .site-nav .announce .tag, .mega-col h3, .mega-feat h3,
+  .mega-col .new, .sec-09 .col-09 summary { font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+  .sec-04 .fc .who time, .sec-04 .msg .who time, .sec-05 .q-05 .n { font-family: var(--mono); letter-spacing: .02em; }
+  /* tertiary actions: text links with an arrow on cards and panels, and the small buttons inside the product windows */
+  .mega-col .all, .sec-05 .q-05 .go, .sec-06 .cap .go, .sec-07 .go-07, .sec-07 .logos-07 .all a,
+  .sec-03 .fx .bt button, .sec-06 .ask, .sec-06 .win button.rerun, .sec-06 .win button.ask { font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+
+  /* type test (?type=regular): text at 16px and below in Regular instead of Light; set by the script at the end */
+  .type-test { position: fixed; left: 16px; bottom: 16px; z-index: 9999; display: flex; gap: 2px; padding: 3px; border-radius: 999px;
+    background: rgba(22,22,22,.92); box-shadow: 0 0 0 1px rgba(252,252,252,.14), 0 10px 30px rgba(0,0,0,.35); font: 400 12px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .type-test a { padding: 8px 12px; border-radius: 999px; color: rgba(252,252,252,.7); text-decoration: none; }
+  .type-test a[aria-current="true"] { background: var(--white); color: var(--ink); }
 </style>
 </head>
 <body>
@@ -4345,6 +4366,37 @@
   let rt = 0; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { collect(); update(); }, 150); });
   addEventListener('load', () => { collect(); update(); });
   collect(); update();
+})();
+</script>
+<script>
+/* type test (Michał, 25.11): with ?type=regular, sans text at 16px and below that is set in Light (300) is shown in
+   Regular (450, the Regular cut), and mono Light in Book (400). Not part of the design hand-off: once a version is
+   chosen, the weights go into the CSS. Without the parameter the page is unchanged. */
+(() => {
+  const q = new URLSearchParams(location.search).get('type'); if (!q) return;
+  const on = q === 'regular';
+  const bar = document.createElement('nav'); bar.className = 'type-test'; bar.setAttribute('aria-label', 'Type test');
+  const link = (v, t) => { const u = new URL(location.href); u.searchParams.set('type', v); return `<a href="${u.pathname + u.search + u.hash}"${(v === 'regular') === on ? ' aria-current="true"' : ''}>${t}</a>`; };
+  bar.innerHTML = link('light', 'Light') + link('regular', 'Regular ≤16px');
+  document.body.append(bar);
+  if (!on) return;
+  const marked = new Set();
+  const apply = () => {
+    for (const el of marked) el.style.removeProperty('font-weight'); marked.clear();
+    for (const el of document.body.querySelectorAll('*')) {
+      if (el.closest('svg, script, style, .type-test')) continue;
+      if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) continue;      // only elements with their own text
+      const cs = getComputedStyle(el);
+      if (parseFloat(cs.fontSize) > 16 || cs.fontWeight !== '300') continue;
+      const mono = /Favorit Mono/.test(cs.fontFamily);
+      if (!mono && !/Favorit/.test(cs.fontFamily)) continue;
+      el.style.setProperty('font-weight', mono ? '400' : '450'); marked.add(el);
+    }
+  };
+  let t = 0; const later = () => { clearTimeout(t); t = setTimeout(apply, 120); };
+  document.fonts.ready.then(apply); addEventListener('resize', later);
+  new MutationObserver(ms => { if (ms.some(m => m.type === 'childList' && ![...m.addedNodes].every(n => n.nodeType === 1 && n.closest && n.closest('.type-test')))) later(); })
+    .observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 </body>
