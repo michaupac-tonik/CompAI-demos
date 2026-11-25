@@ -1824,6 +1824,18 @@
     .sec-03, .sec-04, .sec-05, .sec-06, .sec-07 { padding-top: var(--sp-6); padding-bottom: var(--sp-6); }
     .sec-08 { padding-top: var(--sp-6); }
     .sec-04 .txt-04 { padding-top: 0; }
+    .sec-05 { min-height: 0; align-items: start; }      /* was centred in a full-screen box, which pushed the eyebrow down */
+
+    /* section head: eyebrow -> h2 24, h2 -> lead 24 (stacked), lead -> buttons 40 */
+    .sec-04 .lead-04, .sec-05 .lead-05, .sec-06 .lead-06 { margin-top: var(--sp-3); }
+    .sec-06 .acts-06, .sec-07 .acts-07, .sec-08-head .sec-08-acts { margin-top: var(--sp-4); }
+    /* head -> content 64; inside a text column, blocks 40 apart */
+    .sec-03 .tabs { margin-top: var(--sp-5); }
+    .sec-06 .stage-06 { margin-top: var(--sp-5); padding-top: 0; }
+    .sec-07 .bento-07 { margin-top: var(--sp-5); }
+    .sec-08-head { padding-bottom: var(--sp-5); }
+    .sec-04 .tags-04 { margin-top: var(--sp-4); }
+    .sec-05 .steps-05 { margin: var(--sp-4) 0; }
   }
 </style>
 </head>
