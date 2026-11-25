@@ -2069,8 +2069,11 @@
   .quote-03 { position: relative; z-index: 1; padding: var(--sp-7) 0 var(--sp-6); }
   .quote-03 .q-big { margin: 0; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px); line-height: 1; letter-spacing: -.04em; color: var(--text-1); text-wrap: balance; }
   .quote-03 .q-sub { margin: var(--sp-4) 0 0; max-width: 36ch; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-l); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: pretty; }
-  .quote-03 .q-big .q-g { color: rgba(252,252,252,.5); }
-  .quote-03 .q-big > span { display: inline-block; }
+  /* two lines, as the Figma reference (322:895): the second opens with a long rule at the middle of the lowercase and ends flush with the first */
+  .quote-03 .q-big { display: grid; width: fit-content; }
+  .quote-03 .q-big .q-l { display: block; white-space: nowrap; }
+  .quote-03 .q-big .q-r { display: flex; align-items: baseline; gap: .32em; }
+  .quote-03 .q-big .q-rule { flex: 1 1 auto; min-width: 1.5em; height: max(1.5px, .028em); background: currentColor; transform: translateY(-.26em); }
   /* entrance as the hero's: each part fades in from a blur in place, one beat (.12s) after the other */
   .js .quote-03 .rv { opacity: 0; filter: blur(7px); transform: none; transition: opacity .7s ease calc(.15s + var(--d) * .12s), filter .8s ease calc(.15s + var(--d) * .12s); }
   .js .quote-03 .rv.in { opacity: 1; filter: none; transform: none; }
@@ -2104,8 +2107,13 @@
   /* C refined (Michał, 25.11): the visual stays and only its print morphs; the panels no longer fade as a whole, only the text on the right */
   html.vis-print .sec-03 .shotd, html.vis-print .sec-03 .shotd.on { opacity: 1; filter: none; transition: none; }
   html.vis-print .sec-03 .shotd:not(.on) .viz { visibility: hidden; }
-  html.vis-print .sec-03 .shotd .side { opacity: 0; transition: opacity .3s ease; }
-  html.vis-print .sec-03 .shotd.on .side { opacity: 1; transition: opacity .1s ease; }
+  html.vis-print .sec-03 .shotd .sd { opacity: 0; transition: opacity .3s ease; }
+  html.vis-print .sec-03 .shotd.on .sd { opacity: 1; transition: opacity .1s ease; }
+  /* Connected to your stack stays put at the bottom: one strip (the first panel's), the others are hidden */
+  html.vis-print .sec-03 .shotd:not(:first-child) .integ { visibility: hidden; }
+  @media (min-width: 1101px) { .sec-03 .shotd .side { grid-row: 1 / span 2; align-self: stretch; display: flex; flex-direction: column; } .sec-03 .side .integ { margin-top: auto; } }
+  /* the first sentence comes in with the section's own entrance, no reveal of its own */
+  .sec-03 .sentbar.instant .w, .sec-03 .sentbar.instant .role .rl, .sec-03 .sentbar.instant .role::after { transition: none !important; }
   /* the explanation under the lead: body-m, the secondary tint, in after the lead's words */
   .sec-03 .side .sd p.ex { margin: var(--sp-3) 0 0; max-width: 42ch; font-family: var(--sans); font-size: var(--fs-body-m); font-weight: 400; line-height: 1.55; letter-spacing: 0; color: var(--text-2); text-wrap: pretty;
     opacity: 0; filter: blur(6px); transition: opacity .16s ease, filter .16s ease; }
@@ -2118,6 +2126,8 @@
      so the black of 03 runs straight into it */
   @media (min-width: 1024px) {
     .sec-04 .art-04 { margin-top: calc(-1 * var(--sp-7)); height: calc(100% + var(--sp-7)); }
+    /* test: the window runs out to the right edge of the screen, no margin */
+    .sec-04 .art-04 { margin-right: calc((min(var(--wrap-max), 100vw - 2 * var(--edge)) - 100vw) / 2); }
   }
 </style>
 </head>
@@ -2342,7 +2352,7 @@
 <!-- power quote (Michał, 25.11): the old head of 03, on its own between 02 and 03 -->
 <section class="quote-03" aria-labelledby="quote-03-title">
   <div class="wrap">
-    <h2 id="quote-03-title" class="q-big"><span class="q-g rv" style="--d:0">Comp AI</span> <span class="rv" style="--d:1">shows the work.</span></h2>
+    <h2 id="quote-03-title" class="q-big"><span class="q-l rv" style="--d:0">Comp AI shows</span> <span class="q-l q-r rv" style="--d:1"><i class="q-rule" aria-hidden="true"></i>the work.</span></h2>
     <p class="q-sub rv" style="--d:2">AI agents learn how your company works and use that context to write policies, gather evidence, review vendors and assess risk.</p>
   </div>
 </section>
@@ -3534,11 +3544,12 @@
   const buildAll = d => { setRoleText(roles[0], d.r1); setRoleText(roles[1], d.r2);
     [[tt[0], d.t1], [tt[1], d.t2]].forEach(([el, t]) => { el._id = (el._id || 0) + 1; build(el, el._id, t); }); };
   const showSentence = i => { if (i === sIdx) return; const first = sIdx < 0; sIdx = i; const d = SENT[i], my = ++tok;
-    if (first || reduced) { buildAll(d); if (reduced) tt.forEach(t => t.classList.add('go')); return; }
+    bar.classList.remove('instant');
+    if (first || reduced) { if (first) bar.classList.add('instant'); buildAll(d); tt.forEach(t => t.classList.add('go')); return; }
     const out = Math.max(...tt.map(t => +t.style.getPropertyValue('--n') || 1)) * 34 + 620;      // the words leave as they came, last word first
     tt.forEach(t => { t.classList.remove('go'); t.classList.add('leave'); }); setTimeout(() => { if (my === tok) roles.forEach(r => r.classList.add('retract', 'gone')); }, Math.max(0, out - 360));      // the roles go last, as they came first
     setTimeout(() => { if (my !== tok) return; buildAll(d); roles.forEach(r => r.classList.remove('retract')); void roles[0].offsetWidth; roles.forEach(r => r.classList.remove('gone')); }, out); };
-  if (bar.classList.contains('in') || reduced) showSentence(0); else new MutationObserver((m, ob) => { if (bar.classList.contains('in')) { ob.disconnect(); showSentence(0); } }).observe(bar, { attributes: true, attributeFilter: ['class'] });
+  showSentence(0);      // the first sentence is set at once and comes in with the bar's own entrance
   new MutationObserver(() => { const k = tabs.findIndex(t => t.classList.contains('on')); if (k >= 0 && sIdx >= 0) showSentence(k); })
     .observe(sec.querySelector('.tabs'), { attributes: true, attributeFilter: ['class'], subtree: true });
   // handoff: section 2 fades out as this section rises into view (opacity only: cheap while scrolling)
