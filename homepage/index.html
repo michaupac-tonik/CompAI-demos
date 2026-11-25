@@ -1742,6 +1742,56 @@
     .shift .lead, .sec-03 .head .lead, .sec-03 .tb .n, .sec-03 .sd p .w, .sec-04 .lead-04, .sec-05 .lead-05, #sec-05 .ann-05 b i,
     .sec-06 .lead-06, .sec-07 .lead-07, .sec-08-lead, .sec-08-tb b { font-weight: 450; }
   }
+  /* ==== Type system v0.2 (Michał, 25.11) ==========================================================================
+     One rule per role; every text style on the page (outside the product UI mock-ups) is one of these roles.
+     Scale 1.272 x 16 px: 13 . 16 . 20 . 26 . 33 . 53 . 68, plus one half-step, 14 (body-s, eyebrow).
+     Weight: 300 (Light) above 16 px, 450 (Regular) at 16 px and below; mono at those sizes resolves to Book.
+     Desktop only for now (from 1024 px); the mobile sizes are still the sections' own. Source: styleguide/typography.md. */
+  :root {
+    --fs-display-xl: 68px; --fs-display-l: 53px; --fs-title-m: 33px; --fs-lead-l: 26px; --fs-lead-m: 20px; --fs-title-s: 20px;
+    --fs-body-m: 16px; --fs-body-s: 14px; --fs-eyebrow: 14px; --fs-label-s: 13px; --fs-button: 13px;
+  }
+  @media (min-width: 1024px) {
+    /* display-xl: the page headline */
+    #hero-title, #hero-title .line { font-family: var(--sans); font-size: var(--fs-display-xl); line-height: 1; letter-spacing: -.04em; font-weight: 300; text-transform: none; }
+    /* display-l: section headlines */
+    .shift h2, .sec-03 h2, .sec-04 h2, .sec-05 h2, .sec-06 h2, .sec-07 h2, .sec-08 h2, .sec-08 .sec-08-close-t {
+      font-family: var(--sans); font-size: var(--fs-display-l); line-height: 1; letter-spacing: -.04em; font-weight: 300; text-transform: none; }
+    /* title-m: module and featured-card titles, key figures */
+    .sec-06 .cap h3, .sec-07 .st-07.feat h3, .sec-08-mod-h h3, .hero .lt-lead b, .sec-05 .steps-05 li > b, .sec-05 .ann-05 b,
+    .sec-07 .nums-07 dd, .sec-07 .logos-07 .lead b {
+      font-family: var(--sans); font-size: var(--fs-title-m); line-height: 1.05; letter-spacing: -.04em; font-weight: 300; text-transform: none; }
+    /* lead-l: the hero subline */
+    .hero-text .sub { font-family: var(--sans); font-size: var(--fs-lead-l); line-height: 1.4; letter-spacing: -.01em; font-weight: 300; text-transform: none; }
+    /* lead-m: section leads */
+    .shift .lead, .sec-03 .head .lead, .sec-04 .lead-04, .sec-05 .lead-05, .sec-06 .lead-06, .sec-07 .lead-07, .sec-08-lead, .sec-09 .line-09 {
+      font-family: var(--sans); font-size: var(--fs-lead-m); line-height: 1.4; letter-spacing: -.01em; font-weight: 300; text-transform: none; }
+    /* title-s: tab titles, card titles, list titles, questions */
+    .sec-03 .tb .n, .sec-03 .sd p .w, .sec-05 .x-05 li > span, .sec-05 .ann-05 b i, .sec-07 .st-07.sm h3, .sec-07 .nm-07,
+    .sec-08-tb b, .sec-08-q summary span {
+      font-family: var(--sans); font-size: var(--fs-title-s); line-height: 1.3; letter-spacing: -.01em; font-weight: 300; font-style: normal; text-transform: none; }
+    /* body-m: running text */
+    .shift .steps .d, .sec-03 .co li > span, .sec-05 .steps-05 li > span:not(.n), .sec-06 .cap p, .sec-07 .tx-07 blockquote p, .sec-08-note,
+    .sec-09 .certs-09, .sec-09 .col-09 a, .mega-col li a b, .mega-feat > p b {
+      font-family: var(--sans); font-size: var(--fs-body-m); line-height: 1.55; letter-spacing: 0; font-weight: 450; text-transform: none; }
+    /* body-s: secondary text (descriptions, notes, answers, captions, small print) */
+    .site-nav .announce .t, .site-nav .announce .more, .mega-col li a small, .mega-feat > p, .mega-feat .mini p, .mega-feat .mini p b,
+    .hero .chip .fw span, .hero .lt-cell span, .hero .lt-cell .lt-arrow, .sec-03 .integ li, .sec-05 .ann-05 span, .sec-05 .ann-05 small,
+    .sec-05 .x-05 small, .sec-07 .logos-07 .lead span, .sec-08-tb > span:last-child, .sec-08-a p, .sec-09 .bar-09 p, .sec-09 .bar-09 a {
+      font-family: var(--sans); font-size: var(--fs-body-s); line-height: 1.45; letter-spacing: 0; font-weight: 450; text-transform: none; }
+    /* eyebrow: one per section head */
+    .eyebrow, h1 .kicker, .sec-03 .eyebrow-03, .sec-04 .eyebrow-04, .sec-05 .eyebrow-05, .sec-06 .eyebrow-06, .sec-07 .eyebrow-07, .sec-08-eyebrow {
+      font-family: var(--mono); font-size: var(--fs-eyebrow); line-height: 1.3; letter-spacing: .05em; font-weight: 400; text-transform: uppercase; }
+    /* label-s: short labels (badges, categories, column heads, step numbers, legends, metric labels) and tertiary actions */
+    .site-nav .announce .tag, .mega-col h3, .mega-feat h3, .mega-col .new, .mega-col .all, .hero .chip .fw b, .shift .steps .k,
+    .sec-03 .tb .k, .sec-03 .sd .sdk, .sec-03 .integ .l, .sec-04 .tags-04 .tg, .sec-05 .steps-05 .n, .sec-05 .top-05 b,
+    .sec-05 .legend-05 li, .sec-05 .x-05 li > em, .sec-05 button.fw-05.next em, .sec-05 .q-05 .go, .sec-06 .cap .k, .sec-06 .cap .go,
+    .sec-07 .k-07, .sec-07 .nums-07 dt, .sec-07 .go-07, .sec-07 .logos-07 .all a, .sec-08-tb .sec-08-k, .sec-09 .col-09 summary {
+      font-family: var(--mono); font-size: var(--fs-label-s); line-height: 1.3; letter-spacing: .04em; font-weight: 450; font-style: normal; text-transform: uppercase; }
+    /* button: primary, secondary and quiet buttons, nav links */
+    .btn, .site-nav .links > a, .site-nav .links > button, html:not(#_) .site-nav .nav-actions .btn {
+      font-family: var(--sans); font-size: var(--fs-button); line-height: 1; letter-spacing: 0; font-weight: 450; text-transform: none; }
+  }
 </style>
 </head>
 <body>
