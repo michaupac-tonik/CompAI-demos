@@ -2133,9 +2133,96 @@
   .sec-03 .tb:not(.on):hover { color: rgba(252,252,252,.8); }
   .sec-03 .tb:not(.on):hover::before { background: rgba(252,252,252,.48); }
   @media (prefers-reduced-motion: reduce) { .sec-03.picked .tb.on::after { animation: none; } }
+  /* ==== 05 test (Michał, 25.11): the right side is rich but crowded; B and C take out what repeats or competes ============ */
+  html.only-05 .site-nav, html.only-05 main > :not(#sec-05), html.only-05 footer, html.only-05 .sheet, html.only-05 #sheet { display: none !important; }
+  /* B and C: no quote cards on the bars, no "Next framework" game, the axis keeps only the stage (the left column already says who) */
+  html:is(.v05-b, .v05-c, .v05-d) .sec-05 .q-05, html:is(.v05-b, .v05-c) .sec-05 .fw-05.next, html:is(.v05-b, .v05-c, .v05-d) .sec-05 .x-05 small { display: none !important; }
+  /* B: the chart and one figure per stage. Reused frameworks without the dashed links and dots */
+  html:is(.v05-b, .v05-d) .sec-05 .fw-05.kept::before, html:is(.v05-b, .v05-d) .sec-05 .fw-05.kept::after { display: none; }
+  /* D = B + the "Next framework" game + the customer stories back above the bars, folded: the card shows who (and turns through
+     the stories as before); a click unfolds the quote, the result and the link to the case study */
+  html.v05-d .sec-05 .q-05[data-q] { display: block !important; align-self: stretch; width: auto; }
+  html.v05-d .sec-05 .q-05 .hd { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 10px; row-gap: 2px; align-items: center; cursor: pointer; }
+  /* the quote mark: no box, larger, black; its top on the name's cap height, the head's two lines beside it */
+  .sec-05 .q-05 h3 { display: flex; align-items: center; gap: 8px; min-height: 20px; }
+  .sec-05 .q-05 h3 img.lg { display: block; height: 20px; width: auto; max-width: 100%; }
+  .sec-05 .q-05 h3 img.li { width: 20px; height: 20px; flex: none; }
+  /* with the logos the quote mark goes; the framework sits under the logo from the same left edge as the text below */
+  html.v05-d .sec-05 .q-05 .hd .ic { display: none !important; }
+  html.v05-d .sec-05 .q-05 .hd h3 { grid-column: 1 / span 2; grid-row: 1; }
+  html.v05-d .sec-05 .q-05 .hd .n { grid-column: 1; grid-row: 2; margin: 0; justify-self: start; }
+  html.v05-d .sec-05 .q-05 .hd .tg { grid-column: 2; grid-row: 2; justify-self: end; align-self: center; }
+  html.v05-d .sec-05 .q-05 .hd .n { align-self: center; }
+  html.v05-d .sec-05 .q-05 .hd { row-gap: 6px; }
+  /* Story and Close take the same width, so the button does not move when the label changes */
+  html.v05-d .sec-05 .q-05 .tg .tl { display: inline-block; min-width: 5ch; text-align: left; }
+  /* frameworks new at a stage: a quiet NEW label instead of the +, which read as a button (the + stays only on Next framework) */
+  html.v05-d .sec-05 .fw-05.new > svg { display: none; }
+  html.v05-d .sec-05 .fw-05.new::after { content: "New"; font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: color-mix(in srgb, var(--ink) 64%, transparent); }
+  html.v05-d .sec-05 .q-05 .obj .t { white-space: normal; }
+  html.v05-d .sec-05 .q-05 .tg { all: unset; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px 0 10px; flex: none; cursor: pointer;
+    background: var(--ink); color: var(--white); font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; transition: background-color .25s ease, color .25s ease; }
+  html.v05-d .sec-05 .q-05 .tg svg { width: 12px; height: 12px; transition: transform .45s var(--ease); }
+  html.v05-d .sec-05 .q-05 .hd:hover .tg { background: var(--warm-05); color: var(--ink); }
+  html.v05-d .sec-05 .q-05 { position: relative; z-index: 2; transition: box-shadow .3s ease; }
+  html.v05-d .sec-05 .q-05:not(.open):hover { box-shadow: 0 0 0 1px var(--ink), 0 24px 48px -24px rgba(22,22,22,.25); }
+  html.v05-d .sec-05 .q-05.open .tg svg { transform: rotate(45deg); }
+  html.v05-d .sec-05 .q-05 .tg:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
+  html.v05-d .sec-05 .q-05:not(.open) .qb > :not(.hd), html.v05-d .sec-05 .q-05:not(.open) .ft { display: none; }
+  html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: s05unfold .5s cubic-bezier(.2,.7,.1,1) .14s both; }
+  html.v05-d .sec-05 .q-05.closing .qb > :not(.hd), html.v05-d .sec-05 .q-05.closing .ft { animation: s05fold .22s ease-in both; }
+  @keyframes s05fold { from { opacity: 1; filter: none; } to { opacity: 0; filter: blur(4px); } }
+  /* the list on the left: rows with a story show a quote mark and "Story" at the end; pointing at one (or its story being open)
+     tints the row and brings the mark to full ink */
+  html.v05-d .sec-05 .steps-05 li.has-st > b { justify-self: start; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; }
+  /* on the left, beside each heading: a small button (the label, and the quote mark or the +), outlined at rest, filled when the
+     heading is pointed at or its story is open */
+  html.v05-d .sec-05 .steps-05 .sb { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px;
+    box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); font-family: var(--mono); font-size: 11px; font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase;
+    cursor: pointer; transition: background-color .3s ease, color .3s ease; }
+  html.v05-d .sec-05 .steps-05 .sb svg { width: 12px; height: 12px; flex: none; margin: 0; }      /* one sign everywhere: the + */
+  /* the label takes the button's type (the rows' own rule for their text, .steps-05 span, made it 16px and grey) */
+  html.v05-d .sec-05 .steps-05 .sb > span { grid-column: auto; font: inherit; letter-spacing: inherit; color: inherit; }
+  /* the + and × centred on the capitals of the label, not on its line box (set by the script, --pc) */
+  html.v05-d .sec-05 .q-05 .tg svg, html.v05-d .sec-05 .steps-05 .sb svg { translate: 0 calc(-1 * var(--pc, 0px)); }
+  html.v05-d .sec-05 .steps-05 li.has-st > b:hover .sb, html.v05-d .sec-05 .steps-05 li.has-st.on .sb { background: var(--ink); color: var(--white); }
+  /* the Next framework block: a clear hover (ink outline, white), a pressed state, and focus */
+  html.v05-d .sec-05 button.fw-05.next { transition: background-color .25s ease, color .25s ease, box-shadow .25s ease, transform .15s ease; }
+  html.v05-d .sec-05 button.fw-05.next:hover { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+  html.v05-d .sec-05 button.fw-05.next:active { transform: scale(.98); background: var(--warm-05); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+  html.v05-d .sec-05 button.fw-05.next:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
+  html.v05-d .sec-05 .steps-05 .sb:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
+  @keyframes s05unfold { from { opacity: 0; filter: blur(4px); } to { opacity: 1; filter: none; } }
+  html.v05-d .sec-05 .q-05.open .bar.run { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) { html.v05-d .sec-05 .q-05.open .qb > :not(.hd), html.v05-d .sec-05 .q-05.open .ft { animation: none; } }
+  /* C: the bars alone; one story at a time under the axis, for the stage that is open (it follows the list on the left, the bars and the axis) */
+  html.v05-c .sec-05 .ann-05, html.v05-c .sec-05 .fw-05.kept::before, html.v05-c .sec-05 .fw-05.kept::after { display: none !important; }
+  html.v05-c .sec-05 .col-05, html.v05-c .sec-05 .x-05 li { cursor: pointer; transition: opacity .45s ease; }
+  html.v05-c .sec-05 .col-05.dim { opacity: .3; }
+  html.v05-c .sec-05 .x-05 li.dim { opacity: .4; }
+  html.v05-c .sec-05 .steps-05 li { cursor: pointer; }
+  html.v05-c .sec-05 .steps-05 li .n { transition: color .3s ease; }
+  html.v05-c .sec-05 .steps-05 li:not(.on) .n { color: color-mix(in srgb, var(--ink) 40%, transparent); }
+  .sec-05 .story-05 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: var(--sp-4); padding-top: var(--sp-3); border-top: 1px solid rgba(22,22,22,.14); }
+  .sec-05 .story-05 > * { transition: opacity .3s ease, filter .35s ease, transform .45s var(--ease); }
+  .sec-05 .story-05.out > * { opacity: 0; filter: blur(4px); transform: translateY(6px); }
+  .sec-05 .story-05 .m { margin: 0; }
+  .sec-05 .story-05 .m b { display: block; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-l); line-height: 1; letter-spacing: -.04em; color: var(--ink); }
+  .sec-05 .story-05 .m b i { margin-left: 8px; font-size: .45em; font-style: normal; letter-spacing: -.01em; }
+  .sec-05 .story-05 .m span { display: block; margin-top: var(--sp-1); font-family: var(--sans); font-size: var(--fs-body-m); font-weight: 400; line-height: 1.4; color: color-mix(in srgb, var(--ink) 72%, transparent); }
+  .sec-05 .story-05 .tx { grid-column: 2 / span 2; }
+  .sec-05 .story-05 blockquote { margin: 0; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m); line-height: 1.4; letter-spacing: -.01em; color: var(--ink); text-wrap: pretty; }
+  .sec-05 .story-05 .who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; margin: var(--sp-2) 0 0; font-family: var(--mono); font-size: var(--fs-label-s); line-height: 1.3; letter-spacing: .04em; text-transform: uppercase; color: color-mix(in srgb, var(--ink) 72%, transparent); }
+  .sec-05 .story-05 .who > span { display: inline; width: auto; height: auto; margin: 0; font: inherit; }
+  .sec-05 .story-05 .who a { color: var(--ink); text-decoration: none; }
+  .sec-05 .story-05 .who a:hover { color: var(--accent-05); }
+  @media (prefers-reduced-motion: reduce) { .sec-05 .story-05 > *, html.v05-c .sec-05 .col-05 { transition: none; } }
 </style>
 </head>
 <body>
+<script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
+(() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
+  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
@@ -3960,17 +4047,22 @@
     start: [
       { n: 'Persona AI', f: 'SOC 2', q: true, t: 'Comp AI got us audit-ready in days and cleared the path for our largest enterprise contracts.', o: 'ARR unlocked', v: '$400K+', h: '/case-studies/persona-ai' },
       { n: 'Narrative AI', f: 'ISO 27001', q: true, t: 'We went from non-compliant to a successful pass first time with Comp AI’s help.', o: 'Certified in', v: '<2 weeks', h: '/case-studies/narrative-ai' },
-      { n: 'Zernio', f: 'SOC 2 · GDPR', q: false, t: 'Audit-ready in days, then SOC 2 and GDPR compliant in three months, from a standing start.', o: 'Hours saved', v: '~200 h', h: '/case-studies/zernio' } ],
+      { n: 'Zernio', lg: ['zernio.svg', 3867, 814], f: 'SOC 2 · GDPR', q: false, t: 'Audit-ready in days, then SOC 2 and GDPR compliant in three months, from a standing start.', o: 'Hours saved', v: '~200 h', h: '/case-studies/zernio' } ],
     mid: [
-      { n: 'RiskInMind', f: 'SOC 2', q: true, t: 'Comp AI made it easy to get our SOC 2 certification, which was a major milestone for us.', o: 'Customer won', v: '$100K', h: '/case-studies/riskinmind' },
-      { n: 'Anodes AI', f: 'SOC 2 · HIPAA', q: false, t: 'HIPAA and SOC 2 audit-ready in five weeks, to unlock pilots.', o: 'Hours saved', v: '103 h', h: '/case-studies/anodes-ai' },
-      { n: 'Cap', f: 'SOC 2', q: false, t: 'Audit-ready in one month, saving roughly a month of documentation collection.', o: 'To audit-ready', v: '1 month', h: '/case-studies/cap' } ] };
+      { n: 'RiskInMind', ic: 'riskinmind.png', f: 'SOC 2', q: true, t: 'Comp AI made it easy to get our SOC 2 certification, which was a major milestone for us.', o: 'Customer won', v: '$100K', h: '/case-studies/riskinmind' },
+      { n: 'Anodes AI', ic: 'anodes-ai.svg', f: 'SOC 2 · HIPAA', q: false, t: 'HIPAA and SOC 2 audit-ready in five weeks, to unlock pilots.', o: 'Hours saved', v: '103 h', h: '/case-studies/anodes-ai' },
+      { n: 'Cap', lg: ['cap.svg', 102, 40], f: 'SOC 2', q: false, t: 'Audit-ready in one month, saving roughly a month of documentation collection.', o: 'To audit-ready', v: '1 month', h: '/case-studies/cap' } ] };
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const cards = [...sec.querySelectorAll('.q-05[data-q]')].map(el => {
     const list = STORIES[el.dataset.q] || [], qb = el.querySelector('.qb'), pg = el.querySelector('.pg'), go = el.querySelector('.go'), bar = el.querySelector('.bar');
     const st = { el, list, cur: 0, timer: 0 };
     const paint = i => { const s = list[i];
-      qb.querySelector('h3').textContent = s.n; qb.querySelector('.n').textContent = s.f;
+      // the customer: its logo where it has one as a file (Zernio, Cap), its mark and name (RiskInMind, Anodes AI), else the name
+      // (Persona AI, now The Insights Company, and Narrative set their logos as type on their sites; there is no file to use)
+      const L = 'assets/img/customers/', h3 = qb.querySelector('h3'); h3.classList.toggle('has-lg', !!s.lg);
+      h3.innerHTML = s.lg ? '<img class="lg" src="' + L + s.lg[0] + '" width="' + s.lg[1] + '" height="' + s.lg[2] + '" alt="' + esc(s.n) + '">'
+        : (s.ic ? '<img class="li" src="' + L + s.ic + '" width="20" height="20" alt="">' : '') + esc(s.n);
+      qb.querySelector('.n').textContent = s.f;
       const bq = qb.querySelector('blockquote'); bq.textContent = s.q ? '“' + s.t + '”' : s.t; bq.classList.toggle('hl-05', !s.q);
       qb.querySelector('.obj').innerHTML = UP + '<span class="t">' + esc(s.o) + '</span><span class="num">' + esc(s.v) + '</span>'; go.href = s.h;
       [...pg.children].forEach((b, j) => b.setAttribute('aria-current', j === i)); };
@@ -3978,6 +4070,7 @@
       if (NOMO) { paint(i); return; }
       qb.classList.add('out'); setTimeout(() => { paint(i); qb.classList.remove('out'); }, 280); st.run(); };
     st.run = () => { if (NOMO) return; bar.classList.remove('run'); void bar.offsetWidth; bar.classList.add('run'); };
+    if (list.length) paint(0);
     list.forEach((s, j) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', s.n + ' story'); b.setAttribute('aria-current', j === 0);
       b.addEventListener('click', () => st.go(j, true)); pg.append(b); });
     bar.addEventListener('animationend', () => st.go((st.cur + 1) % list.length));
@@ -4895,6 +4988,111 @@
   hosts[0].append(cv); draw(performance.now());
   sec.addEventListener('tab03', e => go(e.detail));
   let tm; new ResizeObserver(() => { clearTimeout(tm); tm = setTimeout(() => draw(performance.now()), 100); }).observe(sec);
+})();
+</script>
+<script>
+/* 05 test C (Michał, 25.11): one story at a time, for the open stage; it follows the list on the left, the bars and the axis, and turns on its own until touched */
+(() => {
+  const sec = document.getElementById('sec-05'); if (!sec || !document.documentElement.classList.contains('v05-c')) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const chart = sec.querySelector('.chart-05'), cols = [...sec.querySelectorAll('.col-05')], xs = [...sec.querySelectorAll('.x-05 li')], steps = [...sec.querySelectorAll('.steps-05 li')];
+  const S = [
+    { b: '6', u: 'days', t: 'to audit-ready', q: '“Comp AI got us audit-ready in days and cleared the path for our largest enterprise contracts.”', n: 'Persona AI', f: 'SOC 2', h: '/case-studies/persona-ai' },
+    { b: '120', u: 'hours', t: 'of employee time saved', q: '“Comp AI made it easy to get our SOC 2 certification, which was a major milestone for us.”', n: 'RiskInMind', f: 'SOC 2', h: '/case-studies/riskinmind' },
+    { b: '5', u: 'weeks', t: 'to SOC 2 + HIPAA audit-ready', q: 'HIPAA and SOC 2 audit-ready in five weeks, to unlock pilots.', n: 'Anodes AI', f: 'SOC 2 · HIPAA', h: '/case-studies/anodes-ai' } ];
+  const el = document.createElement('div'); el.className = 'story-05'; el.setAttribute('aria-live', 'polite');
+  el.innerHTML = '<p class="m"><b></b><span></span></p><div class="tx"><blockquote></blockquote><p class="who"><span class="cust"></span><a href="">Read the story</a></p></div>';
+  chart.append(el);
+  let cur = -1, timer = 0, auto = true;
+  const paint = i => { const d = S[i]; el.querySelector('.m b').innerHTML = d.b + '<i>' + d.u + '</i>'; el.querySelector('.m span').textContent = d.t;
+    el.querySelector('blockquote').textContent = d.q; el.querySelector('.cust').textContent = d.n + ' · ' + d.f; el.querySelector('.who a').href = d.h; };
+  const set = i => { if (i === cur) return; const first = cur < 0; cur = i;
+    cols.forEach((c, k) => c.classList.toggle('dim', k !== i)); xs.forEach((c, k) => c.classList.toggle('dim', k !== i)); steps.forEach((c, k) => c.classList.toggle('on', k === i));
+    if (first || reduced) { paint(i); return; }
+    el.classList.add('out'); setTimeout(() => { if (cur === i) paint(i); el.classList.remove('out'); }, 300); };
+  const stop = () => { auto = false; clearInterval(timer); };
+  [cols, xs, steps].forEach(list => list.forEach((c, k) => { c.addEventListener('mouseenter', () => { stop(); set(k); }); c.addEventListener('click', () => { stop(); set(k); }); }));
+  set(0);
+  if (!reduced && 'IntersectionObserver' in window) new IntersectionObserver((es, io) => es.forEach(e => { if (e.isIntersecting) { io.disconnect();
+    timer = setInterval(() => { if (auto) set((cur + 1) % S.length); }, 6000); } }), { threshold: .4 }).observe(chart);
+})();
+</script>
+<script>
+/* 05 test D (Michał, 25.11): the story cards above the bars, folded to who they are. They unfold upwards, into space kept free over
+   the bars, so nothing else moves. Pointing at a customer type (the list on the left, the bars, the axis) unfolds its story after a short
+   pause (a quick pass over the list opens nothing); a click on a card or on a type pins it open, a click on an open one folds it.
+   Each fold or unfold starts from where the card is now (an interrupted one never stacks). Open, a card stops turning through stories */
+(() => {
+  const sec = document.getElementById('sec-05'); if (!sec || !document.documentElement.classList.contains('v05-d')) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PLUS = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.6"/></svg>';
+  const QM = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 11.5c0-3.4 1.6-5.6 4.4-6.5l.5 1.4C7.3 7 6.5 8.2 6.4 9.8H8.6V15H4zm7.6 0c0-3.4 1.6-5.6 4.4-6.5l.5 1.4c-1.6.6-2.4 1.8-2.5 3.4h2.2V15h-4.6z" fill="currentColor"/></svg>';
+  const OPEN = { duration: 560, easing: 'cubic-bezier(.2,.7,.1,1)' }, FOLD = { duration: 420, easing: 'cubic-bezier(.55,0,.25,1)' }, INTENT = 140;
+  const chart = sec.querySelector('.chart-05'), cols = [...sec.querySelectorAll('.col-05')], xs = [...sec.querySelectorAll('.x-05 li')], steps = [...sec.querySelectorAll('.steps-05 li')];
+  const cards = [...sec.querySelectorAll('.q-05[data-q]')].map((card, j) => {
+    const hd = card.querySelector('.hd'), tg = document.createElement('button'); tg.type = 'button'; tg.className = 'tg'; tg.innerHTML = '<span class="tl">Story</span>' + PLUS;
+    const id = 'q05-' + j; card.querySelector('.qb').id = id; tg.setAttribute('aria-controls', id); tg.setAttribute('aria-expanded', 'false'); tg.setAttribute('aria-label', 'Show the story');
+    hd.append(tg);
+    const c = { card, tg, col: cols.indexOf(card.closest('.col-05')), pinned: false, on: false, anim: null, h: 0 };
+    c.set = on => { if (on === c.on) return; c.on = on;
+      // where the card is right now (mid-way through a fold or an unfold, too), then the end state
+      const h0 = card.offsetHeight, m0 = parseFloat(getComputedStyle(card).marginTop) || 0;
+      if (c.anim) { c.anim.cancel(); c.anim = null; }
+      card.classList.remove('closing'); card.classList.toggle('open', on); card.style.marginTop = '';
+      const h1 = on ? card.offsetHeight : c.h, m1 = on ? -(h1 - c.h) : 0; card.style.marginTop = m1 + 'px';      // grows upwards by what it adds
+      tg.setAttribute('aria-expanded', on); tg.setAttribute('aria-label', on ? 'Hide the story' : 'Show the story'); tg.querySelector('.tl').textContent = on ? 'Close' : 'Story';
+      if (steps[c.col]) steps[c.col].classList.toggle('on', on);
+      if (reduced) return;
+      if (!on) card.classList.add('open', 'closing');      // the story stays in while it fades and the card folds
+      c.anim = card.animate([{ height: h0 + 'px', marginTop: m0 + 'px' }, { height: h1 + 'px', marginTop: m1 + 'px' }], on ? OPEN : FOLD);
+      c.anim.onfinish = () => { c.anim = null; if (!c.on) card.classList.remove('open', 'closing'); }; };
+    // a click on a folded story opens and pins it; on an open one it always folds it, and pointing at the same type
+    // does not open it again until the pointer has left
+    c.click = () => { if (c.on) { c.pinned = false; c.muted = true; c.set(false); return; }
+      cards.forEach(o => { if (o !== c && o.pinned) { o.pinned = false; o.set(false); } }); c.pinned = true; c.muted = false; c.set(true); };
+    hd.addEventListener('click', c.click);
+    // the stories differ a little in length: while open, the card keeps growing upwards only
+    if ('ResizeObserver' in window) new ResizeObserver(() => { if (c.on && !c.anim) card.style.marginTop = -(card.offsetHeight - c.h) + 'px'; }).observe(card);
+    return c; });
+  // the list on the left: the types with a story get a quote mark and "Story" at the end of the row; hover and the open story light the row
+  // only the headings (Startups, Mid-market, Enterprise) are interactive, not the whole row
+  const heads = steps.map(li => li.querySelector(':scope > b'));
+  steps.forEach((li, k) => { const c = cards.find(x => x.col === k); if (!c || !heads[k]) return;
+    li.classList.add('has-st'); const h = document.createElement('button'); h.type = 'button'; h.className = 'sb'; h.setAttribute('aria-label', heads[k].firstChild.textContent.trim() + ': show the customer story');
+    h.innerHTML = '<span>Story</span>' + PLUS; heads[k].append(h);
+    heads[k].addEventListener('click', c.click); });
+  // Enterprise has no story: pointing at it (the list, its bars, its name on the axis) plays the "Next framework" drop in its column
+  const nb = sec.querySelector('button.fw-05.next'), EK = 2;
+  if (nb && heads[EK]) { steps[EK].classList.add('has-st', 'has-nx'); const h = document.createElement('button'); h.type = 'button'; h.className = 'sb'; h.setAttribute('aria-label', 'Add a framework to the Enterprise column');
+    h.innerHTML = '<span>Add framework</span>' + PLUS; heads[EK].append(h); heads[EK].addEventListener('click', () => nb.click()); }
+  // pointing: a short pause before anything opens, so a quick pass over the types does nothing
+  let at = -1, wait = 0;
+  // the Next framework drop runs only from the heading on the left; on the right it takes a click on the block itself
+  const hover = (k, left) => { if (k !== at) { cards.forEach(c => { if (c.col !== k) c.muted = false; }); if (k === EK && nb && left) nb.click(); } at = k;
+    cards.forEach(c => c.set(c.pinned || (c.col === k && !c.muted))); };
+  const point = (k, left) => { clearTimeout(wait); wait = setTimeout(() => hover(k, left), INTENT); };
+  const leave = () => { clearTimeout(wait); wait = setTimeout(() => { at = -1; cards.forEach(c => { c.muted = false; c.set(c.pinned); }); }, INTENT); };
+  [cols, xs, heads].forEach(list => list.forEach((el, k) => el && el.addEventListener('mouseenter', () => point(k, list === heads))));
+  chart.addEventListener('mouseleave', leave); heads.forEach(el => el && el.addEventListener('mouseleave', leave));
+  // the space over the bars is kept tall enough for the tallest open story, so opening one never moves the section
+  const bars = sec.querySelector('.bars-05');
+  const fit = () => { cards.forEach(c => { if (c.anim) { c.anim.finish(); } }); bars.style.paddingTop = ''; let need = 0;
+    cards.forEach(c => { c.card.classList.remove('open', 'closing'); c.card.style.marginTop = ''; });      // measure everything folded
+    cards.forEach(c => { c.h = c.card.offsetHeight; const free = c.card.offsetTop - bars.offsetTop;
+      c.card.classList.add('open'); need = Math.max(need, c.card.offsetHeight - c.h - free + 8); c.card.classList.remove('open'); });
+    if (need > 0) bars.style.paddingTop = need + 'px';
+    cards.forEach(c => { if (c.on) { c.card.classList.add('open'); c.card.style.marginTop = -(c.card.offsetHeight - c.h) + 'px'; } }); };
+  // a text's baseline (used to centre the + and × on the capitals)
+  const baseline = el => { const r = document.createRange(), t = el.firstChild && el.firstChild.nodeType === 3 ? el.firstChild : el; const m = document.createElement('i');
+    m.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'; el.insertBefore(m, el.firstChild); const y = m.getBoundingClientRect().top; m.remove(); return y; };
+  let settle = () => {
+  };
+  // + and ×: their centre on the middle of the capitals (the label is all capitals: no descenders under the line's centre)
+  const capH = el => { const cs = getComputedStyle(el), g = document.createElement('canvas').getContext('2d'); g.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily; return g.measureText('H').actualBoundingBoxAscent; };
+  const centre = () => [...cards.map(c => c.tg), ...sec.querySelectorAll('.steps-05 .sb')].forEach(b => { const svg = b.querySelector('svg'), t = b.querySelector('span'); if (!svg || !t) return;
+    b.style.setProperty('--pc', '0px'); const r = svg.getBoundingClientRect(); b.style.setProperty('--pc', (r.top + r.height / 2 - (baseline(t) - capH(t) / 2)) + 'px'); });
+  const settle0 = settle; settle = () => { settle0(); centre(); };
+  fit(); settle(); addEventListener('resize', () => { fit(); settle(); }); if (document.fonts) document.fonts.ready.then(() => { fit(); settle(); });
 })();
 </script>
 </body>
