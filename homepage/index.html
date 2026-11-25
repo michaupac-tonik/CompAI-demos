@@ -1868,6 +1868,8 @@
     /* 05 who it's for: split head; the steps and the chart under the line */
     .sec-05 .grid-05 { gap: 0 var(--sp-3); grid-template-rows: repeat(5, auto); }
     .sec-05 .steps-05 { grid-column: 1 / span 5; grid-row: 5; margin: var(--sp-4) 0 0; }
+    .sec-05 .steps-05 { display: flex; flex-direction: column; align-self: start; }      /* not stretched to the chart (its labels hang below the axis) */
+    .sec-05 .steps-05 li { flex: 1 1 0; align-content: start; }      /* the rows share the height set by the script; text at the top, the rule at the bottom */
     .sec-05 .chart-05 { grid-column: 7 / span 6; grid-row: 5; margin-top: var(--sp-4) !important; }      /* top-aligned with the steps under the line; overrides the script's axis alignment (--chart-top) */
 
     /* inside a section: more air. Visual -> the text under or beside it 40; card label -> title 16; title -> text 16;
@@ -1903,6 +1905,34 @@
     h1 .line, h2, h3, .sec-08-close-t, .sub, .lead, .lead-04, .lead-05, .lead-06, .lead-07, .sec-08-lead, .sec-08-tb b, .sec-08-q summary span { text-wrap: balance; }
     p, li, dd, blockquote, .d { text-wrap: pretty; }
   }
+  /* ==== Buttons: hover without a gradient (Michał, 25.11) ===========================================================
+     The hover swaps the two styles: a filled button wipes to the ground's colour and becomes an outline; an outlined
+     one wipes to a fill. The same left-to-right wipe as before, in solid colours; the arrow moves 3px.
+     Only the quote calculator in 08 keeps its mint-to-cyan fill. */
+  /* dark ground: filled (white) -> black with a white outline; outlined -> white fill, ink label */
+  .btn-primary::before, .mega-feat .btn::before, html:not(#_) .site-nav .nav-actions .btn-outline::before { background: var(--black); }
+  .btn-primary:is(:hover, :focus-visible), .mega-feat .btn:is(:hover, :focus-visible), html:not(#_) .site-nav .nav-actions .btn-outline:is(:hover, :focus-visible) { color: var(--white); border-color: var(--white); }
+  .btn-secondary::before, .btn-quiet::before { background: var(--white); }
+  .btn-secondary:is(:hover, :focus-visible), .btn-quiet:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--white); }
+  /* light ground (05-07 and the nav over them): filled (ink) -> paper with an ink outline; outlined -> ink fill, white label */
+  .sec-05 .btn-primary::before, .sec-06 .btn-primary::before, .sec-07 .btn-primary::before, html.nav-light:not(.mega-on):not(#_) .site-nav .nav-actions .btn-outline::before { background: var(--paper, #f8f8f8); }
+  .sec-05 .btn-primary:is(:hover, :focus-visible), .sec-06 .btn-primary:is(:hover, :focus-visible), .sec-07 .btn-primary:is(:hover, :focus-visible),
+  html.nav-light:not(.mega-on):not(#_) .site-nav .nav-actions .btn-outline:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--ink); }
+  /* the calculator keeps its gradient fill and white wipe */
+  .sec-08-qsum .btn-primary { background: linear-gradient(90deg, var(--mint), var(--cyan)); border-color: var(--mint); color: var(--ink); }
+  .sec-08-qsum .btn-primary::before { background: var(--white); }
+  .sec-08-qsum .btn-primary:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--white); }
+  /* H1: the highlighted word is underlined with Favorit's own underline (post table: position -100, thickness 50 per
+     1000 units), not the browser's default line (Michał, 25.11) */
+  h1 u { text-decoration-line: underline; text-decoration-thickness: .05em; text-underline-position: from-font; text-underline-offset: auto; text-decoration-skip-ink: none; }
+
+  /* light sections: where there is a visual, it sits on black, as the dark sections (Michał, 25.11). 04: the window
+     with the print; 07: the prints on the customer cards */
+  .sec-04 { --win-04: var(--black); }
+  .sec-04 .art-04 { box-shadow: none; }
+  .sec-04 .fc { background: rgba(252, 252, 252, .94); }      /* the glass cards were see-through on white; on black they need their own light ground to stay readable */
+  .sec-07 .art-07 { background: var(--black); box-shadow: none; }
+  .sec-07 .art-07:not(.on) { background: radial-gradient(circle, rgba(252, 252, 252, .16) 1px, transparent 1.5px) 0 0 / 10px 10px, var(--black); }
 </style>
 </head>
 <body>
@@ -2057,7 +2087,7 @@
   <canvas id="print" aria-hidden="true"></canvas>
   <div class="wrap hero-inner" style="--lt-rows: 2">
     <div class="hero-text">
-      <h1 id="hero-title"><span class="kicker">AI-native compliance platform</span><span class="line">Watch the work</span> <span class="line"><u>disappear.</u></span></h1>
+      <h1 id="hero-title"><span class="kicker">AI-native compliance platform</span><span class="line">Watch the work</span> <span class="line"><u>disappear</u>.</span></h1>
       <p class="sub">Get compliance-ready faster while Comp AI does more of the work.</p>
       <div class="ctas">
         <a class="btn btn-primary" href="#demo">Book a demo <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
@@ -3902,10 +3932,12 @@
   window.__p05 = { cv, st: () => ({ ox, oy, k, px, dpr, H, L, DIM }) };      // trial 04-06: read by the head bridge from section 04
   // the chart's axis (the line under the bars) lines up with the last rule of the steps on the left; offsets ignore the entrance transforms
   const steps = sec.querySelector('.steps-05'), bars = sec.querySelector('.bars-05');
-  const align = () => { if (!steps || !bars) return; chart.style.setProperty('--chart-top', '0px');
+  // layout v0.1 (25.11): the steps and the chart start together under the line; the steps stretch so that their last rule
+  // meets the chart's axis (the rows share the height, each with its rule at the bottom)
+  const align = () => { if (!steps || !bars) return; chart.style.setProperty('--chart-top', '0px'); steps.style.minHeight = '';
     if (innerWidth < 1024) return;
-    const stepsBottom = steps.offsetTop + steps.offsetHeight, axis = chart.offsetTop + bars.offsetTop + bars.offsetHeight;
-    chart.style.setProperty('--chart-top', Math.max(0, stepsBottom - axis) + 'px'); };
+    const axis = chart.offsetTop + bars.offsetTop + bars.offsetHeight;
+    steps.style.minHeight = Math.max(0, axis - steps.offsetTop) + 'px'; };
   let t = 0; const later = () => { cancelAnimationFrame(t); t = requestAnimationFrame(() => { align(); draw(); }); };
   if (window.BLEND_FIELDS) later(); else addEventListener('load', later, { once: true });
   addEventListener('resize', later);
