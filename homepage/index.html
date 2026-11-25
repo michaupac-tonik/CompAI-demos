@@ -2050,6 +2050,12 @@
     .sec-05 .txt-05 { grid-row: 1 / 7; }
     .sec-05 .chart-05 { grid-row: 5 / span 2; }      /* the chart spans the steps' row and the buttons' row, so the buttons sit right under the list */
   }
+  /* 07: real customer logos (Michał, 25.11), from each company's own site: Zernio (brand kit, zernio.com/press) and
+     Luthor (luthor.ai) as one-colour wordmarks in ink, as Persona; RiskInMind has only a square icon, shown in its colours
+     beside the name. Anodes AI has no public logo or site yet: its card is the last, hidden one */
+  .sec-07 .lg-07.lg-img img { display: block; height: 22px; width: auto; filter: brightness(0) invert(.09); }
+  .sec-07 .nm-07.nm-icon { gap: 10px; }
+  .sec-07 .nm-07.nm-icon img { width: 28px; height: 28px; flex: none; }
 </style>
 </head>
 <body>
@@ -2529,16 +2535,25 @@
       <li class="st-07 sm rv" style="--d:4">
         <div class="art-07" data-scale="medium" aria-hidden="true"></div>
         <div class="tx-07">
-          <span class="nm-07">Zernio</span>
+          <span class="lg-07 lg-img" role="img" aria-label="Zernio"><img src="assets/img/customers/zernio.svg" alt="" width="3867" height="814"></span>
           <p class="k-07">SOC 2 · GDPR</p>
           <h3>Audit-ready in days, SOC 2 and GDPR won in 3 months, ~200 hours saved.</h3>
           <a class="go-07" href="https://www.trycomp.ai/case-studies/zernio">Read the story<span class="vh-07">: Zernio</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
+      <li class="st-07 sm rv" style="--d:7;--gx:80%">
+        <div class="art-07" data-scale="medium" data-at="-.22,.2" aria-hidden="true"></div>
+        <div class="tx-07">
+          <span class="lg-07 lg-img" role="img" aria-label="Luthor AI"><img src="assets/img/customers/luthor-ai.svg" alt="" width="93" height="18"></span>
+          <p class="k-07">SOC 2 Type II</p>
+          <h3>SOC 2 Type II audit-ready in 2 weeks, 120 hours saved.</h3>
+          <a class="go-07" href="https://www.trycomp.ai/case-studies/luthor-ai">Read the story<span class="vh-07">: Luthor AI</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+        </div>
+      </li>
       <li class="st-07 sm rv" style="--d:5;--gx:80%">
         <div class="art-07" data-scale="large" aria-hidden="true"></div>
         <div class="tx-07">
-          <span class="nm-07">RiskInMind</span>
+          <span class="nm-07 nm-icon"><img src="assets/img/customers/riskinmind.png" alt="" width="28" height="28">RiskInMind</span>
           <p class="k-07">SOC 2</p>
           <h3>SOC 2 passed in 20 days, and a $100K first customer landed.</h3>
           <a class="go-07" href="https://www.trycomp.ai/case-studies/riskinmind">Read the story<span class="vh-07">: RiskInMind</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
@@ -2551,15 +2566,6 @@
           <p class="k-07">HIPAA · SOC 2</p>
           <h3>HIPAA and SOC 2 audit-ready in 5 weeks, so the pilots could start.</h3>
           <a class="go-07" href="https://www.trycomp.ai/case-studies/anodes-ai">Read the story<span class="vh-07">: Anodes AI</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
-        </div>
-      </li>
-      <li class="st-07 sm rv" style="--d:7;--gx:80%">
-        <div class="art-07" data-scale="medium" data-at="-.22,.2" aria-hidden="true"></div>
-        <div class="tx-07">
-          <span class="nm-07">Luthor AI</span>
-          <p class="k-07">SOC 2 Type II</p>
-          <h3>SOC 2 Type II audit-ready in 2 weeks, 120 hours saved.</h3>
-          <a class="go-07" href="https://www.trycomp.ai/case-studies/luthor-ai">Read the story<span class="vh-07">: Luthor AI</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
     </ul>
