@@ -16,9 +16,9 @@ Ratio 1.272 (√φ) on a 16 px base, rounded to whole pixels:
 ## Fonts and weights
 
 - Sans: ABC Favorit Pro. Mono: ABC Favorit Mono.
-- **Light (300)** for text above 16 px. **Regular** for text at 16 px and below. Regular is registered as weight `450`
-  so it does not replace Book (`400`).
-- Mono at 16 px and below resolves to Book, because Favorit Mono has no Regular cut.
+- **Light (300)** for text above 16 px. **Book (400)** for text at 16 px and below, in sans and mono.
+  Book was chosen over Regular (25.11): it is the lighter of the two (about 122% of Light's ink against 133%)
+  and keeps the small text closer to the light character of the page.
 - Medium (500) is not used.
 
 ## Roles (desktop, from 1024 px)
@@ -31,11 +31,11 @@ Ratio 1.272 (√φ) on a 16 px base, rounded to whole pixels:
 | `lead-l` | Sans | 26 | 1.4 | −1% | 300 | | The hero subline |
 | `lead-m` | Sans | 20 | 1.4 | −1% | 300 | | Section leads |
 | `title-s` | Sans | 20 | 1.3 | −1% | 300 | | Tab titles, card titles, list titles, FAQ questions |
-| `body-m` | Sans | 16 | 1.55 | 0 | Regular | | Running text, menu item titles, footer links |
-| `body-s` | Sans | 14 | 1.45 | 0 | Regular | | Secondary text: descriptions, notes, answers, captions, small print |
+| `body-m` | Sans | 16 | 1.55 | 0 | Book | | Running text, menu item titles, footer links |
+| `body-s` | Sans | 14 | 1.45 | 0 | Book | | Secondary text: descriptions, notes, answers, captions, small print |
 | `eyebrow` | Mono | 14 | 1.3 | +5% | Book | Upper | One per section head |
 | `label-s` | Mono | 13 | 1.3 | +4% | Book | Upper | Short labels (badges, categories, column heads, step numbers, legends, metric labels) and tertiary actions (text links with an arrow) |
-| `button` | Sans | 13 | 1 | 0 | Regular | | Primary, secondary and quiet buttons; nav links |
+| `button` | Sans | 13 | 1 | 0 | Book | | Primary, secondary and quiet buttons; nav links |
 
 Mono is used only in `eyebrow` and `label-s`. Nav links and buttons are in sans.
 
@@ -57,7 +57,7 @@ Not defined yet: below 1024 px the page still uses each section's own sizes. To 
 
 ## Changes from v0.1 (17.11)
 
-- Weight: Regular for text at 16 px and below (was Light only).
+- Weight: Book for text at 16 px and below (was Light only).
 - Mono: no longer in nav links and buttons; eyebrows get their own role (14 px, Book, +5%).
 - New roles: `title-m`, `title-s`, `body-s` (the half-step 14), `eyebrow`, `button`.
 - `menu-l` (mobile menu) waits for the mobile round.

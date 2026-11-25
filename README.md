@@ -29,11 +29,10 @@ Then open http://localhost:8800/.
 
 ## Fonts
 
-The page uses ABC Favorit Pro (Light 300 for text above 16px, Regular for text at 16px and below, Book 400, Medium 500) and ABC Favorit Mono (Light, Book).
-Regular is registered as weight 450 so it does not replace Book; in the CSS, `450` means Favorit Regular.
+The page uses ABC Favorit Pro (Light 300 for text above 16px, Book 400 for text at 16px and below; Medium 500 is loaded but parked) and ABC Favorit Mono (Book; Light is loaded but unused).
 The font files are licensed and are not committed. Put these files into `homepage/assets/fonts/`:
 
-- `ABCFavoritPro-Light.woff2`, `ABCFavoritPro-Book.woff2`, `ABCFavoritPro-Medium.woff2`, `ABCFavoritPro-Regular.woff2`
+- `ABCFavoritPro-Light.woff2`, `ABCFavoritPro-Book.woff2`, `ABCFavoritPro-Medium.woff2`
 - `ABCFavoritMono-Light-Trial.woff2`, `ABCFavoritMono-Book-Trial.woff2`
 
 Favorit Mono is a trial cut in this reference; production needs the licensed files.
