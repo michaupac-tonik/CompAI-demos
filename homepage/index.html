@@ -2122,13 +2122,17 @@
   .sec-03 .sent .leave .w { opacity: 0; filter: blur(6px); transform: translateY(9px);
     transition: opacity .7s cubic-bezier(.9,0,.8,.3) calc((var(--n, 1) - 1 - var(--i)) * 34ms), filter .8s ease calc((var(--n, 1) - 1 - var(--i)) * 34ms), transform .9s cubic-bezier(.9,0,.8,.3) calc((var(--n, 1) - 1 - var(--i)) * 34ms); }
   @media (prefers-reduced-motion: reduce) { .sec-03 .side .sd p.ex { opacity: 1; filter: none; transition: none; } }
-  /* 04 test (Michał, 25.11): the window with the print continues the black section above: it rises to 04's top edge,
-     so the black of 03 runs straight into it */
-  @media (min-width: 1024px) {
-    .sec-04 .art-04 { margin-top: calc(-1 * var(--sp-7)); height: calc(100% + var(--sp-7)); }
-    /* test: the window runs out to the right edge of the screen, no margin */
-    .sec-04 .art-04 { margin-right: calc((min(var(--wrap-max), 100vw - 2 * var(--edge)) - 100vw) / 2); }
-  }
+  /* 03 tabs (Michał, 25.11): the bar under the open tab always fills, never jumps: over 7 s while the tabs run on their own,
+     in .9 s when a tab is picked; the run no longer pauses on hover (it held the first bar empty); a hover state for the others */
+  .sec-03:hover .tb.on::after { animation-play-state: running; }
+  /* the first bar starts filling as the tabs come in; the run takes the same animation over, so it carries on without a restart */
+  .sec-03:not(.live) .tabs.in .tb.on::after { animation: tbrun 7s linear both; }
+  .sec-03.picked .tabs .tb.on::after, .sec-03.picked .tabs:focus-within .tb.on::after { animation: tbfill .9s var(--ease) both; animation-play-state: running; }
+  @keyframes tbfill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .sec-03 .tb::before { transition: background-color .3s ease; }
+  .sec-03 .tb:not(.on):hover { color: rgba(252,252,252,.8); }
+  .sec-03 .tb:not(.on):hover::before { background: rgba(252,252,252,.48); }
+  @media (prefers-reduced-motion: reduce) { .sec-03.picked .tb.on::after { animation: none; } }
 </style>
 </head>
 <body>
@@ -3489,7 +3493,7 @@
   sec.querySelectorAll('.fx .bt button').forEach(b => b.addEventListener('click', () => { const fx = b.closest('.fx'), sh = b.closest('.shotd'), d = DONE[b.dataset.act];
     fx.dataset.p = fx.querySelector('p').textContent; fx.dataset.ft = fx.querySelector('.ft').textContent;
     ACT[b.dataset.act].on(sh); fx.querySelector('p').textContent = d[1]; fx.querySelector('.ft').textContent = d[2]; b.textContent = '✓ ' + d[0]; b.classList.add('done'); }));
-  tabs.forEach((t, i) => t.addEventListener('click', () => { manual = true; sec.classList.add('live'); set(i); }));
+  tabs.forEach((t, i) => t.addEventListener('click', () => { manual = true; sec.classList.add('live', 'picked'); set(i); }));
   const place = () => sec.querySelectorAll('.pin').forEach(p => { const sc = p.closest('.scr'), t = sc.querySelector(p.dataset.t); if (!t) return; const a = sc.getBoundingClientRect(), r = t.getBoundingClientRect();
     let x = r.width > 200 ? r.right - 22 : r.right; const dsc = t.classList.contains('rw') && t.querySelector('.dsc'); if (dsc) { const rg = document.createRange(); rg.selectNodeContents(dsc); x = rg.getBoundingClientRect().right + 20; }
     const y = r.width > 200 || t.classList.contains('rw') ? r.top + r.height / 2 : r.top + 2; p.style.left = (x - a.left) + 'px'; p.style.top = (y - a.top) + 'px'; });
@@ -3499,7 +3503,7 @@
     li.addEventListener('mouseenter', () => { li.classList.add('hot'); pin().classList.add('hot'); }); li.addEventListener('mouseleave', () => { li.classList.remove('hot'); pin().classList.remove('hot'); }); });
   sec.querySelectorAll('.pin').forEach(p => { const sh = p.closest('.shotd'); const li = () => sh.querySelector('.co li[data-i="' + p.dataset.i + '"]');
     p.addEventListener('mouseenter', () => { p.classList.add('hot'); li().classList.add('hot'); }); p.addEventListener('mouseleave', () => { p.classList.remove('hot'); li().classList.remove('hot'); }); });
-  tabs.forEach(t => t.addEventListener('animationend', () => { if (t.classList.contains('on')) set((cur + 1) % tabs.length); }));
+  tabs.forEach(t => t.addEventListener('animationend', e => { if (e.animationName === 'tbrun' && t.classList.contains('on')) set((cur + 1) % tabs.length); }));
   // the heading block keeps its own reveals; tabs, sentence, screen and strip follow one choreography
   reveal([...sec.querySelectorAll('.rv:not(.tabs):not(.sentbar):not(.stage):not(.foot)')], 500);
   const tabsEl = sec.querySelector('.tabs'), sentEl = sec.querySelector('.sentbar'), stageEl = sec.querySelector('.stage'), footEl = sec.querySelector('.foot');
