@@ -1815,6 +1815,16 @@
   .g2-rating .g2-go { color: var(--text-2); transition: color .2s; }
   .g2-rating:is(:hover, :focus-visible) .g2-go { color: var(--text-1); }
   @media (max-width: 1023px) { .g2-rating { margin-left: 0; padding-left: 0; box-shadow: none; } }
+  /* ==== Layout system v0.1 (Michał, 25.11) =========================================================================
+     Spacing scale: phi x 8 (each step about 1.6 x the one before; the type scale uses its square root, 1.272), all on the 8px grid.
+     Desktop only (from 1024px); hero and 02 (the shift) are outside this first pass. Source: styleguide/layout.md. */
+  :root { --sp-1: 8px; --sp-2: 16px; --sp-3: 24px; --sp-4: 40px; --sp-5: 64px; --sp-6: 104px; --sp-7: 168px; }
+  @media (min-width: 1024px) {
+    /* section: 104 top and bottom; nothing extra inside before the eyebrow */
+    .sec-03, .sec-04, .sec-05, .sec-06, .sec-07 { padding-top: var(--sp-6); padding-bottom: var(--sp-6); }
+    .sec-08 { padding-top: var(--sp-6); }
+    .sec-04 .txt-04 { padding-top: 0; }
+  }
 </style>
 </head>
 <body>
