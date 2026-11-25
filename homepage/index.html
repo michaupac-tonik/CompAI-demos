@@ -2133,9 +2133,40 @@
   .sec-03 .tb:not(.on):hover { color: rgba(252,252,252,.8); }
   .sec-03 .tb:not(.on):hover::before { background: rgba(252,252,252,.48); }
   @media (prefers-reduced-motion: reduce) { .sec-03.picked .tb.on::after { animation: none; } }
+  /* ==== 05 test (Michał, 25.11): the right side is rich but crowded; B and C take out what repeats or competes ============ */
+  html.only-05 .site-nav, html.only-05 main > :not(#sec-05), html.only-05 footer, html.only-05 .sheet, html.only-05 #sheet { display: none !important; }
+  /* B and C: no quote cards on the bars, no "Next framework" game, the axis keeps only the stage (the left column already says who) */
+  html:is(.v05-b, .v05-c) .sec-05 .q-05, html:is(.v05-b, .v05-c) .sec-05 .fw-05.next, html:is(.v05-b, .v05-c) .sec-05 .x-05 small { display: none !important; }
+  /* B: the chart and one figure per stage. Reused frameworks without the dashed links and dots */
+  html.v05-b .sec-05 .fw-05.kept::before, html.v05-b .sec-05 .fw-05.kept::after { display: none; }
+  /* C: the bars alone; one story at a time under the axis, for the stage that is open (it follows the list on the left, the bars and the axis) */
+  html.v05-c .sec-05 .ann-05, html.v05-c .sec-05 .fw-05.kept::before, html.v05-c .sec-05 .fw-05.kept::after { display: none !important; }
+  html.v05-c .sec-05 .col-05, html.v05-c .sec-05 .x-05 li { cursor: pointer; transition: opacity .45s ease; }
+  html.v05-c .sec-05 .col-05.dim { opacity: .3; }
+  html.v05-c .sec-05 .x-05 li.dim { opacity: .4; }
+  html.v05-c .sec-05 .steps-05 li { cursor: pointer; }
+  html.v05-c .sec-05 .steps-05 li .n { transition: color .3s ease; }
+  html.v05-c .sec-05 .steps-05 li:not(.on) .n { color: color-mix(in srgb, var(--ink) 40%, transparent); }
+  .sec-05 .story-05 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: var(--sp-4); padding-top: var(--sp-3); border-top: 1px solid rgba(22,22,22,.14); }
+  .sec-05 .story-05 > * { transition: opacity .3s ease, filter .35s ease, transform .45s var(--ease); }
+  .sec-05 .story-05.out > * { opacity: 0; filter: blur(4px); transform: translateY(6px); }
+  .sec-05 .story-05 .m { margin: 0; }
+  .sec-05 .story-05 .m b { display: block; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-l); line-height: 1; letter-spacing: -.04em; color: var(--ink); }
+  .sec-05 .story-05 .m b i { margin-left: 8px; font-size: .45em; font-style: normal; letter-spacing: -.01em; }
+  .sec-05 .story-05 .m span { display: block; margin-top: var(--sp-1); font-family: var(--sans); font-size: var(--fs-body-m); font-weight: 400; line-height: 1.4; color: color-mix(in srgb, var(--ink) 72%, transparent); }
+  .sec-05 .story-05 .tx { grid-column: 2 / span 2; }
+  .sec-05 .story-05 blockquote { margin: 0; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m); line-height: 1.4; letter-spacing: -.01em; color: var(--ink); text-wrap: pretty; }
+  .sec-05 .story-05 .who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; margin: var(--sp-2) 0 0; font-family: var(--mono); font-size: var(--fs-label-s); line-height: 1.3; letter-spacing: .04em; text-transform: uppercase; color: color-mix(in srgb, var(--ink) 72%, transparent); }
+  .sec-05 .story-05 .who > span { display: inline; width: auto; height: auto; margin: 0; font: inherit; }
+  .sec-05 .story-05 .who a { color: var(--ink); text-decoration: none; }
+  .sec-05 .story-05 .who a:hover { color: var(--accent-05); }
+  @media (prefers-reduced-motion: reduce) { .sec-05 .story-05 > *, html.v05-c .sec-05 .col-05 { transition: none; } }
 </style>
 </head>
 <body>
+<script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
+(() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
+  if (/^[abc]$/.test(v || '')) r.classList.add('v05-' + v); if (q.get('only') === '05') r.classList.add('only-05'); })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
@@ -4895,6 +4926,33 @@
   hosts[0].append(cv); draw(performance.now());
   sec.addEventListener('tab03', e => go(e.detail));
   let tm; new ResizeObserver(() => { clearTimeout(tm); tm = setTimeout(() => draw(performance.now()), 100); }).observe(sec);
+})();
+</script>
+<script>
+/* 05 test C (Michał, 25.11): one story at a time, for the open stage; it follows the list on the left, the bars and the axis, and turns on its own until touched */
+(() => {
+  const sec = document.getElementById('sec-05'); if (!sec || !document.documentElement.classList.contains('v05-c')) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const chart = sec.querySelector('.chart-05'), cols = [...sec.querySelectorAll('.col-05')], xs = [...sec.querySelectorAll('.x-05 li')], steps = [...sec.querySelectorAll('.steps-05 li')];
+  const S = [
+    { b: '6', u: 'days', t: 'to audit-ready', q: '“Comp AI got us audit-ready in days and cleared the path for our largest enterprise contracts.”', n: 'Persona AI', f: 'SOC 2', h: '/case-studies/persona-ai' },
+    { b: '120', u: 'hours', t: 'of employee time saved', q: '“Comp AI made it easy to get our SOC 2 certification, which was a major milestone for us.”', n: 'RiskInMind', f: 'SOC 2', h: '/case-studies/riskinmind' },
+    { b: '5', u: 'weeks', t: 'to SOC 2 + HIPAA audit-ready', q: 'HIPAA and SOC 2 audit-ready in five weeks, to unlock pilots.', n: 'Anodes AI', f: 'SOC 2 · HIPAA', h: '/case-studies/anodes-ai' } ];
+  const el = document.createElement('div'); el.className = 'story-05'; el.setAttribute('aria-live', 'polite');
+  el.innerHTML = '<p class="m"><b></b><span></span></p><div class="tx"><blockquote></blockquote><p class="who"><span class="cust"></span><a href="">Read the story</a></p></div>';
+  chart.append(el);
+  let cur = -1, timer = 0, auto = true;
+  const paint = i => { const d = S[i]; el.querySelector('.m b').innerHTML = d.b + '<i>' + d.u + '</i>'; el.querySelector('.m span').textContent = d.t;
+    el.querySelector('blockquote').textContent = d.q; el.querySelector('.cust').textContent = d.n + ' · ' + d.f; el.querySelector('.who a').href = d.h; };
+  const set = i => { if (i === cur) return; const first = cur < 0; cur = i;
+    cols.forEach((c, k) => c.classList.toggle('dim', k !== i)); xs.forEach((c, k) => c.classList.toggle('dim', k !== i)); steps.forEach((c, k) => c.classList.toggle('on', k === i));
+    if (first || reduced) { paint(i); return; }
+    el.classList.add('out'); setTimeout(() => { if (cur === i) paint(i); el.classList.remove('out'); }, 300); };
+  const stop = () => { auto = false; clearInterval(timer); };
+  [cols, xs, steps].forEach(list => list.forEach((c, k) => { c.addEventListener('mouseenter', () => { stop(); set(k); }); c.addEventListener('click', () => { stop(); set(k); }); }));
+  set(0);
+  if (!reduced && 'IntersectionObserver' in window) new IntersectionObserver((es, io) => es.forEach(e => { if (e.isIntersecting) { io.disconnect();
+    timer = setInterval(() => { if (auto) set((cur + 1) % S.length); }, 6000); } }), { threshold: .4 }).observe(chart);
 })();
 </script>
 </body>
