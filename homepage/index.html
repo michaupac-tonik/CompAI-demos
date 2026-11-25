@@ -1869,7 +1869,7 @@
     .shift-grid .steps { grid-column: 1 / span 5; grid-row: 5; margin-top: var(--sp-4); }
     .shift-grid .board { grid-column: 7 / span 6; grid-row: 5; margin-top: var(--sp-4); }
     /* 05 who it's for: split head; the steps and the chart under the line */
-    .sec-05 .grid-05 { gap: 0 var(--sp-3); grid-template-rows: repeat(5, auto); }
+    .sec-05 .grid-05 { gap: 0 var(--sp-3); grid-template-rows: repeat(5, auto) 1fr; }      /* the last row takes the rest of the chart's height, so the steps' row stays as tall as the steps */
     .sec-05 .steps-05 { grid-column: 1 / span 5; grid-row: 5; margin: var(--sp-4) 0 0; }
     .sec-05 .steps-05 { display: flex; flex-direction: column; align-self: start; }      /* not stretched to the chart (its labels hang below the axis) */
     .sec-05 .steps-05 li { padding: var(--sp-3) 0; }      /* rows at their own height, 24 above and below the text */
@@ -2043,6 +2043,12 @@
     .sec-03 { padding-bottom: var(--sp-7); }
     .sec-04 { padding-top: var(--sp-7); }
     .sec-07 { padding-bottom: var(--sp-7); }
+  }
+  /* 05: the buttons under the list of customer types (Michał, 25.11) */
+  @media (min-width: 1024px) {
+    .sec-05 .acts-05 { grid-column: 1 / span 5; grid-row: 6; align-self: start; justify-content: flex-start; margin-top: var(--sp-4); }
+    .sec-05 .txt-05 { grid-row: 1 / 7; }
+    .sec-05 .chart-05 { grid-row: 5 / span 2; }      /* the chart spans the steps' row and the buttons' row, so the buttons sit right under the list */
   }
 </style>
 </head>
@@ -4455,7 +4461,7 @@
   // scale presets (Figma 314:816). zoom: share of the print's height shown in the window; pitch: lattice step in px;
   // fill: largest diamond as a share of the step; ox/oy: where the window looks (share of the print size from its centre)
   const SCALES = {
-    base:   { zoom: 1.08, pitch: 7,  fill: .92, ox: .05, oy: .02 },
+    base:   { zoom: .9,   pitch: 7,  fill: .92, ox: .05, oy: .02 },
     medium: { zoom: .34,  pitch: 13, fill: .76, ox: .16, oy: -.12 },
     fine:   { zoom: .5,   pitch: 8,  fill: .52, ox: -.1, oy: .05 },
     large:  { zoom: .13,  pitch: 40, fill: .66, ox: .2,  oy: .18, round: true },
@@ -4497,7 +4503,7 @@
     const r = art.getBoundingClientRect(), W = Math.max(1, r.width), H = Math.max(1, r.height), dpr = Math.min(2, devicePixelRatio || 1);
     if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
     const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-    const k = F.h * P.zoom / Math.min(H, W * 1.15);                 // shape units per px
+    const k = F.h * P.zoom / Math.max(H, W * .9);                   // shape units per px: cover the card's visual (its longer side), so no black bands are left at the sides (Michał, 25.11)
     const cx = F.cx + P.ox * F.h, cy = F.cy + P.oy * F.h, half = P.pitch / 2;
     const BUCKETS = 14, paths = Array.from({ length: BUCKETS }, () => new Path2D()), RMAX = Math.min(W, H) * .52;      // the print's own radius, so the whole heat map fits on it
     for (let b = -1, y = 0; y <= H + P.pitch; b++, y = b * half) {
