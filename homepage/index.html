@@ -2279,12 +2279,34 @@
   html .sec-05 .col-05:last-child .fw-05.new { background-color: transparent; background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%), linear-gradient(90deg, var(--mint), var(--cyan));
     background-size: 250% 100%, 100% 100%; background-repeat: no-repeat; }
   html #sec-05 .sw-l button.w[aria-pressed="true"]::before { background: linear-gradient(90deg, var(--mint), var(--cyan)); border-color: transparent; }
+  /* ==== 06 test (Michał, 26.11): Trust is rich but heavy. Three layouts with the three cards side by side and the words above the
+     windows, with more air. ?v06=b|c|d; ?only=06 shows the section alone (the A/B/C/D preview) */
+  html.only-06 .site-nav, html.only-06 main > :not(#sec-06), html.only-06 footer, html.only-06 .sheet, html.only-06 #sheet { display: none !important; }
+  /* B · the card stays; inside it the words come first (label, title, text, link), the window below, inset */
+  html.v06-b .sec-06 .pr { padding: 0; }
+  html.v06-b .sec-06 .pr .cap { order: -1; flex: 0 0 auto; padding: var(--sp-4) var(--sp-4) var(--sp-5); }
+  html.v06-b .sec-06 .pr .cap .go { margin-top: var(--sp-3); padding-top: 0; }
+  html.v06-b .sec-06 .pr .win { margin: auto var(--sp-2) var(--sp-2); }
+  /* C and D · open columns: no card around them. A row of words (each under a hairline, the links aligned), then a row of windows */
+  html:is(.v06-c, .v06-d) .sec-06 .row-06 { grid-template-rows: auto auto; row-gap: var(--sp-5); column-gap: var(--sp-4); }
+  html:is(.v06-c, .v06-d) .sec-06 .row-06 > li { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
+  html:is(.v06-c, .v06-d) .sec-06 .pr { display: grid; grid-row: span 2; grid-template-rows: subgrid; padding: 0; background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; overflow: visible; }
+  html:is(.v06-c, .v06-d) .sec-06 .pr .cap { grid-row: 1; padding: var(--sp-3) 0 0; border-top: 1px solid rgba(22,22,22,.12); }
+  html:is(.v06-c, .v06-d) .sec-06 .pr .cap p { max-width: 36ch; }
+  html:is(.v06-c, .v06-d) .sec-06 .pr .win { grid-row: 2; background: #fff; box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 24px 48px -28px rgba(22,22,22,.2); }
+  html:is(.v06-c, .v06-d) .sec-06 .win-f .hide-s { display: none; }
+  /* D · quiet windows: shorter, without their footers and the "Try it" marks, and held back until a column is pointed at (or focused) */
+  html.v06-d .sec-06 .pr .win { height: 232px; opacity: .45; filter: saturate(0); transition: opacity .5s ease, filter .5s ease, translate .5s var(--ease); }
+  html.v06-d .sec-06 .pr:is(:hover, :focus-within) .win { opacity: 1; filter: none; translate: 0 -4px; }
+  html.v06-d .sec-06 .win-f, html.v06-d .sec-06 .try, html.v06-d .sec-06 .commits { display: none; }
+  html.v06-d .sec-06 .code { border-bottom: 0; flex: 1; }
 </style>
 </head>
 <body>
 <script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
 (() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
-  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); })();</script>
+  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); if (q.get('only') === '06') r.classList.add('only-06');
+  const v6 = q.get('v06'); if (/^[bcd]$/.test(v6 || '')) r.classList.add('v06-' + v6); })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
