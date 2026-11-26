@@ -2304,8 +2304,13 @@
   html:is(.v06-c, .v06-d) .sec-06 .cap .k { gap: 10px; color: var(--ink); }
   html:is(.v06-c, .v06-d) .sec-06 .cap .k::before { content: ""; width: 8px; height: 8px; flex: none; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
   html:is(.v06-c, .v06-d) .sec-06 .pr .win { box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 24px 48px -28px rgba(22,22,22,.2); }      /* neutral, no colour (26.11) */
-  /* the head's buttons move under the cards (the script moves them), from the left */
-  html:is(.v06-c, .v06-d) .sec-06 .stage-06 > .acts-06 { justify-content: flex-start; margin-top: var(--sp-5); }
+  /* each column's link sits under its window (the script moves it): a third row, the links aligned across */
+  html:is(.v06-c, .v06-d) .sec-06 .row-06 { grid-template-rows: auto auto auto; }
+  html:is(.v06-c, .v06-d) .sec-06 .row-06 > li, html:is(.v06-c, .v06-d) .sec-06 .pr { grid-row: span 3; }
+  html:is(.v06-c, .v06-d) .sec-06 .pr > .go { grid-row: 3; align-self: start; justify-self: start; display: inline-flex; align-items: center; gap: 8px; margin: calc(var(--sp-3) - var(--sp-5)) 0 0; padding: 0; text-decoration: none; color: var(--ink);
+    font-family: var(--mono); font-size: var(--fs-label-s); font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase; }
+  html:is(.v06-c, .v06-d) .sec-06 .pr > .go .chev { width: 13px; height: 13px; transition: transform .3s var(--ease); }
+  html:is(.v06-c, .v06-d) .sec-06 .pr > .go:is(:hover, :focus-visible) .chev { transform: translateX(3px); }
   html.v06-d .sec-06 .pr .win { height: 232px; opacity: .45; filter: saturate(0); transition: opacity .5s ease, filter .5s ease, translate .5s var(--ease); }
   html.v06-d .sec-06 .pr:is(:hover, :focus-within) .win { opacity: 1; filter: none; translate: 0 -4px; }
   html.v06-d .sec-06 .win-f, html.v06-d .sec-06 .try, html.v06-d .sec-06 .commits { display: none; }
@@ -5304,8 +5309,8 @@
 (() => {
   const r = document.documentElement; if (!r.classList.contains('v06-c') && !r.classList.contains('v06-d')) return;
   const sec = document.getElementById('sec-06'); if (!sec) return;
-  // the head's buttons go under the cards (26.11)
-  const acts = sec.querySelector('.head-06 .acts-06'), row = sec.querySelector('.row-06'); if (acts && row) row.after(acts);
+  // each column's link goes under its window (26.11): words, then the window, then where to go
+  sec.querySelectorAll('.row-06 .pr').forEach(pr => { const go = pr.querySelector('.cap .go'), win = pr.querySelector('.win'); if (go && win) win.after(go); });
   const TAU = Math.PI * 2, AT = [[.14, -.06], [-.12, .1], [.02, .22]];
   const run = () => { const D = window.BLEND_FIELDS; if (!D) return;
     const dec = (b64, T) => { const s = atob(b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new T(u.buffer); };
