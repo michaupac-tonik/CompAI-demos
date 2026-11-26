@@ -5147,7 +5147,7 @@
   const P_RADIUS = 180, P_REACH = 0.75, P_DENSE = 0.24, P_SPILL = 1.5, P_SPREAD = 0.3, P_CRISP = 0.2, P_EDGE = 5.1;
   const GRAVITY = 0.24, LIFT_W = 0.25, LIFT_M = 0.35;
   const FAR_FROM = 120, FAR_TO = 640, FAR_W = 0.29, FAR_M = 0.47;
-  const P_IN = 0.12, P_OUT = 0.03, P_FOLLOW = 0.1;      // eased (Michał, 25.11; review 15): the print follows the cursor slowly instead of jumping to it
+  const P_IN = 0.07, P_OUT = 0.03, P_FOLLOW = 0.05;      // 08 (26.11): slower than the hero's (.12 / .1): the press builds slowly and trails the cursor a little;      // eased (Michał, 25.11; review 15): the print follows the cursor slowly instead of jumping to it
   const MORPH_GAP = 1400;      // ms after a morph ends before the next can start: fast passes over the print no longer stack morphs
   const TRAIL = 260, TRAIL_SIZE = 0.38, HOVER_ZONE = 0.5;
   // ---- hero additions ----------------------------------------------------------------------
@@ -5447,9 +5447,9 @@
   // 08 (26.11): no jump when the print meets a cursor that is already there (after the reveal, or as the page scrolls under it):
   // it waits a beat after it finds the cursor, then the press builds and follows slowly at first (eased), and the hover morph
   // waits a little longer still
-  const ENG_DELAY = 350, MORPH_WAIT = 900, ENG_RAMP = 1400; let engageAt = -1e9;
+  const ENG_DELAY = 600, MORPH_WAIT = 1200, ENG_RAMP = 2600; let engageAt = -1e9;
   const engaged = (t, extra = 0) => revealT0 >= 0 && t > revealT0 + REVEAL_MS * .9 && t - engageAt > ENG_DELAY + extra;
-  const engEase = t => .15 + .85 * smooth(0, 1, (t - engageAt - ENG_DELAY) / ENG_RAMP);
+  const engEase = t => .08 + .92 * smooth(0, 1, (t - engageAt - ENG_DELAY) / ENG_RAMP);
   const onPointer = e => {
     if (paused || e.pointerType === 'touch') return;
     pointerIn = true;
