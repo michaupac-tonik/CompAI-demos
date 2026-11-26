@@ -1337,8 +1337,8 @@
   }
   /* @section:07 css:end */
   /* @section:08 css:start */
-  /* ==== 08 · Next step (structure v12; split 26.11 into five sections: #sec-08 quote, #sec-08-demo, #sec-08-price,
-     #sec-08-faq, #sec-08-close, all .sec-08 for the shared tokens): the final CTA, dark.
+  /* ==== 08 · Next step (structure v12; split 26.11 into four sections: #sec-08 quote, #sec-08-price (with the next
+     step, #sec-08-next, under the quote builder), #sec-08-faq, #sec-08-close, all .sec-08 for the shared tokens): the final CTA, dark.
      A power quote with the main action over the returning print, then three modules on full rules with sticky titles:
      The call (before pricing: three steps in a row, the tab pattern of 03: hairline + mint progress, no visual), Pricing (the quote builder in the dark UI of 02's board, with its own Book a demo), FAQ (collapsed),
      and the closing CTA "Compliance that helps you close deals." (moved here from the footer sketch).
@@ -1373,8 +1373,150 @@
     box-sizing: border-box; min-height: calc(100svh - var(--nav-h, 74px)); }      /* a screen under the nav, so the print can be large */
   .quote-08 .wrap { position: relative; z-index: 1; }
   .quote-08 .kv-08 { position: absolute; z-index: 0; inset: 0 0 auto; width: 100%; height: 100%; display: block; opacity: .8; pointer-events: none; }
-  .sec-08:not(.quote-08) { background: var(--black); }
-  #sec-08-demo { padding-top: var(--sp-6); }      /* dark from the demo on, over the paper and the print's way out */
+  .sec-08:not(.quote-08) { background: var(--black); }      /* dark from the next step on */
+  /* ---- spacing (26.11): one rhythm for the 08 sections on black. Each section pads sp-6 above and below (74 at 1440, 104 at
+     1920), so two sections sit 2 x sp-6 apart, as 04-07; the first opens on sp-7 (as the light block ends) and the closing CTA
+     ends on sp-7 before the footer. No rules between them. ---- */
+  .sec-08:not(.quote-08) { padding: var(--sp-6) 0; }
+  #sec-08-price { padding-top: var(--sp-7); }      /* the first on black, as the light quote ends (03 -> 04) */
+  /* ---- pricing (26.11, v6): in the pattern of 02 The shift, not the same. The section head over the content as in the
+     other sections (eyebrow, h2 display-l, lead; 7 of 12), then 64 under it: left (4 of 12) the next step, the call as a
+     vertical timeline on 02's diamond rail; right (8 of 12) the quote builder, unchanged inside. ---- */
+  /* on the page's 12 columns, as 02 The shift: the steps on columns 1-4, one column left empty, the builder on 6-12
+     (about 140 between them at 1440, as between 02's text and its board) */
+  .s8p-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3); row-gap: 32px; align-items: start; }
+  .s8p-grid > .s8n { grid-column: 1 / span 4; }
+  .s8p-grid > .sec-08-ui { grid-column: 6 / -1; }
+  /* head row: the section head on the left, the presets (02's switch) on the right over the builder */
+  .s8p-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px 72px; margin-bottom: var(--sp-5); }
+  .s8p-top .s8p-head { margin-bottom: 0; }
+  .s8p-presets { flex: none; }
+  /* the left column runs as tall as the builder; the three steps spread over it */
+  .s8p-grid { align-items: stretch; }
+  .s8n { display: flex; flex-direction: column; }
+  .s8n .s8n-tl[data-dir="v"] { flex: 1; align-content: space-between; }
+  /* steps: a mono time label (mint once lit), the step in lead-m Light, a line of detail, and a small live piece of the
+     product under it in the builder's UI (surface, hairline, 13px) */
+  /* type: only the system's roles (typography v0.2): the time label in label-s, the step in title-s, the detail and every
+     text in the small product pieces in body-s */
+  .s8n .s8n-tl .t { font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+  .s8n .s8n-tl .d { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); opacity: 1; color: inherit; }
+  .s8n-conn > span, .s8n-list, .s8n-plan, .s8n-sum { font-size: var(--fs-body-s, 14px) !important; }
+  .s8n .s8n-tl li { gap: 8px; color: rgba(252,252,252,.42); }
+  .s8n .s8n-tl li.on { color: var(--white); }
+  .s8n .s8n-tl li::before, .s8n .s8n-tl li::after { width: 9px; height: 9px; left: -25px; top: 1px; }
+  .s8n .s8n-tl li::after { box-shadow: 0 0 calc(14px * var(--a, 0)) rgba(36,255,99, calc(.35 * var(--a, 0))); }
+  .s8n-conn, .s8n-list, .s8n-plan { margin-top: 8px; }
+  /* 1 · the stack: the tools connect one after another (outline diamond -> gradient, dim -> white) */
+  .s8n-conn { display: flex; flex-wrap: wrap; gap: 6px; }
+  .s8n-conn > span { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border: 1px solid rgba(252,252,252,.12); border-radius: var(--r-sm);
+    background: rgba(22,22,22,.92); font: 400 13px/1 var(--sans); color: rgba(252,252,252,.4); white-space: nowrap; transition: color .4s ease, border-color .4s ease; }
+  .s8n-conn > span::before { content: ""; width: 6px; height: 6px; box-sizing: border-box; transform: rotate(45deg); border: 1px solid rgba(252,252,252,.35); transition: background .4s ease, border-color .4s ease; }
+  .s8n-tl li.on .s8n-conn > span { color: var(--white); border-color: rgba(252,252,252,.22); transition-delay: calc(.3s + var(--i) * .35s); }
+  .s8n-tl li.on .s8n-conn > span::before { background: linear-gradient(135deg, var(--mint), var(--cyan)); border-color: var(--mint); transition-delay: calc(.3s + var(--i) * .35s); }
+  /* 2 · the work, live: the agents' tasks as a short list, no box: a task comes in at the bottom with an outline diamond
+     that breathes while it is worked on, then its diamond fills in the gradient and the task is struck through, done; three
+     rows, a new one every few seconds (the hero's ticker, quieter) */
+  .s8n-list { display: grid; gap: 8px; height: calc(3 * 1.2em + 16px); overflow: hidden; align-content: end; font: 400 13px/1.2 var(--sans); }
+  .s8n-list .r { display: flex; align-items: center; gap: 10px; color: rgba(252,252,252,.85); white-space: nowrap; animation: s8n-in .5s var(--ease) both; }
+  .s8n-list .r::before { content: ""; width: 6px; height: 6px; flex: none; box-sizing: border-box; transform: rotate(45deg); border: 1px solid rgba(252,252,252,.5); transition: background .4s ease, border-color .4s ease; }
+  .s8n-list .r span { text-decoration-line: line-through; text-decoration-color: transparent; transition: text-decoration-color .4s ease, color .5s ease; }
+  .s8n-list .r.run::before { animation: s8n-blink 1.2s ease-in-out infinite; }
+  .s8n-list .r.done::before { background: linear-gradient(135deg, var(--mint), var(--cyan)); border-color: var(--mint); }
+  @keyframes s8n-in { from { opacity: 0; filter: blur(4px); transform: translateY(6px); } }
+  @keyframes s8n-blink { 50% { opacity: .3; } }
+  .s8n-tl li:not(.on) .s8n-list { opacity: .4; }
+  /* 3 · the plan: a small gantt of the weeks to audit-ready: three phases as bars on one time track (connect, evidence and
+     policies, audit), drawn one after the other in the gradient */
+  .s8n-plan { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: center; gap: 10px 14px; max-width: 420px; font: 400 13px/1 var(--sans); }
+  .s8n-plan .l { color: rgba(252,252,252,.6); }
+  .s8n-plan .tr { position: relative; height: 9px; }
+  .s8n-plan .tr::before { content: ""; position: absolute; left: 0; right: 0; top: 4px; height: 1px; background: rgba(252,252,252,.12); }
+  .s8n-plan .tr i { position: absolute; top: 1px; height: 7px; left: calc(var(--s) * 100%); width: calc((var(--e) - var(--s)) * 100%); border-radius: 1px;
+    background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(0); transition: transform .7s cubic-bezier(.4,0,.2,1) calc(.3s + var(--d) * .55s); }
+  .s8n-tl li.on .s8n-plan .tr i { transform: scaleX(1); }
+  .s8n-plan .ax { grid-column: 2; display: flex; justify-content: space-between; color: rgba(252,252,252,.45); }
+  .s8n-tl li.on .s8n-plan .ax span:last-child { color: var(--white); transition: color .4s ease 2s; }
+  /* the steps are numbered next to their minutes ("STEP 1 · MIN 0–5"); no rail (decided 26.11, after an A/B with 02's rail) */
+  .s8n-tl .t .n { color: var(--white); }
+  .s8n-tl .t .n::after { content: "·"; margin: 0 .6em; color: rgba(252,252,252,.4); }
+  .s8n-tl[data-dir="v"] { padding: 0; }
+  .s8n-tl[data-dir="v"]::before, .s8n-tl[data-dir="v"]::after, .s8n .s8n-tl li::before, .s8n .s8n-tl li::after { content: none; }
+  /* ---- taken further (26.11, B of the A/B): step 1 counts the controls the stack maps to and takes one more tool ("More",
+     as the next framework in 05); step 2 names the control each task satisfies; step 3 has a light week grid under the gantt ---- */
+  .s8n-sum { display: block; margin-top: 10px; color: rgba(252,252,252,.6); line-height: 1.45; }
+  .s8n-sum em { font-style: normal; color: var(--white); font-variant-numeric: tabular-nums; }
+  .s8n-list { max-width: 420px; }
+  .s8n-list .r .c { margin-left: auto; padding-left: 16px; color: var(--white); }
+  /* only the task being worked on is white; done ones fade to grey, struck through in the same grey (no colour), the task and its control alike */
+  .s8n-list .r .c { text-decoration-line: line-through; text-decoration-color: transparent; transition: text-decoration-color .4s ease, color .5s ease; }
+  .s8n-list .r span { color: var(--white); }
+  .s8n-list .r.done span, .s8n-list .r.done .c { color: rgba(252,252,252,.4); text-decoration-color: currentColor; }
+  .s8n-plan .tr::after { content: ""; position: absolute; inset: -6px 0; background: repeating-linear-gradient(90deg, rgba(252,252,252,.1) 0 1px, transparent 1px 25%); pointer-events: none; }
+  /* step 1 · More: one more tool, in the pattern of 05's next framework: a quiet chip with a plus and a nudging "Try it" */
+  .s8n-more { appearance: none; display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 6px 0 10px; border: 1px dashed rgba(252,252,252,.28); border-radius: var(--r-sm);
+    background: none; color: rgba(252,252,252,.7); font: 400 var(--fs-body-s, 14px)/1 var(--sans); cursor: pointer; transition: color .25s ease, border-color .25s ease, background-color .25s ease; }
+  .s8n-more svg { width: 12px; height: 12px; }
+  .s8n-more em { font: 400 var(--fs-label-s, 13px)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; font-style: normal; padding: 4px 6px; border-radius: var(--r-sm);
+    background: rgba(252,252,252,.08); color: var(--white); animation: s05nudge 3.2s ease-in-out infinite; }
+  .s8n-more:is(:hover, :focus-visible) { color: var(--white); border-color: rgba(252,252,252,.6); border-style: solid; }
+  .s8n-more:focus-visible { outline: 1px solid var(--white); outline-offset: 2px; }
+  .s8n-tl li:not(.on) .s8n-more { visibility: hidden; }
+  /* picked: the chip itself becomes the added tool, as 05's next framework: it drops in, filled in the gradient with an ink
+     label; "Next" on it replaces it with the next tool */
+  /* picked (26.11): neutral, not the gradient, so it does not pull the eye from the builder's Book a demo: the white outline
+     and faint fill of a picked choice in the builder, the gradient diamond in place of the plus; it still drops in as in 05 */
+  .s8n-more.on { border: 1px solid rgba(252,252,252,.7); background: rgba(252,252,252,.06); color: var(--white); animation: s05drop .5s var(--ease); }
+  .s8n-more.on svg { display: none; }
+  .s8n-more.on::before { content: ""; width: 6px; height: 6px; transform: rotate(45deg); background: linear-gradient(135deg, var(--mint), var(--cyan)); }
+  /* and as in 05: a burst of small squares from the chip (white and grey, neutral), and the tools already there pulse once */
+  .s8n-conn { position: relative; }
+  .s8n-px { position: absolute; z-index: 3; width: 4px; height: 4px; pointer-events: none; background: var(--c, #24FF63); animation: s05burst .7s ease-out forwards; }
+  .s8n-conn > span.pulse { animation: s8n-pulse 1.1s ease-out; }
+  @keyframes s8n-pulse { 0% { box-shadow: 0 0 0 0 rgba(252,252,252,.18); } 100% { box-shadow: 0 0 0 10px rgba(252,252,252,0); } }
+  @media (prefers-reduced-motion: reduce) { .s8n-px { display: none; } .s8n-more.on, .s8n-conn > span.pulse { animation: none; } }
+  .s8n-more.on em { background: rgba(252,252,252,.1); color: var(--white); animation: none; }
+  .s8n-more.on:is(:hover, :focus-visible) { color: var(--white); border-color: var(--white); border-style: solid; }
+  @media (prefers-reduced-motion: reduce) { .s8n-more em { animation: none; } }
+  .s8n-tl { --p: 0; position: relative; list-style: none; margin: 0; padding: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .s8n-tl::before, .s8n-tl::after { content: ""; position: absolute; left: 3px; top: 3px; width: var(--rw, 100%); height: 1px; background: rgba(252,252,252,.14); }
+  .s8n-tl::after { background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(var(--p)); }
+  .s8n-tl li { position: relative; display: grid; gap: 8px; align-content: start; color: rgba(252,252,252,.45); transition: color .6s var(--ease); }
+  .s8n-tl li.on { color: var(--white); }
+  .s8n-tl li::before, .s8n-tl li::after { content: ""; position: absolute; left: 0; top: -28px; width: 7px; height: 7px; transform: rotate(45deg); background: #333; }
+  .s8n-tl li::after { background: linear-gradient(135deg, var(--mint), var(--cyan)); opacity: var(--a, 0); transform: rotate(45deg) scale(calc(.4 + .6 * var(--a, 0))); }
+  .s8n-tl .t { font: 400 var(--t-label)/1.3 var(--sans); color: rgba(252,252,252,.5); }
+  .s8n-tl li.on .t { color: var(--mint); }
+  .s8n-tl b { font: 300 var(--t-lead-m)/1.3 var(--sans); letter-spacing: -.01em; color: inherit; text-wrap: balance; }
+  .s8n-tl .d { font-size: 15px; line-height: 1.45; color: inherit; opacity: .8; text-wrap: balance; }
+  @media (max-width: 1023px) { .s8p-grid { grid-template-columns: minmax(0, 1fr); } .s8p-grid > .s8n, .s8p-grid > .sec-08-ui { grid-column: 1 / -1; } .s8p-top { flex-direction: column; align-items: flex-start; } }
+  /* vertical: in the pricing's left column (data-dir="v"), and on phones */
+  .s8n-tl[data-dir="v"] { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0 0 0 24px; }
+  .s8n-tl[data-dir="v"]::before, .s8n-tl[data-dir="v"]::after { width: 1px; height: var(--rw, 100%); }
+  .s8n-tl[data-dir="v"]::after { background: linear-gradient(180deg, var(--mint), var(--cyan)); transform-origin: top; transform: scaleY(var(--p)); }
+  .s8n-tl[data-dir="v"] li::before, .s8n-tl[data-dir="v"] li::after { left: -24px; top: 4px; }
+  .s8n-tl[data-dir="v"] li { gap: 6px; }
+  /* ---- pricing (26.11): a large section of its own with a section head (eyebrow, h2 display-l, lead) and the quote builder
+     under it on the full width; the builder itself is unchanged (approved by the client) ---- */
+  .s8p-head { max-width: calc(7 / 12 * 100%); margin-bottom: var(--sp-5); }
+  .s8p-head .sec-08-eyebrow { margin-bottom: var(--sp-3); }
+  .s8p-head .sec-08-lead { margin-top: var(--sp-3); }
+  /* ---- the quote builder in the pricing (26.11, B of an A/B): the builder's own size and choices, with a gradient edge on
+     top (green 080 to cyan 080) and only the system's type roles, each at the step of the scale nearest the builder's sizes
+     (questions body-m 16, choices and summary body-s 14, labels label-s 13 mono, the price title-m), so nothing grows.
+     Colours from the brand library (tokens/comp-ai-colours.css): the surface neutral 010 (#202020), the summary a step up
+     with the neutral 100 ramp at 4 % over it, the edge and hairlines on the neutral 100 ramp (16 %, 8 %). ---- */
+  #sec-08-price .sec-08-ui { position: relative; background: #202020; border-color: rgba(248,248,248,.16); }      /* neutral 010; neutral 100 at 16 % */
+  #sec-08-price .sec-08-ui::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--mint), var(--cyan)); z-index: 1; }
+  #sec-08-price .sec-08-mono { font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  #sec-08-price .sec-08-qrow legend { font: 400 var(--fs-body-m, 16px)/1.3 var(--sans); }
+  #sec-08-price .sec-08-qrow legend small { font: 400 var(--fs-body-s, 14px)/1.3 var(--sans); }
+  #sec-08-price .sec-08-chip { font: 400 var(--fs-body-s, 14px)/1 var(--sans); }
+  #sec-08-price .sec-08-ui { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
+  #sec-08-price .sec-08-qlist dd { font-size: var(--fs-body-s, 14px); }
+  #sec-08-price .sec-08-qprice b { font: 300 var(--fs-title-m, 33px)/1.05 var(--sans); }
+  #sec-08-price .sec-08-qprice small { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
+  #sec-08-price .sec-08-qsum { background: rgba(248,248,248,.04); }      /* neutral 100 at 4 % over neutral 010 */
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
@@ -1389,7 +1531,7 @@
 
   /* modules: a full-strength rule, the title on the left (it stays put while the module scrolls; top clears the
      homepage's fixed bar + nav), the content on the right */
-  .sec-08-mod { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 72px; align-items: start; padding: 56px 0 104px; border-top: 1px solid rgba(252,252,252,.4); }
+  .sec-08-mod { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 72px; align-items: start; padding: 0; }      /* no rule between the sections; the section pads (26.11) */
   .sec-08 { --stick-08: var(--nav-h, 74px); }      /* below the homepage's fixed nav (the announcement bar has slid away by here) */
   .sec-08-mod-h { position: sticky; top: calc(var(--stick-08) + 24px); z-index: 2; }
   .sec-08-mod-h .sec-08-eyebrow { margin-bottom: 18px; }
@@ -1433,26 +1575,6 @@
   .sec-08-qsum .btn-primary::before { background: var(--white); }
   .sec-08-qsum .btn-primary:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--white); }
 
-  /* ---- the call: three steps in a row (the tab pattern of 03). The mint line fills over the active step, then the next one
-     takes over; click or arrow keys pick one; paused on hover and focus; static under reduced motion. ---- */
-  .sec-08-tabs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-  .sec-08-tb { position: relative; display: grid; gap: 12px; align-content: start; width: 100%; margin: 0; padding: 20px 4px 0 0; border: 0; background: none;
-    color: rgba(252,252,252,.45); text-align: left; font: inherit; cursor: pointer; transition: color .3s; }
-  .sec-08-tb::before, .sec-08-tb::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: rgba(252,252,252,.16); }
-  .sec-08-tb::after { background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(0); }
-  .sec-08-tb[aria-selected="true"] { color: var(--white); }
-  .sec-08-tb[aria-selected="true"]::after, .sec-08-tb.is-done::after { transform: scaleX(1); }      /* finished steps stay filled */
-  .sec-08-tb.is-done { color: var(--white); }      /* finished steps keep their text lit, not only the line */
-  .sec-08-tb.is-done .sec-08-k { color: var(--mint); opacity: 1; }
-  .sec-08-tabs.run .sec-08-tb[aria-selected="true"]::after { animation: sec08-run 6s linear both; }
-  .sec-08-tabs:is(:hover, :focus-within) .sec-08-tb[aria-selected="true"]::after { animation-play-state: paused; }
-  @keyframes sec08-run { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  .sec-08-tb:hover { color: var(--white); }
-  .sec-08-tb:focus-visible { outline-offset: 4px; border-radius: var(--r-sm); }
-  .sec-08-tb .sec-08-k { font: 400 var(--t-label)/1.3 var(--sans); opacity: .7; }
-  .sec-08-tb[aria-selected="true"] .sec-08-k { color: var(--mint); opacity: 1; }
-  .sec-08-tb b { font-weight: 300; font-size: var(--t-lead-m); line-height: 1.3; letter-spacing: -.01em; text-wrap: balance; }
-  .sec-08-tb span:last-child { font-size: 15px; line-height: 1.45; opacity: .85; text-wrap: balance; }
 
   /* ---- FAQ: two independent columns of questions, collapsed by default (details / summary, keyboard native) ---- */
   .sec-08-faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; align-items: start; }
@@ -1477,7 +1599,7 @@
   }
 
   /* ---- closing: "Compliance that helps you close deals." (the CTA of the v2 sketch, moved here from the footer) ---- */
-  .sec-08-close { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 32px 64px; padding: 72px 0 96px; border-top: 1px solid rgba(252,252,252,.4); }
+  .sec-08-close { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 32px 64px; padding: 0; }
   .sec-08-close .sec-08-eyebrow { margin-bottom: 20px; }
   .sec-08 .sec-08-close-t { margin: 0; max-width: 15ch; font-weight: 300; font-size: var(--t-display-l); line-height: 1.02; letter-spacing: -.04em; text-wrap: balance; }
   .sec-08-close .sec-08-lead { max-width: 30em; }
@@ -1490,18 +1612,15 @@
     .sec-08 { --t-lead-m: 16px; --t-display-m: 26px; --t-display-l: 33px; }
     .quote-08 { padding: 104px 0 144px; }
     .sec-08-close { grid-template-columns: minmax(0, 1fr); }
-    .sec-08-mod { grid-template-columns: minmax(0, 3fr) minmax(0, 7fr); padding: 44px 0 80px; gap: 28px 32px; }
+    .sec-08-mod { grid-template-columns: minmax(0, 3fr) minmax(0, 7fr); gap: 28px 32px; }
     .sec-08-ui-b { grid-template-columns: minmax(0, 1fr); }
     .sec-08-qsum { border-left: 0; border-top: 1px solid rgba(252,252,252,.08); }
-    .sec-08-tabs { grid-template-columns: minmax(0, 1fr); gap: 0; }
-    .sec-08-tb { padding: 16px 0; grid-template-columns: 36px minmax(0, 1fr); gap: 6px 4px; }
-    .sec-08-tb .sec-08-k { grid-row: span 2; padding-top: 4px; }
-    .sec-08-close { padding: 56px 0 72px; align-items: start; }
+    .sec-08-close { align-items: start; }
   }
   /* one column only on phones; from 768px up the module titles stay beside their content and stick */
   /* phones: one column; the module title becomes a dark bar that sticks under the nav while its content scrolls (as 03's tabs) */
   @media (max-width: 767px) {
-    .sec-08-mod { grid-template-columns: minmax(0, 1fr); padding: 0 0 64px; gap: 20px; }
+    .sec-08-mod { grid-template-columns: minmax(0, 1fr); gap: 20px; }
     .sec-08-mod-h { top: var(--stick-08); margin-inline: calc(var(--edge) * -1); padding: 20px var(--edge) 14px; background: #000; border-bottom: 1px solid var(--line-08); }
     .sec-08-mod-h .sec-08-eyebrow { margin-bottom: 10px; }
     .sec-08-mod-h .sec-08-note { display: none; }
@@ -1515,7 +1634,6 @@
     .sec-08-ui-h { padding: 0 16px; }
     .sec-08-qsum { padding: 18px 16px; }
     .sec-08-a { padding-right: 0; }
-    .sec-08-close { padding: 48px 0 64px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .sec-08 *, .sec-08 *::before, .sec-08 *::after { animation: none !important; transition: none !important; }
@@ -1899,7 +2017,6 @@
     .sec-05 .grid-05::after, .sec-06 .head-06::after, .sec-07 .head-07::after { background: rgba(22,22,22,.12); }      /* the hairline on the light sections */
     .sec-06 .stage-06 { margin-top: var(--sp-4); padding-top: 0; }
     .sec-07 .bento-07 { margin-top: var(--sp-4); }
-    .sec-08-mod { padding-top: var(--sp-4); }      /* 08: each module opens with its own line (border-top), the content 40 under it */
 
     /* stacked head, where the section is two columns (04, 05): text on the left, the visual on the right */
     .sec-04 .txt-04 { order: 1; padding: 0 var(--sp-5) 0 0; }
@@ -2048,7 +2165,7 @@
   /* 08, the black section after the light ones (Michał, 25.11, list 46): more room where it opens and where it closes,
      the largest step of the scale (168 at 1920, 104 at 1280) */
   @media (min-width: 1024px) {
-    .sec-08-close { padding-bottom: var(--sp-7); }
+    #sec-08-close { padding-bottom: var(--sp-7); }
   }
   /* where a head has no line under it, the content keeps the head -> content step, 64 (02, 05, 06, 07) */
   @media (min-width: 1024px) {
@@ -2895,7 +3012,7 @@
 </section>
 <!-- @section:07 html:end -->
 <!-- @section:08 html:start -->
-<!-- 08 split (26.11): the old 08 is now five sections, each in its own block (quote, demo, price, faq, close),
+<!-- 08 split (26.11): the old 08 is now four sections, each in its own block (quote, price with the next step, faq, close),
      so each can be worked on alone. They share the .sec-08 class (tokens, type); the ids stay as they were. -->
 <!-- @section:08-quote html:start -->
 <!-- power quote (26.11): the old head of 08 as a quote, as "Comp AI shows the work." before 03, on light (the paper of 04-07);
@@ -2908,32 +3025,36 @@
   </div>
 </section>
 <!-- @section:08-quote html:end -->
-<!-- @section:08-demo html:start -->
-<section class="sec-08" id="sec-08-demo" aria-labelledby="sec-08-call-t">
-  <div class="wrap">
-    <div class="sec-08-mod">
-      <div class="sec-08-mod-h">
-        <p class="sec-08-eyebrow">The demo</p>
-        <h3 id="sec-08-call-t">What happens on the call</h3>
-        <p class="sec-08-note">Twenty minutes, on tools like yours.</p>
-      </div>
-      <ol class="sec-08-tabs" role="tablist" aria-label="The 20-minute call, step by step">
-        <li><button class="sec-08-tb" type="button" role="tab" aria-selected="true"><span class="sec-08-k">01</span><b>You show us your stack</b><span>Your tools and the frameworks you need.</span></button></li>
-        <li><button class="sec-08-tb" type="button" role="tab" aria-selected="false" tabindex="-1"><span class="sec-08-k">02</span><b>We do the work, live</b><span>Agents collect evidence and draft policies.</span></button></li>
-        <li><button class="sec-08-tb" type="button" role="tab" aria-selected="false" tabindex="-1"><span class="sec-08-k">03</span><b>You get a plan and a price</b><span>What audit-ready takes, and what it costs.</span></button></li>
-      </ol>
-    </div>
-  </div>
-</section>
-<!-- @section:08-demo html:end -->
 <!-- @section:08-price html:start -->
+<!-- pricing (26.11, v6): in the pattern of 02 The shift, not the same: the section head over the content as in the other
+     sections, then the next step (the call as a vertical timeline on 02's diamond rail) on the left and the quote builder on the right -->
 <section class="sec-08" id="sec-08-price" aria-labelledby="sec-08-price-t">
   <div class="wrap">
-    <div class="sec-08-mod">
-      <div class="sec-08-mod-h">
+    <div class="s8p-top">
+      <div class="s8p-head">
         <p class="sec-08-eyebrow">Pricing</p>
-        <h3 id="sec-08-price-t">What sets the price</h3>
-        <p class="sec-08-note">Pick what applies to you. We confirm your number on the call.</p>
+        <h2 id="sec-08-price-t">What sets the price</h2>
+        <p class="sec-08-lead">Pick what applies to you, or start from a company like yours. We confirm your number on a <span class="sec-08-nb">20-minute</span> call.</p>
+      </div>
+      <!-- presets (the switch of 02, over the builder): each fills the builder with a typical company; placeholders to confirm -->
+      <div class="shift-switch s8p-presets" role="group" aria-label="Start from a company like yours"><button type="button" aria-pressed="false" data-p="0">Startup</button><button type="button" aria-pressed="true" data-p="1">Scale-up</button><button type="button" aria-pressed="false" data-p="2">Enterprise</button></div>
+    </div>
+    <div class="s8p-grid">
+      <div class="s8n" id="sec-08-next" role="group" aria-label="The 20-minute call, step by step">
+        <!-- working copy: the systems, tasks and figures in the small UI pieces are placeholders -->
+        <ol class="s8n-tl" data-dir="v">
+          <li><span class="t"><span class="n">Step 1</span>Min 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span>
+            <span class="s8n-conn"><span style="--i:0">AWS</span><span style="--i:1">GitHub</span><span style="--i:2">Google Workspace</span><span style="--i:3">Okta</span><button type="button" class="s8n-more" aria-label="Add one more tool"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg><span class="nm">More</span><em>Try it</em></button></span>
+            <span class="s8n-sum" aria-live="polite"><em data-count="212">0</em> controls mapped to your stack</span></li>
+          <li><span class="t"><span class="n">Step 2</span>Min 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies while you watch.</span>
+            <span class="s8n-list" aria-hidden="true"></span></li>
+          <li><span class="t"><span class="n">Step 3</span>Min 15–20</span><b>You leave with a plan and your number</b><span class="d">What audit-ready takes, and what it costs.</span>
+            <span class="s8n-plan" aria-hidden="true">
+              <span class="l">Connect</span><span class="tr"><i style="--s:0;--e:.14;--d:0"></i></span>
+              <span class="l">Evidence, policies</span><span class="tr"><i style="--s:.08;--e:.72;--d:1"></i></span>
+              <span class="l">Audit</span><span class="tr"><i style="--s:.66;--e:1;--d:2"></i></span>
+              <span class="ax"><span>Today</span><span>Audit-ready · week XX</span></span></span></li>
+        </ol>
       </div>
       <!-- working copy: the four factors, the size bands and the lists of frameworks and systems are placeholders to confirm with Comp AI -->
       <div class="sec-08-ui" data-quote>
@@ -5017,33 +5138,67 @@
   if (reduced || !('IntersectionObserver' in window)) qv.forEach(e => e.classList.add('in'));
   else { const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' }); qv.forEach(e => io.observe(e)); }
 
-  const list = document.querySelector('#sec-08-demo .sec-08-tabs');
-  if (list) {
-    const tabs = [...list.querySelectorAll('.sec-08-tb')];
-    let cur = 0;
-    let hold = 0;
-    const show = (i, focus) => {
-      clearTimeout(hold);
-      cur = (i + tabs.length) % tabs.length;
-      tabs.forEach((b, j) => { b.setAttribute('aria-selected', j === cur); b.tabIndex = j === cur ? 0 : -1; b.classList.toggle('is-done', j < cur); });
-      if (focus) tabs[cur].focus();
-    };
-    tabs.forEach((b, i) => {
-      b.addEventListener('click', () => show(i));
-      b.addEventListener('animationend', () => {
-        if (!list.classList.contains('run')) return;
-        if (cur < tabs.length - 1) show(cur + 1);
-        else { b.classList.add('is-done'); hold = setTimeout(() => show(0), 2400); }   // all three full, a beat, then from the start
-      });
-      b.addEventListener('keydown', e => {
-        const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-        if (d) { e.preventDefault(); show(cur + d, true); }
-        else if (e.key === 'Home') { e.preventDefault(); show(0, true); }
-        else if (e.key === 'End') { e.preventDefault(); show(tabs.length - 1, true); }
-      });
-    });
-    if (!reduced) new IntersectionObserver(([e]) => list.classList.toggle('run', e.isIntersecting), { threshold: .4 }).observe(list);
+  // ---- next step: the timeline's rail fills once, as it comes into view (2.6 s, eased); each diamond and its step light as the
+  //      fill reaches them. The rail runs from the first diamond to the last (measured). Static under reduced motion.
+  const tl = document.querySelector('#sec-08-next .s8n-tl');
+  if (tl) {
+    const items = [...tl.children];
+    const vert = () => tl.dataset.dir === 'v';
+    let end = 1, X = [];
+    const measure = () => { const v = vert(); X = items.map(li => v ? li.offsetTop + 7 : li.offsetLeft + 3); end = X[X.length - 1] - X[0] || 1;
+      tl.style.setProperty('--rw', end + 'px'); };
+    const paint = p => { tl.style.setProperty('--p', p.toFixed(4));
+      items.forEach((li, k) => { const a = Math.min(1, Math.max(0, (p * end - (X[k] - X[0]) + 24) / 24)); li.style.setProperty('--a', a.toFixed(3)); li.classList.toggle('on', a > .5); }); };
+    measure(); paint(0);
+    addEventListener('resize', () => { measure(); paint(+tl.style.getPropertyValue('--p') || 0); });
+    if (reduced || !('IntersectionObserver' in window)) paint(1);
+    else { const io = new IntersectionObserver(([e]) => { if (!e.isIntersecting) return; io.disconnect();
+        const t0 = performance.now(), D = 2600, ease = t => 1 - Math.pow(1 - t, 3);
+        const step = now => { const t = Math.min(1, (now - t0) / D); paint(ease(t)); if (t < 1) requestAnimationFrame(step); };
+        requestAnimationFrame(step); }, { threshold: .6 });
+      io.observe(tl); }
   }
+
+  // ---- next step, 2 · the work, live: the agents' tasks as a short list. While the step is lit and on screen a task comes in
+  //      every 3.2 s, is worked on for 1.6 s, then done; three rows shown. The first rows are there from the start, done.
+  const list = document.querySelector('#sec-08-next .s8n-list');
+  if (list) {
+    const li = list.closest('li');
+    const TASKS = [['Collect evidence from AWS', 'CC6.1'], ['Draft the access control policy', 'A.5.15'], ['Check MFA in Google Workspace', 'CC6.3'], ['Review a new vendor', 'CC9.2'],
+      ['Map controls to ISO 27001', 'A.5.1'], ['Pull GitHub branch protection', 'CC8.1'], ['Score laptop encryption risk', 'A.8.24']];
+    let i = 0, timer = 0, vis = false;
+    const row = (cls, anim) => { const r = document.createElement('span'); r.className = 'r ' + cls; if (!anim) r.style.animation = 'none';
+      const [t, c] = TASKS[i++ % TASKS.length]; r.innerHTML = `<span>${t}</span><span class="c">${c}</span>`; list.append(r); while (list.children.length > 3) list.firstElementChild.remove(); return r; };
+    row('done'); row('done'); row('done');
+    const next = () => { clearTimeout(timer); if (!vis || reduced) return;
+      if (li.classList.contains('on')) { const r = row('run', true); setTimeout(() => r.classList.replace('run', 'done'), 1600); timer = setTimeout(next, 3200); }
+      else timer = setTimeout(next, 500); };
+    new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (vis) timer = setTimeout(next, 1200); else clearTimeout(timer); }).observe(list);
+  }
+  // step 1: the controls the stack maps to count up once, after the tools have connected; "More" adds one more tool (connected
+  //         as it comes in) and the count goes up with it; the button goes when the list of tools runs out
+  const sum = document.querySelector('#sec-08-next .s8n-sum em');
+  if (sum) { const li = sum.closest('li'); let shown = 0, started = false;
+    const countTo = (N, delay = 0) => { const from = shown; shown = N;
+      if (reduced) { sum.textContent = N; return; }
+      const t0 = performance.now() + delay, D = 1000 + Math.min(600, Math.abs(N - from) * 4);
+      const f = now => { const k = Math.min(1, Math.max(0, (now - t0) / D)); sum.textContent = Math.round(from + (N - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); };
+      requestAnimationFrame(f); };
+    const go = () => { if (started || !li.classList.contains('on')) return; started = true; countTo(+sum.dataset.count, 1500); };
+    new MutationObserver(go).observe(li, { attributes: true, attributeFilter: ['class'] }); go();
+    // More, as 05's next framework: the chip becomes the added tool (it drops in, in the gradient); "Next" on it replaces it
+    // with the next tool, round the list; the count follows (the stack's own controls plus the added tool's)
+    const more = li.querySelector('.s8n-more'), EXTRA = [['Azure', 34], ['Jamf', 21], ['Slack', 12], ['Jira', 16], ['Datadog', 19]];
+    if (more) { let k = 0; const nm = more.querySelector('.nm'), tag = more.querySelector('em'), base = +sum.dataset.count;
+      more.addEventListener('click', () => { const [name, add] = EXTRA[k++ % EXTRA.length];
+        more.classList.remove('on'); void more.offsetWidth; more.classList.add('on'); nm.textContent = name; tag.textContent = 'Next';
+        more.setAttribute('aria-label', name + ' added. Replace it with the next tool');
+        if (!reduced) { const box = more.parentElement, r = more.getBoundingClientRect(), br = box.getBoundingClientRect();
+          [...box.querySelectorAll(':scope > span')].forEach((c, j) => { c.classList.remove('pulse'); void c.offsetWidth; setTimeout(() => c.classList.add('pulse'), 80 * j); setTimeout(() => c.classList.remove('pulse'), 1200 + 80 * j); });
+          for (let i = 0; i < 14; i++) { const d = document.createElement('i'); d.className = 's8n-px'; const ang = Math.random() * Math.PI * 2, dist = 30 + Math.random() * 50;
+            d.style.cssText = `left:${r.left - br.left + r.width * (.15 + .7 * Math.random())}px;top:${r.top - br.top + r.height / 2}px;--dx:${Math.cos(ang) * dist}px;--dy:${Math.sin(ang) * dist - 20}px;--c:${['#FCFCFC', '#979797', '#FCFCFC'][i % 3]}`;
+            box.append(d); setTimeout(() => d.remove(), 800); } }
+        countTo(base + add, 250); }); } }
 
   // ---- pricing: the quote builder. Toggles (frameworks, systems) and single choices (size, audit) feed the summary.
   const quote = document.querySelector('#sec-08-price [data-quote]');
@@ -5067,7 +5222,23 @@
         e.preventDefault(); const c = chips[(chips.indexOf(document.activeElement) + d + chips.length) % chips.length]; choose(c); c.focus();
       });
     });
-    update();
+    // presets (26.11): the switch over the builder fills it with a typical company; a manual change shows which preset still
+    // matches, if any. Working values, to confirm with Comp AI.
+    const PRESETS = [
+      { fw: ['SOC 2'], size: ['1–50'], sys: ['AWS', 'GitHub', 'Google Workspace'], aud: ['With Comp AI'] },
+      { fw: ['SOC 2', 'ISO 27001'], size: ['51–200'], sys: ['AWS', 'GitHub', 'Google Workspace'], aud: ['With Comp AI'] },
+      { fw: ['SOC 2', 'ISO 27001', 'HIPAA', 'GDPR'], size: ['1,000+'], sys: ['AWS', 'Azure', 'GitHub', 'Okta'], aud: ['Own auditor'] } ];
+    const pbtn = [...document.querySelectorAll('#sec-08-price .s8p-presets button')];
+    const groups = [...quote.querySelectorAll('[data-q]')];
+    const same = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+    const mark = () => { const now = Object.fromEntries(groups.map(g => [g.dataset.q, picked(g)]));
+      pbtn.forEach((b, i) => b.setAttribute('aria-pressed', Object.keys(PRESETS[i]).every(k => same(PRESETS[i][k], now[k])))); };
+    const apply = P => { groups.forEach(g => { const v = P[g.dataset.q], radio = g.getAttribute('role') === 'radiogroup';
+      g.querySelectorAll('.sec-08-chip').forEach(c => { const on = v.includes(c.textContent); c.setAttribute(radio ? 'aria-checked' : 'aria-pressed', on); if (radio) c.tabIndex = on ? 0 : -1; }); });
+      update(); mark(); };
+    pbtn.forEach((b, i) => b.addEventListener('click', () => apply(PRESETS[i])));
+    quote.addEventListener('click', e => { if (e.target.closest('.sec-08-chip')) mark(); });
+    update(); mark();
   }
 })();
 </script>
@@ -5559,7 +5730,7 @@
    Inline styles are set only while a block is leaving, so the sections' own entrance animations are left alone.
    Canvases are not touched (the head bridge between 04 and 05 drives its own). The hero has its own exit; the footer is last. */
 (() => {
-  const SECS = ['shift', 'sec-03', 'sec-04', 'sec-05', 'sec-06', 'sec-07', 'sec-08', 'sec-08-demo', 'sec-08-price', 'sec-08-faq', 'sec-08-close'];
+  const SECS = ['shift', 'sec-03', 'sec-04', 'sec-05', 'sec-06', 'sec-07', 'sec-08', 'sec-08-price', 'sec-08-faq', 'sec-08-close'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const row = document.querySelector('.site-nav .nav-row');
   const clamp01 = v => Math.min(1, Math.max(0, v));
