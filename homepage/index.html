@@ -3072,10 +3072,10 @@
 
   const jit = new Float32Array(N);
   for (let i = 0; i < N; i++) { const h = Math.sin(D.pts[2*i] * 0.9285 + D.pts[2*i+1] * 5.5881) * 43758.5453; jit[i] = (h - Math.floor(h)) * 2 - 1;}
-  // the way out as section 03 comes in (26.11): each dot has its own moment to go, mostly at random, a little earlier lower on the
-  // screen (where 03 rises from); window.printOut 0..1 is set by the scroll script near the end of the page
+  // the way out as section 03 comes in (26.11): each dot has its own moment to go; it starts clearly at the bottom of the screen
+  // (where 03 rises from) and climbs, at random within that; window.printOut 0..1 is set by the scroll script near the end of the page
   const OUTR = new Float32Array(N); for (let i = 0; i < N; i++) { const h = Math.sin(D.pts[2*i] * 12.9898 + D.pts[2*i+1] * 78.233) * 24634.6345; OUTR[i] = h - Math.floor(h); }
-  const outOf = (i, x, y, out) => { const sy = Math.min(1, Math.max(0, (y * view.k + view.oy) / view.h)), th = (.8 * OUTR[i] + .2 * (1 - sy)) * .9;
+  const outOf = (i, x, y, out) => { const sy = Math.min(1, Math.max(0, (y * view.k + view.oy) / view.h)), th = (.4 * OUTR[i] + .6 * (1 - sy)) * .9;      /* from the bottom up, frayed: position leads (60 %), chance breaks the edge (40 %) */
     return 1 - smooth(th, th + .1, out); };
 
   // ---- intro: the print is pressed in from black, front running along its own lines ------------
