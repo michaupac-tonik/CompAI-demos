@@ -2273,6 +2273,12 @@
     opacity .3s ease, transform .55s cubic-bezier(.2,.7,.1,1); transition-delay: var(--fd, 0s); }
   #sec-05 .chart-05.lg .col-05 > .fw-05.fold { height: 0; padding-top: 0; padding-bottom: 0; margin-top: -4px; opacity: 0; transform: scaleX(.92); box-shadow: none; }
   #sec-05 .chart-05.lg .col-05 > :not(.fw-05) { transition: none; }      /* the figures and stories just ride down on the stack */
+  /* ==== 05 (Michał, 26.11): the new frameworks in the gradient of 02's handover bars (mint to cyan, left to right) */
+  html .sec-05 .fw-05.new, html .sec-05 button.fw-05.next.on { background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  /* the last column's new frameworks carry a passing sheen: the gradient goes under it, as a second layer (it does not move: 100 % wide) */
+  html .sec-05 .col-05:last-child .fw-05.new { background-color: transparent; background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%), linear-gradient(90deg, var(--mint), var(--cyan));
+    background-size: 250% 100%, 100% 100%; background-repeat: no-repeat; }
+  html #sec-05 .sw-l button.w[aria-pressed="true"]::before { background: linear-gradient(90deg, var(--mint), var(--cyan)); border-color: transparent; }
 </style>
 </head>
 <body>
