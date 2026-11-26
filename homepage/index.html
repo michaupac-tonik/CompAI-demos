@@ -1443,10 +1443,11 @@
   .s8n-sum { display: block; margin-top: 10px; color: rgba(252,252,252,.6); line-height: 1.45; }
   .s8n-sum em { font-style: normal; color: var(--white); font-variant-numeric: tabular-nums; }
   .s8n-list { max-width: 420px; }
-  .s8n-list .r .c { margin-left: auto; padding-left: 16px; color: rgba(252,252,252,.5); }
-  /* done: white struck through in white (no colour), the task and its control alike */
+  .s8n-list .r .c { margin-left: auto; padding-left: 16px; color: var(--white); }
+  /* only the task being worked on is white; done ones fade to grey, struck through in the same grey (no colour), the task and its control alike */
   .s8n-list .r .c { text-decoration-line: line-through; text-decoration-color: transparent; transition: text-decoration-color .4s ease, color .5s ease; }
-  .s8n-list .r.done span, .s8n-list .r.done .c { color: var(--text-2, rgba(252,252,252,.72)); text-decoration-color: currentColor; }
+  .s8n-list .r span { color: var(--white); }
+  .s8n-list .r.done span, .s8n-list .r.done .c { color: rgba(252,252,252,.4); text-decoration-color: currentColor; }
   .s8n-plan .tr::after { content: ""; position: absolute; inset: -6px 0; background: repeating-linear-gradient(90deg, rgba(252,252,252,.1) 0 1px, transparent 1px 25%); pointer-events: none; }
   /* step 1 · More: one more tool, in the pattern of 05's next framework: a quiet chip with a plus and a nudging "Try it" */
   .s8n-more { appearance: none; display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 6px 0 10px; border: 1px dashed rgba(252,252,252,.28); border-radius: var(--r-sm);
