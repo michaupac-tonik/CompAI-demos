@@ -1382,7 +1382,11 @@
   /* ---- pricing (26.11, v6): in the pattern of 02 The shift, not the same. The section head over the content as in the
      other sections (eyebrow, h2 display-l, lead; 7 of 12), then 64 under it: left (4 of 12) the next step, the call as a
      vertical timeline on 02's diamond rail; right (8 of 12) the quote builder, unchanged inside. ---- */
-  .s8p-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 72px; align-items: start; }      /* left 4 of 12, builder 8 of 12 (26.11) */
+  /* on the page's 12 columns, as 02 The shift: the steps on columns 1-4, one column left empty, the builder on 6-12
+     (about 140 between them at 1440, as between 02's text and its board) */
+  .s8p-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3); row-gap: 32px; align-items: start; }
+  .s8p-grid > .s8n { grid-column: 1 / span 4; }
+  .s8p-grid > .sec-08-ui { grid-column: 6 / -1; }
   /* head row: the section head on the left, the presets (02's switch) on the right over the builder */
   .s8p-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px 72px; margin-bottom: var(--sp-5); }
   .s8p-top .s8p-head { margin-bottom: 0; }
@@ -1482,7 +1486,7 @@
   .s8n-tl li.on .t { color: var(--mint); }
   .s8n-tl b { font: 300 var(--t-lead-m)/1.3 var(--sans); letter-spacing: -.01em; color: inherit; text-wrap: balance; }
   .s8n-tl .d { font-size: 15px; line-height: 1.45; color: inherit; opacity: .8; text-wrap: balance; }
-  @media (max-width: 1023px) { .s8p-grid { grid-template-columns: minmax(0, 1fr); } .s8p-top { flex-direction: column; align-items: flex-start; } }
+  @media (max-width: 1023px) { .s8p-grid { grid-template-columns: minmax(0, 1fr); } .s8p-grid > .s8n, .s8p-grid > .sec-08-ui { grid-column: 1 / -1; } .s8p-top { flex-direction: column; align-items: flex-start; } }
   /* vertical: in the pricing's left column (data-dir="v"), and on phones */
   .s8n-tl[data-dir="v"] { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0 0 0 24px; }
   .s8n-tl[data-dir="v"]::before, .s8n-tl[data-dir="v"]::after { width: 1px; height: var(--rw, 100%); }
@@ -1494,6 +1498,26 @@
   .s8p-head { max-width: calc(7 / 12 * 100%); margin-bottom: var(--sp-5); }
   .s8p-head .sec-08-eyebrow { margin-bottom: var(--sp-3); }
   .s8p-head .sec-08-lead { margin-top: var(--sp-3); }
+  /* ---- calculator A/B (26.11, review). A (default): the builder in 02's dark board. B (html.c08-b): the same builder as a
+     light card (paper, ink), so it stands out on black next to the steps; its Book a demo keeps the gradient ---- */
+  .c08-b #sec-08-price .sec-08-ui { background: var(--paper); color: var(--ink); border-color: transparent; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+  .c08-b #sec-08-price .sec-08-ui-h { border-bottom-color: rgba(22,22,22,.1); color: rgba(22,22,22,.55); }
+  .c08-b #sec-08-price .sec-08-qrow + .sec-08-qrow { box-shadow: inset 0 1px rgba(22,22,22,.1); }
+  .c08-b #sec-08-price .sec-08-qrow legend { color: var(--ink); }
+  .c08-b #sec-08-price .sec-08-qrow legend .sec-08-mono, .c08-b #sec-08-price .sec-08-qrow legend small { color: rgba(22,22,22,.5); }
+  .c08-b #sec-08-price .sec-08-chip { border-color: rgba(22,22,22,.18); color: rgba(22,22,22,.65); }
+  .c08-b #sec-08-price .sec-08-chip::before { border-color: rgba(22,22,22,.35); }
+  .c08-b #sec-08-price .sec-08-chip:hover { border-color: rgba(22,22,22,.55); color: var(--ink); }
+  .c08-b #sec-08-price .sec-08-chip:is([aria-pressed="true"], [aria-checked="true"]) { border-color: var(--ink); background: rgba(22,22,22,.04); color: var(--ink); }
+  .c08-b #sec-08-price .sec-08-chip:is([aria-pressed="true"], [aria-checked="true"])::before { border-color: var(--ink); }
+  .c08-b #sec-08-price .sec-08-qsum { background: rgba(22,22,22,.04); border-left-color: rgba(22,22,22,.08); }
+  .c08-b #sec-08-price .sec-08-qsum > .sec-08-mono, .c08-b #sec-08-price .sec-08-qlist dt, .c08-b #sec-08-price .sec-08-qprice .sec-08-mono { color: rgba(22,22,22,.5); }
+  .c08-b #sec-08-price .sec-08-qlist div { border-top-color: rgba(22,22,22,.1); }
+  .c08-b #sec-08-price .sec-08-qlist dd, .c08-b #sec-08-price .sec-08-qprice b { color: var(--ink); }
+  .c08-b #sec-08-price .sec-08-qprice { border-top-color: rgba(22,22,22,.14); }
+  .c08-b #sec-08-price .sec-08-qprice small { color: rgba(22,22,22,.6); }
+  .c08-b #sec-08-price .sec-08-qsum .btn-primary:is(:hover, :focus-visible) { border-color: var(--ink); }
+  .c08-b #sec-08-price .sec-08-ui :focus-visible { outline-color: var(--ink); }
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
