@@ -5143,7 +5143,7 @@
   const Cf = new Float32Array(N), Wf = new Float32Array(N), Mf = new Float32Array(N), Hf = new Float32Array(N), Dr = new Uint8Array(N), Xs = new Float32Array(N), Ys = new Float32Array(N), Hs = new Float32Array(N);
 
   // ---- tuning (press-screen.html, 16.11) ---------------------------------------------------
-  const SPEED = reduced ? 1e9 : 3.3, LOCAL = reduced ? 300 : 2300, SWELL = reduced ? 0 : 0.94;
+  const SPEED = reduced ? 1e9 : 1.7, LOCAL = reduced ? 300 : 2800, SWELL = reduced ? 0 : 0.6;      // 08 (26.11): a calmer morph than the hero's (3.3 / 2300 / .94): no snatch while the cursor keeps moving
   const P_RADIUS = 180, P_REACH = 0.75, P_DENSE = 0.24, P_SPILL = 1.5, P_SPREAD = 0.3, P_CRISP = 0.2, P_EDGE = 5.1;
   const GRAVITY = 0.24, LIFT_W = 0.25, LIFT_M = 0.35;
   const FAR_FROM = 120, FAR_TO = 640, FAR_W = 0.29, FAR_M = 0.47;
