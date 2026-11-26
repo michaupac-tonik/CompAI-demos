@@ -2309,6 +2309,8 @@
   html:is(.v06-c, .v06-d) .sec-06 .tag:not(.warn):not(.star) { background: rgba(36, 255, 99, .2); box-shadow: none; color: var(--ink); }
   html:is(.v06-c, .v06-d) .sec-06 .tag.warn { background: rgba(243, 115, 0, .16); color: #8a3d00; }
   html:is(.v06-c, .v06-d) .sec-06 .ck { background: rgba(36, 255, 99, .28); color: var(--ink); }
+  /* the repository's star count (GitHub stars, a click stars it): room inside its outline, as the other tags (a reset left it at 0) */
+  html:is(.v06-c, .v06-d) #sec-06 .win button.star { padding: 0 8px 0 7px; gap: 5px; }
   html:is(.v06-c, .v06-d) .sec-06 .win button.star.on { background: var(--mint); color: var(--ink); }
   html:is(.v06-c, .v06-d) .sec-06 .feed .src { background: linear-gradient(135deg, var(--mint), var(--cyan)); color: var(--ink); }
   /* the head: lines of even length (26.11) */
