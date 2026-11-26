@@ -3200,8 +3200,10 @@
     cvs.width = Math.round(view.w * view.dpr); cvs.height = Math.round(view.h * view.dpr);
     const S = F[0], coreX = S.cx, coreY = S.cy - S.ry * .28;
     if (view.w >= 1024) {
-      view.k = Math.max(.6, Math.min(view.w / 1440, view.h / 900));
-      view.ox = view.w * (.742 + Math.max(0, Math.min(1, (1440 - view.w) / 416)) * .1) - coreX * view.k;
+      // 26.11: the composition of 1920 kept on every desktop width: the scale follows the width (1.2 at 1920, as the type's fluid
+      // scale), limited by the height only on short windows; the centre stays at 74.2 % (it used to drift right below 1440)
+      view.k = Math.max(.6, Math.min(view.w / 1600, view.h / 900));
+      view.ox = view.w * .742 - coreX * view.k;
       view.oy = view.h * .44 - coreY * view.k;
     } else if (view.w > 600) {
       view.k = Math.max(.62, view.w / 1440 * 1.15);
@@ -3840,7 +3842,7 @@
     let vL = 0, vT = 0;
     const layout = () => { W = document.documentElement.clientWidth; H = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
       cv.width = cvB.width = Math.round(W * dpr); cv.height = cvB.height = Math.round(H * dpr);
-      let ox, oy; if (W >= 1024) { k0 = Math.max(.6, Math.min(W / 1440, H / 900)); ox = W * (.742 + clamp((1440 - W) / 416) * .1) - CX * k0; oy = H * .44 - CY * k0; }
+      let ox, oy; if (W >= 1024) { k0 = Math.max(.6, Math.min(W / 1600, H / 900)); ox = W * .742 - CX * k0;      /* as the hero's place() (26.11) */ oy = H * .44 - CY * k0; }
       else if (W > 600) { k0 = Math.max(.62, W / 1440 * 1.15); ox = W * .7 - CX * k0; oy = H * .3 - CY * k0; }
       else { k0 = Math.max(.5, W / 1440 * 1.6); ox = W * .62 - CX * k0; oy = H * .2 - CY * k0; }
       const a = art.getBoundingClientRect(); lw = a.width; lh = a.height;
