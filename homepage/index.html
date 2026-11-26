@@ -1337,7 +1337,7 @@
   }
   /* @section:07 css:end */
   /* @section:08 css:start */
-  /* ==== 08 · Next step (structure v12; split 26.11 into five sections: #sec-08 quote, #sec-08-demo, #sec-08-price,
+  /* ==== 08 · Next step (structure v12; split 26.11 into five sections: #sec-08 quote, #sec-08-next, #sec-08-price,
      #sec-08-faq, #sec-08-close, all .sec-08 for the shared tokens): the final CTA, dark.
      A power quote with the main action over the returning print, then three modules on full rules with sticky titles:
      The call (before pricing: three steps in a row, the tab pattern of 03: hairline + mint progress, no visual), Pricing (the quote builder in the dark UI of 02's board, with its own Book a demo), FAQ (collapsed),
@@ -1373,8 +1373,15 @@
     box-sizing: border-box; min-height: calc(100svh - var(--nav-h, 74px)); }      /* a screen under the nav, so the print can be large */
   .quote-08 .wrap { position: relative; z-index: 1; }
   .quote-08 .kv-08 { position: absolute; z-index: 0; inset: 0 0 auto; width: 100%; height: 100%; display: block; opacity: .8; pointer-events: none; }
-  .sec-08:not(.quote-08) { background: var(--black); }
-  #sec-08-demo { padding-top: var(--sp-6); }      /* dark from the demo on, over the paper and the print's way out */
+  .sec-08:not(.quote-08) { background: var(--black); }      /* dark from the next step on */
+  /* ---- next step (26.11): a section of its own on black. Opens as the first dark section ends and the light one starts
+     (03 -> 04: sp-7, 120 at 1440, 168 at 1920); the section head as the others (eyebrow, h2 display-l, lead, 24 apart),
+     then the three steps 64 under it (as 03's tabs), and sp-6 before the pricing module's line ---- */
+  .sec-08-next { padding: var(--sp-7) 0 var(--sp-6); }
+  .sec-08-nhead { max-width: calc(7 / 12 * 100%); }
+  .sec-08-nhead .sec-08-eyebrow { margin-bottom: var(--sp-3); }
+  .sec-08-nhead .sec-08-lead { margin-top: var(--sp-3); }
+  .sec-08-next .sec-08-tabs { margin-top: var(--sp-5); }
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
@@ -2837,7 +2844,7 @@
 </section>
 <!-- @section:07 html:end -->
 <!-- @section:08 html:start -->
-<!-- 08 split (26.11): the old 08 is now five sections, each in its own block (quote, demo, price, faq, close),
+<!-- 08 split (26.11): the old 08 is now five sections, each in its own block (quote, next, price, faq, close),
      so each can be worked on alone. They share the .sec-08 class (tokens, type); the ids stay as they were. -->
 <!-- @section:08-quote html:start -->
 <!-- power quote (26.11): the old head of 08 as a quote, as "Comp AI shows the work." before 03, on light (the paper of 04-07);
@@ -2850,24 +2857,24 @@
   </div>
 </section>
 <!-- @section:08-quote html:end -->
-<!-- @section:08-demo html:start -->
-<section class="sec-08" id="sec-08-demo" aria-labelledby="sec-08-call-t">
+<!-- @section:08-next html:start -->
+<!-- next step (26.11): the old demo module as a section of its own, with a section head (eyebrow "Next step", h2, lead) and the
+     three steps under it; the eyebrow came over from the old head, which is now the power quote -->
+<section class="sec-08 sec-08-next" id="sec-08-next" aria-labelledby="sec-08-next-t">
   <div class="wrap">
-    <div class="sec-08-mod">
-      <div class="sec-08-mod-h">
-        <p class="sec-08-eyebrow">The demo</p>
-        <h3 id="sec-08-call-t">What happens on the call</h3>
-        <p class="sec-08-note">Twenty minutes, on tools like yours.</p>
-      </div>
-      <ol class="sec-08-tabs" role="tablist" aria-label="The 20-minute call, step by step">
-        <li><button class="sec-08-tb" type="button" role="tab" aria-selected="true"><span class="sec-08-k">01</span><b>You show us your stack</b><span>Your tools and the frameworks you need.</span></button></li>
-        <li><button class="sec-08-tb" type="button" role="tab" aria-selected="false" tabindex="-1"><span class="sec-08-k">02</span><b>We do the work, live</b><span>Agents collect evidence and draft policies.</span></button></li>
-        <li><button class="sec-08-tb" type="button" role="tab" aria-selected="false" tabindex="-1"><span class="sec-08-k">03</span><b>You get a plan and a price</b><span>What audit-ready takes, and what it costs.</span></button></li>
-      </ol>
+    <div class="sec-08-nhead">
+      <p class="sec-08-eyebrow">Next step</p>
+      <h2 id="sec-08-next-t">What happens on the call</h2>
+      <p class="sec-08-lead">Twenty minutes, on tools like yours.</p>
     </div>
+    <ol class="sec-08-tabs" role="tablist" aria-label="The 20-minute call, step by step">
+      <li><button class="sec-08-tb" type="button" role="tab" aria-selected="true"><span class="sec-08-k">01</span><b>You show us your stack</b><span>Your tools and the frameworks you need.</span></button></li>
+      <li><button class="sec-08-tb" type="button" role="tab" aria-selected="false" tabindex="-1"><span class="sec-08-k">02</span><b>We do the work, live</b><span>Agents collect evidence and draft policies.</span></button></li>
+      <li><button class="sec-08-tb" type="button" role="tab" aria-selected="false" tabindex="-1"><span class="sec-08-k">03</span><b>You get a plan and a price</b><span>What audit-ready takes, and what it costs.</span></button></li>
+    </ol>
   </div>
 </section>
-<!-- @section:08-demo html:end -->
+<!-- @section:08-next html:end -->
 <!-- @section:08-price html:start -->
 <section class="sec-08" id="sec-08-price" aria-labelledby="sec-08-price-t">
   <div class="wrap">
@@ -4947,7 +4954,7 @@
   if (reduced || !('IntersectionObserver' in window)) qv.forEach(e => e.classList.add('in'));
   else { const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' }); qv.forEach(e => io.observe(e)); }
 
-  const list = document.querySelector('#sec-08-demo .sec-08-tabs');
+  const list = document.querySelector('#sec-08-next .sec-08-tabs');
   if (list) {
     const tabs = [...list.querySelectorAll('.sec-08-tb')];
     let cur = 0;
@@ -5465,7 +5472,7 @@
    Inline styles are set only while a block is leaving, so the sections' own entrance animations are left alone.
    Canvases are not touched (the head bridge between 04 and 05 drives its own). The hero has its own exit; the footer is last. */
 (() => {
-  const SECS = ['shift', 'sec-03', 'sec-04', 'sec-05', 'sec-06', 'sec-07', 'sec-08', 'sec-08-demo', 'sec-08-price', 'sec-08-faq', 'sec-08-close'];
+  const SECS = ['shift', 'sec-03', 'sec-04', 'sec-05', 'sec-06', 'sec-07', 'sec-08', 'sec-08-next', 'sec-08-price', 'sec-08-faq', 'sec-08-close'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const row = document.querySelector('.site-nav .nav-row');
   const clamp01 = v => Math.min(1, Math.max(0, v));
