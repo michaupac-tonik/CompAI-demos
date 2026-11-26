@@ -1558,6 +1558,15 @@
   /* picked: white outline and the mint diamond (the markers of 02 and 03) */
   .sec-08-chip[aria-pressed="true"], .sec-08-chip[aria-checked="true"] { border-color: rgba(252,252,252,.7); background: rgba(252,252,252,.06); color: var(--white); }
   .sec-08-chip[aria-pressed="true"]::before, .sec-08-chip[aria-checked="true"]::before { background: linear-gradient(135deg, var(--mint), var(--cyan)); border-color: var(--mint); }
+  /* Other (26.11): for a framework or system that is not listed. A quiet chip (dashed, a plus) that opens a small field in its
+     place; Enter (or leaving the field) adds what was typed as a picked choice before it, Esc cancels */
+  .sec-08-other { appearance: none; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 11px; border-radius: var(--r-sm); border: 1px dashed rgba(252,252,252,.28);
+    background: transparent; color: rgba(252,252,252,.6); font: inherit; font-size: var(--fs-body-s, 14px); line-height: 1; cursor: pointer; transition: border-color .2s, color .2s; }
+  .sec-08-other svg { width: 12px; height: 12px; }
+  .sec-08-other:is(:hover, :focus-visible) { border-color: rgba(252,252,252,.6); border-style: solid; color: var(--white); }
+  .sec-08-oin { height: 34px; width: 150px; padding: 0 11px; border-radius: var(--r-sm); border: 1px solid rgba(252,252,252,.7); background: rgba(252,252,252,.06);
+    color: var(--white); font: 400 var(--fs-body-s, 14px)/1 var(--sans); outline: none; }
+  .sec-08-oin::placeholder { color: rgba(252,252,252,.4); }
   .sec-08-qsum { display: flex; flex-direction: column; gap: 18px; padding: 20px; background: rgba(252,252,252,.025); border-left: 1px solid rgba(252,252,252,.08); }
   .sec-08-qsum > .sec-08-mono { color: rgba(252,252,252,.5); }
   .sec-08-qlist { margin: 0; display: grid; }
@@ -3061,9 +3070,9 @@
         <div class="sec-08-ui-h"><span class="sec-08-mono">Quote builder</span><span class="sec-08-mono">No price list</span></div>
         <div class="sec-08-ui-b">
           <form class="sec-08-qform" onsubmit="return false" aria-label="What applies to you">
-            <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">01</span>Frameworks <small>you need now</small></legend><div class="sec-08-chips" data-q="fw"><button class="sec-08-chip" type="button" aria-pressed="true">SOC 2</button><button class="sec-08-chip" type="button" aria-pressed="true">ISO 27001</button><button class="sec-08-chip" type="button" aria-pressed="false">HIPAA</button><button class="sec-08-chip" type="button" aria-pressed="false">GDPR</button><button class="sec-08-chip" type="button" aria-pressed="false">ISO 42001</button></div></fieldset>
+            <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">01</span>Frameworks <small>you need now</small></legend><div class="sec-08-chips" data-q="fw"><button class="sec-08-chip" type="button" aria-pressed="true">SOC 2</button><button class="sec-08-chip" type="button" aria-pressed="true">ISO 27001</button><button class="sec-08-chip" type="button" aria-pressed="false">HIPAA</button><button class="sec-08-chip" type="button" aria-pressed="false">GDPR</button><button class="sec-08-chip" type="button" aria-pressed="false">ISO 42001</button><button class="sec-08-other" type="button" data-ph="e.g. PCI DSS" aria-label="Add a framework that is not listed"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg>Other</button></div></fieldset>
             <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">02</span>Company size <small>people in scope</small></legend><div class="sec-08-chips" role="radiogroup" aria-label="Company size" data-q="size"><button class="sec-08-chip" type="button" role="radio" aria-checked="false">1–50</button><button class="sec-08-chip" type="button" role="radio" aria-checked="true">51–200</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">201–1,000</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">1,000+</button></div></fieldset>
-            <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">03</span>Systems <small>to connect</small></legend><div class="sec-08-chips" data-q="sys"><button class="sec-08-chip" type="button" aria-pressed="true">AWS</button><button class="sec-08-chip" type="button" aria-pressed="false">Google Cloud</button><button class="sec-08-chip" type="button" aria-pressed="false">Azure</button><button class="sec-08-chip" type="button" aria-pressed="true">GitHub</button><button class="sec-08-chip" type="button" aria-pressed="true">Google Workspace</button><button class="sec-08-chip" type="button" aria-pressed="false">Okta</button></div></fieldset>
+            <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">03</span>Systems <small>to connect</small></legend><div class="sec-08-chips" data-q="sys"><button class="sec-08-chip" type="button" aria-pressed="true">AWS</button><button class="sec-08-chip" type="button" aria-pressed="false">Google Cloud</button><button class="sec-08-chip" type="button" aria-pressed="false">Azure</button><button class="sec-08-chip" type="button" aria-pressed="true">GitHub</button><button class="sec-08-chip" type="button" aria-pressed="true">Google Workspace</button><button class="sec-08-chip" type="button" aria-pressed="false">Okta</button><button class="sec-08-other" type="button" data-ph="e.g. Jamf" aria-label="Add a system that is not listed"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg>Other</button></div></fieldset>
             <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">04</span>Audit</legend><div class="sec-08-chips" role="radiogroup" aria-label="Audit" data-q="aud"><button class="sec-08-chip" type="button" role="radio" aria-checked="true">With Comp AI</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">Own auditor</button></div></fieldset>
           </form>
           <div class="sec-08-qsum">
@@ -5237,6 +5246,18 @@
       g.querySelectorAll('.sec-08-chip').forEach(c => { const on = v.includes(c.textContent); c.setAttribute(radio ? 'aria-checked' : 'aria-pressed', on); if (radio) c.tabIndex = on ? 0 : -1; }); });
       update(); mark(); };
     pbtn.forEach((b, i) => b.addEventListener('click', () => apply(PRESETS[i])));
+    // Other: the chip opens a field in its place; Enter or leaving it adds the name as a picked choice before it (once), Esc cancels
+    quote.querySelectorAll('.sec-08-other').forEach(btn => btn.addEventListener('click', () => {
+      const f = document.createElement('input'); f.className = 'sec-08-oin'; f.type = 'text'; f.maxLength = 32; f.placeholder = btn.dataset.ph || 'Name it';
+      f.setAttribute('aria-label', btn.getAttribute('aria-label')); btn.replaceWith(f); f.focus();
+      let done = false;
+      const close = keep => { if (done) return; done = true; const v = f.value.trim(), g = f.closest('[data-q]');
+        if (keep && v) { const have = [...g.querySelectorAll('.sec-08-chip')].find(c => c.textContent.toLowerCase() === v.toLowerCase());
+          if (have) have.setAttribute('aria-pressed', 'true');
+          else { const c = document.createElement('button'); c.className = 'sec-08-chip'; c.type = 'button'; c.setAttribute('aria-pressed', 'true'); c.textContent = v; f.before(c); } }
+        f.replaceWith(btn); if (keep) btn.focus(); update(); mark(); };
+      f.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); close(true); } else if (e.key === 'Escape') { e.preventDefault(); close(false); } });
+      f.addEventListener('blur', () => close(true)); }));
     quote.addEventListener('click', e => { if (e.target.closest('.sec-08-chip')) mark(); });
     update(); mark();
   }
