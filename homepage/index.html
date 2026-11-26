@@ -2316,7 +2316,7 @@
 <script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
 (() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
   r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); if (q.get('only') === '06') r.classList.add('only-06');
-  const v6 = q.get('v06'); if (/^[bcd]$/.test(v6 || '')) r.classList.add('v06-' + v6); })();</script>
+  const v6 = q.get('v06'); r.classList.add('v06-' + (/^[abcd]$/.test(v6 || '') ? v6 : 'c'));      /* 06: C is the working layout (26.11); ?v06=a|b|d for the others */ })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
