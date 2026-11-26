@@ -41,7 +41,7 @@ Roles of 20 px and less do not scale. In CSS: `clamp(lo, lo + (hi − lo) × (10
 
 | Role | Font | Size | Line-height | Letter-spacing | Weight | Case | Used for |
 |---|---|---|---|---|---|---|---|
-| `display-xl` | Sans | 68 | 1 | −4% | 300 | | The page headline (h1) |
+| `display-xl` | Sans | 68 | 1 | −4% | 300 | | The page headline (h1) and the power quotes (03, 08) |
 | `display-l` | Sans | 53 | 1 | −4% | 300 | | Section headlines (h2) |
 | `title-m` | Sans | 33 | 1.05 | −4% | 300 | | Module and featured-card titles, key figures |
 | `lead-l` | Sans | 26 | 1.4 | −1% | 300 | | The hero subline |

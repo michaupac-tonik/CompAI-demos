@@ -1517,7 +1517,7 @@
   #sec-08-price .sec-08-qprice b { font: 300 var(--fs-title-m, 33px)/1.05 var(--sans); }
   #sec-08-price .sec-08-qprice small { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
   #sec-08-price .sec-08-qsum { background: rgba(248,248,248,.04); }      /* neutral 100 at 4 % over neutral 010 */
-  .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
+  .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-xl);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
   .quote-08 .q-big .q-r { display: flex; align-items: baseline; gap: .32em; }
@@ -2224,7 +2224,7 @@
   /* ==== 03 test (Michał, 25.11): power quote, the sentence as the heading, a visual without the product ============== */
   /* the power quote: the old head of 03 on its own, between 02 and 03; one step above display-xl (86 at 1920, 68 at 1280) */
   .quote-03 { position: relative; z-index: 1; padding: var(--sp-7) 0 var(--sp-6); }
-  .quote-03 .q-big { margin: 0; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px); line-height: 1; letter-spacing: -.04em; color: var(--text-1); text-wrap: balance; }
+  .quote-03 .q-big { margin: 0; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-xl); line-height: 1; letter-spacing: -.04em; color: var(--text-1); text-wrap: balance; }
   .quote-03 .q-sub { margin: var(--sp-4) 0 0; max-width: 36ch; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-l); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: pretty; }
   /* two lines, as the Figma reference (322:895): the second opens with a long rule at the middle of the lowercase and ends flush with the first */
   .quote-03 .q-big { display: grid; width: fit-content; }
