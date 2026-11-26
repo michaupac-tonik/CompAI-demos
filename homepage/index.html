@@ -1419,7 +1419,6 @@
   .s8n-list .r span { text-decoration-line: line-through; text-decoration-color: transparent; transition: text-decoration-color .4s ease, color .5s ease; }
   .s8n-list .r.run::before { animation: s8n-blink 1.2s ease-in-out infinite; }
   .s8n-list .r.done::before { background: linear-gradient(135deg, var(--mint), var(--cyan)); border-color: var(--mint); }
-  .s8n-list .r.done span { color: rgba(252,252,252,.45); text-decoration-color: rgba(252,252,252,.35); }
   @keyframes s8n-in { from { opacity: 0; filter: blur(4px); transform: translateY(6px); } }
   @keyframes s8n-blink { 50% { opacity: .3; } }
   .s8n-tl li:not(.on) .s8n-list { opacity: .4; }
@@ -1439,20 +1438,27 @@
   .s8n-tl .t .n::after { content: "·"; margin: 0 .6em; color: rgba(252,252,252,.4); }
   .s8n-tl[data-dir="v"] { padding: 0; }
   .s8n-tl[data-dir="v"]::before, .s8n-tl[data-dir="v"]::after, .s8n .s8n-tl li::before, .s8n .s8n-tl li::after { content: none; }
-  /* ---- A/B (26.11, review): A (default) as above; B (?p08=b) takes the same pieces further: step 1 counts the controls the
-     stack maps to, step 2 names the control each task satisfies, step 3 draws the weeks under the gantt (a light grid) ---- */
-  .s8n-b { display: none !important; }
-  .p08-b .s8n-b { display: revert !important; }
-  .s8n-sum { margin-top: 10px; color: rgba(252,252,252,.6); line-height: 1.45; }
-  .p08-b .s8n-sum { display: block !important; }
+  /* ---- taken further (26.11, B of the A/B): step 1 counts the controls the stack maps to and takes one more tool ("More",
+     as the next framework in 05); step 2 names the control each task satisfies; step 3 has a light week grid under the gantt ---- */
+  .s8n-sum { display: block; margin-top: 10px; color: rgba(252,252,252,.6); line-height: 1.45; }
   .s8n-sum em { font-style: normal; color: var(--white); font-variant-numeric: tabular-nums; }
-  .s8n-list .r .c { display: none; margin-left: auto; padding-left: 16px; color: rgba(252,252,252,.4); }
-  .p08-b .s8n-list .r .c { display: inline; }
-  .p08-b .s8n-list { max-width: 420px; }
-  .p08-b .s8n-list .r.done .c { color: var(--mint); opacity: .8; }
-  .p08-b .s8n-plan .tr::after { content: ""; position: absolute; inset: -6px 0; background: repeating-linear-gradient(90deg, rgba(252,252,252,.1) 0 1px, transparent 1px 25%); pointer-events: none; }
-  .p08-b .s8n-plan .wk { grid-column: 2; display: grid !important; grid-template-columns: repeat(4, 1fr); color: rgba(252,252,252,.4); font: 400 var(--fs-label-s, 13px)/1 var(--mono); letter-spacing: .04em; }
-  .p08-b .s8n-plan .ax { order: 10; }
+  .s8n-list { max-width: 420px; }
+  .s8n-list .r .c { margin-left: auto; padding-left: 16px; color: rgba(252,252,252,.5); }
+  /* done: white struck through in white (no colour), the task and its control alike */
+  .s8n-list .r .c { text-decoration-line: line-through; text-decoration-color: transparent; transition: text-decoration-color .4s ease, color .5s ease; }
+  .s8n-list .r.done span, .s8n-list .r.done .c { color: var(--text-2, rgba(252,252,252,.72)); text-decoration-color: currentColor; }
+  .s8n-plan .tr::after { content: ""; position: absolute; inset: -6px 0; background: repeating-linear-gradient(90deg, rgba(252,252,252,.1) 0 1px, transparent 1px 25%); pointer-events: none; }
+  /* step 1 · More: one more tool, in the pattern of 05's next framework: a quiet chip with a plus and a nudging "Try it" */
+  .s8n-more { appearance: none; display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 6px 0 10px; border: 1px dashed rgba(252,252,252,.28); border-radius: var(--r-sm);
+    background: none; color: rgba(252,252,252,.7); font: 400 var(--fs-body-s, 14px)/1 var(--sans); cursor: pointer; transition: color .25s ease, border-color .25s ease, background-color .25s ease; }
+  .s8n-more svg { width: 12px; height: 12px; }
+  .s8n-more em { font: 400 var(--fs-label-s, 13px)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; font-style: normal; padding: 4px 6px; border-radius: var(--r-sm);
+    background: rgba(252,252,252,.08); color: var(--white); animation: s05nudge 3.2s ease-in-out infinite; }
+  .s8n-more:is(:hover, :focus-visible) { color: var(--white); border-color: rgba(252,252,252,.6); border-style: solid; }
+  .s8n-more:focus-visible { outline: 1px solid var(--white); outline-offset: 2px; }
+  .s8n-tl li:not(.on) .s8n-more { visibility: hidden; }
+  .s8n-conn > span.add { animation: s8n-in .5s var(--ease) both; }
+  @media (prefers-reduced-motion: reduce) { .s8n-more em { animation: none; } }
   .s8n-tl { --p: 0; position: relative; list-style: none; margin: 0; padding: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
   .s8n-tl::before, .s8n-tl::after { content: ""; position: absolute; left: 3px; top: 3px; width: var(--rw, 100%); height: 1px; background: rgba(252,252,252,.14); }
   .s8n-tl::after { background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(var(--p)); }
@@ -2946,8 +2952,8 @@
         <!-- working copy: the systems, tasks and figures in the small UI pieces are placeholders -->
         <ol class="s8n-tl" data-dir="v">
           <li><span class="t"><span class="n">Step 1</span>Min 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span>
-            <span class="s8n-conn" aria-hidden="true"><span style="--i:0">AWS</span><span style="--i:1">GitHub</span><span style="--i:2">Google Workspace</span><span style="--i:3">Okta</span></span>
-            <span class="s8n-sum s8n-b" aria-hidden="true"><em data-count="212">0</em> controls mapped to your stack</span></li>
+            <span class="s8n-conn"><span style="--i:0">AWS</span><span style="--i:1">GitHub</span><span style="--i:2">Google Workspace</span><span style="--i:3">Okta</span><button type="button" class="s8n-more" aria-label="Add one more tool"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg>More<em>Try it</em></button></span>
+            <span class="s8n-sum" aria-live="polite"><em data-count="212">0</em> controls mapped to your stack</span></li>
           <li><span class="t"><span class="n">Step 2</span>Min 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies while you watch.</span>
             <span class="s8n-list" aria-hidden="true"></span></li>
           <li><span class="t"><span class="n">Step 3</span>Min 15–20</span><b>You leave with a plan and your number</b><span class="d">What audit-ready takes, and what it costs.</span>
@@ -2955,8 +2961,7 @@
               <span class="l">Connect</span><span class="tr"><i style="--s:0;--e:.14;--d:0"></i></span>
               <span class="l">Evidence, policies</span><span class="tr"><i style="--s:.08;--e:.72;--d:1"></i></span>
               <span class="l">Audit</span><span class="tr"><i style="--s:.66;--e:1;--d:2"></i></span>
-              <span class="ax"><span>Today</span><span>Audit-ready · week XX</span></span>
-              <span class="wk s8n-b"><span>W1</span><span>W4</span><span>W8</span><span>WXX</span></span></span></li>
+              <span class="ax"><span>Today</span><span>Audit-ready · week XX</span></span></span></li>
         </ol>
       </div>
       <!-- working copy: the four factors, the size bands and the lists of frameworks and systems are placeholders to confirm with Comp AI -->
@@ -5066,15 +5071,22 @@
       else timer = setTimeout(next, 500); };
     new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (vis) timer = setTimeout(next, 1200); else clearTimeout(timer); }).observe(list);
   }
-  // B · step 1: the controls the stack maps to count up once, after the tools have connected
+  // step 1: the controls the stack maps to count up once, after the tools have connected; "More" adds one more tool (connected
+  //         as it comes in) and the count goes up with it; the button goes when the list of tools runs out
   const sum = document.querySelector('#sec-08-next .s8n-sum em');
-  if (sum) { const li = sum.closest('li'), N = +sum.dataset.count; let done = false;
-    const go = () => { if (done || !li.classList.contains('on')) return; done = true;
+  if (sum) { const li = sum.closest('li'); let shown = 0, started = false;
+    const countTo = (N, delay = 0) => { const from = shown; shown = N;
       if (reduced) { sum.textContent = N; return; }
-      const t0 = performance.now() + 1500, D = 1400;
-      const f = now => { const k = Math.min(1, Math.max(0, (now - t0) / D)); sum.textContent = Math.round(N * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); };
+      const t0 = performance.now() + delay, D = 1000 + Math.min(600, Math.abs(N - from) * 4);
+      const f = now => { const k = Math.min(1, Math.max(0, (now - t0) / D)); sum.textContent = Math.round(from + (N - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); };
       requestAnimationFrame(f); };
-    new MutationObserver(go).observe(li, { attributes: true, attributeFilter: ['class'] }); go(); }
+    const go = () => { if (started || !li.classList.contains('on')) return; started = true; countTo(+sum.dataset.count, 1500); };
+    new MutationObserver(go).observe(li, { attributes: true, attributeFilter: ['class'] }); go();
+    const more = li.querySelector('.s8n-more'), EXTRA = [['Azure', 34], ['Jamf', 21], ['Slack', 12], ['Jira', 16], ['Datadog', 19]];
+    if (more) more.addEventListener('click', () => { const nx = EXTRA.shift(); if (!nx) return;
+      const c = document.createElement('span'); c.className = 'add'; c.style.setProperty('--i', 0); c.textContent = nx[0]; more.before(c);
+      countTo(shown + nx[1], 450);
+      if (!EXTRA.length) more.remove(); }); }
 
   // ---- pricing: the quote builder. Toggles (frameworks, systems) and single choices (size, audit) feed the summary.
   const quote = document.querySelector('#sec-08-price [data-quote]');
