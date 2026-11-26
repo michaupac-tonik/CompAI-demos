@@ -2296,6 +2296,16 @@
   html:is(.v06-c, .v06-d) .sec-06 .pr .win { grid-row: 2; background: #fff; box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 24px 48px -28px rgba(22,22,22,.2); }
   html:is(.v06-c, .v06-d) .sec-06 .win-f .hide-s { display: none; }
   /* D · quiet windows: shorter, without their footers and the "Try it" marks, and held back until a column is pointed at (or focused) */
+  /* C refined (26.11): more of the brand in the heads. A tile of the print above each (mint to cyan diamonds on black, a crop of
+     its own), the column's hairline with a gradient run that fills it when the column is pointed at, the label led by a gradient
+     square, a touch of mint in the windows' shadow */
+  html:is(.v06-c, .v06-d) .sec-06 .pr .cap { position: relative; border-top-color: rgba(22,22,22,.1); }
+  html:is(.v06-c, .v06-d) .sec-06 .pr .cap::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: 64px; background: linear-gradient(90deg, var(--mint), var(--cyan)); transition: width .7s cubic-bezier(.2,.7,.1,1); }
+  html:is(.v06-c, .v06-d) .sec-06 .pr:is(:hover, :focus-within) .cap::before { width: 100%; }
+  html:is(.v06-c, .v06-d) .sec-06 .cap .tile { display: block; width: 56px; height: 56px; margin: 0 0 var(--sp-3); background: #000 center / cover no-repeat; }
+  html:is(.v06-c, .v06-d) .sec-06 .cap .k { gap: 10px; color: var(--ink); }
+  html:is(.v06-c, .v06-d) .sec-06 .cap .k::before { content: ""; width: 8px; height: 8px; flex: none; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  html:is(.v06-c, .v06-d) .sec-06 .pr .win { box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 28px 56px -30px rgba(0, 200, 160, .35); }
   html.v06-d .sec-06 .pr .win { height: 232px; opacity: .45; filter: saturate(0); transition: opacity .5s ease, filter .5s ease, translate .5s var(--ease); }
   html.v06-d .sec-06 .pr:is(:hover, :focus-within) .win { opacity: 1; filter: none; translate: 0 -4px; }
   html.v06-d .sec-06 .win-f, html.v06-d .sec-06 .try, html.v06-d .sec-06 .commits { display: none; }
@@ -5286,6 +5296,37 @@
   const settle0 = settle; settle = () => { settle0(); centre(); };
   sec.querySelectorAll('.steps-05 li.has-st').forEach(li => { const b = li.querySelector('.sb'); if (b) li.style.setProperty('--sbw', Math.ceil(b.offsetWidth) + 'px'); });
   fit(); settle(); addEventListener('resize', () => { fit(); settle(); }); if (document.fonts) document.fonts.ready.then(() => { fit(); settle(); });
+})();
+</script>
+<script>
+/* 06 test C (Michał, 26.11): a tile of the print above each column's head: a close crop of the hero's print (diamond dots, mint
+   to cyan from the centre out, on black), a different place for each column */
+(() => {
+  const r = document.documentElement; if (!r.classList.contains('v06-c') && !r.classList.contains('v06-d')) return;
+  const sec = document.getElementById('sec-06'); if (!sec) return;
+  const TAU = Math.PI * 2, AT = [[.14, -.06], [-.12, .1], [.02, .22]];
+  const run = () => { const D = window.BLEND_FIELDS; if (!D) return;
+    const dec = (b64, T) => { const s = atob(b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new T(u.buffer); };
+    const k0 = D.order[0], N = D.pts.length / 2, A = (D.pts[2] - D.pts[0]) / 2 || 14, c = dec(D.c[k0], Int16Array), w = dec(D.w[k0], Uint8Array), m = dec(D.m[k0], Uint8Array);
+    const nx = Math.ceil(D.W / A) + 4, ny = Math.ceil(D.H / A) + 4, o = 2, C = new Float32Array(nx * ny).fill(NaN), Wd = new Float32Array(nx * ny), M = new Float32Array(nx * ny);
+    let sx = 0, sy = 0, n = 0, y0 = 1e9, y1 = -1e9;
+    for (let i = 0; i < N; i++) { const gx = Math.round(D.pts[2*i] / A) + o, gy = Math.round(D.pts[2*i+1] / A) + o; if (gx < 0 || gy < 0 || gx >= nx || gy >= ny) continue;
+      const q = gy * nx + gx; C[q] = c[i] / 1000; Wd[q] = w[i] / 255; M[q] = m[i] / 255; if (M[q] > .3) { sx += D.pts[2*i]; sy += D.pts[2*i+1]; n++; y0 = Math.min(y0, D.pts[2*i+1]); y1 = Math.max(y1, D.pts[2*i+1]); } }
+    const F = { cx: sx / n, cy: sy / n, h: y1 - y0 };
+    const sample = (x, y) => { const u = x / A + o, v = y / A + o, i0 = Math.floor(u), j0 = Math.floor(v), fu = u - i0, fv = v - j0; if (i0 < 0 || j0 < 0 || i0 + 1 >= nx || j0 + 1 >= ny) return 0;
+      let sw = 0, cc = 0, ww = 0, mm = 0, ref = NaN; for (let dj = 0; dj < 2; dj++) for (let di = 0; di < 2; di++) { const q = (j0 + dj) * nx + i0 + di, cv = C[q]; if (cv !== cv) continue;
+        const kk = (di ? fu : 1 - fu) * (dj ? fv : 1 - fv) + 1e-4; if (ref !== ref) ref = cv; cc += kk * (cv - Math.round(cv - ref)); ww += kk * Wd[q]; mm += kk * M[q]; sw += kk; }
+      if (!sw) return 0; cc /= sw; ww /= sw; mm /= sw; if (mm < .02) return 0; const val = .5 + .5 * Math.cos(TAU * cc), t = Math.min(1, Math.max(0, (val - (1 - ww - .34)) / .64)); return t * t * (3 - 2 * t) * mm; };
+    const S = 112, P = 14, half = P / 2, B = 8, MINT = [36, 255, 99], CYAN = [0, 255, 238];
+    sec.querySelectorAll('.pr .cap').forEach((cap, j) => { const [ox, oy] = AT[j % AT.length], k = F.h * .16 / S, cx = F.cx + ox * F.h, cy = F.cy + oy * F.h;
+      const cv = document.createElement('canvas'); cv.width = cv.height = S; const g = cv.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, S, S);
+      const paths = Array.from({ length: B }, () => new Path2D());
+      for (let b = -1, y = 0; y <= S + P; b++, y = b * half) for (let x = (b & 1) ? half : 0; x <= S + P; x += P) { const v = sample(cx + (x - S / 2) * k, cy + (y - S / 2) * k); if (v < .08) continue;
+        const d = half * .85 * v; if (d < .8) continue; const q = Math.min(B - 1, Math.floor(Math.hypot(x - S / 2, y - S / 2) / (S * .72) * B)), p = paths[q];
+        p.moveTo(x, y - d); p.lineTo(x + d, y); p.lineTo(x, y + d); p.lineTo(x - d, y); p.closePath(); }
+      paths.forEach((p, q) => { const f = q / (B - 1); g.fillStyle = 'rgb(' + MINT.map((v, i) => Math.round(v + (CYAN[i] - v) * f)).join(',') + ')'; g.fill(p); });
+      const t = document.createElement('span'); t.className = 'tile'; t.setAttribute('aria-hidden', 'true'); t.style.backgroundImage = 'url(' + cv.toDataURL() + ')'; cap.prepend(t); }); };
+  if (window.BLEND_FIELDS) run(); else addEventListener('load', run);
 })();
 </script>
 </body>
