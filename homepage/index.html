@@ -1379,12 +1379,10 @@
      ends on sp-7 before the footer. No rules between them. ---- */
   .sec-08:not(.quote-08) { padding: var(--sp-6) 0; }
   #sec-08-price { padding-top: var(--sp-7); }      /* the first on black, as the light quote ends (03 -> 04) */
-  /* ---- pricing (26.11, v5): in the pattern of 02 The shift, not the same. Left (5 of 12): the head (eyebrow, h2
-     display-l, lead) and under it the next step, the call as a vertical timeline on 02's diamond rail; right (7 of 12): the
-     quote builder, unchanged inside (its two columns 3:2). Top-aligned, the builder starts with the head. ---- */
+  /* ---- pricing (26.11, v6): in the pattern of 02 The shift, not the same. The section head over the content as in the
+     other sections (eyebrow, h2 display-l, lead; 7 of 12), then 64 under it: left (5 of 12) the next step, the call as a
+     vertical timeline on 02's diamond rail; right (7 of 12) the quote builder, unchanged inside (its two columns 3:2). ---- */
   .s8p-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px 72px; align-items: start; }
-  .s8p-txt .s8p-head { max-width: none; margin: 0; }
-  .s8n { margin-top: var(--sp-6); }
   .s8n-h { margin: 0 0 var(--sp-4); font: 400 var(--t-label)/1.3 var(--sans); color: rgba(252,252,252,.6); }
   .s8n-tl { --p: 0; position: relative; list-style: none; margin: 0; padding: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
   .s8n-tl::before, .s8n-tl::after { content: ""; position: absolute; left: 3px; top: 3px; width: var(--rw, 100%); height: 1px; background: rgba(252,252,252,.14); }
@@ -1406,7 +1404,7 @@
   .s8n-tl[data-dir="v"] li { gap: 6px; }
   /* ---- pricing (26.11): a large section of its own with a section head (eyebrow, h2 display-l, lead) and the quote builder
      under it on the full width; the builder itself is unchanged (approved by the client) ---- */
-  .s8p-head { margin-bottom: var(--sp-5); }
+  .s8p-head { max-width: calc(7 / 12 * 100%); margin-bottom: var(--sp-5); }
   .s8p-head .sec-08-eyebrow { margin-bottom: var(--sp-3); }
   .s8p-head .sec-08-lead { margin-top: var(--sp-3); }
   #sec-08-price .sec-08-ui-b { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
@@ -2861,16 +2859,16 @@
 </section>
 <!-- @section:08-quote html:end -->
 <!-- @section:08-price html:start -->
-<!-- pricing (26.11, v5): in the pattern of 02 The shift, not the same: the head and the next step (the call as a vertical
-     timeline on 02's diamond rail) in the left column, the quote builder on the right -->
+<!-- pricing (26.11, v6): in the pattern of 02 The shift, not the same: the section head over the content as in the other
+     sections, then the next step (the call as a vertical timeline on 02's diamond rail) on the left and the quote builder on the right -->
 <section class="sec-08" id="sec-08-price" aria-labelledby="sec-08-price-t">
-  <div class="wrap s8p-grid">
-    <div class="s8p-txt">
-      <div class="s8p-head">
-        <p class="sec-08-eyebrow">Pricing</p>
-        <h2 id="sec-08-price-t">What sets the price</h2>
-        <p class="sec-08-lead">Pick what applies to you. We confirm your number on the call.</p>
-      </div>
+  <div class="wrap">
+    <div class="s8p-head">
+      <p class="sec-08-eyebrow">Pricing</p>
+      <h2 id="sec-08-price-t">What sets the price</h2>
+      <p class="sec-08-lead">Pick what applies to you. We confirm your number on the call.</p>
+    </div>
+    <div class="s8p-grid">
       <div class="s8n" id="sec-08-next" role="group" aria-labelledby="sec-08-next-t">
         <p class="s8n-h" id="sec-08-next-t">Next step: a 20-minute call</p>
         <ol class="s8n-tl" data-dir="v" aria-label="The call, step by step">
@@ -2879,27 +2877,27 @@
           <li><span class="t">Minutes 15–20</span><b>You leave with a plan and your number</b><span class="d">What audit-ready takes, and what it costs.</span></li>
         </ol>
       </div>
-    </div>
-    <!-- working copy: the four factors, the size bands and the lists of frameworks and systems are placeholders to confirm with Comp AI -->
-    <div class="sec-08-ui" data-quote>
-      <div class="sec-08-ui-h"><span class="sec-08-mono">Quote builder</span><span class="sec-08-mono">No price list</span></div>
-      <div class="sec-08-ui-b">
-        <form class="sec-08-qform" onsubmit="return false" aria-label="What applies to you">
-          <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">01</span>Frameworks <small>you need now</small></legend><div class="sec-08-chips" data-q="fw"><button class="sec-08-chip" type="button" aria-pressed="true">SOC 2</button><button class="sec-08-chip" type="button" aria-pressed="true">ISO 27001</button><button class="sec-08-chip" type="button" aria-pressed="false">HIPAA</button><button class="sec-08-chip" type="button" aria-pressed="false">GDPR</button><button class="sec-08-chip" type="button" aria-pressed="false">ISO 42001</button></div></fieldset>
-          <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">02</span>Company size <small>people in scope</small></legend><div class="sec-08-chips" role="radiogroup" aria-label="Company size" data-q="size"><button class="sec-08-chip" type="button" role="radio" aria-checked="false">1–50</button><button class="sec-08-chip" type="button" role="radio" aria-checked="true">51–200</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">201–1,000</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">1,000+</button></div></fieldset>
-          <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">03</span>Systems <small>to connect</small></legend><div class="sec-08-chips" data-q="sys"><button class="sec-08-chip" type="button" aria-pressed="true">AWS</button><button class="sec-08-chip" type="button" aria-pressed="false">Google Cloud</button><button class="sec-08-chip" type="button" aria-pressed="false">Azure</button><button class="sec-08-chip" type="button" aria-pressed="true">GitHub</button><button class="sec-08-chip" type="button" aria-pressed="true">Google Workspace</button><button class="sec-08-chip" type="button" aria-pressed="false">Okta</button></div></fieldset>
-          <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">04</span>Audit</legend><div class="sec-08-chips" role="radiogroup" aria-label="Audit" data-q="aud"><button class="sec-08-chip" type="button" role="radio" aria-checked="true">With Comp AI</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">Own auditor</button></div></fieldset>
-        </form>
-        <div class="sec-08-qsum">
-          <span class="sec-08-mono">Your quote is based on</span>
-          <dl class="sec-08-qlist" aria-live="polite">
-            <div><dt>Frameworks</dt><dd data-out="fw">SOC 2, ISO 27001</dd></div>
-            <div><dt>Company</dt><dd data-out="size">51–200 people</dd></div>
-            <div><dt>Systems</dt><dd data-out="sys">AWS, GitHub, Google Workspace</dd></div>
-            <div><dt>Audit</dt><dd data-out="aud">With Comp AI</dd></div>
-          </dl>
-          <div class="sec-08-qprice"><span class="sec-08-mono">Your price</span><b>Shared on the call</b><small>We confirm the number with you in 20 minutes.</small></div>
-          <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      <!-- working copy: the four factors, the size bands and the lists of frameworks and systems are placeholders to confirm with Comp AI -->
+      <div class="sec-08-ui" data-quote>
+        <div class="sec-08-ui-h"><span class="sec-08-mono">Quote builder</span><span class="sec-08-mono">No price list</span></div>
+        <div class="sec-08-ui-b">
+          <form class="sec-08-qform" onsubmit="return false" aria-label="What applies to you">
+            <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">01</span>Frameworks <small>you need now</small></legend><div class="sec-08-chips" data-q="fw"><button class="sec-08-chip" type="button" aria-pressed="true">SOC 2</button><button class="sec-08-chip" type="button" aria-pressed="true">ISO 27001</button><button class="sec-08-chip" type="button" aria-pressed="false">HIPAA</button><button class="sec-08-chip" type="button" aria-pressed="false">GDPR</button><button class="sec-08-chip" type="button" aria-pressed="false">ISO 42001</button></div></fieldset>
+            <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">02</span>Company size <small>people in scope</small></legend><div class="sec-08-chips" role="radiogroup" aria-label="Company size" data-q="size"><button class="sec-08-chip" type="button" role="radio" aria-checked="false">1–50</button><button class="sec-08-chip" type="button" role="radio" aria-checked="true">51–200</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">201–1,000</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">1,000+</button></div></fieldset>
+            <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">03</span>Systems <small>to connect</small></legend><div class="sec-08-chips" data-q="sys"><button class="sec-08-chip" type="button" aria-pressed="true">AWS</button><button class="sec-08-chip" type="button" aria-pressed="false">Google Cloud</button><button class="sec-08-chip" type="button" aria-pressed="false">Azure</button><button class="sec-08-chip" type="button" aria-pressed="true">GitHub</button><button class="sec-08-chip" type="button" aria-pressed="true">Google Workspace</button><button class="sec-08-chip" type="button" aria-pressed="false">Okta</button></div></fieldset>
+            <fieldset class="sec-08-qrow"><legend><span class="sec-08-mono">04</span>Audit</legend><div class="sec-08-chips" role="radiogroup" aria-label="Audit" data-q="aud"><button class="sec-08-chip" type="button" role="radio" aria-checked="true">With Comp AI</button><button class="sec-08-chip" type="button" role="radio" aria-checked="false">Own auditor</button></div></fieldset>
+          </form>
+          <div class="sec-08-qsum">
+            <span class="sec-08-mono">Your quote is based on</span>
+            <dl class="sec-08-qlist" aria-live="polite">
+              <div><dt>Frameworks</dt><dd data-out="fw">SOC 2, ISO 27001</dd></div>
+              <div><dt>Company</dt><dd data-out="size">51–200 people</dd></div>
+              <div><dt>Systems</dt><dd data-out="sys">AWS, GitHub, Google Workspace</dd></div>
+              <div><dt>Audit</dt><dd data-out="aud">With Comp AI</dd></div>
+            </dl>
+            <div class="sec-08-qprice"><span class="sec-08-mono">Your price</span><b>Shared on the call</b><small>We confirm the number with you in 20 minutes.</small></div>
+            <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          </div>
         </div>
       </div>
     </div>
