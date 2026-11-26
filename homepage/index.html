@@ -1364,21 +1364,23 @@
   /* ---- quote (26.11): the old head as a power quote, the pattern of "Comp AI shows the work." before 03 (two lines,
      the second opening with a rule; one step above display-xl, 86 at 1920, 68 at 1280) and the lead under it, no buttons.
      Light, as 04-07 before it: the section is see-through and while it is on screen the page turns paper and the shared
-     print (#print, fixed, drawn black with mint and cyan dots) is turned light by a filter (black -> paper, the dots keep
-     their hue, darker) at 80 % (html.q08-light, set by the print script near the end of the page).
+     print (#print, fixed, drawn black with mint and cyan dots) has its black keyed out by an SVG filter (#q08-key: alpha
+     from the green channel, which is full in both mint and cyan), so the dots keep the colour of the upper sections, at 80 %
+     (html.q08-light, set by the print script near the end of the page).
      Room under it as under 03's quote: its own 104 plus the 104 that opens the next section (2 x sp-6), so the print has
      the space; the demo then opens dark. ---- */
   .quote-08 { --fg: var(--ink); --text-1: var(--ink); --text-2: color-mix(in srgb, var(--ink) 72%, transparent);
     padding: var(--sp-7) 0 calc(2 * var(--sp-6)); color: var(--ink); }
   html.q08-light, html.q08-light body { background: var(--paper); }
-  html.q08-light #print { filter: invert(1) hue-rotate(180deg) brightness(.973); opacity: .8 !important; }
+  html.q08-light #print { filter: url(#q08-key); opacity: .8 !important; }      /* the print's black keyed out, the dots in their own mint and cyan */
   .sec-08:not(.quote-08) { background: var(--black); }
   #sec-08-demo { padding-top: var(--sp-6); }      /* dark from the demo on, over the paper and the print's way out */
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
   .quote-08 .q-big .q-r { display: flex; align-items: baseline; gap: .32em; }
-  .quote-08 .q-big .q-rule { flex: 1 1 auto; min-width: 1.5em; height: max(1.5px, .028em); background: currentColor; transform: translateY(-.26em); }
+  /* the rule as long as 03's ("Comp AI shows / the work.": 2.355em), not stretched to the end of the longer first line */
+  .quote-08 .q-big .q-rule { flex: none; width: 2.355em; height: max(1.5px, .028em); background: currentColor; transform: translateY(-.26em); }
   .quote-08 .q-sub { margin: var(--sp-4) 0 0; max-width: 36ch; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-l); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: pretty; }
   .quote-08 .q-big, .quote-08 .q-sub { text-shadow: 0 0 4px var(--paper), 0 0 10px var(--paper), 0 0 10px var(--paper); }      /* the halo over the print */
   /* entrance as 03's quote: each part fades in from a blur in place, one beat after the other */
@@ -2841,6 +2843,8 @@
 <!-- power quote (26.11): the old head of 08 as a quote, as "Comp AI shows the work." before 03, on light (the paper of 04-07);
      the shared print comes back on the right at 80 %; no buttons (the next sections carry them); dark starts at the demo -->
 <section class="sec-08 quote-08" id="sec-08" aria-labelledby="sec-08-title">
+  <!-- keys out the print's black on the light quote: colours as they are, alpha from the green channel -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="q08-key" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 1 0 0 0"/></filter></svg>
   <div class="wrap" id="demo">
     <h2 id="sec-08-title" class="q-big"><span class="q-l rv" style="--d:0">See the work done,</span> <span class="q-l q-r rv" style="--d:1"><i class="q-rule" aria-hidden="true"></i>live.</span></h2>
     <p class="q-sub rv" style="--d:2">Watch Comp AI do the work on your own stack in a <span class="sec-08-nb">20-minute</span> call. See what sets your price, and get answers to the questions teams ask first.</p>
