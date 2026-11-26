@@ -2302,7 +2302,7 @@
   html:is(.v06-c, .v06-d) .sec-06 .pr .cap { position: relative; border-top: 0; padding-top: 0; }      /* no rule above the columns (26.11): nothing loads or switches here */
   html:is(.v06-c, .v06-d) .sec-06 .cap .tile { display: block; width: 112px; height: 112px; margin: 0 0 var(--sp-3); background: #000; }      /* the client's Blend motifs, in the print's dots */
   html:is(.v06-c, .v06-d) .sec-06 .cap .tile canvas { display: block; width: 100%; height: 100%; }
-  html:is(.v06-c, .v06-d) .sec-06 .cap .k { gap: 10px; color: var(--ink); }
+  html:is(.v06-c, .v06-d) .sec-06 .cap .k { gap: 10px; color: color-mix(in srgb, var(--ink) 56%, transparent); }      /* a label, not an action: quieter than the column's link (26.11) */
   html:is(.v06-c, .v06-d) .sec-06 .cap .k::before { content: ""; width: 8px; height: 8px; flex: none; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
   html:is(.v06-c, .v06-d) .sec-06 .pr .win { box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 24px 48px -28px rgba(22,22,22,.2); }      /* neutral, no colour (26.11) */
   /* the windows take the brand accents (26.11): passed checks and controls in mint, the item that needs review in orange, a starred repo in mint */
@@ -2322,6 +2322,8 @@
   html:is(.v06-c, .v06-d) #sec-06 .win button.star { padding: 0 8px 0 7px; gap: 5px; }
   html:is(.v06-c, .v06-d) .sec-06 .win button.star.on { background: var(--mint); color: var(--ink); }
   html:is(.v06-c, .v06-d) .sec-06 .feed .src { background: linear-gradient(135deg, var(--mint), var(--cyan)); color: var(--ink); }
+  /* open columns: pointing at the link does not light the whole column (no outline, no lift) */
+  html:is(.v06-c, .v06-d) .sec-06 .pr, html:is(.v06-c, .v06-d) .sec-06 .pr:hover, html:is(.v06-c, .v06-d) .sec-06 .pr:has(.go:is(:hover, :focus-visible)) { box-shadow: none; translate: none; }
   /* the head: lines of even length (26.11) */
   html:is(.v06-c, .v06-d) #sec-06 .head-06 h2, html:is(.v06-c, .v06-d) #sec-06 .head-06 .lead-06 { text-wrap: balance; }
   html.v06-d .sec-06 .pr .win { height: 232px; opacity: .45; filter: saturate(0); transition: opacity .5s ease, filter .5s ease, translate .5s var(--ease); }
