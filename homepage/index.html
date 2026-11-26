@@ -736,13 +736,17 @@
   @keyframes s04drift { from { translate: 0 0; } to { translate: 0 -6px; } }
   .sec-04 .fc.d.in { animation-duration: 6s; animation-delay: -2s; }
   /* 26.11: the notification card changes with the chat: out and in again */
-  .sec-04 .fc.in.swap { opacity: 0; filter: blur(6px); transform: translateY(6px); transition: opacity .5s ease, filter .5s ease, transform .5s ease; }
+  /* entering: up from below, out of a blur, slow and soft */
+  .sec-04 .fc { transition: opacity .9s cubic-bezier(.2,.7,.1,1), filter .9s cubic-bezier(.2,.7,.1,1), transform 1s cubic-bezier(.2,.7,.1,1); }
+  .sec-04 .fc.d { transition-delay: .35s; }      /* the reply time follows the card */
+  .sec-04 .fc.d:not(.in) { transition-delay: 0s; }
   /* the card is the thread: who and where, the topic, one sentence, the state; all from the left edge, nothing cut */
   .sec-04 .fc.a { text-align: left; }
+  .sec-04 .fc.a, .sec-04 .fc.d { background: #fcfcfc; -webkit-backdrop-filter: none; backdrop-filter: none; }      /* solid: nothing of the print shows through */
+  .sec-04 .fc.a .st span { display: inline-block; }
   .sec-04 .fc.a .who { justify-content: flex-start; }
   .sec-04 .fc.a .who .nm { align-items: flex-start; text-align: left; flex: 0 1 auto; }
-  /* the reply time sits under the card, from its left edge (set by the script) */
-  .sec-04 .fc.d.under { top: var(--ct, 168px); left: var(--cl, 32%); }
+
   .sec-04 .fc.a .tt { display: block; margin: 14px 0 0; font: 400 16px/1.3 var(--sans); letter-spacing: -.01em; color: #161616; }
   .sec-04 .fc.a p { margin: 6px 0 0; }
   .sec-04 .fc.a .st { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(22,22,22,.1); font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: #696969; }
@@ -2248,7 +2252,7 @@
   .sec-04 .fc.a .who .nm small { position: static; display: block; }
   .sec-04 .fc.a .who time { align-self: flex-start; }
   .sec-04 .fc.a .who .nm small { font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .02em; color: #696969; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .sec-04 svg.av.pv { background-color: #000; background-size: cover; background-position: center; padding: 0; }
+  .sec-04 .fc .who svg.av.pv, .sec-04 svg.av.pv { background-color: #000; background-size: cover; background-position: center; padding: 0; }
   .sec-04 .chat-rail .ch.dm u { text-decoration: none; width: 7px; height: 7px; border-radius: 50%; background: #2fb457; flex: none; }
   .sec-04 .chat-04:not(.rt) .reply-time { justify-self: start; margin: 2px 0 8px 56px; padding: 5px 8px 5px 6px; background: rgba(36, 255, 99, .28); color: var(--ink); }
   .sec-04 .chat-04:not(.rt) .reply-time::before { transform: translateY(-3px); }
@@ -4095,20 +4099,33 @@
   // fades out and in again, in the rhythm of the conversation. They show while the print is docked.
   const fcN = sec.querySelector('.fc.a'), fcT = sec.querySelector('.fc.d'); let docked = false, hasN = false, hasT = false;
   const syncCards = Ps => { docked = reduced || Ps >= .8; fcN.classList.toggle('in', docked && hasN); fcT.classList.toggle('in', docked && hasT); };
-  const swapCard = (el, fill) => { if (!el.classList.contains('in') || reduced) { fill(); return; } el.classList.add('swap'); setTimeout(() => { fill(); el.classList.remove('swap'); }, 520); };
+  // a change of content: the card goes up and out (.42 s), takes the new content while it is not seen, and comes in again from below (.8 s)
+  const OUT = [{ opacity: 1, filter: 'blur(0px)', transform: 'none' }, { opacity: 0, filter: 'blur(6px)', transform: 'translateY(-8px)' }];
+  const IN = [{ opacity: 0, filter: 'blur(6px)', transform: 'translateY(10px)' }, { opacity: 1, filter: 'blur(0px)', transform: 'none' }];
+  const swapCard = (el, fill, delay = 0) => { if (!el.classList.contains('in') || reduced) { fill(); return; }
+    const o = el.animate(OUT, { duration: 420, delay, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
+    o.onfinish = () => { fill(); el.animate(IN, { duration: 800, easing: 'cubic-bezier(.2,.7,.1,1)' }); o.cancel(); }; };
+  // a word or a figure that changes in place: out and in, quickly
+  const swapText = (el, txt) => { if (!el || el.textContent === txt) return; if (reduced || !el.offsetParent) { el.textContent = txt; return; }
+    const o = el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' }); o.onfinish = () => { el.textContent = txt; el.animate([{ opacity: 0, filter: 'blur(3px)' }, { opacity: 1, filter: 'blur(0px)' }], { duration: 450, easing: 'ease-out' }); o.cancel(); }; };
   // the card follows the thread, not each message: it comes in with the expert's first message of a conversation and stays while the
   // conversation runs; its state turns from "in progress" to the outcome with the thread's last reply. The chip keeps the latest reply time.
   let cardC = -1;
+  const firstReply = c => { const r = CONV[c].steps.find(x => x[0] === 'r'); return r ? r[1] : ''; };
+  const chipText = txt => { const m = /\d+/.exec(txt || ''); return 'Answered in ' + (m ? m[0] : '') + ' min'; };
   const thread = (c, done) => { const T = THREAD[c]; if (!T) return;
+    if (cardC === c) { setState(done); return; }
+    cardC = c;
     const fill = () => { fcN.querySelector('.who').innerHTML = '<svg class="av" aria-hidden="true"></svg><span class="nm"><b>Compliance expert</b><small>' + esc(CONV[c].ch) + '</small></span>';
-      printAv(fcN.querySelector('svg.av'), c); fcN.querySelector('.tt').textContent = T.t; fcN.querySelector('p').textContent = T.s; setState(done); hasN = true; fcN.classList.toggle('in', docked); };
-    if (cardC !== c) { cardC = c; hasT = false; fcT.classList.remove('in'); swapCard(fcN, fill); } else setState(done); };
-  const setState = done => { const st = fcN.querySelector('.st'), T = THREAD[cardC]; if (!st || !T) return; st.classList.toggle('done', !!done); st.querySelector('span').textContent = done ? T.done : T.run; };
+      printAv(fcN.querySelector('svg.av'), c); fcN.querySelector('.tt').textContent = T.t; fcN.querySelector('p').textContent = T.s;
+      const st = fcN.querySelector('.st'); st.classList.toggle('done', !!done); st.querySelector('span').textContent = done ? T.done : T.run; hasN = true; fcN.classList.toggle('in', docked); };
+    // the reply time comes with the card (its first reply), and changes with the card
+    const fillT = () => { fcT.textContent = chipText(firstReply(c)); hasT = true; fcT.classList.toggle('in', docked); };
+    swapCard(fcN, fill); swapCard(fcT, fillT, 160); };
+  const setState = done => { const st = fcN.querySelector('.st'), T = THREAD[cardC]; if (!st || !T) return; st.classList.toggle('done', !!done); swapText(st.querySelector('span'), done ? T.done : T.run); };
   const notify = (c, st, first) => { if (first) thread(c, false); };
-  const underCard = () => { fcT.classList.add('under'); fcT.style.setProperty('--ct', (fcN.offsetTop + fcN.offsetHeight + 12) + 'px'); fcT.style.setProperty('--cl', fcN.offsetLeft + 'px'); };
-  const answered = (txt, last) => { const m = /\d+/.exec(txt); fcT.textContent = 'Answered in ' + (m ? m[0] : '') + ' min'; underCard(); hasT = true; fcT.classList.toggle('in', docked); if (last) setState(true); };
-  addEventListener('resize', () => { if (hasT) underCard(); });
-  const echoLast = c => { const st = CONV[c].steps, r = [...st].reverse().find(x => x[0] === 'r'); thread(c, true); if (r) setTimeout(() => answered(r[1], true), reduced ? 0 : 600); };
+  const answered = (txt, last) => { if (hasT) swapText(fcT, chipText(txt)); if (last) setState(true); };
+  const echoLast = c => { const st = CONV[c].steps, r = [...st].reverse().find(x => x[0] === 'r'); thread(c, true); if (r) setTimeout(() => answered(r[1], true), reduced ? 0 : 900); };
   // Section 03 is not pinned: its content scrolls away and fades like the rest of the page, the print stage (the shared fixed canvas) stays.
   // The transition is tied to the scroll and reversible: it starts when the top of section 04 appears in the viewport and is finished when the section is 50 %
   // visible; scrolling back plays it the other way with the same mapping. Before it starts (section 04 within 2 screens) the print is taken over and relaxes.
