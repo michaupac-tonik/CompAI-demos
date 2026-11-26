@@ -1337,8 +1337,8 @@
   }
   /* @section:07 css:end */
   /* @section:08 css:start */
-  /* ==== 08 · Next step (structure v12; split 26.11 into five sections: #sec-08 quote, #sec-08-next, #sec-08-price,
-     #sec-08-faq, #sec-08-close, all .sec-08 for the shared tokens): the final CTA, dark.
+  /* ==== 08 · Next step (structure v12; split 26.11 into four sections: #sec-08 quote, #sec-08-price (with the next
+     step, #sec-08-next, under the quote builder), #sec-08-faq, #sec-08-close, all .sec-08 for the shared tokens): the final CTA, dark.
      A power quote with the main action over the returning print, then three modules on full rules with sticky titles:
      The call (before pricing: three steps in a row, the tab pattern of 03: hairline + mint progress, no visual), Pricing (the quote builder in the dark UI of 02's board, with its own Book a demo), FAQ (collapsed),
      and the closing CTA "Compliance that helps you close deals." (moved here from the footer sketch).
@@ -1378,13 +1378,14 @@
      1920), so two sections sit 2 x sp-6 apart, as 04-07; the first opens on sp-7 (as the light block ends) and the closing CTA
      ends on sp-7 before the footer. No rules between them. ---- */
   .sec-08:not(.quote-08) { padding: var(--sp-6) 0; }
-  .sec-08.sec-08-next { padding-top: var(--sp-7); }
-  /* ---- next step (26.11, v3): a full section, but low. The section head as the others (eyebrow, h2 display-l, lead, 24
-     apart, 7 of 12), then the call as a timeline on the full width, 64 under it: three moments on one rail; 02's grey
-     diamonds light in the mint-to-cyan gradient as the rail's fill reaches them. The fill runs once when it comes into view. ---- */
-  .s8n-head { max-width: calc(7 / 12 * 100%); margin-bottom: var(--sp-5); }
+  #sec-08-price { padding-top: var(--sp-7); }      /* the first on black, as the light quote ends (03 -> 04) */
+  /* ---- next step (26.11, v4): a part of the pricing, under the quote builder (sp-6 below it): what happens on the call the
+     builder ends on, kept quiet. A small head on the left (eyebrow, h3 display-m, note; 4 of 12), the call as a timeline on
+     the right (8 of 12): three moments on one rail; 02's grey diamonds light in the mint-to-cyan gradient as the rail's fill
+     reaches them. The fill runs once when it comes into view. ---- */
+  .s8n { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 72px; align-items: start; margin-top: var(--sp-6); }
   .s8n-head .sec-08-eyebrow { margin-bottom: var(--sp-3); }
-  .s8n-head .sec-08-lead { margin-top: var(--sp-3); }
+  .s8n-head h3 { margin-bottom: 0; }
   .s8n-tl { --p: 0; position: relative; list-style: none; margin: 0; padding: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
   .s8n-tl::before, .s8n-tl::after { content: ""; position: absolute; left: 3px; top: 3px; width: var(--rw, 100%); height: 1px; background: rgba(252,252,252,.14); }
   .s8n-tl::after { background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(var(--p)); }
@@ -1396,7 +1397,7 @@
   .s8n-tl li.on .t { color: var(--mint); }
   .s8n-tl b { font: 300 var(--t-lead-m)/1.3 var(--sans); letter-spacing: -.01em; color: inherit; text-wrap: balance; }
   .s8n-tl .d { font-size: 15px; line-height: 1.45; color: inherit; opacity: .8; text-wrap: balance; }
-  @media (max-width: 1023px) { .s8n-head { max-width: none; } }
+  @media (max-width: 1023px) { .s8n { grid-template-columns: minmax(0, 1fr); } }
   @media (max-width: 767px) { .s8n-tl { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0 0 0 24px; }
     .s8n-tl::before, .s8n-tl::after { width: 1px; height: var(--rw, 100%); }
     .s8n-tl::after { transform-origin: top; transform: scaleY(var(--p)); }
@@ -2846,7 +2847,7 @@
 </section>
 <!-- @section:07 html:end -->
 <!-- @section:08 html:start -->
-<!-- 08 split (26.11): the old 08 is now five sections, each in its own block (quote, next, price, faq, close),
+<!-- 08 split (26.11): the old 08 is now four sections, each in its own block (quote, price with the next step, faq, close),
      so each can be worked on alone. They share the .sec-08 class (tokens, type); the ids stay as they were. -->
 <!-- @section:08-quote html:start -->
 <!-- power quote (26.11): the old head of 08 as a quote, as "Comp AI shows the work." before 03, on light (the paper of 04-07);
@@ -2859,24 +2860,6 @@
   </div>
 </section>
 <!-- @section:08-quote html:end -->
-<!-- @section:08-next html:start -->
-<!-- next step (26.11, v3): a full section with a section head (eyebrow, h2 display-l, lead) like the others, but low: the call
-     as a timeline under the head, three moments on one rail with 02's diamonds; the rail fills once as it comes into view -->
-<section class="sec-08 sec-08-next" id="sec-08-next" aria-labelledby="sec-08-next-t">
-  <div class="wrap">
-    <div class="s8n-head">
-      <p class="sec-08-eyebrow">Next step</p>
-      <h2 id="sec-08-next-t">What happens on the call</h2>
-      <p class="sec-08-lead">Twenty minutes, on tools like yours. You leave with a plan and a price.</p>
-    </div>
-    <ol class="s8n-tl" aria-label="The call, step by step">
-      <li><span class="t">Minutes 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span></li>
-      <li><span class="t">Minutes 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies.</span></li>
-      <li><span class="t">Minutes 15–20</span><b>You get a plan and a price</b><span class="d">What audit-ready takes, and what it costs.</span></li>
-    </ol>
-  </div>
-</section>
-<!-- @section:08-next html:end -->
 <!-- @section:08-price html:start -->
 <section class="sec-08" id="sec-08-price" aria-labelledby="sec-08-price-t">
   <div class="wrap">
@@ -2908,6 +2891,20 @@
             <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
           </div>
         </div>
+      </div>
+      <!-- next step (26.11, v4): a part of the pricing, after the quote builder: what happens on the call the builder ends on,
+           as a quiet timeline (a small head on the left, three moments on one rail with 02's diamonds on the right) -->
+      <div class="s8n" id="sec-08-next" role="group" aria-labelledby="sec-08-next-t">
+        <div class="s8n-head">
+          <p class="sec-08-eyebrow">Next step</p>
+          <h3 id="sec-08-next-t">What happens on the call</h3>
+          <p class="sec-08-note">Twenty minutes, on tools like yours.</p>
+        </div>
+      <ol class="s8n-tl" aria-label="The call, step by step">
+        <li><span class="t">Minutes 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span></li>
+        <li><span class="t">Minutes 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies.</span></li>
+        <li><span class="t">Minutes 15–20</span><b>You leave with a plan and your number</b><span class="d">What audit-ready takes, and what it costs.</span></li>
+      </ol>
       </div>
     </div>
   </div>
@@ -5467,7 +5464,7 @@
    Inline styles are set only while a block is leaving, so the sections' own entrance animations are left alone.
    Canvases are not touched (the head bridge between 04 and 05 drives its own). The hero has its own exit; the footer is last. */
 (() => {
-  const SECS = ['shift', 'sec-03', 'sec-04', 'sec-05', 'sec-06', 'sec-07', 'sec-08', 'sec-08-next', 'sec-08-price', 'sec-08-faq', 'sec-08-close'];
+  const SECS = ['shift', 'sec-03', 'sec-04', 'sec-05', 'sec-06', 'sec-07', 'sec-08', 'sec-08-price', 'sec-08-faq', 'sec-08-close'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const row = document.querySelector('.site-nav .nav-row');
   const clamp01 = v => Math.min(1, Math.max(0, v));
