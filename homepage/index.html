@@ -1380,9 +1380,9 @@
   .sec-08:not(.quote-08) { padding: var(--sp-6) 0; }
   #sec-08-price { padding-top: var(--sp-7); }      /* the first on black, as the light quote ends (03 -> 04) */
   /* ---- pricing (26.11, v6): in the pattern of 02 The shift, not the same. The section head over the content as in the
-     other sections (eyebrow, h2 display-l, lead; 7 of 12), then 64 under it: left (5 of 12) the next step, the call as a
-     vertical timeline on 02's diamond rail; right (7 of 12) the quote builder, unchanged inside (its two columns 3:2). ---- */
-  .s8p-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px 72px; align-items: start; }
+     other sections (eyebrow, h2 display-l, lead; 7 of 12), then 64 under it: left (4 of 12) the next step, the call as a
+     vertical timeline on 02's diamond rail; right (8 of 12) the quote builder, unchanged inside. ---- */
+  .s8p-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 72px; align-items: start; }      /* left 4 of 12, builder 8 of 12 (26.11) */
   /* head row: the section head on the left, the presets (02's switch) on the right over the builder */
   .s8p-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px 72px; margin-bottom: var(--sp-5); }
   .s8p-top .s8p-head { margin-bottom: 0; }
@@ -1457,7 +1457,12 @@
   .s8n-more:is(:hover, :focus-visible) { color: var(--white); border-color: rgba(252,252,252,.6); border-style: solid; }
   .s8n-more:focus-visible { outline: 1px solid var(--white); outline-offset: 2px; }
   .s8n-tl li:not(.on) .s8n-more { visibility: hidden; }
-  .s8n-conn > span.add { animation: s8n-in .5s var(--ease) both; }
+  /* picked: the chip itself becomes the added tool, as 05's next framework: it drops in, filled in the gradient with an ink
+     label; "Next" on it replaces it with the next tool */
+  .s8n-more.on { border: 1px solid transparent; background: linear-gradient(90deg, var(--mint), var(--cyan)) border-box; color: var(--ink); animation: s05drop .5s var(--ease); }
+  .s8n-more.on svg { display: none; }
+  .s8n-more.on em { background: rgba(255,255,255,.7); color: var(--ink); animation: none; }
+  .s8n-more.on:is(:hover, :focus-visible) { color: var(--ink); border-color: transparent; }
   @media (prefers-reduced-motion: reduce) { .s8n-more em { animation: none; } }
   .s8n-tl { --p: 0; position: relative; list-style: none; margin: 0; padding: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
   .s8n-tl::before, .s8n-tl::after { content: ""; position: absolute; left: 3px; top: 3px; width: var(--rw, 100%); height: 1px; background: rgba(252,252,252,.14); }
@@ -1482,7 +1487,6 @@
   .s8p-head { max-width: calc(7 / 12 * 100%); margin-bottom: var(--sp-5); }
   .s8p-head .sec-08-eyebrow { margin-bottom: var(--sp-3); }
   .s8p-head .sec-08-lead { margin-top: var(--sp-3); }
-  #sec-08-price .sec-08-ui-b { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
@@ -2952,7 +2956,7 @@
         <!-- working copy: the systems, tasks and figures in the small UI pieces are placeholders -->
         <ol class="s8n-tl" data-dir="v">
           <li><span class="t"><span class="n">Step 1</span>Min 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span>
-            <span class="s8n-conn"><span style="--i:0">AWS</span><span style="--i:1">GitHub</span><span style="--i:2">Google Workspace</span><span style="--i:3">Okta</span><button type="button" class="s8n-more" aria-label="Add one more tool"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg>More<em>Try it</em></button></span>
+            <span class="s8n-conn"><span style="--i:0">AWS</span><span style="--i:1">GitHub</span><span style="--i:2">Google Workspace</span><span style="--i:3">Okta</span><button type="button" class="s8n-more" aria-label="Add one more tool"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg><span class="nm">More</span><em>Try it</em></button></span>
             <span class="s8n-sum" aria-live="polite"><em data-count="212">0</em> controls mapped to your stack</span></li>
           <li><span class="t"><span class="n">Step 2</span>Min 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies while you watch.</span>
             <span class="s8n-list" aria-hidden="true"></span></li>
@@ -5082,11 +5086,14 @@
       requestAnimationFrame(f); };
     const go = () => { if (started || !li.classList.contains('on')) return; started = true; countTo(+sum.dataset.count, 1500); };
     new MutationObserver(go).observe(li, { attributes: true, attributeFilter: ['class'] }); go();
+    // More, as 05's next framework: the chip becomes the added tool (it drops in, in the gradient); "Next" on it replaces it
+    // with the next tool, round the list; the count follows (the stack's own controls plus the added tool's)
     const more = li.querySelector('.s8n-more'), EXTRA = [['Azure', 34], ['Jamf', 21], ['Slack', 12], ['Jira', 16], ['Datadog', 19]];
-    if (more) more.addEventListener('click', () => { const nx = EXTRA.shift(); if (!nx) return;
-      const c = document.createElement('span'); c.className = 'add'; c.style.setProperty('--i', 0); c.textContent = nx[0]; more.before(c);
-      countTo(shown + nx[1], 450);
-      if (!EXTRA.length) more.remove(); }); }
+    if (more) { let k = 0; const nm = more.querySelector('.nm'), tag = more.querySelector('em'), base = +sum.dataset.count;
+      more.addEventListener('click', () => { const [name, add] = EXTRA[k++ % EXTRA.length];
+        more.classList.remove('on'); void more.offsetWidth; more.classList.add('on'); nm.textContent = name; tag.textContent = 'Next';
+        more.setAttribute('aria-label', name + ' added. Replace it with the next tool');
+        countTo(base + add, 250); }); } }
 
   // ---- pricing: the quote builder. Toggles (frameworks, systems) and single choices (size, audit) feed the summary.
   const quote = document.querySelector('#sec-08-price [data-quote]');
