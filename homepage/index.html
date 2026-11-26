@@ -1755,6 +1755,17 @@
     .sec-09 .cta-09-note { align-items: baseline; }
   }
   .sec-09 .home-09 + .certs-09 { margin-top: -7px; }      /* the brand line went into the CTA above: the Trust Center line sits under the logo */
+  /* ---- the logo at the bottom (26.11): the nav's lockup (mark 27.5 x 26, gap 10.4, wordmark 76.7 x 21, 3 lower) set to the
+     footer's width, cut horizontally by the bottom of the page at 72 % of its height. White and still at rest; the canvas over it
+     takes over only while the cursor is on it. */
+  .sec-09 .mark-09 { position: relative; display: block; margin-top: var(--sp-5, 64px); aspect-ratio: 114.6 / 18.72; overflow: hidden; }
+  .sec-09 .lk-09 { display: flex; align-items: flex-start; gap: 9.075%; width: 100%; transition: opacity .2s; }
+  .sec-09 .lk-09 .m { display: block; width: 23.997%; height: auto; aspect-ratio: 27.5 / 26; }
+  .sec-09 .lk-09 .w { display: block; width: 66.928%; height: auto; aspect-ratio: 76.7 / 21; margin-top: 2.618%; }
+  .sec-09 .mark-09 canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .sec-09 .mark-09.live .lk-09 { opacity: 0; }
+  .sec-09 .bar-09 { padding-bottom: 0; }
+  @media (max-width: 767px) { .sec-09 .mark-09 { margin-top: 40px; } }
   /* isolated view (?only=09): the footer alone */
   html.only-09 .site-nav, html.only-09 .mega-scrim, html.only-09 main, html.only-09 .sheet, html.only-09 #sheet { display: none !important; }
   /* @section:09 css:end */
@@ -3282,6 +3293,12 @@
       <a class="status-09" href="https://status.trycomp.ai" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"></span><span class="u">All systems normal</span></a>
     </div>
   </div>
+  <!-- the logo lockup across the footer's width, cut by the bottom of the page; pointing at it breaks it into the print's dots,
+       which gather toward the cursor (drawn on the canvas over it) -->
+  <a class="mark-09" href="/" aria-label="Comp AI home">
+    <span class="lk-09"><img class="m" src="assets/img/logo-mark.svg" alt="" width="28" height="26"><img class="w" src="assets/img/logo-wordmark.svg" alt="" width="77" height="21"></span>
+    <canvas aria-hidden="true"></canvas>
+  </a>
   </div>
 </footer>
 <!-- @section:09 html:end -->
@@ -5739,6 +5756,69 @@
   const sync = () => groups.forEach(g => { g.open = !mq.matches; });
   groups.forEach(g => g.querySelector('summary').addEventListener('click', e => { if (!mq.matches) e.preventDefault(); }));
   sync(); mq.addEventListener('change', sync);
+
+  // the logo at the bottom: at rest the white lockup (images); while the cursor is on it a canvas draws the same lockup in the
+  // print's diamond dots (the hero's 45° lattice), which break apart from where the cursor came in, turn mint to cyan and gather
+  // toward the cursor; when it leaves they spring back and the white lockup returns. Off with reduced motion and on touch.
+  const mk = sec.querySelector('.mark-09'), cv = mk && mk.querySelector('canvas');
+  if (mk && cv && !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches) {
+    const ctx = cv.getContext('2d'), imgs = [...mk.querySelectorAll('.lk-09 img')];
+    const MINT = [36, 255, 99], CYAN = [0, 255, 238];
+    let dots = [], W = 0, H = 0, G = 8, dpr = 1, raf = 0, on = false, t0 = 0, ex = 0, ey = 0;
+    const cur = { x: 0, y: 0, tx: 0, ty: 0 };
+    const build = () => {
+      const r = mk.getBoundingClientRect(); W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, 2);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      G = Math.max(4, Math.round(W / 170));                                      // lattice step: about 8 at 1376
+      const off = document.createElement('canvas'); off.width = Math.ceil(W); off.height = Math.ceil(H);
+      const o = off.getContext('2d');
+      imgs.forEach(im => { const b = im.getBoundingClientRect(); o.drawImage(im, b.left - r.left, b.top - r.top, b.width, b.height); });
+      const a = o.getImageData(0, 0, off.width, off.height).data;
+      dots = [];
+      for (let j = 0; j * G <= H + G; j++) for (let i = j % 2; i * G <= W; i += 2) {     // (i + j) even: the 45° lattice
+        const x = i * G, y = j * G, px = Math.min(off.width - 1, Math.round(x)), py = Math.min(off.height - 1, Math.round(y));
+        if (y >= off.height || a[(py * off.width + px) * 4 + 3] < 128) continue;
+        const h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+        dots.push({ hx: x, hy: y, x, y, vx: 0, vy: 0, k: 0, r: h - Math.floor(h) });
+      }
+    };
+    const frame = now => {
+      cur.x += (cur.tx - cur.x) * .18; cur.y += (cur.ty - cur.y) * .18;
+      const R = H * .55, el = now - t0; let busy = on;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      for (const d of dots) {
+        // breaks from where the cursor came in, outward (about 1.4 px per ms), each dot a little early or late
+        const reach = Math.hypot(d.hx - ex, d.hy - ey) / 1.4 + d.r * 160;
+        d.k += ((on && el > reach ? 1 : 0) - d.k) * (on ? .09 : .07);
+        // pull toward the cursor, strongest close to it; a slight scatter of its own
+        const dx = cur.x - d.hx, dy = cur.y - d.hy, f = Math.exp(-(dx * dx + dy * dy) / (2 * R * R)) * .62 * d.k;
+        const sc = (d.r - .5) * G * 1.6 * d.k;
+        const tx = d.hx + dx * f + sc, ty = d.hy + dy * f - sc * .6;
+        d.vx = (d.vx + (tx - d.x) * .14) * .76; d.vy = (d.vy + (ty - d.y) * .14) * .76;
+        d.x += d.vx; d.y += d.vy;
+        if (d.k > .002 || Math.abs(d.vx) + Math.abs(d.vy) > .02) busy = true;
+        // size: at rest the diamonds touch (a solid logo); broken, they shrink to the print's dots
+        const s = G * (1 - .52 * d.k);
+        const u = Math.min(1, Math.max(0, d.x / W)), c = MINT.map((v, n) => Math.round(v + (CYAN[n] - v) * u));
+        const w = [252, 252, 252].map((v, n) => Math.round(v + (c[n] - v) * Math.min(1, d.k * 1.6)));
+        ctx.fillStyle = `rgb(${w})`;
+        ctx.beginPath(); ctx.moveTo(d.x, d.y - s); ctx.lineTo(d.x + s, d.y); ctx.lineTo(d.x, d.y + s); ctx.lineTo(d.x - s, d.y); ctx.fill();
+      }
+      if (busy) raf = requestAnimationFrame(frame);
+      else { raf = 0; mk.classList.remove('live'); ctx.clearRect(0, 0, W, H); }
+    };
+    const pos = e => { const r = mk.getBoundingClientRect(); cur.tx = e.clientX - r.left; cur.ty = e.clientY - r.top; };
+    mk.addEventListener('pointerenter', e => {
+      if (e.pointerType === 'touch') return;
+      if (!dots.length || Math.abs(mk.getBoundingClientRect().width - W) > 1) build();
+      pos(e); if (!raf) { cur.x = cur.tx; cur.y = cur.ty; }
+      ex = cur.tx; ey = cur.ty; t0 = performance.now(); on = true;
+      mk.classList.add('live'); if (!raf) raf = requestAnimationFrame(frame);
+    });
+    mk.addEventListener('pointermove', pos);
+    mk.addEventListener('pointerleave', () => { on = false; });
+    addEventListener('resize', () => { if (!raf) dots = []; });
+  }
 })();
 </script>
 <!-- @section:09 js:end -->
