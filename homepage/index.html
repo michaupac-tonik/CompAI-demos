@@ -2309,6 +2309,15 @@
   html:is(.v06-c, .v06-d) .sec-06 .tag:not(.warn):not(.star) { background: rgba(36, 255, 99, .2); box-shadow: none; color: var(--ink); }
   html:is(.v06-c, .v06-d) .sec-06 .tag.warn { background: rgba(243, 115, 0, .16); color: #8a3d00; }
   html:is(.v06-c, .v06-d) .sec-06 .ck { background: rgba(36, 255, 99, .28); color: var(--ink); }
+  /* Try it and Live are switches now (26.11): the page's switch square, empty when off, mint when on; Live pulses while live */
+  html:is(.v06-c, .v06-d) #sec-06 .win button.try, html:is(.v06-c, .v06-d) #sec-06 .win button.live { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 7px;
+    background: rgba(22, 22, 22, .06); color: var(--ink); font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; transition: background-color .2s ease; }
+  html:is(.v06-c, .v06-d) #sec-06 .win button.live { background: none; padding: 0 2px; }
+  html:is(.v06-c, .v06-d) #sec-06 .win button:is(.try, .live):hover { background: rgba(22, 22, 22, .12); }
+  html:is(.v06-c, .v06-d) #sec-06 .win button:is(.try, .live)::before { content: ""; width: 7px; height: 7px; box-sizing: border-box; border: 1px solid currentColor; border-radius: 0; background: transparent; animation: none; transition: background-color .25s, border-color .25s; }
+  html:is(.v06-c, .v06-d) #sec-06 .win button:is(.try, .live)[aria-pressed="true"]::before { background: var(--mint); border-color: var(--mint); }
+  html:is(.v06-c, .v06-d) #sec-06 .win button.live[aria-pressed="true"]::before { animation: s06pulse 2s ease-out infinite; }
+  @media (prefers-reduced-motion: reduce) { html:is(.v06-c, .v06-d) #sec-06 .win button.live::before { animation: none; } }
   /* the repository's star count (GitHub stars, a click stars it): room inside its outline, as the other tags (a reset left it at 0) */
   html:is(.v06-c, .v06-d) #sec-06 .win button.star { padding: 0 8px 0 7px; gap: 5px; }
   html:is(.v06-c, .v06-d) .sec-06 .win button.star.on { background: var(--mint); color: var(--ink); }
@@ -4829,7 +4838,7 @@
     }
   });
   if (!reduced) setInterval(() => {
-    if (!visible || document.hidden) return;
+    if (!visible || document.hidden || sec.dataset.paused) return;      // Live switched off (26.11): the windows hold still
     tick++; since++;
     if (tick % 3 === 0 && !feed.querySelector('li.open')) { addEvidence(); since = 0; }
     if (tick % 7 === 0 && !repo.classList.contains('diffing')) addCommit();
@@ -5331,6 +5340,21 @@
       const f = a ? 1 - a * AMP * (.5 - .5 * Math.cos(TAU * (rr / LAMBDA - t))) : 1, d = pts[i + 2] * f; if (d < .35) continue;
       const p = paths[pts[i + 4]]; p.moveTo(x, y - d); p.lineTo(x + d, y); p.lineTo(x, y + d); p.lineTo(x - d, y); p.closePath(); }
     paths.forEach((p, q) => { g.fillStyle = COL[q]; g.fill(p); }); };
+  // "Try it" and "Live" look like the page's switches, so they are switches (26.11). Try it opens the first thing to try in its window
+  // (a commit's change, an evidence item's source, a control's evidence) and closes it again; its square fills while that is open.
+  // Live holds the windows still (no new evidence, commits or re-checks) and lets them run again; its square fills while live.
+  const tries = [...sec.querySelectorAll('.win .try')].map(sp => { const b = document.createElement('button'); b.type = 'button'; b.className = 'try'; b.textContent = sp.textContent;
+    b.setAttribute('aria-pressed', 'false'); sp.replaceWith(b); return b; });
+  const targetOf = b => { const w = b.closest('.win'); return w.querySelector('[data-commits] .cm') || w.querySelector('[data-feed] .row') || w.querySelector('[data-ctl] .ci > button'); };
+  const openIn = b => { const w = b.closest('.win'); return w.matches('.diffing, .ctl-open') || !!w.querySelector('[data-feed] li.open'); };
+  const sync = () => tries.forEach(b => b.setAttribute('aria-pressed', openIn(b) ? 'true' : 'false'));
+  tries.forEach(b => { const w = b.closest('.win'); b.setAttribute('aria-label', 'Try it: ' + ({ repo: 'open a commit', tc: 'open a control' }[w.hasAttribute('data-repo') ? 'repo' : w.hasAttribute('data-tc') ? 'tc' : ''] || 'open an evidence item'));
+    b.addEventListener('click', () => { if (openIn(b)) { const o = b.closest('.win').querySelector('li.open > button, .ci.open > button'); if (o) o.click(); } else { const t = targetOf(b); if (t) t.click(); } setTimeout(sync, 0); }); });
+  sec.addEventListener('click', () => setTimeout(sync, 0));
+  const liveSp = sec.querySelector('.win .live');
+  if (liveSp) { const lb = document.createElement('button'); lb.type = 'button'; lb.className = 'live'; lb.textContent = 'Live'; lb.setAttribute('aria-pressed', 'true'); lb.setAttribute('aria-label', 'Live updates'); liveSp.replaceWith(lb);
+    lb.addEventListener('click', () => { const on = lb.getAttribute('aria-pressed') !== 'true'; lb.setAttribute('aria-pressed', on ? 'true' : 'false'); lb.textContent = on ? 'Live' : 'Paused';
+      if (on) delete sec.dataset.paused; else sec.dataset.paused = '1'; }); }
   sec.querySelectorAll('.pr').forEach((pr, j) => { const cap = pr.querySelector('.cap'); if (!cap) return;
     const t0 = document.createElement('span'); t0.className = 'tile'; t0.setAttribute('aria-hidden', 'true'); const cv = document.createElement('canvas'); cv.width = cv.height = S; t0.append(cv); cap.prepend(t0);
     fetch('assets/img/trust/motif-' + (j % 3 + 1) + '.svg').then(res => res.text()).then(txt => { const pts = build(txt); let t = 0, a = 0, want = 0, raf = 0, last = 0; draw(cv, pts, 0, 0); if (reduced) return;
