@@ -2429,6 +2429,12 @@
   html .sec-05 button.fw-05.next { container-type: inline-size; }
   html .sec-05 button.fw-05.next .lb { min-width: 0; }
   @container (max-width: 210px) { html .sec-05 button.fw-05.next em { display: none; } html .sec-05 button.fw-05.next .lb { gap: 7px; } html .sec-05 button.fw-05.next .nm { font-size: 14px; } }
+  /* 03 (26.11): the graphic's container ends where the third tab's bar ends, and the text starts under the fourth: the stage keeps
+     the tabs' five columns and their gap. Up to 1599 px only: wider, the earlier layout stays (Michał: 1920 was fine) */
+  @media (min-width: 1101px) and (max-width: 1599px) { #sec-03 .stage { --sw: calc((100% - 4 * var(--sp-3)) * .6 + 2 * var(--sp-3)); } #sec-03 .shotd { column-gap: var(--sp-3); } }
+  /* 04 (26.11): the reply-time chip keeps clear of the card: it starts at least 20 px past the card's right edge (the card is 268 px
+     from -32 px), so they no longer overlap at 1440 */
+  @media (min-width: 1024px) { #sec-04 .fc.d { left: max(32%, calc(min(268px, 58%) + max(-5%, -32px) + 20px)); } }
   /* ==== 06 Trust, layout C (approved 26.11): the three columns side by side, the words above the windows, with more air.
      ?only=06 shows the section alone */
   html.only-06 .site-nav, html.only-06 main > :not(#sec-06), html.only-06 footer, html.only-06 .sheet, html.only-06 #sheet { display: none !important; }
