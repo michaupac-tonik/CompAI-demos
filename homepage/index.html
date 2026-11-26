@@ -2299,13 +2299,13 @@
   /* C refined (26.11): more of the brand in the heads. A tile of the print above each (mint to cyan diamonds on black, a crop of
      its own), the column's hairline with a gradient run that fills it when the column is pointed at, the label led by a gradient
      square, a touch of mint in the windows' shadow */
-  html:is(.v06-c, .v06-d) .sec-06 .pr .cap { position: relative; border-top-color: rgba(22,22,22,.1); }
-  html:is(.v06-c, .v06-d) .sec-06 .pr .cap::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: 64px; background: linear-gradient(90deg, var(--mint), var(--cyan)); transition: width .7s cubic-bezier(.2,.7,.1,1); }
-  html:is(.v06-c, .v06-d) .sec-06 .pr:is(:hover, :focus-within) .cap::before { width: 100%; }
+  html:is(.v06-c, .v06-d) .sec-06 .pr .cap { position: relative; border-top: 0; padding-top: 0; }      /* no rule above the columns (26.11): nothing loads or switches here */
   html:is(.v06-c, .v06-d) .sec-06 .cap .tile { display: block; width: 56px; height: 56px; margin: 0 0 var(--sp-3); background: #000 center / cover no-repeat; }
   html:is(.v06-c, .v06-d) .sec-06 .cap .k { gap: 10px; color: var(--ink); }
   html:is(.v06-c, .v06-d) .sec-06 .cap .k::before { content: ""; width: 8px; height: 8px; flex: none; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
-  html:is(.v06-c, .v06-d) .sec-06 .pr .win { box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 28px 56px -30px rgba(0, 200, 160, .35); }
+  html:is(.v06-c, .v06-d) .sec-06 .pr .win { box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 24px 48px -28px rgba(22,22,22,.2); }      /* neutral, no colour (26.11) */
+  /* the head's buttons move under the cards (the script moves them), from the left */
+  html:is(.v06-c, .v06-d) .sec-06 .stage-06 > .acts-06 { justify-content: flex-start; margin-top: var(--sp-5); }
   html.v06-d .sec-06 .pr .win { height: 232px; opacity: .45; filter: saturate(0); transition: opacity .5s ease, filter .5s ease, translate .5s var(--ease); }
   html.v06-d .sec-06 .pr:is(:hover, :focus-within) .win { opacity: 1; filter: none; translate: 0 -4px; }
   html.v06-d .sec-06 .win-f, html.v06-d .sec-06 .try, html.v06-d .sec-06 .commits { display: none; }
@@ -4436,7 +4436,7 @@
   }
   // global fixes 24.11: the head fades in when the section's UI comes in (same trigger as the .rv items), not on page load
   let headIn = false;
-  const draw = () => { if (!layout()) return; render(); if (headIn) cv.classList.add('on'); };
+  const draw = () => { if (!layout() || !cv.width || !cv.height) return; render(); if (headIn) cv.classList.add('on'); };      // nothing to draw while the section is hidden (the single-section previews)
   if ('IntersectionObserver' in window) { const ioH = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { headIn = true; cv.classList.add('on'); ioH.disconnect(); } }), { threshold: 0, rootMargin: '0px 0px -12% 0px' }); ioH.observe(sec); } else headIn = true;
   window.__p05 = { cv, st: () => ({ ox, oy, k, px, dpr, H, L, DIM }) };      // trial 04-06: read by the head bridge from section 04
   // the chart's axis (the line under the bars) lines up with the last rule of the steps on the left; offsets ignore the entrance transforms
@@ -5304,6 +5304,8 @@
 (() => {
   const r = document.documentElement; if (!r.classList.contains('v06-c') && !r.classList.contains('v06-d')) return;
   const sec = document.getElementById('sec-06'); if (!sec) return;
+  // the head's buttons go under the cards (26.11)
+  const acts = sec.querySelector('.head-06 .acts-06'), row = sec.querySelector('.row-06'); if (acts && row) row.after(acts);
   const TAU = Math.PI * 2, AT = [[.14, -.06], [-.12, .1], [.02, .22]];
   const run = () => { const D = window.BLEND_FIELDS; if (!D) return;
     const dec = (b64, T) => { const s = atob(b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new T(u.buffer); };
