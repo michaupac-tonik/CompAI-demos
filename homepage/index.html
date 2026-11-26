@@ -2413,9 +2413,15 @@
   #sec-05 .chart-05.lg .col-05 > .fw-05.fold { height: 0; padding-top: 0; padding-bottom: 0; margin-top: -4px; opacity: 0; transform: scaleX(.92); box-shadow: none; }
   #sec-05 .chart-05.lg .col-05 > :not(.fw-05) { transition: none; }      /* the figures and stories just ride down on the stack */
   /* ==== 05 (Michał, 26.11): the new frameworks in the gradient of 02's handover bars (mint to cyan, left to right) */
-  html .sec-05 .fw-05.new, html .sec-05 button.fw-05.next.on { background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  html .sec-05 .fw-05.new, html .sec-05 button.fw-05.next.on { background: var(--g05, linear-gradient(90deg, var(--mint), var(--cyan))); }
+  /* (26.11, trial) a gradient of its own per framework, the pairs of 07's customer stories: the same framework keeps its colour in every column */
+  html .sec-05 .fw-05.new[data-fw="ISO 27001"] { --g05: linear-gradient(90deg, #F1BC37, #F5380E); }
+  html .sec-05 .fw-05.new[data-fw="HIPAA"] { --g05: linear-gradient(90deg, var(--cyan), #F1BC37); }
+  html .sec-05 .fw-05.new[data-fw="GDPR"] { --g05: linear-gradient(90deg, #F37300, #F1BC37); }
+  html .sec-05 .fw-05.new[data-fw="ISO 42001"] { --g05: linear-gradient(90deg, var(--mint), #F37300); }
+  html .sec-05 .fw-05.new[data-fw="PCI DSS"] { --g05: linear-gradient(90deg, #F5380E, #F37300); }
   /* the last column's new frameworks carry a passing sheen: the gradient goes under it, as a second layer (it does not move: 100 % wide) */
-  html .sec-05 .col-05:last-child .fw-05.new { background-color: transparent; background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%), linear-gradient(90deg, var(--mint), var(--cyan));
+  html .sec-05 .col-05:last-child .fw-05.new { background-color: transparent; background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%), var(--g05, linear-gradient(90deg, var(--mint), var(--cyan)));
     background-size: 250% 100%, 100% 100%; background-repeat: no-repeat; }
   html #sec-05 .sw-l button.w[aria-pressed="true"]::before { background: linear-gradient(90deg, var(--mint), var(--cyan)); border-color: transparent; }
   /* ==== 06 Trust, layout C (approved 26.11): the three columns side by side, the words above the windows, with more air.
@@ -5981,7 +5987,11 @@
   // each motif is a lattice of diamonds 28 units apart; the files differ in size, so every tile shows the same window, 896 x 896 units
   // around its motif: the same dots, the same size, in each tile. The dots are taken from the file as they are (centre, size)
   const S = 224, WIN = 896, B = 10, MINT = [36, 255, 99], CYAN = [0, 255, 238], LAMBDA = 46, AMP = .38, SPEED = .22, sc = S / WIN;
-  const COL = Array.from({ length: B }, (_, q) => 'rgb(' + MINT.map((v, i) => Math.round(v + (CYAN[i] - v) * q / (B - 1))).join(',') + ')');
+  // colours as the customer stories in 07 (Figma 320:874), core first: a pair of the brand's heat colours per tile (26.11)
+  const PALS = [[[241, 188, 55], [245, 56, 14]], [[0, 255, 238], [241, 188, 55]], [[243, 115, 0], [241, 188, 55]]];
+  const ramp = pal => Array.from({ length: B }, (_, q) => { const f = q / (B - 1) * (pal.length - 1), j = Math.min(pal.length - 2, Math.floor(f)), w = f - j;
+    return 'rgb(' + pal[j].map((v, i) => Math.round(v + (pal[j + 1][i] - v) * w)).join(',') + ')'; });
+  const COL = ramp([MINT, CYAN]), COLS = PALS.map(ramp);
   const build = txt => { const d = (/ d="([^"]+)"/.exec(txt) || [])[1] || '', re = /M(-?[\d.]+) (-?[\d.]+)l(-?[\d.]+)/g, raw = []; let m, x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
     while ((m = re.exec(d))) { const h = +m[3], cx = +m[1], cy = +m[2] + h; raw.push(cx, cy, h); if (h > 3) { x0 = Math.min(x0, cx); x1 = Math.max(x1, cx); y0 = Math.min(y0, cy); y1 = Math.max(y1, cy); } }
     const ox = (x0 + x1) / 2 - WIN / 2, oy = (y0 + y1) / 2 - WIN / 2, pts = [];
@@ -5992,7 +6002,7 @@
     for (let i = 0; i < pts.length; i += 5) { const x = pts[i], y = pts[i + 1], rr = pts[i + 3];
       const f = a ? 1 - a * AMP * (.5 - .5 * Math.cos(TAU * (rr / LAMBDA - t))) : 1, d = pts[i + 2] * f; if (d < .35) continue;
       const p = paths[pts[i + 4]]; p.moveTo(x, y - d); p.lineTo(x + d, y); p.lineTo(x, y + d); p.lineTo(x - d, y); p.closePath(); }
-    paths.forEach((p, q) => { g.fillStyle = COL[q]; g.fill(p); }); };
+    const col = cv._col || COL; paths.forEach((p, q) => { g.fillStyle = col[q]; g.fill(p); }); };
   // "Try it" and "Live" look like the page's switches, so they are switches (26.11). Try it opens the first thing to try in its window
   // (a commit's change, an evidence item's source, a control's evidence) and closes it again; its square fills while that is open.
   // Live holds the windows still (no new evidence, commits or re-checks) and lets them run again; its square fills while live.
@@ -6010,6 +6020,7 @@
       if (on) delete sec.dataset.paused; else sec.dataset.paused = '1'; }); }
   sec.querySelectorAll('.pr').forEach((pr, j) => { const cap = pr.querySelector('.cap'); if (!cap) return;
     const t0 = document.createElement('span'); t0.className = 'tile'; t0.setAttribute('aria-hidden', 'true'); const cv = document.createElement('canvas'); cv.width = cv.height = S; t0.append(cv); cap.prepend(t0);
+    cv._col = COLS[j % 3];
     fetch('assets/img/trust/motif-' + (j % 3 + 1) + '.svg').then(res => res.text()).then(txt => { const pts = build(txt); let t = 0, a = 0, want = 0, raf = 0, last = 0; draw(cv, pts, 0, 0); if (reduced) return;
       const step = now => { const dt = Math.min(50, now - (last || now)) / 1000; last = now; t += dt * SPEED; a += (want - a) * (1 - Math.exp(-dt * 4));      // the wave eases in and out
         draw(cv, pts, t, a); if (want || a > .005) raf = requestAnimationFrame(step); else { raf = 0; last = 0; draw(cv, pts, t, 0); } };
