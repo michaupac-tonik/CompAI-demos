@@ -2301,12 +2301,70 @@
   html .sec-05 .col-05:last-child .fw-05.new { background-color: transparent; background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%), linear-gradient(90deg, var(--mint), var(--cyan));
     background-size: 250% 100%, 100% 100%; background-repeat: no-repeat; }
   html #sec-05 .sw-l button.w[aria-pressed="true"]::before { background: linear-gradient(90deg, var(--mint), var(--cyan)); border-color: transparent; }
+  /* ==== 06 Trust, layout C (approved 26.11): the three columns side by side, the words above the windows, with more air.
+     ?only=06 shows the section alone */
+  html.only-06 .site-nav, html.only-06 main > :not(#sec-06), html.only-06 footer, html.only-06 .sheet, html.only-06 #sheet { display: none !important; }
+  /* open columns: no card around them. A row of words (the links aligned), then a row of windows */
+  :root .sec-06 .row-06 { grid-template-rows: auto auto; row-gap: var(--sp-5); column-gap: var(--sp-4); }
+  :root .sec-06 .row-06 > li { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
+  :root .sec-06 .pr { display: grid; grid-row: span 2; grid-template-rows: subgrid; padding: 0; background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; overflow: visible; }
+  :root .sec-06 .pr .cap { grid-row: 1; position: relative; padding: 0; border-top: 0; }
+  :root .sec-06 .pr .cap p { max-width: 36ch; }
+  :root .sec-06 .pr .win { grid-row: 2; background: #fff; }
+  :root .sec-06 .win-f .hide-s { display: none; }
+  /* the heads: a tile with the client's motif above each, the label in quiet grey led by a gradient square */
+  :root .sec-06 .cap .tile { display: block; width: 112px; height: 112px; margin: 0 0 var(--sp-3); background: #000; }      /* the client's Blend motifs, in the print's dots */
+  :root .sec-06 .cap .tile canvas { display: block; width: 100%; height: 100%; }
+  :root .sec-06 .cap .k { gap: 10px; color: color-mix(in srgb, var(--ink) 56%, transparent); }      /* a label, not an action: quieter than the column's link (26.11) */
+  :root .sec-06 .cap .k::before { content: ""; width: 8px; height: 8px; flex: none; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  :root .sec-06 .pr .win { box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 24px 48px -28px rgba(22,22,22,.2); }      /* neutral, no colour (26.11) */
+  /* the windows take the brand accents (26.11): passed checks and controls in mint, the item that needs review in orange, a starred repo in mint */
+  :root .sec-06 .tag:not(.warn):not(.star) { background: rgba(36, 255, 99, .2); box-shadow: none; color: var(--ink); }
+  :root .sec-06 .tag.warn { background: rgba(243, 115, 0, .16); color: #8a3d00; }
+  :root .sec-06 .ck { background: rgba(36, 255, 99, .28); color: var(--ink); }
+  /* Try it and Live are switches now (26.11): the page's switch square, empty when off, mint when on; Live pulses while live */
+  :root #sec-06 .win button.try, :root #sec-06 .win button.live { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 7px;
+    background: rgba(22, 22, 22, .06); color: var(--ink); font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; transition: background-color .2s ease; }
+  :root #sec-06 .win button.live { background: none; padding: 0 2px; }
+  :root #sec-06 .win button:is(.try, .live):hover { background: rgba(22, 22, 22, .12); }
+  :root #sec-06 .win button:is(.try, .live)::before { content: ""; width: 7px; height: 7px; box-sizing: border-box; border: 1px solid currentColor; border-radius: 0; background: transparent; animation: none; transition: background-color .25s, border-color .25s; }
+  :root #sec-06 .win button:is(.try, .live)[aria-pressed="true"]::before { background: var(--mint); border-color: var(--mint); }
+  :root #sec-06 .win button.live[aria-pressed="true"]::before { animation: s06pulse 2s ease-out infinite; }
+  @media (prefers-reduced-motion: reduce) { :root #sec-06 .win button.live::before { animation: none; } }
+  /* the repository's star count (GitHub stars, a click stars it): room inside its outline, as the other tags (a reset left it at 0) */
+  :root #sec-06 .win button.star { padding: 0 8px 0 7px; gap: 5px; }
+  :root .sec-06 .win button.star.on { background: var(--mint); color: var(--ink); }
+  :root .sec-06 .feed .src { background: linear-gradient(135deg, var(--mint), var(--cyan)); color: var(--ink); }
+  /* open columns: pointing at the link does not light the whole column (no outline, no lift) */
+  :root .sec-06 .pr, :root .sec-06 .pr:hover, :root .sec-06 .pr:has(.go:is(:hover, :focus-visible)) { box-shadow: none; translate: none; }
+  /* no buttons in the head (26.11): they repeated the columns' own links (GitHub, trust center) */
+  :root .sec-06 .head-06 .acts-06 { display: none; }
+  /* the head: lines of even length (26.11) */
+  :root #sec-06 .head-06 h2, :root #sec-06 .head-06 .lead-06 { text-wrap: balance; }
+  /* 06: the report request's answer inside the trust center window (26.11): the controls fade up and out, a short panel comes in from below */
+  .sec-06 .win[data-tc] .tc-b { transition: opacity .35s ease, filter .35s ease, transform .45s cubic-bezier(.2,.7,.1,1); }
+  .sec-06 .win[data-tc].req .tc-b { opacity: 0; filter: blur(4px); transform: translateY(-8px); pointer-events: none; }
+  .sec-06 .tc-req { position: absolute; left: 0; right: 0; top: 47px; bottom: 41px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 14px 16px 14px;
+    opacity: 0; filter: blur(4px); transform: translateY(10px); pointer-events: none; visibility: hidden;
+    transition: opacity .45s ease, filter .45s ease, transform .6s cubic-bezier(.2,.7,.1,1), visibility 0s linear .6s; }
+  .sec-06 .win[data-tc].req .tc-req { opacity: 1; filter: none; transform: none; pointer-events: auto; visibility: visible; transition: opacity .5s ease .15s, filter .5s ease .15s, transform .7s cubic-bezier(.2,.7,.1,1) .15s, visibility 0s; }
+  .sec-06 .tc-req .ok { display: grid; place-items: center; flex: none; width: 28px; height: 28px; min-height: 28px; aspect-ratio: 1; background: var(--mint); color: var(--ink); }
+  .sec-06 .tc-req .ok svg { width: 14px; height: 14px; }
+  .sec-06 .tc-req b { margin-top: 6px; font-family: var(--sans); font-weight: 400; font-size: 18px; line-height: 1.2; letter-spacing: -.01em; color: var(--ink); }
+  .sec-06 .tc-req p { margin: 0; font-size: 13.5px; line-height: 1.4; color: #515151; }
+  .sec-06 .tc-req ol { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; width: 100%; }
+  .sec-06 .tc-req li { display: grid; grid-template-columns: 26px minmax(0, 1fr); align-items: baseline; padding-top: 6px; border-top: 1px solid rgba(22,22,22,.08); font-size: 13.5px; line-height: 1.35; color: var(--ink); }
+  .sec-06 .tc-req li em { font-family: var(--mono); font-size: 11px; font-style: normal; letter-spacing: .04em; color: #696969; }
+  .sec-06 .win .tc-req button.back { margin-top: auto; padding-top: 12px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
+  .sec-06 .win .tc-req button.back svg { width: 12px; height: 12px; transition: transform .3s var(--ease); }
+  .sec-06 .win .tc-req button.back:is(:hover, :focus-visible) svg { transform: translateX(3px); }
+  @media (prefers-reduced-motion: reduce) { .sec-06 .win[data-tc] .tc-b, .sec-06 .tc-req { transition: none; } }
 </style>
 </head>
 <body>
 <script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
 (() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
-  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); })();</script>
+  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); if (q.get('only') === '06') r.classList.add('only-06'); })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
@@ -2679,14 +2737,14 @@
       <div class="print-06" role="img" aria-label="A person in profile turning into interlocking circles, like a seal"><canvas aria-hidden="true"></canvas></div>
       <!-- WORKING SAMPLE DATA in the windows: file, commits and their diffs, times, evidence items, controls and their
            evidence counts; Comp AI's own frameworks (SOC 2 Type II, ISO 27001) are placeholders until the client confirms them.
-           Placeholders: stars, contributors, controls (XX). Things to try (easter eggs): star the repo, open a commit's diff,
+           Stars (2.1k, 2,134) and contributors (40) are trycompai/comp on GitHub as of 26.11.2026; controls (XX) is still a placeholder. Things to try (easter eggs): star the repo, open a commit's diff,
            open an evidence item and re-run its check, open a control's evidence, request the report.
            LINKS: GitHub repo and trust center URLs to be confirmed by the client (both are outside services in the current
            trycomp.ai footer); the evidence card points to section 03 of this page for now. -->
       <ul class="row-06">
         <li class="rv" style="--d:4"><article class="pr" style="--gx: 30%; --gy: 100%">
           <div class="win" data-repo>
-            <div class="win-h"><svg class="ghi" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ttl"><i>trycompai /</i> comp</span><span class="end"><span class="try">Try it</span><button class="tag star" type="button" aria-pressed="false" aria-label="Star the repository"><svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="M6 .8l1.6 3.3 3.6.5-2.6 2.5.6 3.6L6 9l-3.2 1.7.6-3.6L.8 4.6l3.6-.5z"/></svg><span class="num">XX</span></button></span></div>
+            <div class="win-h"><svg class="ghi" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ttl"><i>trycompai /</i> comp</span><span class="end"><span class="try">Try it</span><button class="tag star" type="button" aria-pressed="false" aria-label="Star the repository (2,134 stars)"><svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="M6 .8l1.6 3.3 3.6.5-2.6 2.5.6 3.6L6 9l-3.2 1.7.6-3.6L.8 4.6l3.6-.5z"/></svg><span class="num">2.1k</span></button></span></div>
 <pre class="code"><span class="fp">agents/evidence/collect.ts</span><span class="c">// every item keeps its source and time</span>
 <span class="f">await</span> evidence.save({
   control: <span class="s">"CC6.1"</span>, source: <span class="s">"okta"</span>,
@@ -2697,7 +2755,7 @@
               <li><button class="cm" type="button" aria-expanded="false"><span class="av"></span><span class="m">Add MFA check for Google Workspace</span><span class="t">5h</span></button><pre class="diff"><span class="del">- checks.register(okta.mfa)</span><span class="add">+ checks.register(okta.mfa, gws.mfa)</span></pre></li>
               <li><button class="cm" type="button" aria-expanded="false"><span class="av"></span><span class="m">Retry when AWS rate-limits a request</span><span class="t">1d</span></button><pre class="diff"><span class="del">- await aws.call(req)</span><span class="add">+ await retry(() => aws.call(req), { on: 429 })</span></pre></li>
             </ul>
-            <div class="win-f"><span><span class="num">XX</span> contributors</span><span class="hide-s">Click a commit to see the change</span></div>
+            <div class="win-f"><span><span class="num">40</span> contributors</span><span class="hide-s">Click a commit to see the change</span></div>
           </div>
           <div class="cap">
             <p class="k">01 · Open source</p>
@@ -4441,7 +4499,7 @@
   }
   // global fixes 24.11: the head fades in when the section's UI comes in (same trigger as the .rv items), not on page load
   let headIn = false;
-  const draw = () => { if (!layout()) return; render(); if (headIn) cv.classList.add('on'); };
+  const draw = () => { if (!layout() || !cv.width || !cv.height) return; render(); if (headIn) cv.classList.add('on'); };      // nothing to draw while the section is hidden (the single-section previews)
   if ('IntersectionObserver' in window) { const ioH = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { headIn = true; cv.classList.add('on'); ioH.disconnect(); } }), { threshold: 0, rootMargin: '0px 0px -12% 0px' }); ioH.observe(sec); } else headIn = true;
   window.__p05 = { cv, st: () => ({ ox, oy, k, px, dpr, H, L, DIM }) };      // trial 04-06: read by the head bridge from section 04
   // the chart's axis (the line under the bars) lines up with the last rule of the steps on the left; offsets ignore the entrance transforms
@@ -4796,6 +4854,17 @@
     commits.prepend(li); [...commits.children].forEach((el, i) => { if (i) { el.classList.remove('new'); el.querySelector('.t').textContent = ['now', '2h', '5h', '1d'][i] || '1d'; } });
     while (commits.children.length > 3) commits.lastElementChild.remove(); };
   const recheck = () => { const c = ctl(); c.forEach(x => x.classList.remove('chk')); void sec.offsetWidth; c[ki++ % c.length].classList.add('chk'); };
+  // the request's answer: the controls step aside for a short panel (requested, and the steps that follow), then come back by
+  // themselves after 7 s or with "Back to controls". WORKING SAMPLE DATA: the steps are to be confirmed with the client.
+  const req = document.createElement('div'); req.className = 'tc-req'; req.setAttribute('aria-live', 'polite');
+  req.innerHTML = '<span class="ok">' + OK + '</span><b>Report requested</b>'
+    + '<ol><li><em>01</em>Sign a short NDA</li><li><em>02</em>Get the SOC 2 Type II report by email</li><li><em>03</em>Ask our team anything about it</li></ol>'
+    + '<button class="back" type="button">Back to controls <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg></button>';
+  if (tc) tc.append(req);
+  let reqT = 0;
+  const showReq = () => { if (!tc) return; clearTimeout(reqT); tc.classList.add('req'); reqT = setTimeout(hideReq, 7000); };
+  const hideReq = () => { if (!tc) return; clearTimeout(reqT); tc.classList.remove('req'); const a = tc.querySelector('button.ask');
+    if (a) setTimeout(() => { a.classList.remove('sent'); a.textContent = 'Request report'; delete a.dataset.busy; }, 400); };
   // open one item of a list, close the others
   const openOne = (li, list) => { const was = li.classList.contains('open');
     [...list.children].forEach(x => { x.classList.remove('open'); const b = x.querySelector('button'); if (b) b.setAttribute('aria-expanded', 'false'); });
@@ -4817,15 +4886,16 @@
       setTimeout(() => { tag.outerHTML = passed(); num.textContent = 'now'; li.classList.remove('new'); void li.offsetWidth; li.classList.add('new'); since = 0; sync.textContent = '0s'; }, 1200);
     } else if (t.parentElement.classList.contains('ci')) {    // a control opens its evidence
       const box = t.closest('[data-ctl]'); tc.classList.toggle('ctl-open', openOne(t.parentElement, box));
-    } else if (t.classList.contains('ask')) {                 // request the report
+    } else if (t.classList.contains('ask')) {                 // request the report: sending, then the window shows what happens next (26.11)
       if (t.classList.contains('sent') || t.dataset.busy) return;
       t.dataset.busy = 1; t.textContent = 'Sending…';
-      setTimeout(() => { t.classList.add('sent'); t.textContent = 'Requested ✓'; }, 900);
-      setTimeout(() => { t.classList.remove('sent'); t.textContent = 'Request report'; delete t.dataset.busy; }, 5200);
+      setTimeout(() => { t.classList.add('sent'); t.textContent = 'Requested ✓'; showReq(t); }, 900);
+    } else if (t.classList.contains('back')) {                // back to the controls
+      hideReq();
     }
   });
   if (!reduced) setInterval(() => {
-    if (!visible || document.hidden) return;
+    if (!visible || document.hidden || sec.dataset.paused) return;      // Live switched off (26.11): the windows hold still
     tick++; since++;
     if (tick % 3 === 0 && !feed.querySelector('li.open')) { addEvidence(); since = 0; }
     if (tick % 7 === 0 && !repo.classList.contains('diffing')) addCommit();
@@ -5059,11 +5129,11 @@
   const Cf = new Float32Array(N), Wf = new Float32Array(N), Mf = new Float32Array(N), Hf = new Float32Array(N), Dr = new Uint8Array(N), Xs = new Float32Array(N), Ys = new Float32Array(N), Hs = new Float32Array(N);
 
   // ---- tuning (press-screen.html, 16.11) ---------------------------------------------------
-  const SPEED = reduced ? 1e9 : 3.3, LOCAL = reduced ? 300 : 2300, SWELL = reduced ? 0 : 0.94;
+  const SPEED = reduced ? 1e9 : 1.7, LOCAL = reduced ? 300 : 2800, SWELL = reduced ? 0 : 0.6;      // 08 (26.11): a calmer morph than the hero's (3.3 / 2300 / .94): no snatch while the cursor keeps moving
   const P_RADIUS = 180, P_REACH = 0.75, P_DENSE = 0.24, P_SPILL = 1.5, P_SPREAD = 0.3, P_CRISP = 0.2, P_EDGE = 5.1;
   const GRAVITY = 0.24, LIFT_W = 0.25, LIFT_M = 0.35;
   const FAR_FROM = 120, FAR_TO = 640, FAR_W = 0.29, FAR_M = 0.47;
-  const P_IN = 0.12, P_OUT = 0.03, P_FOLLOW = 0.1;      // eased (Michał, 25.11; review 15): the print follows the cursor slowly instead of jumping to it
+  const P_IN = 0.07, P_OUT = 0.03, P_FOLLOW = 0.05;      // 08 (26.11): slower than the hero's (.12 / .1): the press builds slowly and trails the cursor a little;      // eased (Michał, 25.11; review 15): the print follows the cursor slowly instead of jumping to it
   const MORPH_GAP = 1400;      // ms after a morph ends before the next can start: fast passes over the print no longer stack morphs
   const TRAIL = 260, TRAIL_SIZE = 0.38, HOVER_ZONE = 0.5;
   // ---- hero additions ----------------------------------------------------------------------
@@ -5127,7 +5197,11 @@
   const MIST_H = 1.5;                                 // size of the mist dots left behind (shape units)
   const MIST_R = 380;                                 // mist: reach of the cursor (shape units); dots grow within it
   const INTRO_LEN = 3.5;                              // seconds; the cursor press waits until it is over
-  let introT0 = performance.now(), introOn = !reduced;
+  let introT0 = performance.now(), introOn = false;      // 08 (26.11): no press-in from the middle; the reveal from the top below replaces it
+  // 08 (26.11): the print waits until the logo block of 07 (the row from "1,000+") is fully on screen and in, then comes in from
+  // the top down, dot by dot (a soft, slightly uneven edge), so it is never seen cut by a block that is not there yet
+  let revealT0 = reduced ? 0 : -1; const REVEAL_MS = 1700;
+  const RJ = new Float32Array(N); for (let i = 0; i < N; i++) { const h = Math.sin(D.pts[2*i] * 12.9898 + D.pts[2*i+1] * 78.233) * 43758.5453; RJ[i] = h - Math.floor(h); }
   let paused = reduced;
 
   let cur = 0;
@@ -5271,6 +5345,8 @@
       // getting smaller again with distance until they are back at their resting size
       if (pz > .01) h *= 1 + .8 * pz * (1 - smooth(0, MIST_R * .7, Math.hypot(x - press.x, y - press.y)));
       if (out > 0) h *= outOf(i, x, y, out);
+      if (revealT0 < 0) continue;
+      if (!reduced) { const rp = (now - revealT0) / REVEAL_MS; if (rp < 1.2) { const sy = Math.min(1, Math.max(0, (y * view.k + view.oy) / view.h)), th = sy * .84 + RJ[i] * .14; h *= smooth(th, th + .1, rp); } }
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
@@ -5342,29 +5418,37 @@
       press.ty = D.H / 2 + Math.sin(ambientT * 1.7) * D.H * .46;
       press.target = AMBIENT; press.force = 1;
     } else if (idle) press.target = 0;
-    const follow = idle ? .02 : P_FOLLOW;
-    press.amt += (press.target - press.amt) * (press.target > press.amt ? (idle ? .02 : P_IN) : P_OUT);
+    if (pointerIn && !idle && press.target === 0 && engaged(now) && now - lastPointer < REST_MS) press.target = 1;      // the beat is over: the press may begin
+    const ee = idle ? 1 : engEase(now), follow = idle ? .02 : P_FOLLOW * ee;
+    press.amt += (press.target - press.amt) * (press.target > press.amt ? (idle ? .02 : P_IN * ee) : P_OUT);
     press.x += (press.tx - press.x) * follow;
     press.y += (press.ty - press.y) * follow;
     draw(now);
-    const moving = inIntro || (introOn && !ambientOk && !paused && !reduced) || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
+    const moving = (revealT0 >= 0 && now - revealT0 < REVEAL_MS * 1.25) || inIntro || (introOn && !ambientOk && !paused && !reduced) || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
     raf = (visible && (now < tEnd || moving)) ? requestAnimationFrame(frame) : 0;
   }
 
   let armed = true, pointerIn = false, restTimer = 0;
   const introBusy = () => introOn && performance.now() - introT0 < INTRO_LEN * 1000;
+  // 08 (26.11): no jump when the print meets a cursor that is already there (after the reveal, or as the page scrolls under it):
+  // it waits a beat after it finds the cursor, then the press builds and follows slowly at first (eased), and the hover morph
+  // waits a little longer still
+  const ENG_DELAY = 600, MORPH_WAIT = 1200, ENG_RAMP = 2600; let engageAt = -1e9;
+  const engaged = (t, extra = 0) => revealT0 >= 0 && t > revealT0 + REVEAL_MS * .9 && t - engageAt > ENG_DELAY + extra;
+  const engEase = t => .08 + .92 * smooth(0, 1, (t - engageAt - ENG_DELAY) / ENG_RAMP);
   const onPointer = e => {
     if (paused || e.pointerType === 'touch') return;
     pointerIn = true;
     clearTimeout(restTimer); restTimer = setTimeout(kick, REST_MS + 30);   // wake the loop to let go after a rest
     const [x, y] = toShape(e.clientX, e.clientY);
-    if (performance.now() - lastPointer > IDLE_MS) { press.x = x; press.y = y; }
-    lastPointer = performance.now();
-    press.tx = x; press.ty = y; press.target = 1;
+    const nowp = performance.now();
+    if (nowp - lastPointer > IDLE_MS) { engageAt = nowp; if (press.amt < .05) { press.x = x; press.y = y; } setTimeout(kick, ENG_DELAY + 20); }      // a press already there (the ambient one) glides over instead of jumping
+    lastPointer = nowp;
+    press.tx = x; press.ty = y; press.target = engaged(nowp) ? 1 : 0;
     press.force = e.pressure > 0 && e.pointerType !== 'mouse' ? .4 + 1.2 * e.pressure : 1;
     const S = F[cur], zx = (x - S.cx) / (S.rx * HOVER_ZONE), zy = (y - S.cy) / (S.ry * HOVER_ZONE);
     const z = zx * zx + zy * zy, busy = t0 >= 0 && performance.now() < tEnd;
-    if (z < 1 && armed && !busy && !introBusy() && performance.now() > tEnd + MORPH_GAP) { armed = false; morph(x, y); }   // also on the mist
+    if (z < 1 && armed && !busy && !introBusy() && engaged(nowp, MORPH_WAIT) && nowp > tEnd + MORPH_GAP) { armed = false; morph(x, y); }   // also on the mist
     else if (z > 1.3) armed = true;
     kick();
   };
@@ -5388,8 +5472,18 @@
   // 08: the press-in intro runs the first time the print comes into view (half of it on screen)
   let seen = false;
   new IntersectionObserver(([en]) => { visible = en.isIntersecting;
-    if (visible && !seen && en.intersectionRatio >= .5) { seen = true; introT0 = performance.now(); introOn = !reduced; press.amt = press.target = 0; t0 = -1; }
+    if (visible && !seen && en.intersectionRatio >= .5) { seen = true; press.amt = press.target = 0; t0 = -1; }
     if (visible) kick(); }, { threshold: [0, .5] }).observe(cvs);
+  // the gate: the logo block in (its entrance done) and wholly on screen, or already scrolled past; then a short beat
+  let gateT = 0, inAt = logos && logos.classList.contains('in') ? -1e9 : 0;
+  const ENTRANCE = 1800;      // the logo block's own entrance (its delay and fade) once it is in
+  const gate = () => { if (revealT0 >= 0 || gateT) return; if (!logos) { revealT0 = performance.now(); kick(); return; }
+    const r = logos.getBoundingClientRect(), isIn = logos.classList.contains('in'), shown = isIn && r.top >= 0 && r.bottom <= innerHeight, past = r.bottom < 0;
+    if (!(shown || past)) return;
+    const wait = past ? 0 : Math.max(250, ENTRANCE - (performance.now() - inAt));
+    gateT = setTimeout(() => { gateT = 0; const q = logos.getBoundingClientRect(); if (q.bottom < 0 || (q.top >= 0 && q.bottom <= innerHeight)) { revealT0 = performance.now(); kick(); } }, wait); };
+  if (logos) new MutationObserver(() => { if (logos.classList.contains('in') && !inAt) inAt = performance.now(); gate(); }).observe(logos, { attributes: true, attributeFilter: ['class'] });
+  addEventListener('scroll', gate, { passive: true }); addEventListener('resize', gate); gate();
   document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) kick(); });
 
   let rz = 0;
@@ -5703,6 +5797,53 @@
   const settle0 = settle; settle = () => { settle0(); centre(); };
   sec.querySelectorAll('.steps-05 li.has-st').forEach(li => { const b = li.querySelector('.sb'); if (b) li.style.setProperty('--sbw', Math.ceil(b.offsetWidth) + 'px'); });
   fit(); settle(); addEventListener('resize', () => { fit(); settle(); }); if (document.fonts) document.fonts.ready.then(() => { fit(); settle(); });
+})();
+</script>
+<script>
+/* 06 Trust (Michał, 26.11): a tile above each column's head with one of the client's Blend motifs (assets/img/trust/motif-1..3.svg:
+   white diamonds on black). Each is redrawn on the page's lattice of diamond dots, as big as the motif is bright there, mint to cyan
+   from the centre out. As the customer stories in 07: pointing at the column lets the motif flow (a soft wave runs out through the
+   dots), and it settles back when the pointer leaves; with reduced motion it stays still */
+(() => {
+  const sec = document.getElementById('sec-06'); if (!sec) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches, TAU = Math.PI * 2;
+  // each motif is a lattice of diamonds 28 units apart; the files differ in size, so every tile shows the same window, 896 x 896 units
+  // around its motif: the same dots, the same size, in each tile. The dots are taken from the file as they are (centre, size)
+  const S = 224, WIN = 896, B = 10, MINT = [36, 255, 99], CYAN = [0, 255, 238], LAMBDA = 46, AMP = .38, SPEED = .22, sc = S / WIN;
+  const COL = Array.from({ length: B }, (_, q) => 'rgb(' + MINT.map((v, i) => Math.round(v + (CYAN[i] - v) * q / (B - 1))).join(',') + ')');
+  const build = txt => { const d = (/ d="([^"]+)"/.exec(txt) || [])[1] || '', re = /M(-?[\d.]+) (-?[\d.]+)l(-?[\d.]+)/g, raw = []; let m, x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    while ((m = re.exec(d))) { const h = +m[3], cx = +m[1], cy = +m[2] + h; raw.push(cx, cy, h); if (h > 3) { x0 = Math.min(x0, cx); x1 = Math.max(x1, cx); y0 = Math.min(y0, cy); y1 = Math.max(y1, cy); } }
+    const ox = (x0 + x1) / 2 - WIN / 2, oy = (y0 + y1) / 2 - WIN / 2, pts = [];
+    for (let i = 0; i < raw.length; i += 3) { const x = (raw[i] - ox) * sc, y = (raw[i + 1] - oy) * sc, h = raw[i + 2] * sc; if (x < -4 || y < -4 || x > S + 4 || y > S + 4 || h < .35) continue;
+      const rr = Math.hypot(x - S / 2, y - S / 2); pts.push(x, y, h, rr, Math.min(B - 1, Math.floor(rr / (S * .72) * B))); }
+    return Float32Array.from(pts); };
+  const draw = (cv, pts, t, a) => { const g = cv.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, S, S); const paths = Array.from({ length: B }, () => new Path2D());
+    for (let i = 0; i < pts.length; i += 5) { const x = pts[i], y = pts[i + 1], rr = pts[i + 3];
+      const f = a ? 1 - a * AMP * (.5 - .5 * Math.cos(TAU * (rr / LAMBDA - t))) : 1, d = pts[i + 2] * f; if (d < .35) continue;
+      const p = paths[pts[i + 4]]; p.moveTo(x, y - d); p.lineTo(x + d, y); p.lineTo(x, y + d); p.lineTo(x - d, y); p.closePath(); }
+    paths.forEach((p, q) => { g.fillStyle = COL[q]; g.fill(p); }); };
+  // "Try it" and "Live" look like the page's switches, so they are switches (26.11). Try it opens the first thing to try in its window
+  // (a commit's change, an evidence item's source, a control's evidence) and closes it again; its square fills while that is open.
+  // Live holds the windows still (no new evidence, commits or re-checks) and lets them run again; its square fills while live.
+  const tries = [...sec.querySelectorAll('.win .try')].map(sp => { const b = document.createElement('button'); b.type = 'button'; b.className = 'try'; b.textContent = sp.textContent;
+    b.setAttribute('aria-pressed', 'false'); sp.replaceWith(b); return b; });
+  const targetOf = b => { const w = b.closest('.win'); return w.querySelector('[data-commits] .cm') || w.querySelector('[data-feed] .row') || w.querySelector('[data-ctl] .ci > button'); };
+  const openIn = b => { const w = b.closest('.win'); return w.matches('.diffing, .ctl-open') || !!w.querySelector('[data-feed] li.open'); };
+  const sync = () => tries.forEach(b => b.setAttribute('aria-pressed', openIn(b) ? 'true' : 'false'));
+  tries.forEach(b => { const w = b.closest('.win'); b.setAttribute('aria-label', 'Try it: ' + ({ repo: 'open a commit', tc: 'open a control' }[w.hasAttribute('data-repo') ? 'repo' : w.hasAttribute('data-tc') ? 'tc' : ''] || 'open an evidence item'));
+    b.addEventListener('click', () => { if (openIn(b)) { const o = b.closest('.win').querySelector('li.open > button, .ci.open > button'); if (o) o.click(); } else { const t = targetOf(b); if (t) t.click(); } setTimeout(sync, 0); }); });
+  sec.addEventListener('click', () => setTimeout(sync, 0));
+  const liveSp = sec.querySelector('.win .live');
+  if (liveSp) { const lb = document.createElement('button'); lb.type = 'button'; lb.className = 'live'; lb.textContent = 'Live'; lb.setAttribute('aria-pressed', 'true'); lb.setAttribute('aria-label', 'Live updates'); liveSp.replaceWith(lb);
+    lb.addEventListener('click', () => { const on = lb.getAttribute('aria-pressed') !== 'true'; lb.setAttribute('aria-pressed', on ? 'true' : 'false'); lb.textContent = on ? 'Live' : 'Paused';
+      if (on) delete sec.dataset.paused; else sec.dataset.paused = '1'; }); }
+  sec.querySelectorAll('.pr').forEach((pr, j) => { const cap = pr.querySelector('.cap'); if (!cap) return;
+    const t0 = document.createElement('span'); t0.className = 'tile'; t0.setAttribute('aria-hidden', 'true'); const cv = document.createElement('canvas'); cv.width = cv.height = S; t0.append(cv); cap.prepend(t0);
+    fetch('assets/img/trust/motif-' + (j % 3 + 1) + '.svg').then(res => res.text()).then(txt => { const pts = build(txt); let t = 0, a = 0, want = 0, raf = 0, last = 0; draw(cv, pts, 0, 0); if (reduced) return;
+      const step = now => { const dt = Math.min(50, now - (last || now)) / 1000; last = now; t += dt * SPEED; a += (want - a) * (1 - Math.exp(-dt * 4));      // the wave eases in and out
+        draw(cv, pts, t, a); if (want || a > .005) raf = requestAnimationFrame(step); else { raf = 0; last = 0; draw(cv, pts, t, 0); } };
+      const on = () => { want = 1; if (!raf) raf = requestAnimationFrame(step); }, off = () => { want = 0; if (!raf) raf = requestAnimationFrame(step); };
+      pr.addEventListener('pointerenter', on); pr.addEventListener('pointerleave', off); pr.addEventListener('focusin', on); pr.addEventListener('focusout', off); }).catch(() => {}); });
 })();
 </script>
 </body>
