@@ -1363,16 +1363,15 @@
 
   /* ---- quote (26.11): the old head as a power quote, the pattern of "Comp AI shows the work." before 03 (two lines,
      the second opening with a rule; one step above display-xl, 86 at 1920, 68 at 1280) and the lead under it, no buttons.
-     Light, as 04-07 before it: the section is see-through and while it is on screen the page turns paper and the shared
-     print (#print, fixed, drawn black with mint and cyan dots) has its black keyed out by an SVG filter (#q08-key: alpha
-     from the green channel, which is full in both mint and cyan), so the dots keep the colour of the upper sections, at 80 %
-     (html.q08-light, set by the print script near the end of the page).
-     Room under it as under 03's quote: its own 104 plus the 104 that opens the next section (2 x sp-6), so the print has
-     the space; the demo then opens dark. ---- */
+     Light, as 04-07 before it (paper). The visual is its own canvas (.kv-08, drawn by 08's script): the hero's print as
+     full-size diamonds, mint in the middle to cyan outward, as the key visual in Figma (315:834) and 03's, at 80 %. It sits in the
+     section on the right and scrolls with it; the section's room holds all of it, so the next section cuts nothing.
+     Room under it as under 03's quote: its own 104 plus the 104 that opens the next section (2 x sp-6); the demo then opens dark. ---- */
   .quote-08 { --fg: var(--ink); --text-1: var(--ink); --text-2: color-mix(in srgb, var(--ink) 72%, transparent);
-    padding: var(--sp-7) 0 calc(2 * var(--sp-6)); color: var(--ink); }
-  html.q08-light, html.q08-light body { background: var(--paper); }
-  html.q08-light #print { filter: url(#q08-key); opacity: .8 !important; }      /* the print's black keyed out, the dots in their own mint and cyan */
+    padding: var(--sp-7) 0 calc(2 * var(--sp-6)); color: var(--ink); background: var(--paper);
+    box-sizing: border-box; min-height: calc(100svh - var(--nav-h, 74px)); }      /* a screen under the nav, so the print can be large */
+  .quote-08 .wrap { position: relative; z-index: 1; }
+  .quote-08 .kv-08 { position: absolute; z-index: 0; top: 0; bottom: 0; right: 0; width: 56%; height: 100%; display: block; opacity: .8; pointer-events: none; }
   .sec-08:not(.quote-08) { background: var(--black); }
   #sec-08-demo { padding-top: var(--sp-6); }      /* dark from the demo on, over the paper and the print's way out */
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
@@ -2841,10 +2840,9 @@
      so each can be worked on alone. They share the .sec-08 class (tokens, type); the ids stay as they were. -->
 <!-- @section:08-quote html:start -->
 <!-- power quote (26.11): the old head of 08 as a quote, as "Comp AI shows the work." before 03, on light (the paper of 04-07);
-     the shared print comes back on the right at 80 %; no buttons (the next sections carry them); dark starts at the demo -->
+     its own print on the right (canvas .kv-08, scrolls with the page); no buttons (the next sections carry them); dark starts at the demo -->
 <section class="sec-08 quote-08" id="sec-08" aria-labelledby="sec-08-title">
-  <!-- keys out the print's black on the light quote: colours as they are, alpha from the green channel -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="q08-key" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 1 0 0 0"/></filter></svg>
+  <canvas class="kv-08" aria-hidden="true"></canvas>
   <div class="wrap" id="demo">
     <h2 id="sec-08-title" class="q-big"><span class="q-l rv" style="--d:0">See the work done,</span> <span class="q-l q-r rv" style="--d:1"><i class="q-rule" aria-hidden="true"></i>live.</span></h2>
     <p class="q-sub rv" style="--d:2">Watch Comp AI do the work on your own stack in a <span class="sec-08-nb">20-minute</span> call. See what sets your price, and get answers to the questions teams ask first.</p>
@@ -4948,6 +4946,42 @@
   if (reduced || !('IntersectionObserver' in window)) qv.forEach(e => e.classList.add('in'));
   else { const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' }); qv.forEach(e => io.observe(e)); }
 
+  // ---- quote: the visual. The hero's print (window.BLEND_FIELDS) drawn still as full-size diamonds on a 45° lattice, each
+  //      sized by the ridge it sits on, mint in the middle to cyan outward (the key visual in Figma 315:834, as 03's).
+  //      Fitted to the canvas height, so nothing runs past the section; redrawn on resize only.
+  const kv = document.querySelector('.quote-08 .kv-08');
+  const drawKV = () => { const D = window.BLEND_FIELDS; if (!kv || !D) return;
+    const TAU = Math.PI * 2, smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+    const dec = (b64, T) => { const z = atob(b64), u = new Uint8Array(z.length); for (let i = 0; i < z.length; i++) u[i] = z.charCodeAt(i); return new T(u.buffer); };
+    const key = D.order[0], N = D.pts.length / 2, A = (D.pts[2] - D.pts[0]) / 2 || 14;
+    const c = dec(D.c[key], Int16Array), w = dec(D.w[key], Uint8Array), m = dec(D.m[key], Uint8Array);
+    const o = 2, nx = Math.ceil(D.W / A) + 4, ny = Math.ceil(D.H / A) + 4;
+    const C = new Float32Array(nx * ny).fill(NaN), Wd = new Float32Array(nx * ny), M = new Float32Array(nx * ny);
+    let sx = 0, sy = 0, n = 0, y0 = 1e9, y1 = -1e9;
+    for (let i = 0; i < N; i++) { const gx = Math.round(D.pts[2*i] / A) + o, gy = Math.round(D.pts[2*i+1] / A) + o; if (gx < 0 || gy < 0 || gx >= nx || gy >= ny) continue;
+      const q = gy * nx + gx; C[q] = c[i] / 1000; Wd[q] = w[i] / 255; M[q] = m[i] / 255;
+      if (M[q] > .3) { sx += D.pts[2*i]; sy += D.pts[2*i+1]; n++; y0 = Math.min(y0, D.pts[2*i+1]); y1 = Math.max(y1, D.pts[2*i+1]); } }
+    const sample = (x, y) => { const u = x / A + o, v = y / A + o, i0 = Math.floor(u), j0 = Math.floor(v), fu = u - i0, fv = v - j0;
+      if (i0 < 0 || j0 < 0 || i0 + 1 >= nx || j0 + 1 >= ny) return 0;
+      let sw = 0, cc = 0, ww = 0, mm = 0, ref = NaN;
+      for (let dj = 0; dj < 2; dj++) for (let di = 0; di < 2; di++) { const q = (j0 + dj) * nx + i0 + di, cv = C[q]; if (cv !== cv) continue;
+        const k = (di ? fu : 1 - fu) * (dj ? fv : 1 - fv) + 1e-4; if (ref !== ref) ref = cv; cc += k * (cv - Math.round(cv - ref)); ww += k * Wd[q]; mm += k * M[q]; sw += k; }
+      if (!sw) return 0; cc /= sw; ww /= sw; mm /= sw; if (mm < .02) return 0;
+      return smooth(1 - ww - .34, 1 - ww + .3, .5 + .5 * Math.cos(TAU * cc)) * mm; };
+    const r = kv.getBoundingClientRect(), W = Math.max(1, r.width), H = Math.max(1, r.height), dpr = Math.min(2, devicePixelRatio || 1);
+    kv.width = Math.round(W * dpr); kv.height = Math.round(H * dpr);
+    const g = kv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    const COL = [[36, 255, 99], [0, 255, 238]], BK = 12, RM = Math.min(W, H) * .6;
+    const k = (y1 - y0) * 1.08 / H, cx = sx / n, cy = sy / n, pitch = 16, half = pitch / 2;      // the whole print in the height, a little room around it
+    const paths = Array.from({ length: BK }, () => new Path2D());
+    for (let b = -1, y = 0; y <= H + pitch; b++, y = b * half) for (let x = (b & 1) ? half : 0; x <= W + pitch; x += pitch) {
+      const v = sample(cx + (x - W / 2) * k, cy + (y - H / 2) * k); if (v < .06) continue;
+      const d = half * .9 * v; if (d < .35) continue;
+      const p = paths[Math.min(BK - 1, Math.floor(Math.hypot(x - W / 2, y - H * .55) / RM * BK))];
+      p.moveTo(x, y - d); p.lineTo(x + d, y); p.lineTo(x, y + d); p.lineTo(x - d, y); p.closePath(); }
+    paths.forEach((p, q) => { const f = q / (BK - 1); g.fillStyle = `rgb(${COL[0].map((v, i) => Math.round(v + (COL[1][i] - v) * f)).join(',')})`; g.fill(p); }); };
+  if (kv) { let rt = 0; drawKV(); addEventListener('load', drawKV); addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawKV, 150); }); }
+
   const list = document.querySelector('#sec-08-demo .sec-08-tabs');
   if (list) {
     const tabs = [...list.querySelectorAll('.sec-08-tb')];
@@ -5024,16 +5058,9 @@
    no longer a fade of the whole canvas. */
 (() => {
   const print = document.getElementById('print'), s3 = document.getElementById('sec-03'); if (!print || !s3) return;
-  // 26.11: the print comes back for 08's power quote, as it was for 03's: it forms as the quote comes up (top of the quote
-  // from the bottom of the screen to 40 %) and goes again as the next section (#sec-08-demo) rises from 75 % to 25 % of the
-  // screen (later than 03's, so the print stays whole while the quote is read; the demo's first rows show under it)
-  const q8 = document.getElementById('sec-08'), n8 = document.getElementById('sec-08-demo');
-  const inOf = (el, a = 1, b = .6) => el ? Math.min(1, Math.max(0, (innerHeight * a - el.getBoundingClientRect().top) / (innerHeight * b))) : 0;
   let raf = 0;
   const update = () => { raf = 0;
-    const vh = innerHeight, k = 1 - Math.max(1 - inOf(s3), inOf(q8) * (1 - inOf(n8, .75, .5)));
-    // 08's quote is light: paper behind the page and the print turned light while any of the quote is on screen
-    const qr = q8 && q8.getBoundingClientRect(); document.documentElement.classList.toggle('q08-light', !!qr && qr.top < vh && qr.bottom > 0);
+    const vh = innerHeight, k = Math.min(1, Math.max(0, (vh - s3.getBoundingClientRect().top) / (vh * .6)));
     if (k !== window.printOut) { window.printOut = k; dispatchEvent(new Event('heromist')); }      // the hero redraws with it
     print.style.visibility = k >= 1 ? 'hidden' : ''; };
   addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
