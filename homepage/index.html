@@ -5164,8 +5164,10 @@
   // here), and the print is larger than the canvas (OVER x its height): the logo block cuts its top, the black demo its bottom
   const OVER = 1.45, logos = document.querySelector('#sec-07 .logos-07');
   function place() {
-    const hr = host.getBoundingClientRect(), lift = logos ? Math.max(0, hr.top - logos.getBoundingClientRect().bottom) : 0;
-    cvs.style.top = -lift + 'px'; cvs.style.height = (hr.height + lift) + 'px';
+    // measured on the layout (offsets), not the screen: the logo block's entrance and the scroll fade move it by a few px
+    const docTop = el => { let y = 0; for (let e = el; e; e = e.offsetParent) y += e.offsetTop; return y; };
+    const lift = logos ? Math.max(0, docTop(host) - (docTop(logos) + logos.offsetHeight)) : 0;
+    cvs.style.top = -lift + 'px'; cvs.style.height = (host.offsetHeight + lift) + 'px';
     const r = cvs.getBoundingClientRect(); view.w = r.width; view.h = r.height;
     view.dpr = Math.min(window.devicePixelRatio || 1, 2);
     cvs.width = Math.round(view.w * view.dpr); cvs.height = Math.round(view.h * view.dpr);
