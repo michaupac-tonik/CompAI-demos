@@ -1498,21 +1498,22 @@
   .s8p-head { max-width: calc(7 / 12 * 100%); margin-bottom: var(--sp-5); }
   .s8p-head .sec-08-eyebrow { margin-bottom: var(--sp-3); }
   .s8p-head .sec-08-lead { margin-top: var(--sp-3); }
-  /* ---- calculator A/B (26.11, review). A (default): the builder as it was. B (html.c08-b): the same builder, the same size
-     and choices as A, with two changes: a gradient edge on top, and only the system's type roles, each at the step of the
-     scale nearest to A's sizes (questions body-m 16, choices and summary body-s 14, labels label-s 13 mono, the price
-     title-m), so nothing grows; the surface a step lighter ---- */
-  .c08-b #sec-08-price .sec-08-ui { position: relative; background: #1a1a1a; border-color: rgba(252,252,252,.14); }
-  .c08-b #sec-08-price .sec-08-ui::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--mint), var(--cyan)); z-index: 1; }
-  .c08-b #sec-08-price .sec-08-mono { font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
-  .c08-b #sec-08-price .sec-08-qrow legend { font: 400 var(--fs-body-m, 16px)/1.3 var(--sans); }
-  .c08-b #sec-08-price .sec-08-qrow legend small { font: 400 var(--fs-body-s, 14px)/1.3 var(--sans); }
-  .c08-b #sec-08-price .sec-08-chip { font: 400 var(--fs-body-s, 14px)/1 var(--sans); }
-  .c08-b #sec-08-price .sec-08-ui { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
-  .c08-b #sec-08-price .sec-08-qlist dd { font-size: var(--fs-body-s, 14px); }
-  .c08-b #sec-08-price .sec-08-qprice b { font: 300 var(--fs-title-m, 33px)/1.05 var(--sans); }
-  .c08-b #sec-08-price .sec-08-qprice small { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
-  .c08-b #sec-08-price .sec-08-qsum { background: #212121; }
+  /* ---- the quote builder in the pricing (26.11, B of an A/B): the builder's own size and choices, with a gradient edge on
+     top (green 080 to cyan 080) and only the system's type roles, each at the step of the scale nearest the builder's sizes
+     (questions body-m 16, choices and summary body-s 14, labels label-s 13 mono, the price title-m), so nothing grows.
+     Colours from the brand library (tokens/comp-ai-colours.css): the surface neutral 010 (#202020), the summary a step up
+     with the neutral 100 ramp at 4 % over it, the edge and hairlines on the neutral 100 ramp (16 %, 8 %). ---- */
+  #sec-08-price .sec-08-ui { position: relative; background: #202020; border-color: rgba(248,248,248,.16); }      /* neutral 010; neutral 100 at 16 % */
+  #sec-08-price .sec-08-ui::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--mint), var(--cyan)); z-index: 1; }
+  #sec-08-price .sec-08-mono { font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  #sec-08-price .sec-08-qrow legend { font: 400 var(--fs-body-m, 16px)/1.3 var(--sans); }
+  #sec-08-price .sec-08-qrow legend small { font: 400 var(--fs-body-s, 14px)/1.3 var(--sans); }
+  #sec-08-price .sec-08-chip { font: 400 var(--fs-body-s, 14px)/1 var(--sans); }
+  #sec-08-price .sec-08-ui { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
+  #sec-08-price .sec-08-qlist dd { font-size: var(--fs-body-s, 14px); }
+  #sec-08-price .sec-08-qprice b { font: 300 var(--fs-title-m, 33px)/1.05 var(--sans); }
+  #sec-08-price .sec-08-qprice small { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
+  #sec-08-price .sec-08-qsum { background: rgba(248,248,248,.04); }      /* neutral 100 at 4 % over neutral 010 */
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
