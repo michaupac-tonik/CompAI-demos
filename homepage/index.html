@@ -1577,7 +1577,7 @@
 
 
   /* ---- FAQ: two independent columns of questions, collapsed by default (details / summary, keyboard native) ---- */
-  .sec-08-faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; align-items: start; }
+  .sec-08-faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 72px; align-items: start; }      /* full width under the head (26.11), 02's gap between the columns */
   .sec-08-q { border-top: 1px solid var(--line-08); }
   .sec-08-q:last-child { border-bottom: 1px solid var(--line-08); }
   .sec-08-q summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0;
@@ -1606,7 +1606,8 @@
   .sec-08-close .sec-08-acts { margin: 0; }
 
   @media (min-width: 1680px) { .sec-08 { --t-lead-m: 22px; } }
-  @media (max-width: 1199px) { .sec-08-mod { gap: 32px 48px; } .sec-08-faq { grid-template-columns: minmax(0, 1fr); }
+  @media (max-width: 1199px) { .sec-08-mod { gap: 32px 48px; } }
+  @media (max-width: 1023px) { .sec-08-faq { grid-template-columns: minmax(0, 1fr); }
     .sec-08-faq-col + .sec-08-faq-col .sec-08-q:first-child { border-top: 0; } .sec-08-faq-col:first-child .sec-08-q:last-child { border-bottom: 0; } }
   @media (max-width: 1023px) {
     .sec-08 { --t-lead-m: 16px; --t-display-m: 26px; --t-display-l: 33px; }
@@ -3094,25 +3095,24 @@
 </section>
 <!-- @section:08-price html:end -->
 <!-- @section:08-faq html:start -->
+<!-- FAQ (26.11): a section head as the others (eyebrow, h2, lead, as the pricing and 02), the questions under it on the full width -->
 <section class="sec-08" id="sec-08-faq" aria-labelledby="sec-08-faq-t">
   <div class="wrap">
-    <div class="sec-08-mod">
-      <div class="sec-08-mod-h">
-        <p class="sec-08-eyebrow">FAQ</p>
-        <h3 id="sec-08-faq-t">Common questions</h3>
-        <p class="sec-08-note">Anything else, ask it on the call.</p>
+    <div class="s8p-head">
+      <p class="sec-08-eyebrow">FAQ</p>
+      <h2 id="sec-08-faq-t">Common questions</h2>
+      <p class="sec-08-lead">The answers teams ask for first. Anything else, ask it on the call.</p>
+    </div>
+    <div class="sec-08-faq">
+      <div class="sec-08-faq-col">
+        <details class="sec-08-q"><summary><span>What happens in the <span class="sec-08-nb">20-minute</span> call?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>You tell us your stack and the frameworks you need. We show Comp AI doing the work on tools like yours, live, and you leave with a plan and a price.</p></div></details>
+        <details class="sec-08-q"><summary><span>Do I need to prepare anything?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>No. Bring the frameworks you need and the main tools you run on, like your cloud, code host and identity provider. That's enough to tailor the demo.</p></div></details>
+        <details class="sec-08-q"><summary><span>Who does the work, agents or people?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>Agents do the work with your company's context. Experts review the decisions that need a person. You see every step.</p></div></details>
       </div>
-      <div class="sec-08-faq">
-          <div class="sec-08-faq-col">
-            <details class="sec-08-q"><summary><span>What happens in the <span class="sec-08-nb">20-minute</span> call?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>You tell us your stack and the frameworks you need. We show Comp AI doing the work on tools like yours, live, and you leave with a plan and a price.</p></div></details>
-            <details class="sec-08-q"><summary><span>Do I need to prepare anything?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>No. Bring the frameworks you need and the main tools you run on, like your cloud, code host and identity provider. That's enough to tailor the demo.</p></div></details>
-            <details class="sec-08-q"><summary><span>Who does the work, agents or people?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>Agents do the work with your company's context. Experts review the decisions that need a person. You see every step.</p></div></details>
-          </div>
-          <div class="sec-08-faq-col">
-            <details class="sec-08-q"><summary><span>Which frameworks do you cover?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>SOC 2, ISO 27001, HIPAA and GDPR, plus XX more. When you need the next framework, you add it without starting over.</p></div></details>
-            <details class="sec-08-q"><summary><span>How fast can we be <span class="sec-08-nb">audit-ready?</span></span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>Most teams are audit-ready in XX weeks. It depends on where you start, and we look at that with you on the call.</p></div></details>
-            <details class="sec-08-q"><summary><span>Can our security team verify the work?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>Yes. The code is open source, evidence updates live, and your trust center is public. Your security lead can check the work instead of taking our word for it.</p></div></details>
-          </div>
+      <div class="sec-08-faq-col">
+        <details class="sec-08-q"><summary><span>Which frameworks do you cover?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>SOC 2, ISO 27001, HIPAA and GDPR, plus XX more. When you need the next framework, you add it without starting over.</p></div></details>
+        <details class="sec-08-q"><summary><span>How fast can we be <span class="sec-08-nb">audit-ready?</span></span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>Most teams are audit-ready in XX weeks. It depends on where you start, and we look at that with you on the call.</p></div></details>
+        <details class="sec-08-q"><summary><span>Can our security team verify the work?</span><span class="sec-08-plus" aria-hidden="true"></span></summary><div class="sec-08-a"><p>Yes. The code is open source, evidence updates live, and your trust center is public. Your security lead can check the work instead of taking our word for it.</p></div></details>
       </div>
     </div>
   </div>
