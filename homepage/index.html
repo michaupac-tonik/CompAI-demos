@@ -1660,7 +1660,7 @@
   .sec-09 { --t-label: 13px; --t-body: 16px; --t-lead-m: 20px;     /* the type scale of 03 to 08 */
     --f-line: rgba(252,252,252,.16); --f-dim: rgba(252,252,252,.74); --f-faint: rgba(252,252,252,.56);
     position: relative; z-index: 1; background: var(--black); color: var(--white); font-weight: 400; }
-  .sec-09 a { color: inherit; text-decoration: none; }
+  .sec-09 a:not(.btn) { color: inherit; text-decoration: none; }      /* the buttons keep their own colours */
   .sec-09 ul { margin: 0; padding: 0; list-style: none; }
   /* the nav's hover: an underline that runs in from the left */
   .sec-09 .u { position: relative; }
@@ -1723,6 +1723,24 @@
   @media (prefers-reduced-motion: reduce) {
     .sec-09 *, .sec-09 *::before, .sec-09 *::after { transition: none !important; }
   }
+  /* ---- the closing CTA (26.11): the heading in display-l on the left, one action on the right, on the heading's last line;
+     the footer's rule under it. Not a power quote (those are 03 and 08). */
+  .sec-09 { padding-top: var(--sp-7, 168px); }
+  .sec-09 .cta-09 { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--sp-4, 40px) var(--sp-5, 64px); padding-bottom: var(--sp-6, 104px); }
+  .sec-09 .cta-09-t { margin: 0; max-width: 15ch; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-l, 53px); line-height: 1.02; letter-spacing: -.04em; color: var(--text-1); text-wrap: balance; }
+  @media (max-width: 1023px) {
+    .sec-09 { padding-top: 88px; }
+    .sec-09 .cta-09 { padding-bottom: 72px; }
+    .sec-09 .cta-09-t { font-size: 33px; }
+  }
+  @media (max-width: 767px) {
+    .sec-09 { padding-top: 72px; }
+    .sec-09 .cta-09 { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-bottom: 56px; }
+    .sec-09 .cta-09 .btn { width: 100%; }
+  }
+  .sec-09 .home-09 + .certs-09 { margin-top: -7px; }      /* the brand line went into the CTA above: the Trust Center line sits under the logo */
+  /* isolated view (?only=09): the footer alone */
+  html.only-09 .site-nav, html.only-09 .mega-scrim, html.only-09 main, html.only-09 .sheet, html.only-09 #sheet { display: none !important; }
   /* @section:09 css:end */
 
   /* ---- review 24.11: one type system across the page -------------------------------------------------------------
@@ -2509,7 +2527,7 @@
 <body>
 <script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
 (() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
-  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); if (q.get('only') === '06') r.classList.add('only-06'); })();</script>
+  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); if (q.get('only') === '09') r.classList.add('only-09'); if (q.get('only') === '06') r.classList.add('only-06'); })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
@@ -3138,31 +3156,21 @@
 </section>
 <!-- @section:08-faq html:end -->
 <!-- @section:08-close html:start -->
-<section class="sec-08" id="sec-08-close" aria-labelledby="sec-08-close-t">
-  <div class="wrap">
-    <div class="sec-08-close">
-      <div>
-        <p class="sec-08-eyebrow">Comp AI</p>
-        <h3 class="sec-08-close-t" id="sec-08-close-t">Compliance that helps you close deals.</h3>
-        <p class="sec-08-lead">AI-powered compliance platform. Get SOC 2, ISO 27001, HIPAA and GDPR audit-ready in record time.</p>
-      </div>
-      <div class="sec-08-acts">
-        <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
-        <a class="btn btn-secondary" href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="lb">Visit the Trust Center</span></a>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- the closing CTA moved into the footer (09, 26.11) -->
 <!-- @section:08-close html:end -->
 <!-- @section:08 html:end -->
 </main>
 <!-- @section:09 html:start -->
 <footer class="sec-09" id="sec-09" aria-label="Footer">
   <div class="wrap">
+  <!-- the closing CTA (26.11): 08's "Compliance that helps you close deals." opens the footer, a CTA of its own (not a power quote), one action -->
+  <div class="cta-09">
+    <h2 class="cta-09-t">Compliance that helps you close deals.</h2>
+    <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+  </div>
   <div class="top-09">
     <div class="brand-09">
       <a class="home-09" href="/" aria-label="Comp AI home"><img class="m" src="assets/img/logo-mark.svg" alt="" width="28" height="26"><img class="w" src="assets/img/logo-wordmark.svg" alt="" width="77" height="21"></a>
-      <p class="line-09">Get compliance-ready faster while Comp AI does more of the work.</p>
       <p class="certs-09">Our own <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">SOC 2</span></a>, <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">ISO 27001</span></a>, <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">HIPAA</span></a> and <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">GDPR</span></a> evidence is open in the Trust Center.</p>
     </div>
     <nav class="cols-09" aria-label="Footer">
