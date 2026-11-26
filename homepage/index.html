@@ -1379,12 +1379,12 @@
      ends on sp-7 before the footer. No rules between them. ---- */
   .sec-08:not(.quote-08) { padding: var(--sp-6) 0; }
   .sec-08.sec-08-next { padding-top: var(--sp-7); }
-  /* ---- next step (26.11, v2): a light timeline, so it does not compete with the pricing. Head on the left (eyebrow and a
-     display-m title, 4 of 12), the call on the right (8 of 12): three moments on one rail; 02's grey diamonds light in the
-     mint-to-cyan gradient as the rail's fill reaches them. The fill runs once when the timeline comes into view. ---- */
-  .s8n-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 72px; align-items: start; }
+  /* ---- next step (26.11, v3): a full section, but low. The section head as the others (eyebrow, h2 display-l, lead, 24
+     apart, 7 of 12), then the call as a timeline on the full width, 64 under it: three moments on one rail; 02's grey
+     diamonds light in the mint-to-cyan gradient as the rail's fill reaches them. The fill runs once when it comes into view. ---- */
+  .s8n-head { max-width: calc(7 / 12 * 100%); margin-bottom: var(--sp-5); }
   .s8n-head .sec-08-eyebrow { margin-bottom: var(--sp-3); }
-  .sec-08 .s8n-head h2 { font-size: var(--t-display-m); line-height: 1.08; max-width: 14em; }
+  .s8n-head .sec-08-lead { margin-top: var(--sp-3); }
   .s8n-tl { --p: 0; position: relative; list-style: none; margin: 0; padding: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
   .s8n-tl::before, .s8n-tl::after { content: ""; position: absolute; left: 3px; top: 3px; width: var(--rw, 100%); height: 1px; background: rgba(252,252,252,.14); }
   .s8n-tl::after { background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(var(--p)); }
@@ -1396,7 +1396,7 @@
   .s8n-tl li.on .t { color: var(--mint); }
   .s8n-tl b { font: 300 var(--t-lead-m)/1.3 var(--sans); letter-spacing: -.01em; color: inherit; text-wrap: balance; }
   .s8n-tl .d { font-size: 15px; line-height: 1.45; color: inherit; opacity: .8; text-wrap: balance; }
-  @media (max-width: 1023px) { .s8n-grid { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 1023px) { .s8n-head { max-width: none; } }
   @media (max-width: 767px) { .s8n-tl { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0 0 0 24px; }
     .s8n-tl::before, .s8n-tl::after { width: 1px; height: var(--rw, 100%); }
     .s8n-tl::after { transform-origin: top; transform: scaleY(var(--p)); }
@@ -2860,13 +2860,14 @@
 </section>
 <!-- @section:08-quote html:end -->
 <!-- @section:08-next html:start -->
-<!-- next step (26.11, v2): kept light so it does not compete with the pricing below: a short head on the left and the call as a
-     timeline on the right, three moments on one rail with 02's diamonds; the rail fills once as it comes into view -->
+<!-- next step (26.11, v3): a full section with a section head (eyebrow, h2 display-l, lead) like the others, but low: the call
+     as a timeline under the head, three moments on one rail with 02's diamonds; the rail fills once as it comes into view -->
 <section class="sec-08 sec-08-next" id="sec-08-next" aria-labelledby="sec-08-next-t">
-  <div class="wrap s8n-grid">
+  <div class="wrap">
     <div class="s8n-head">
       <p class="sec-08-eyebrow">Next step</p>
-      <h2 id="sec-08-next-t">A 20-minute call, on tools like yours</h2>
+      <h2 id="sec-08-next-t">What happens on the call</h2>
+      <p class="sec-08-lead">Twenty minutes, on tools like yours. You leave with a plan and a price.</p>
     </div>
     <ol class="s8n-tl" aria-label="The call, step by step">
       <li><span class="t">Minutes 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span></li>
