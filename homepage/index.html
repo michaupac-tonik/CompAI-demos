@@ -3072,6 +3072,11 @@
 
   const jit = new Float32Array(N);
   for (let i = 0; i < N; i++) { const h = Math.sin(D.pts[2*i] * 0.9285 + D.pts[2*i+1] * 5.5881) * 43758.5453; jit[i] = (h - Math.floor(h)) * 2 - 1;}
+  // the way out as section 03 comes in (26.11): each dot has its own moment to go, mostly at random, a little earlier lower on the
+  // screen (where 03 rises from); window.printOut 0..1 is set by the scroll script near the end of the page
+  const OUTR = new Float32Array(N); for (let i = 0; i < N; i++) { const h = Math.sin(D.pts[2*i] * 12.9898 + D.pts[2*i+1] * 78.233) * 24634.6345; OUTR[i] = h - Math.floor(h); }
+  const outOf = (i, x, y, out) => { const sy = Math.min(1, Math.max(0, (y * view.k + view.oy) / view.h)), th = (.8 * OUTR[i] + .2 * (1 - sy)) * .9;
+    return 1 - smooth(th, th + .1, out); };
 
   // ---- intro: the print is pressed in from black, front running along its own lines ------------
   const S0 = F[0], CX = S0.cx, CY = S0.cy - S0.ry * .28;
@@ -3175,6 +3180,7 @@
       return Math.max(0, Math.min(Y_BANDS - 1, Math.floor(g * Y_BANDS))); };
     const mz = smooth(.3, .8, dis);                    // 0 in the hero, 1 once only the mist is left
     const pz = press.amt * mz;                         // cursor presence on the mist
+    const out = window.printOut || 0;                  // 03 coming in: the dots go one by one
     const r = D.round * (1 - .7 * dis), hmax = D.hmax, hmin = D.hmin, active = t0 >= 0 && now < tEnd;   // finer dots on the mist
     const pa = press.amt * press.force * (introOn ? smooth(.15, 1.4, (now - introT0) / 1000) : 1) * (1 - .8 * dis);   // a fifth of the press on the mist
     const d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2);
@@ -3248,6 +3254,7 @@
       // mist: the small dimmed dots are the resting form and never go away; around the cursor they grow,
       // getting smaller again with distance until they are back at their resting size
       if (pz > .01) h *= 1 + .8 * pz * (1 - smooth(0, MIST_R * .7, Math.hypot(x - press.x, y - press.y)));
+      if (out > 0) h *= outOf(i, x, y, out);
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
@@ -3274,7 +3281,7 @@
           if (j < 0 || Mf[j] < .35) continue;
           const v = .5 + .5 * Math.cos(TAU * Cf[j]);
           const s = smooth(1 - Wf[j] - .34, 1 - Wf[j] + .30, v) * Mf[j];
-          const h = (mz > .5 ? MIST_H * 2.2 : hmax * TRAIL_SIZE) * s * (1 - (k - 1) / 4) * tp * (1 - Mf[i]);
+          const h = (mz > .5 ? MIST_H * 2.2 : hmax * TRAIL_SIZE) * s * (1 - (k - 1) / 4) * tp * (1 - Mf[i]) * (out > 0 ? outOf(i, x, y, out) : 1);
           if (h > (mz > .5 ? .3 : .9)) {
             const hd = Math.min(h - r, 3.2) + r;
             let clear = true;                                   // keep clear of the drawn squares around it
@@ -4811,14 +4818,15 @@
 </script>
 <!-- @section:09 js:end -->
 <script>
-/* global fixes 24.11: the shared print (hero, 02, 03) fades out as section 03 comes in: fully there while the top of 03 is at the
-   bottom of the screen, gone when it reaches 40 % of the screen. filter: opacity() multiplies with the opacity the hero sets. */
+/* global fixes 24.11: the shared print (hero, 02, 03) goes as section 03 comes in: fully there while the top of 03 is at the
+   bottom of the screen, gone when it reaches 40 % of the screen. Since 26.11 dot by dot (window.printOut, read by the hero's draw),
+   no longer a fade of the whole canvas. */
 (() => {
   const print = document.getElementById('print'), s3 = document.getElementById('sec-03'); if (!print || !s3) return;
   let raf = 0;
   const update = () => { raf = 0;
     const vh = innerHeight, k = Math.min(1, Math.max(0, (vh - s3.getBoundingClientRect().top) / (vh * .6)));
-    print.style.filter = k ? `opacity(${(1 - k).toFixed(3)})` : '';
+    if (k !== window.printOut) { window.printOut = k; dispatchEvent(new Event('heromist')); }      // the hero redraws with it
     print.style.visibility = k >= 1 ? 'hidden' : ''; };
   addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
   addEventListener('resize', update); update();
