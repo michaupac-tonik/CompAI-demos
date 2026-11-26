@@ -1365,15 +1365,14 @@
      the second opening with a rule; one step above display-xl, 86 at 1920, 68 at 1280) and the lead under it, no buttons.
      Light, as 04-07 before it (paper). The visual is its own canvas (.kv-08, the whole section, drawn by the 08 quote script):
      the hero's print with the hero's behaviour, mint in the middle to cyan outward as the key visual in Figma (315:834), at 80 %.
-     It scrolls with the section; the print is larger than the section (1.45 x its height), so its top and bottom are cut by
-     07 above and the black demo below (the section clips it).
+     It scrolls with the section. The canvas reaches up to the bottom of 07's logo block (set by the script) and the print is
+     larger than the canvas (1.45 x its height), so the logo block cuts its top and the black demo its bottom.
      Room under it as under 03's quote: its own 104 plus the 104 that opens the next section (2 x sp-6); the demo then opens dark. ---- */
   .quote-08 { --fg: var(--ink); --text-1: var(--ink); --text-2: color-mix(in srgb, var(--ink) 72%, transparent);
     padding: var(--sp-7) 0 calc(2 * var(--sp-6)); color: var(--ink); background: var(--paper);
     box-sizing: border-box; min-height: calc(100svh - var(--nav-h, 74px)); }      /* a screen under the nav, so the print can be large */
   .quote-08 .wrap { position: relative; z-index: 1; }
-  .quote-08 { overflow: clip; }
-  .quote-08 .kv-08 { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; display: block; opacity: .8; pointer-events: none; }
+  .quote-08 .kv-08 { position: absolute; z-index: 0; inset: 0 0 auto; width: 100%; height: 100%; display: block; opacity: .8; pointer-events: none; }
   .sec-08:not(.quote-08) { background: var(--black); }
   #sec-08-demo { padding-top: var(--sp-6); }      /* dark from the demo on, over the paper and the print's way out */
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
@@ -5161,9 +5160,12 @@
   // placement: the print sits right of the type on desktop and below it on a phone, larger than
   // the screen so its lines run off the edges
   const view = { k: 1, ox: 0, oy: 0, w: 0, h: 0, dpr: 1 };
-  // 08: the print is larger than the section (OVER x its height), so 07 above and the black demo below cut its top and bottom
-  const OVER = 1.45;
+  // 08: the canvas reaches up over the end of 07 to the bottom of its logo block (the row from "1,000+"; its top is measured
+  // here), and the print is larger than the canvas (OVER x its height): the logo block cuts its top, the black demo its bottom
+  const OVER = 1.45, logos = document.querySelector('#sec-07 .logos-07');
   function place() {
+    const hr = host.getBoundingClientRect(), lift = logos ? Math.max(0, hr.top - logos.getBoundingClientRect().bottom) : 0;
+    cvs.style.top = -lift + 'px'; cvs.style.height = (hr.height + lift) + 'px';
     const r = cvs.getBoundingClientRect(); view.w = r.width; view.h = r.height;
     view.dpr = Math.min(window.devicePixelRatio || 1, 2);
     cvs.width = Math.round(view.w * view.dpr); cvs.height = Math.round(view.h * view.dpr);
