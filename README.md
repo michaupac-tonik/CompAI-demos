@@ -13,6 +13,9 @@ homepage/
   assets/fonts/         Favorit fonts (not in git, see Fonts)
 tokens/
   comp-ai-colours.css   brand colour tokens (reference; not linked by index.html yet)
+styleguide/             work in progress, see the banner in each file (describes the v3 layout on branch homepage-v3)
+  layout.md             layout v0.1: spacing scale, margins, section heads
+  typography.md         type system v0.2: scale, roles, weights
 ```
 
 ## Run it
