@@ -3850,7 +3850,10 @@
       for (let i = 0; i < N; i++) { Ox[i] = ox + X0[i] * k0; Oy[i] = oy + Y0[i] * k0;
         const xn = clamp(Ox[i] / W); dly[i] = DM * Math.pow(xn, 1.5) + jit[i] * .01;     // the front: nearest the left edge first
         kst[i] = 30 - 25 * xn;      // soft far from the edge, and also under-damped there (below): they are pulled out and snap back like rubber                                              // spring stiffness: soft far from the edge, so those dots are dragged along late
-        Rx[i] = (X0[i] - ax) * kD; Ry[i] = (Y0[i] - ay) * kD; if (!active) { px[i] = Sx[i] = Ox[i]; py[i] = Sy[i] = Oy[i]; vx[i] = vy[i] = 0; } } };
+        Rx[i] = (X0[i] - ax) * kD; Ry[i] = (Y0[i] - ay) * kD; if (!active) { px[i] = Sx[i] = Ox[i]; py[i] = Sy[i] = Oy[i]; vx[i] = vy[i] = 0; } }
+      // 26.11: a new size moves every place (the window, the scale, the targets). Once the print is on, its dots jump to the new places
+      // at once: flying there from the old ones swarmed them against the window's edge, where the window clips them
+      if (active) snap = true; };
     // read which of the shapes the shared print shows right now, from its pixels
     const detect = () => { try {
       const sc = shared.width / W, ctx2 = shared.getContext('2d'), img = ctx2.getImageData(0, 0, shared.width, shared.height).data, sw = shared.width, sh = shared.height;
