@@ -2424,6 +2424,10 @@
   html .sec-05 .col-05:last-child .fw-05.new { background-color: transparent; background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%), var(--g05, linear-gradient(90deg, var(--mint), var(--cyan)));
     background-size: 250% 100%, 100% 100%; background-repeat: no-repeat; }
   html #sec-05 .sw-l button.w[aria-pressed="true"]::before { background: linear-gradient(90deg, var(--mint), var(--cyan)); border-color: transparent; }
+  /* 05 (26.11): when the column is too narrow for both, the "Try it" hint gives way to the name (the plus and the hover still say it is a button) */
+  html .sec-05 button.fw-05.next { container-type: inline-size; }
+  html .sec-05 button.fw-05.next .lb { min-width: 0; }
+  @container (max-width: 210px) { html .sec-05 button.fw-05.next em { display: none; } html .sec-05 button.fw-05.next .lb { gap: 7px; } html .sec-05 button.fw-05.next .nm { font-size: 14px; } }
   /* ==== 06 Trust, layout C (approved 26.11): the three columns side by side, the words above the windows, with more air.
      ?only=06 shows the section alone */
   html.only-06 .site-nav, html.only-06 main > :not(#sec-06), html.only-06 footer, html.only-06 .sheet, html.only-06 #sheet { display: none !important; }
