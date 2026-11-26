@@ -2257,7 +2257,7 @@
   @media (prefers-reduced-motion: reduce) { .sec-04 .chat-track > .msg.on { animation: none; } }
   /* ==== one switch on the whole page (Michał, 26.11): the stage switch of 02, also for the frameworks legend of 05 and the chat views
      of 04. Text in mono led by a square; the chosen option has the square filled (no ink edge) and the text in full ink; in 05 the
-     square is mint, and ink for the reused frameworks (white did not read as chosen). */
+     square is mint, as in 02. */
   :is(#sec-04, #sec-05) .sw-l { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--sp-3); padding: 0; list-style: none; }
   :is(#sec-04, #sec-05) .sw-l li { display: contents; }
   :is(#sec-04, #sec-05) .sw-l button { appearance: none; border: 0; border-radius: 0; background: none; box-shadow: none; padding: 8px 0; margin: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
@@ -2265,11 +2265,14 @@
   :is(#sec-04, #sec-05) .sw-l button::before { content: ""; width: 8px; height: 8px; flex: none; box-sizing: border-box; border: 1px solid currentColor; background: transparent; transition: background-color .3s, border-color .3s; }
   :is(#sec-04, #sec-05) .sw-l button:hover, :is(#sec-04, #sec-05) .sw-l button[aria-pressed="true"] { color: var(--ink); background: none; }
   :is(#sec-04, #sec-05) .sw-l button[aria-pressed="true"]::before { background: var(--mint); border-color: var(--mint); }      /* filled, no ink edge (26.11) */
-  #sec-05 .sw-l button.k[aria-pressed="true"]::before { background: var(--ink); border-color: var(--ink); }      /* white did not read as chosen on the light ground: ink, as the reused frameworks' marks */
   :is(#sec-04, #sec-05) .sw-l button:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
-  /* 05: one kind of framework at a time; the other steps back */
-  .sec-05 .chart-05 .fw-05 { transition: opacity .45s ease; }
-  .sec-05 .chart-05[data-show="kept"] .fw-05.new, .sec-05 .chart-05[data-show="new"] .fw-05.kept { opacity: .2; }
+  /* 05: one kind of framework at a time. By default neither box is chosen and every framework is there; choosing one folds the
+     other kind away like blocks taken off a stack, one after the other (--fd), and what stood on them (the figures, the stories,
+     Next framework) settles down onto what is left */
+  #sec-05 .chart-05.lg .col-05 > .fw-05 { overflow: hidden; transition: height .55s cubic-bezier(.2,.7,.1,1), margin .55s cubic-bezier(.2,.7,.1,1), padding .55s cubic-bezier(.2,.7,.1,1),
+    opacity .3s ease, transform .55s cubic-bezier(.2,.7,.1,1); transition-delay: var(--fd, 0s); }
+  #sec-05 .chart-05.lg .col-05 > .fw-05.fold { height: 0; padding-top: 0; padding-bottom: 0; margin-top: -4px; opacity: 0; transform: scaleX(.92); box-shadow: none; }
+  #sec-05 .chart-05.lg .col-05 > :not(.fw-05) { transition: none; }      /* the figures and stories just ride down on the stack */
 </style>
 </head>
 <body>
@@ -2589,7 +2592,7 @@
       <figure class="chart-05 rv" style="--d:3" aria-label="Frameworks by stage. Startup: SOC 2. Mid-market: SOC 2 reused, ISO 27001 and HIPAA new. Enterprise: SOC 2, ISO 27001 and HIPAA reused, GDPR, ISO 42001 and PCI DSS new.">
         <div class="top-05">
           <b>Frameworks as you grow</b>
-          <ul class="legend-05 sw-l" role="group" aria-label="Show frameworks"><li><button type="button" class="k" data-f="kept" aria-pressed="true">Reused</button></li><li><button type="button" class="w" data-f="new" aria-pressed="true">New at this stage</button></li></ul>
+          <ul class="legend-05 sw-l" role="group" aria-label="Show frameworks"><li><button type="button" class="k" data-f="kept" aria-pressed="false">Reused</button></li><li><button type="button" class="w" data-f="new" aria-pressed="false">New at this stage</button></li></ul>
         </div>
         <div class="bars-05">
           <div class="col-05" style="--s:0">
@@ -4236,10 +4239,17 @@
       const step = now => { const u = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - u, 3); node.textContent = m[1] + Math.round(to * e) + m[3]; if (u < 1) requestAnimationFrame(step); };
       requestAnimationFrame(step); }); };
   // the legend is a switch (26.11): one kind of framework at a time, the other steps back; the shown one again (or the other) brings both back
-  const lgB = [...sec.querySelectorAll('.legend-05 button')], chartF = sec.querySelector('.chart-05');
-  lgB.forEach(b => b.addEventListener('click', () => { const solo = chartF.dataset.show, f = b.dataset.f;
-    const next = !solo || solo === 'all' ? f : 'all'; chartF.dataset.show = next;
-    lgB.forEach(x => x.setAttribute('aria-pressed', next === 'all' || x.dataset.f === next ? 'true' : 'false')); }));
+  const lgB = [...sec.querySelectorAll('.legend-05 button')], chartF = sec.querySelector('.chart-05'), barsF = sec.querySelector('.bars-05');
+  const STEP = 80;      // ms between two blocks
+  lgB.forEach(b => b.addEventListener('click', () => { const cur = chartF.dataset.show || '', f = b.dataset.f, next = cur === f ? '' : f;
+    if (!chartF.classList.contains('lg')) { barsF.style.minHeight = barsF.offsetHeight + 'px'; chartF.classList.add('lg'); }      // the chart keeps its height: nothing below moves
+    chartF.dataset.show = next; lgB.forEach(x => x.setAttribute('aria-pressed', x.dataset.f === next ? 'true' : 'false'));
+    const fold = next === 'kept' ? 'new' : next === 'new' ? 'kept' : '';
+    sec.querySelectorAll('.col-05').forEach(col => { const blocks = [...col.querySelectorAll(':scope > .fw-05.new, :scope > .fw-05.kept')];      // DOM order: bottom up
+      blocks.forEach((el, i) => { const goes = !!fold && el.classList.contains(fold);
+        if (goes === el.classList.contains('fold')) return;
+        el.style.setProperty('--fd', (goes ? (blocks.length - 1 - i) : i) * STEP + 'ms');      // folding: from the top down; coming back: from the bottom up
+        el.classList.toggle('fold', goes); }); }); }));
   const chartEl = sec.querySelector('.chart-05');
   if (chartEl) { if ('IntersectionObserver' in window) { const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io2.disconnect(); setTimeout(() => { countUp(); startCards(); }, 900); } }), { threshold: .3 }); io2.observe(chartEl); }
     else startCards(); }
