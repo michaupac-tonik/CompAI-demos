@@ -2305,6 +2305,14 @@
   html:is(.v06-c, .v06-d) .sec-06 .cap .k { gap: 10px; color: var(--ink); }
   html:is(.v06-c, .v06-d) .sec-06 .cap .k::before { content: ""; width: 8px; height: 8px; flex: none; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
   html:is(.v06-c, .v06-d) .sec-06 .pr .win { box-shadow: 0 0 0 1px rgba(22,22,22,.08), 0 24px 48px -28px rgba(22,22,22,.2); }      /* neutral, no colour (26.11) */
+  /* the windows take the brand accents (26.11): passed checks and controls in mint, the item that needs review in orange, a starred repo in mint */
+  html:is(.v06-c, .v06-d) .sec-06 .tag:not(.warn):not(.star) { background: rgba(36, 255, 99, .2); box-shadow: none; color: var(--ink); }
+  html:is(.v06-c, .v06-d) .sec-06 .tag.warn { background: rgba(243, 115, 0, .16); color: #8a3d00; }
+  html:is(.v06-c, .v06-d) .sec-06 .ck { background: rgba(36, 255, 99, .28); color: var(--ink); }
+  html:is(.v06-c, .v06-d) .sec-06 .win button.star.on { background: var(--mint); color: var(--ink); }
+  html:is(.v06-c, .v06-d) .sec-06 .feed .src { background: linear-gradient(135deg, var(--mint), var(--cyan)); color: var(--ink); }
+  /* the head: lines of even length (26.11) */
+  html:is(.v06-c, .v06-d) #sec-06 .head-06 h2, html:is(.v06-c, .v06-d) #sec-06 .head-06 .lead-06 { text-wrap: balance; }
   html.v06-d .sec-06 .pr .win { height: 232px; opacity: .45; filter: saturate(0); transition: opacity .5s ease, filter .5s ease, translate .5s var(--ease); }
   html.v06-d .sec-06 .pr:is(:hover, :focus-within) .win { opacity: 1; filter: none; translate: 0 -4px; }
   html.v06-d .sec-06 .win-f, html.v06-d .sec-06 .try, html.v06-d .sec-06 .commits { display: none; }
@@ -2688,14 +2696,14 @@
       <div class="print-06" role="img" aria-label="A person in profile turning into interlocking circles, like a seal"><canvas aria-hidden="true"></canvas></div>
       <!-- WORKING SAMPLE DATA in the windows: file, commits and their diffs, times, evidence items, controls and their
            evidence counts; Comp AI's own frameworks (SOC 2 Type II, ISO 27001) are placeholders until the client confirms them.
-           Placeholders: stars, contributors, controls (XX). Things to try (easter eggs): star the repo, open a commit's diff,
+           Stars (2.1k, 2,134) and contributors (40) are trycompai/comp on GitHub as of 26.11.2026; controls (XX) is still a placeholder. Things to try (easter eggs): star the repo, open a commit's diff,
            open an evidence item and re-run its check, open a control's evidence, request the report.
            LINKS: GitHub repo and trust center URLs to be confirmed by the client (both are outside services in the current
            trycomp.ai footer); the evidence card points to section 03 of this page for now. -->
       <ul class="row-06">
         <li class="rv" style="--d:4"><article class="pr" style="--gx: 30%; --gy: 100%">
           <div class="win" data-repo>
-            <div class="win-h"><svg class="ghi" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ttl"><i>trycompai /</i> comp</span><span class="end"><span class="try">Try it</span><button class="tag star" type="button" aria-pressed="false" aria-label="Star the repository"><svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="M6 .8l1.6 3.3 3.6.5-2.6 2.5.6 3.6L6 9l-3.2 1.7.6-3.6L.8 4.6l3.6-.5z"/></svg><span class="num">XX</span></button></span></div>
+            <div class="win-h"><svg class="ghi" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ttl"><i>trycompai /</i> comp</span><span class="end"><span class="try">Try it</span><button class="tag star" type="button" aria-pressed="false" aria-label="Star the repository (2,134 stars)"><svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="M6 .8l1.6 3.3 3.6.5-2.6 2.5.6 3.6L6 9l-3.2 1.7.6-3.6L.8 4.6l3.6-.5z"/></svg><span class="num">2.1k</span></button></span></div>
 <pre class="code"><span class="fp">agents/evidence/collect.ts</span><span class="c">// every item keeps its source and time</span>
 <span class="f">await</span> evidence.save({
   control: <span class="s">"CC6.1"</span>, source: <span class="s">"okta"</span>,
@@ -2706,7 +2714,7 @@
               <li><button class="cm" type="button" aria-expanded="false"><span class="av"></span><span class="m">Add MFA check for Google Workspace</span><span class="t">5h</span></button><pre class="diff"><span class="del">- checks.register(okta.mfa)</span><span class="add">+ checks.register(okta.mfa, gws.mfa)</span></pre></li>
               <li><button class="cm" type="button" aria-expanded="false"><span class="av"></span><span class="m">Retry when AWS rate-limits a request</span><span class="t">1d</span></button><pre class="diff"><span class="del">- await aws.call(req)</span><span class="add">+ await retry(() => aws.call(req), { on: 429 })</span></pre></li>
             </ul>
-            <div class="win-f"><span><span class="num">XX</span> contributors</span><span class="hide-s">Click a commit to see the change</span></div>
+            <div class="win-f"><span><span class="num">40</span> contributors</span><span class="hide-s">Click a commit to see the change</span></div>
           </div>
           <div class="cap">
             <p class="k">01 · Open source</p>
@@ -5306,30 +5314,28 @@
   const r = document.documentElement; if (!r.classList.contains('v06-c') && !r.classList.contains('v06-d')) return;
   const sec = document.getElementById('sec-06'); if (!sec) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches, TAU = Math.PI * 2;
-  const S = 224, P = 7, half = P / 2, B = 10, MINT = [36, 255, 99], CYAN = [0, 255, 238], LAMBDA = 46, AMP = .38, SPEED = .22;
+  // each motif is a lattice of diamonds 28 units apart; the files differ in size, so every tile shows the same window, 896 x 896 units
+  // around its motif: the same dots, the same size, in each tile. The dots are taken from the file as they are (centre, size)
+  const S = 224, WIN = 896, B = 10, MINT = [36, 255, 99], CYAN = [0, 255, 238], LAMBDA = 46, AMP = .38, SPEED = .22, sc = S / WIN;
   const COL = Array.from({ length: B }, (_, q) => 'rgb(' + MINT.map((v, i) => Math.round(v + (CYAN[i] - v) * q / (B - 1))).join(',') + ')');
-  const build = img => { const m = document.createElement('canvas'); m.width = m.height = S; const mg = m.getContext('2d', { willReadFrequently: true });
-    mg.fillStyle = '#000'; mg.fillRect(0, 0, S, S); const k = Math.max(S / img.width, S / img.height), w = img.width * k, h = img.height * k;      // cover, centred
-    mg.drawImage(img, (S - w) / 2, (S - h) / 2, w, h); const px = mg.getImageData(0, 0, S, S).data;
-    const lum = (x, y) => { x = Math.max(0, Math.min(S - 1, Math.round(x))); y = Math.max(0, Math.min(S - 1, Math.round(y))); const o = (y * S + x) * 4; return (px[o] + px[o + 1] + px[o + 2]) / 765; };
-    const pts = [];
-    for (let b = -1, y = 0; y <= S + P; b++, y = b * half) for (let x = (b & 1) ? half : 0; x <= S + P; x += P) {
-      let v = 0, n = 0; for (let dy = -2; dy <= 2; dy += 2) for (let dx = -2; dx <= 2; dx += 2) { v += lum(x + dx, y + dy); n++; } v = Math.min(1, v / n * 1.35);      // how much of the motif covers this cell
-      if (v < .06) continue; const rr = Math.hypot(x - S / 2, y - S / 2); pts.push(x, y, v, rr, Math.min(B - 1, Math.floor(rr / (S * .72) * B))); }
+  const build = txt => { const d = (/ d="([^"]+)"/.exec(txt) || [])[1] || '', re = /M(-?[\d.]+) (-?[\d.]+)l(-?[\d.]+)/g, raw = []; let m, x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    while ((m = re.exec(d))) { const h = +m[3], cx = +m[1], cy = +m[2] + h; raw.push(cx, cy, h); if (h > 3) { x0 = Math.min(x0, cx); x1 = Math.max(x1, cx); y0 = Math.min(y0, cy); y1 = Math.max(y1, cy); } }
+    const ox = (x0 + x1) / 2 - WIN / 2, oy = (y0 + y1) / 2 - WIN / 2, pts = [];
+    for (let i = 0; i < raw.length; i += 3) { const x = (raw[i] - ox) * sc, y = (raw[i + 1] - oy) * sc, h = raw[i + 2] * sc; if (x < -4 || y < -4 || x > S + 4 || y > S + 4 || h < .35) continue;
+      const rr = Math.hypot(x - S / 2, y - S / 2); pts.push(x, y, h, rr, Math.min(B - 1, Math.floor(rr / (S * .72) * B))); }
     return Float32Array.from(pts); };
   const draw = (cv, pts, t, a) => { const g = cv.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, S, S); const paths = Array.from({ length: B }, () => new Path2D());
-    for (let i = 0; i < pts.length; i += 5) { const x = pts[i], y = pts[i + 1], v = pts[i + 2], rr = pts[i + 3];
-      const f = a ? 1 - a * AMP * (.5 - .5 * Math.cos(TAU * (rr / LAMBDA - t))) : 1, d = half * .95 * v * f; if (d < .7) continue;
+    for (let i = 0; i < pts.length; i += 5) { const x = pts[i], y = pts[i + 1], rr = pts[i + 3];
+      const f = a ? 1 - a * AMP * (.5 - .5 * Math.cos(TAU * (rr / LAMBDA - t))) : 1, d = pts[i + 2] * f; if (d < .35) continue;
       const p = paths[pts[i + 4]]; p.moveTo(x, y - d); p.lineTo(x + d, y); p.lineTo(x, y + d); p.lineTo(x - d, y); p.closePath(); }
     paths.forEach((p, q) => { g.fillStyle = COL[q]; g.fill(p); }); };
   sec.querySelectorAll('.pr').forEach((pr, j) => { const cap = pr.querySelector('.cap'); if (!cap) return;
     const t0 = document.createElement('span'); t0.className = 'tile'; t0.setAttribute('aria-hidden', 'true'); const cv = document.createElement('canvas'); cv.width = cv.height = S; t0.append(cv); cap.prepend(t0);
-    const img = new Image(); img.onload = () => { const pts = build(img); let t = 0, a = 0, want = 0, raf = 0, last = 0; draw(cv, pts, 0, 0); if (reduced) return;
+    fetch('assets/img/trust/motif-' + (j % 3 + 1) + '.svg').then(res => res.text()).then(txt => { const pts = build(txt); let t = 0, a = 0, want = 0, raf = 0, last = 0; draw(cv, pts, 0, 0); if (reduced) return;
       const step = now => { const dt = Math.min(50, now - (last || now)) / 1000; last = now; t += dt * SPEED; a += (want - a) * (1 - Math.exp(-dt * 4));      // the wave eases in and out
         draw(cv, pts, t, a); if (want || a > .005) raf = requestAnimationFrame(step); else { raf = 0; last = 0; draw(cv, pts, t, 0); } };
       const on = () => { want = 1; if (!raf) raf = requestAnimationFrame(step); }, off = () => { want = 0; if (!raf) raf = requestAnimationFrame(step); };
-      pr.addEventListener('pointerenter', on); pr.addEventListener('pointerleave', off); pr.addEventListener('focusin', on); pr.addEventListener('focusout', off); };
-    img.src = 'assets/img/trust/motif-' + (j % 3 + 1) + '.svg'; });
+      pr.addEventListener('pointerenter', on); pr.addEventListener('pointerleave', off); pr.addEventListener('focusin', on); pr.addEventListener('focusout', off); }).catch(() => {}); });
 })();
 </script>
 </body>
