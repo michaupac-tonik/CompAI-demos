@@ -1,5 +1,7 @@
 # Typography v0.2
 
+> **Work in progress (v0.2), not final.** Describes the v3 layout in progress on branch `homepage-v3`, not the page currently in `main`. Do not build tokens or components from this yet. Last updated: 26.11.2026.
+
 The type system of the Comp AI homepage. Every text style on the page belongs to one of the roles below. There are no
 variants of a role: if two elements have the same function, they share one role and look the same.
 The product UI mock-ups (the app windows in sections 03, 04, 06 and 08, the cards in 05) illustrate the product and are
