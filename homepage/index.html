@@ -1498,26 +1498,30 @@
   .s8p-head { max-width: calc(7 / 12 * 100%); margin-bottom: var(--sp-5); }
   .s8p-head .sec-08-eyebrow { margin-bottom: var(--sp-3); }
   .s8p-head .sec-08-lead { margin-top: var(--sp-3); }
-  /* ---- calculator A/B (26.11, review). A (default): the builder in 02's dark board. B (html.c08-b): the same builder as a
-     light card (paper, ink), so it stands out on black next to the steps; its Book a demo keeps the gradient ---- */
-  .c08-b #sec-08-price .sec-08-ui { background: var(--paper); color: var(--ink); border-color: transparent; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
-  .c08-b #sec-08-price .sec-08-ui-h { border-bottom-color: rgba(22,22,22,.1); color: rgba(22,22,22,.55); }
-  .c08-b #sec-08-price .sec-08-qrow + .sec-08-qrow { box-shadow: inset 0 1px rgba(22,22,22,.1); }
-  .c08-b #sec-08-price .sec-08-qrow legend { color: var(--ink); }
-  .c08-b #sec-08-price .sec-08-qrow legend .sec-08-mono, .c08-b #sec-08-price .sec-08-qrow legend small { color: rgba(22,22,22,.5); }
-  .c08-b #sec-08-price .sec-08-chip { border-color: rgba(22,22,22,.18); color: rgba(22,22,22,.65); }
-  .c08-b #sec-08-price .sec-08-chip::before { border-color: rgba(22,22,22,.35); }
-  .c08-b #sec-08-price .sec-08-chip:hover { border-color: rgba(22,22,22,.55); color: var(--ink); }
-  .c08-b #sec-08-price .sec-08-chip:is([aria-pressed="true"], [aria-checked="true"]) { border-color: var(--ink); background: rgba(22,22,22,.04); color: var(--ink); }
-  .c08-b #sec-08-price .sec-08-chip:is([aria-pressed="true"], [aria-checked="true"])::before { border-color: var(--ink); }
-  .c08-b #sec-08-price .sec-08-qsum { background: rgba(22,22,22,.04); border-left-color: rgba(22,22,22,.08); }
-  .c08-b #sec-08-price .sec-08-qsum > .sec-08-mono, .c08-b #sec-08-price .sec-08-qlist dt, .c08-b #sec-08-price .sec-08-qprice .sec-08-mono { color: rgba(22,22,22,.5); }
-  .c08-b #sec-08-price .sec-08-qlist div { border-top-color: rgba(22,22,22,.1); }
-  .c08-b #sec-08-price .sec-08-qlist dd, .c08-b #sec-08-price .sec-08-qprice b { color: var(--ink); }
-  .c08-b #sec-08-price .sec-08-qprice { border-top-color: rgba(22,22,22,.14); }
-  .c08-b #sec-08-price .sec-08-qprice small { color: rgba(22,22,22,.6); }
-  .c08-b #sec-08-price .sec-08-qsum .btn-primary:is(:hover, :focus-visible) { border-color: var(--ink); }
-  .c08-b #sec-08-price .sec-08-ui :focus-visible { outline-color: var(--ink); }
+  /* ---- calculator A/B (26.11, review). A (default): the builder as it was. B (html.c08-b): the same dark builder with
+     stronger details inside, so it holds its own next to the steps: a gradient edge on top, the system's type roles
+     (questions in title-s, choices in body-m, labels in label-s), larger choices, picked ones filled white with an ink
+     label, more room per question, the summary column a step lighter ---- */
+  .c08-b #sec-08-price .sec-08-ui { position: relative; background: #1a1a1a; border-color: rgba(252,252,252,.14); }
+  .c08-b #sec-08-price .sec-08-ui::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--mint), var(--cyan)); z-index: 1; }
+  .c08-b #sec-08-price .sec-08-ui-h { min-height: 52px; padding: 0 24px; }
+  .c08-b #sec-08-price .sec-08-mono { font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .c08-b #sec-08-price .sec-08-qform { padding: 0 24px; }
+  .c08-b #sec-08-price .sec-08-ui-b { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }      /* the choices get the room */
+  .c08-b #sec-08-price .sec-08-qrow { padding: 24px 0; }
+  .c08-b #sec-08-price .sec-08-qrow legend { margin-bottom: 16px; font: 300 var(--fs-title-s, 20px)/1.3 var(--sans); letter-spacing: -.01em; }
+  .c08-b #sec-08-price .sec-08-qrow legend small { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); letter-spacing: 0; }
+  .c08-b #sec-08-price .sec-08-chips { gap: 8px; }
+  .c08-b #sec-08-price .sec-08-chip { height: 40px; padding: 0 14px; gap: 10px; border-color: rgba(252,252,252,.2); color: rgba(252,252,252,.72); font: 400 var(--fs-body-m, 16px)/1 var(--sans); }
+  .c08-b #sec-08-price .sec-08-chip:hover { border-color: rgba(252,252,252,.6); color: var(--white); }
+  .c08-b #sec-08-price .sec-08-chip:is([aria-pressed="true"], [aria-checked="true"]) { background: var(--white); border-color: var(--white); color: var(--ink); }
+  .c08-b #sec-08-price .sec-08-chip:is([aria-pressed="true"], [aria-checked="true"])::before { border-color: transparent; }
+  .c08-b #sec-08-price .sec-08-qsum { gap: 20px; padding: 24px; background: #222; border-left-color: rgba(252,252,252,.1); }
+  .c08-b #sec-08-price .sec-08-qlist div { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 12px 0; font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }      /* label over value: the narrower summary keeps its values on one line */
+  .c08-b #sec-08-price .sec-08-qlist dd { font-size: var(--fs-body-m, 16px); }
+  .c08-b #sec-08-price .sec-08-qprice b { font: 300 var(--fs-title-m, 33px)/1.05 var(--sans); }
+  .c08-b #sec-08-price .sec-08-qprice small { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
+  .c08-b #sec-08-price .sec-08-qsum .btn-primary { height: 48px; }
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
