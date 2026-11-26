@@ -1731,10 +1731,10 @@
   .sec-09 .cta-09 { padding-bottom: var(--sp-6, 104px); }
   .sec-09 .cta-09-t { margin: 0; max-width: 15ch; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-l, 53px); line-height: 1.02; letter-spacing: -.04em; color: var(--text-1); text-wrap: balance; }
   .sec-09 .cta-09-sub { margin: var(--sp-3, 24px) 0 0; max-width: 28em; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m, 20px); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: pretty; }
-  .sec-09 .cta-09-form { display: flex; gap: 8px; width: min(100%, 520px); margin-top: var(--sp-4, 40px); }
+  .sec-09 .cta-09-form { display: flex; align-items: stretch; gap: 8px; width: min(100%, 520px); margin-top: var(--sp-4, 40px); }
   .sec-09 .cta-09-form .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  /* the field is the secondary button's outline: flat, 1px, the same height and fill */
-  .sec-09 .cta-09-form input { flex: 1 1 auto; min-width: 0; height: 40px; margin: 0; padding: 0 14px; border: 1px solid rgba(252,252,252,.6); border-radius: var(--r);
+  /* the field is the secondary button's outline: flat, 1px, the same fill; its height follows the button (40, 44 from 1680) */
+  .sec-09 .cta-09-form input { flex: 1 1 auto; min-width: 0; height: auto; min-height: 40px; margin: 0; padding: 0 14px; border: 1px solid rgba(252,252,252,.6); border-radius: var(--r);
     background: rgba(252,252,252,.06); color: var(--white); font: 400 var(--fs-body-m, 16px)/1 var(--sans); outline: none; transition: border-color .2s; }
   .sec-09 .cta-09-form input::placeholder { color: var(--text-2); }
   .sec-09 .cta-09-form input:is(:hover, :focus) { border-color: var(--white); }
