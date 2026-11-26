@@ -2273,12 +2273,18 @@
     opacity .3s ease, transform .55s cubic-bezier(.2,.7,.1,1); transition-delay: var(--fd, 0s); }
   #sec-05 .chart-05.lg .col-05 > .fw-05.fold { height: 0; padding-top: 0; padding-bottom: 0; margin-top: -4px; opacity: 0; transform: scaleX(.92); box-shadow: none; }
   #sec-05 .chart-05.lg .col-05 > :not(.fw-05) { transition: none; }      /* the figures and stories just ride down on the stack */
+  /* ==== 05 test (Michał, 26.11): the new frameworks in the gradient of 02's handover bars (mint to cyan, left to right), behind ?g05=1 */
+  html.g05 .sec-05 .fw-05.new, html.g05 .sec-05 button.fw-05.next.on { background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  /* the last column's new frameworks carry a passing sheen: the gradient goes under it, as a second layer (it does not move: 100 % wide) */
+  html.g05 .sec-05 .col-05:last-child .fw-05.new { background-color: transparent; background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%), linear-gradient(90deg, var(--mint), var(--cyan));
+    background-size: 250% 100%, 100% 100%; background-repeat: no-repeat; }
+  html.g05 #sec-05 .sw-l button.w[aria-pressed="true"]::before { background: linear-gradient(90deg, var(--mint), var(--cyan)); border-color: transparent; }
 </style>
 </head>
 <body>
 <script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
 (() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
-  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); })();</script>
+  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); if (q.get('g05') === '1') r.classList.add('g05'); })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
