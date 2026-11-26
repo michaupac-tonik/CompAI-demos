@@ -1723,21 +1723,27 @@
   @media (prefers-reduced-motion: reduce) {
     .sec-09 *, .sec-09 *::before, .sec-09 *::after { transition: none !important; }
   }
-  /* ---- the closing CTA (26.11): the heading in display-l on the left, one action on the right, on the heading's last line;
-     the footer's rule under it. Not a power quote (those are 03 and 08). */
+  /* ---- the closing CTA (26.11): one column on the left, as the section heads: the heading (display-l), the subheading
+     (lead-m), and the action right under them. The action is a piece of 08's quote builder: its surface (neutral 010),
+     hairline (neutral 100 at 16 %) and gradient edge on top, and its Book a demo in the mint-to-cyan fill; under it the
+     builder's gradient chip before a short note. Not a power quote (those are 03 and 08). */
   .sec-09 { padding-top: var(--sp-7, 168px); }
-  .sec-09 .cta-09 { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--sp-4, 40px) var(--sp-5, 64px); padding-bottom: var(--sp-6, 104px); }
+  .sec-09 .cta-09 { padding-bottom: var(--sp-6, 104px); }
   .sec-09 .cta-09-t { margin: 0; max-width: 15ch; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-l, 53px); line-height: 1.02; letter-spacing: -.04em; color: var(--text-1); text-wrap: balance; }
-  .sec-09 .cta-09-sub { margin: var(--sp-3, 24px) 0 0; max-width: 30em; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m, 20px); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: pretty; }
-  /* the action: a work-email field and Book a demo as one control, so the demo request starts here */
-  .sec-09 .cta-09-form { display: flex; width: min(100%, 440px); }
+  .sec-09 .cta-09-sub { margin: var(--sp-3, 24px) 0 0; max-width: 28em; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m, 20px); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: pretty; }
+  .sec-09 .cta-09-form { position: relative; display: flex; gap: 4px; width: min(100%, 560px); margin-top: var(--sp-4, 40px); padding: 4px;
+    background: #202020; box-shadow: inset 0 0 0 1px rgba(248,248,248,.16); transition: box-shadow .2s; }
+  .sec-09 .cta-09-form::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  .sec-09 .cta-09-form:focus-within { box-shadow: inset 0 0 0 1px rgba(248,248,248,.4); }
   .sec-09 .cta-09-form .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .sec-09 .cta-09-form input { flex: 1 1 auto; min-width: 0; height: 40px; margin: 0; padding: 0 14px; border: 1px solid rgba(252,252,252,.6); border-right: 0; border-radius: var(--r) 0 0 var(--r);
-    background: rgba(252,252,252,.06); color: var(--white); font: 400 14px/1 var(--sans); transition: border-color .2s, background-color .2s; }
-  .sec-09 .cta-09-form input::placeholder { color: var(--text-2); }
-  .sec-09 .cta-09-form input:hover { border-color: var(--white); }
-  .sec-09 .cta-09-form input:focus { outline: none; border-color: var(--white); background: rgba(252,252,252,.1); }
-  .sec-09 .cta-09-form .btn { flex: none; border-radius: 0 var(--r) var(--r) 0; }
+  .sec-09 .cta-09-form input { flex: 1 1 auto; min-width: 0; height: 40px; margin: 0; padding: 0 12px; border: 0; border-radius: 0; background: transparent;
+    color: var(--white); font: 400 var(--fs-body-m, 16px)/1 var(--sans); outline: none; }
+  .sec-09 .cta-09-form input::placeholder { color: rgba(248,248,248,.48); }
+  .sec-09 .cta-09-form .btn-primary { flex: none; background: linear-gradient(90deg, var(--mint), var(--cyan)); border-color: transparent; color: var(--ink); }
+  .sec-09 .cta-09-form .btn-primary::before { background: var(--white); }
+  .sec-09 .cta-09-form .btn-primary:is(:hover, :focus-visible) { color: var(--ink); border-color: var(--white); }
+  .sec-09 .cta-09-note { display: flex; align-items: center; gap: 8px; margin: var(--sp-2, 16px) 0 0; font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); color: var(--text-2); }
+  .sec-09 .cta-09-note::before { content: ""; flex: none; width: 10px; height: 6px; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
   @media (max-width: 1023px) {
     .sec-09 { padding-top: 88px; }
     .sec-09 .cta-09 { padding-bottom: 72px; }
@@ -1746,9 +1752,10 @@
   }
   @media (max-width: 767px) {
     .sec-09 { padding-top: 72px; }
-    .sec-09 .cta-09 { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-bottom: 56px; }
-    .sec-09 .cta-09-form { width: 100%; }
-    .sec-09 .cta-09-form input { font-size: 16px; }      /* 16px or iOS zooms into the field */
+    .sec-09 .cta-09 { padding-bottom: 56px; }
+    .sec-09 .cta-09-form { flex-direction: column; margin-top: 32px; }
+    .sec-09 .cta-09-form .btn { width: 100%; }
+    .sec-09 .cta-09-note { align-items: baseline; }
   }
   .sec-09 .home-09 + .certs-09 { margin-top: -7px; }      /* the brand line went into the CTA above: the Trust Center line sits under the logo */
   /* isolated view (?only=09): the footer alone */
@@ -3177,16 +3184,15 @@
   <div class="wrap">
   <!-- the closing CTA (26.11): 08's "Compliance that helps you close deals." opens the footer, a CTA of its own (not a power quote), one action -->
   <div class="cta-09">
-    <div>
-      <h2 class="cta-09-t">Compliance that helps you close deals.</h2>
-      <p class="cta-09-sub">AI-powered compliance platform. Get SOC 2, ISO 27001, HIPAA and GDPR audit-ready in record time.</p>
-    </div>
+    <h2 class="cta-09-t">Compliance that helps you close deals.</h2>
+    <p class="cta-09-sub">AI-powered compliance platform. Get SOC 2, ISO 27001, HIPAA and GDPR audit-ready in record time.</p>
     <!-- placeholder: the Book a Demo page takes the email and goes on from there (not built yet) -->
     <form class="cta-09-form" action="/book-a-demo" method="post">
       <label class="vh" for="cta-09-email">Work email</label>
       <input id="cta-09-email" name="email" type="email" autocomplete="email" placeholder="Work email" required>
       <button class="btn btn-primary" type="submit"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></button>
     </form>
+    <p class="cta-09-note">A 20-minute call on your own stack. No price list, your quote on the call.</p>
   </div>
   <div class="top-09">
     <div class="brand-09">
