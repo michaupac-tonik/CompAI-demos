@@ -1383,34 +1383,68 @@
      other sections (eyebrow, h2 display-l, lead; 7 of 12), then 64 under it: left (5 of 12) the next step, the call as a
      vertical timeline on 02's diamond rail; right (7 of 12) the quote builder, unchanged inside (its two columns 3:2). ---- */
   .s8p-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px 72px; align-items: start; }
-  /* the left column runs as tall as the builder: the small head on top, the three steps spread over the rest */
+  /* head row: the section head on the left, the presets (02's switch) on the right over the builder */
+  .s8p-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px 72px; margin-bottom: var(--sp-5); }
+  .s8p-top .s8p-head { margin-bottom: 0; }
+  .s8p-presets { flex: none; }
+  /* the left column runs as tall as the builder; the three steps spread over it */
   .s8p-grid { align-items: stretch; }
-  .s8n { display: flex; flex-direction: column; gap: var(--sp-5); }
-  .s8n-hd h3 { margin: 0; }
-  .s8n-hd .sec-08-note { margin-top: 12px; }
+  .s8n { display: flex; flex-direction: column; }
   .s8n .s8n-tl[data-dir="v"] { flex: 1; align-content: space-between; }
-  /* steps: a mono time label (mint once reached), the step in lead-m Light, a line of detail, and a small piece of the
-     product under it in the UI of the builder (surface, hairline, 13px): the stack connected, the work done, the plan */
+  /* steps: a mono time label (mint once lit), the step in lead-m Light, a line of detail, and a small live piece of the
+     product under it in the builder's UI (surface, hairline, 13px) */
   .s8n .s8n-tl .t { font: 400 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
   .s8n .s8n-tl li { gap: 8px; color: rgba(252,252,252,.42); }
   .s8n .s8n-tl li.on { color: var(--white); }
   .s8n .s8n-tl li::before, .s8n .s8n-tl li::after { width: 9px; height: 9px; left: -25px; top: 1px; }
   .s8n .s8n-tl li::after { box-shadow: 0 0 calc(14px * var(--a, 0)) rgba(36,255,99, calc(.35 * var(--a, 0))); }
-  .s8n-ui { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; opacity: .35; filter: saturate(0); transition: opacity .6s ease, filter .6s ease; }
-  .s8n-tl li.on .s8n-ui { opacity: 1; filter: none; }
-  .s8n-ui > span { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border: 1px solid rgba(252,252,252,.12); border-radius: var(--r-sm);
-    background: rgba(22,22,22,.92); font: 400 13px/1 var(--sans); color: rgba(252,252,252,.8); white-space: nowrap; }
-  .s8n-ui > span.on::before { content: ""; width: 6px; height: 6px; transform: rotate(45deg); background: linear-gradient(135deg, var(--mint), var(--cyan)); }
-  .s8n-ui > span:not(.on):not(.plain):not(.row) { color: rgba(252,252,252,.45); }
-  .s8n-ui > span:not(.on):not(.plain):not(.row)::before { content: ""; width: 6px; height: 6px; transform: rotate(45deg); border: 1px solid rgba(252,252,252,.35); }
-  .s8n-run { flex-direction: column; align-items: stretch; gap: 0; max-width: 340px; border: 1px solid rgba(252,252,252,.12); border-radius: var(--r-sm); overflow: hidden; background: rgba(22,22,22,.92); }
-  .s8n-run > span.row { position: relative; justify-content: space-between; height: 34px; border: 0; border-radius: 0; background: none; overflow: hidden; }
-  .s8n-run > span.row + span.row { border-top: 1px solid rgba(252,252,252,.08); }
-  .s8n-run > span.row::before { content: ""; position: absolute; inset: 0 0 0 auto; width: 38%; background: linear-gradient(90deg, var(--mint), var(--cyan)); clip-path: inset(0 0 0 100%); transition: clip-path .9s cubic-bezier(.2,.8,.2,1); }
-  .s8n-tl li.on .s8n-run > span.row::before { clip-path: inset(0); }
-  .s8n-tl li.on .s8n-run > span.row + span.row::before { transition-delay: .18s; }
-  .s8n-run em { position: relative; z-index: 1; font-style: normal; color: rgba(252,252,252,.6); transition: color .4s ease .3s; }
-  .s8n-tl li.on .s8n-run em { color: var(--ink); }
+  .s8n-conn, .s8n-feed, .s8n-plan { margin-top: 8px; }
+  /* 1 · the stack: the tools connect one after another (outline diamond -> gradient, dim -> white) */
+  .s8n-conn { display: flex; flex-wrap: wrap; gap: 6px; }
+  .s8n-conn > span { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border: 1px solid rgba(252,252,252,.12); border-radius: var(--r-sm);
+    background: rgba(22,22,22,.92); font: 400 13px/1 var(--sans); color: rgba(252,252,252,.4); white-space: nowrap; transition: color .4s ease, border-color .4s ease; }
+  .s8n-conn > span::before { content: ""; width: 6px; height: 6px; box-sizing: border-box; transform: rotate(45deg); border: 1px solid rgba(252,252,252,.35); transition: background .4s ease, border-color .4s ease; }
+  .s8n-tl li.on .s8n-conn > span { color: var(--white); border-color: rgba(252,252,252,.22); transition-delay: calc(.3s + var(--i) * .35s); }
+  .s8n-tl li.on .s8n-conn > span::before { background: linear-gradient(135deg, var(--mint), var(--cyan)); border-color: var(--mint); transition-delay: calc(.3s + var(--i) * .35s); }
+  /* 2 · the work, live: a feed of the agents' tasks. A new task comes in at the bottom, a gradient bar runs under it
+     while it is worked on, then it is struck through as done (the hero's ticker) and the count goes up; three rows shown */
+  .s8n-feed { display: block; max-width: 400px; border: 1px solid rgba(252,252,252,.12); border-radius: var(--r-sm); background: rgba(22,22,22,.92); overflow: hidden; font: 400 13px/1 var(--sans); }
+  .s8n-feed .hd { display: flex; justify-content: space-between; align-items: center; height: 32px; padding: 0 12px; color: rgba(252,252,252,.5); }
+  .s8n-feed .hd em { font-style: normal; color: var(--white); font-variant-numeric: tabular-nums; }
+  .s8n-feed .rows { display: block; height: 102px; overflow: hidden; }
+  .s8n-feed .r { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px; height: 34px; padding: 0 12px; border-top: 1px solid rgba(252,252,252,.08);
+    color: rgba(252,252,252,.85); white-space: nowrap; animation: s8n-in .45s var(--ease) both; }
+  .s8n-feed .r > span:first-child { overflow: hidden; text-overflow: ellipsis; text-decoration-line: line-through; text-decoration-color: transparent; transition: text-decoration-color .3s ease, color .4s ease; }
+  .s8n-feed .r::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(0); }
+  .s8n-feed .r.run::after { animation: s8n-run 1.3s cubic-bezier(.4,0,.2,1) forwards; }
+  .s8n-feed .r em { display: inline-flex; align-items: center; gap: 8px; font-style: normal; color: rgba(252,252,252,.5); }
+  .s8n-feed .r em::before { content: ""; width: 6px; height: 6px; transform: rotate(45deg); border: 1px solid currentColor; box-sizing: border-box; }
+  .s8n-feed .r.run em::before { animation: s8n-blink 1s ease-in-out infinite; }
+  .s8n-feed .r.done > span:first-child { color: rgba(252,252,252,.45); text-decoration-color: rgba(252,252,252,.45); }
+  .s8n-feed .r.done em { color: var(--mint); }
+  .s8n-feed .r.done em::before { background: linear-gradient(135deg, var(--mint), var(--cyan)); border: 0; }
+  .s8n-feed .r.done::after { opacity: 0; transition: opacity .5s ease; transform: scaleX(1); }
+  @keyframes s8n-in { from { opacity: 0; filter: blur(4px); transform: translateY(8px); } }
+  @keyframes s8n-run { to { transform: scaleX(1); } }
+  @keyframes s8n-blink { 50% { opacity: .3; } }
+  .s8n-tl li:not(.on) .s8n-feed { opacity: .4; }
+  /* 3 · the plan: a track from today to audit-ready fills in the gradient, its end diamond lights */
+  .s8n-plan { display: grid; gap: 10px; max-width: 400px; }
+  .s8n-plan .trk { position: relative; height: 9px; }
+  .s8n-plan .trk::before { content: ""; position: absolute; left: 0; right: 4px; top: 4px; height: 1px; background: rgba(252,252,252,.18); }
+  .s8n-plan .trk i { position: absolute; left: 0; right: 4px; top: 3px; height: 3px; background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(0); transition: transform 1.6s cubic-bezier(.4,0,.2,1) .3s; }
+  .s8n-plan .trk b { position: absolute; right: 0; top: 0; width: 9px; height: 9px; transform: rotate(45deg); background: #333; transition: background .4s ease 1.8s, box-shadow .4s ease 1.8s; }
+  .s8n-tl li.on .s8n-plan .trk i { transform: scaleX(1); }
+  .s8n-tl li.on .s8n-plan .trk b { background: linear-gradient(135deg, var(--mint), var(--cyan)); box-shadow: 0 0 14px rgba(36,255,99,.35); }
+  .s8n-plan .lbl { display: flex; justify-content: space-between; font: 400 13px/1 var(--sans); color: rgba(252,252,252,.5); }
+  .s8n-plan .lbl span:last-child { color: inherit; }
+  .s8n-tl li.on .s8n-plan .lbl span:last-child { color: var(--white); transition: color .4s ease 1.8s; }
+  /* ---- A/B (26.11). A (default): the steps as three boxes in the builder's UI, no rail, spread over the builder's height. B: the steps on 02's diamond rail (above). ---- */
+  .p08-a .s8n-tl[data-dir="v"] { padding: 0; gap: 12px; align-content: space-between; }
+  .p08-a .s8n-tl[data-dir="v"]::before, .p08-a .s8n-tl[data-dir="v"]::after, .p08-a .s8n .s8n-tl li::before, .p08-a .s8n .s8n-tl li::after { content: none; }
+  .p08-a .s8n .s8n-tl li { align-content: start; padding: 20px 22px; border: 1px solid rgba(252,252,252,.1); border-radius: var(--r); background: rgba(22,22,22,.5); transition: color .6s var(--ease), border-color .6s ease; }
+  .p08-a .s8n .s8n-tl li.on { border-color: rgba(252,252,252,.18); }
+  .p08-a .s8n .s8n-tl li.on .t { color: var(--mint); }
   .s8n-tl { --p: 0; position: relative; list-style: none; margin: 0; padding: 28px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
   .s8n-tl::before, .s8n-tl::after { content: ""; position: absolute; left: 3px; top: 3px; width: var(--rw, 100%); height: 1px; background: rgba(252,252,252,.14); }
   .s8n-tl::after { background: linear-gradient(90deg, var(--mint), var(--cyan)); transform-origin: left; transform: scaleX(var(--p)); }
@@ -1422,7 +1456,7 @@
   .s8n-tl li.on .t { color: var(--mint); }
   .s8n-tl b { font: 300 var(--t-lead-m)/1.3 var(--sans); letter-spacing: -.01em; color: inherit; text-wrap: balance; }
   .s8n-tl .d { font-size: 15px; line-height: 1.45; color: inherit; opacity: .8; text-wrap: balance; }
-  @media (max-width: 1023px) { .s8p-grid { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 1023px) { .s8p-grid { grid-template-columns: minmax(0, 1fr); } .s8p-top { flex-direction: column; align-items: flex-start; } }
   /* vertical: in the pricing's left column (data-dir="v"), and on phones */
   .s8n-tl[data-dir="v"] { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0 0 0 24px; }
   .s8n-tl[data-dir="v"]::before, .s8n-tl[data-dir="v"]::after { width: 1px; height: var(--rw, 100%); }
@@ -2890,25 +2924,27 @@
      sections, then the next step (the call as a vertical timeline on 02's diamond rail) on the left and the quote builder on the right -->
 <section class="sec-08" id="sec-08-price" aria-labelledby="sec-08-price-t">
   <div class="wrap">
-    <div class="s8p-head">
-      <p class="sec-08-eyebrow">Pricing</p>
-      <h2 id="sec-08-price-t">What sets the price</h2>
-      <p class="sec-08-lead">Pick what applies to you. We confirm your number on the call.</p>
+    <!-- A/B test (26.11): ?p08=a (default) the steps as three boxes, no rail; ?p08=b the steps on 02's diamond rail -->
+    <script>document.documentElement.classList.add('p08-' + (new URLSearchParams(location.search).get('p08') === 'b' ? 'b' : 'a'))</script>
+    <div class="s8p-top">
+      <div class="s8p-head">
+        <p class="sec-08-eyebrow">Pricing</p>
+        <h2 id="sec-08-price-t">What sets the price</h2>
+        <p class="sec-08-lead">Pick what applies to you, or start from a company like yours. We confirm your number on a <span class="sec-08-nb">20-minute</span> call.</p>
+      </div>
+      <!-- presets (the switch of 02, over the builder): each fills the builder with a typical company; placeholders to confirm -->
+      <div class="shift-switch s8p-presets" role="group" aria-label="Start from a company like yours"><button type="button" aria-pressed="false" data-p="0">Startup</button><button type="button" aria-pressed="true" data-p="1">Scale-up</button><button type="button" aria-pressed="false" data-p="2">Enterprise</button></div>
     </div>
     <div class="s8p-grid">
-      <div class="s8n" id="sec-08-next" role="group" aria-labelledby="sec-08-next-t">
-        <div class="s8n-hd">
-          <h3 id="sec-08-next-t">What happens on the call</h3>
-          <p class="sec-08-note">Twenty minutes, on tools like yours.</p>
-        </div>
-        <!-- working copy: the systems, items and figures in the small UI pieces are placeholders -->
-        <ol class="s8n-tl" data-dir="v" aria-label="The call, step by step">
+      <div class="s8n" id="sec-08-next" role="group" aria-label="The 20-minute call, step by step">
+        <!-- working copy: the systems, tasks and figures in the small UI pieces are placeholders -->
+        <ol class="s8n-tl" data-dir="v">
           <li><span class="t">Min 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span>
-            <span class="s8n-ui" aria-hidden="true"><span class="on">AWS</span><span class="on">GitHub</span><span class="on">Google Workspace</span><span>Okta</span></span></li>
-          <li><span class="t">Min 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies.</span>
-            <span class="s8n-ui s8n-run" aria-hidden="true"><span class="row">Evidence from AWS<em>Done</em></span><span class="row">Access control policy<em>Done</em></span></span></li>
+            <span class="s8n-conn" aria-hidden="true"><span style="--i:0">AWS</span><span style="--i:1">GitHub</span><span style="--i:2">Google Workspace</span><span style="--i:3">Okta</span></span></li>
+          <li><span class="t">Min 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies while you watch.</span>
+            <span class="s8n-feed" aria-hidden="true"><span class="hd"><span>Agents at work</span><span><em data-n>0</em> items done</span></span><span class="rows"></span></span></li>
           <li><span class="t">Min 15–20</span><b>You leave with a plan and your number</b><span class="d">What audit-ready takes, and what it costs.</span>
-            <span class="s8n-ui" aria-hidden="true"><span class="on">SOC 2</span><span class="on">ISO 27001</span><span class="plain">Audit-ready in XX weeks</span></span></li>
+            <span class="s8n-plan" aria-hidden="true"><span class="trk"><i></i><b></b></span><span class="lbl"><span>Today</span><span>Audit-ready · week XX</span></span></span></li>
         </ol>
       </div>
       <!-- working copy: the four factors, the size bands and the lists of frameworks and systems are placeholders to confirm with Comp AI -->
@@ -5002,6 +5038,26 @@
       io.observe(tl); }
   }
 
+  // ---- next step, 2 · the work, live: a feed of the agents' tasks while the step is lit and on screen. A task comes in at the
+  //      bottom and is worked on (the bar under it), then struck through as done and counted; three rows shown.
+  const feed = document.querySelector('#sec-08-next .s8n-feed');
+  if (feed) {
+    const rowsEl = feed.querySelector('.rows'), nEl = feed.querySelector('[data-n]'), li = feed.closest('li');
+    const TASKS = ['Collect evidence from AWS', 'Draft the access control policy', 'Check MFA in Google Workspace', 'Review a new vendor',
+      'Map controls to ISO 27001', 'Score laptop encryption risk', 'Pull GitHub branch protection', 'Update the incident response plan'];
+    let ti = 0, n = 0, timer = 0, vis = false;
+    const add = () => { const r = document.createElement('span'); r.className = 'r run';
+      r.innerHTML = `<span>${TASKS[ti++ % TASKS.length]}</span><em>Working</em>`; rowsEl.append(r);
+      while (rowsEl.children.length > 3) rowsEl.firstElementChild.remove();
+      setTimeout(() => { r.classList.replace('run', 'done'); r.querySelector('em').textContent = 'Done'; n += 3 + Math.floor(Math.random() * 7); nEl.textContent = n; }, reduced ? 0 : 1400); };
+    const tick = () => { clearTimeout(timer); if (!vis || !li.classList.contains('on')) { timer = setTimeout(tick, 400); return; } add(); if (!reduced) timer = setTimeout(tick, 2100); };
+    // the first rows are there from the start, already done, so the box is never empty
+    for (let i = 0; i < 3; i++) { const r = document.createElement('span'); r.className = 'r done'; r.style.animation = 'none';
+      r.innerHTML = `<span>${TASKS[ti++]}</span><em>Done</em>`; rowsEl.append(r); n += 5; }
+    nEl.textContent = n;
+    new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (vis) tick(); else clearTimeout(timer); }).observe(feed);
+  }
+
   // ---- pricing: the quote builder. Toggles (frameworks, systems) and single choices (size, audit) feed the summary.
   const quote = document.querySelector('#sec-08-price [data-quote]');
   if (quote) {
@@ -5024,7 +5080,23 @@
         e.preventDefault(); const c = chips[(chips.indexOf(document.activeElement) + d + chips.length) % chips.length]; choose(c); c.focus();
       });
     });
-    update();
+    // presets (26.11): the switch over the builder fills it with a typical company; a manual change shows which preset still
+    // matches, if any. Working values, to confirm with Comp AI.
+    const PRESETS = [
+      { fw: ['SOC 2'], size: ['1–50'], sys: ['AWS', 'GitHub', 'Google Workspace'], aud: ['With Comp AI'] },
+      { fw: ['SOC 2', 'ISO 27001'], size: ['51–200'], sys: ['AWS', 'GitHub', 'Google Workspace'], aud: ['With Comp AI'] },
+      { fw: ['SOC 2', 'ISO 27001', 'HIPAA', 'GDPR'], size: ['1,000+'], sys: ['AWS', 'Azure', 'GitHub', 'Okta'], aud: ['Own auditor'] } ];
+    const pbtn = [...document.querySelectorAll('#sec-08-price .s8p-presets button')];
+    const groups = [...quote.querySelectorAll('[data-q]')];
+    const same = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+    const mark = () => { const now = Object.fromEntries(groups.map(g => [g.dataset.q, picked(g)]));
+      pbtn.forEach((b, i) => b.setAttribute('aria-pressed', Object.keys(PRESETS[i]).every(k => same(PRESETS[i][k], now[k])))); };
+    const apply = P => { groups.forEach(g => { const v = P[g.dataset.q], radio = g.getAttribute('role') === 'radiogroup';
+      g.querySelectorAll('.sec-08-chip').forEach(c => { const on = v.includes(c.textContent); c.setAttribute(radio ? 'aria-checked' : 'aria-pressed', on); if (radio) c.tabIndex = on ? 0 : -1; }); });
+      update(); mark(); };
+    pbtn.forEach((b, i) => b.addEventListener('click', () => apply(PRESETS[i])));
+    quote.addEventListener('click', e => { if (e.target.closest('.sec-08-chip')) mark(); });
+    update(); mark();
   }
 })();
 </script>
