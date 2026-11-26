@@ -2324,6 +2324,8 @@
   html:is(.v06-c, .v06-d) .sec-06 .feed .src { background: linear-gradient(135deg, var(--mint), var(--cyan)); color: var(--ink); }
   /* open columns: pointing at the link does not light the whole column (no outline, no lift) */
   html:is(.v06-c, .v06-d) .sec-06 .pr, html:is(.v06-c, .v06-d) .sec-06 .pr:hover, html:is(.v06-c, .v06-d) .sec-06 .pr:has(.go:is(:hover, :focus-visible)) { box-shadow: none; translate: none; }
+  /* no buttons in the head (26.11): they repeated the columns' own links (GitHub, trust center) */
+  html:is(.v06-c, .v06-d) .sec-06 .head-06 .acts-06 { display: none; }
   /* the head: lines of even length (26.11) */
   html:is(.v06-c, .v06-d) #sec-06 .head-06 h2, html:is(.v06-c, .v06-d) #sec-06 .head-06 .lead-06 { text-wrap: balance; }
   html.v06-d .sec-06 .pr .win { height: 232px; opacity: .45; filter: saturate(0); transition: opacity .5s ease, filter .5s ease, translate .5s var(--ease); }
