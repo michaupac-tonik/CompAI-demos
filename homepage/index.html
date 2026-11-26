@@ -2256,16 +2256,16 @@
   .sec-04 .chat-04:not(.rt) .reply-time::before { transform: translateY(-3px); }
   @media (prefers-reduced-motion: reduce) { .sec-04 .chat-track > .msg.on { animation: none; } }
   /* ==== one switch on the whole page (Michał, 26.11): the stage switch of 02, also for the frameworks legend of 05 and the chat views
-     of 04. Text in mono led by a square; the chosen option has the square filled and the text in full ink. On light sections the
-     square takes an ink edge; in 05 it keeps the colour it stands for (reused white, new mint). */
+     of 04. Text in mono led by a square; the chosen option has the square filled (no ink edge) and the text in full ink; in 05 the
+     square keeps the colour it stands for (reused white with the frameworks' grey edge, new mint). */
   :is(#sec-04, #sec-05) .sw-l { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--sp-3); padding: 0; list-style: none; }
   :is(#sec-04, #sec-05) .sw-l li { display: contents; }
   :is(#sec-04, #sec-05) .sw-l button { appearance: none; border: 0; border-radius: 0; background: none; box-shadow: none; padding: 8px 0; margin: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
     color: color-mix(in srgb, var(--ink) 64%, transparent); font-family: var(--mono); font-size: var(--fs-label-s); font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase; transition: color .3s; }
   :is(#sec-04, #sec-05) .sw-l button::before { content: ""; width: 8px; height: 8px; flex: none; box-sizing: border-box; border: 1px solid currentColor; background: transparent; transition: background-color .3s, border-color .3s; }
   :is(#sec-04, #sec-05) .sw-l button:hover, :is(#sec-04, #sec-05) .sw-l button[aria-pressed="true"] { color: var(--ink); background: none; }
-  :is(#sec-04, #sec-05) .sw-l button[aria-pressed="true"]::before { background: var(--mint); border-color: var(--ink); }
-  #sec-05 .sw-l button.k[aria-pressed="true"]::before { background: #fff; }
+  :is(#sec-04, #sec-05) .sw-l button[aria-pressed="true"]::before { background: var(--mint); border-color: var(--mint); }      /* filled, no ink edge (26.11) */
+  #sec-05 .sw-l button.k[aria-pressed="true"]::before { background: #fff; border-color: #bdbdbd; }      /* white as the reused frameworks, with their grey edge */
   :is(#sec-04, #sec-05) .sw-l button:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
   /* 05: one kind of framework at a time; the other steps back */
   .sec-05 .chart-05 .fw-05 { transition: opacity .45s ease; }
