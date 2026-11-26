@@ -1362,18 +1362,25 @@
   .sec-08-nb { white-space: nowrap; }
 
   /* ---- quote (26.11): the old head as a power quote, the pattern of "Comp AI shows the work." before 03 (two lines,
-     the second opening with a rule; one step above display-xl, 86 at 1920, 68 at 1280), the lead under it and the two
-     actions under that. Text on the left; the shared print (#print, fixed) comes back on the right while this is on screen
-     (the print script near the end of the page). ---- */
-  .quote-08 { padding: var(--sp-7) 0 var(--sp-6); }
+     the second opening with a rule; one step above display-xl, 86 at 1920, 68 at 1280) and the lead under it, no buttons.
+     Light, as 04-07 before it: the section is see-through and while it is on screen the page turns paper and the shared
+     print (#print, fixed, drawn black with mint and cyan dots) is turned light by a filter (black -> paper, the dots keep
+     their hue, darker) at 80 % (html.q08-light, set by the print script near the end of the page).
+     Room under it as under 03's quote: its own 104 plus the 104 that opens the next section (2 x sp-6), so the print has
+     the space; the demo then opens dark. ---- */
+  .quote-08 { --fg: var(--ink); --text-1: var(--ink); --text-2: color-mix(in srgb, var(--ink) 72%, transparent);
+    padding: var(--sp-7) 0 calc(2 * var(--sp-6)); color: var(--ink); }
+  html.q08-light, html.q08-light body { background: var(--paper); }
+  html.q08-light #print { filter: invert(1) hue-rotate(180deg) brightness(.973); opacity: .8 !important; }
+  .sec-08:not(.quote-08) { background: var(--black); }
+  #sec-08-demo { padding-top: var(--sp-6); }      /* dark from the demo on, over the paper and the print's way out */
   .quote-08 .q-big { margin: 0; display: grid; width: fit-content; font-family: var(--sans); font-weight: 300; font-size: clamp(68px, calc(68px + 18 * (100vw - 1280px) / 640), 86px);
     line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .quote-08 .q-big .q-l { display: block; white-space: nowrap; }
   .quote-08 .q-big .q-r { display: flex; align-items: baseline; gap: .32em; }
   .quote-08 .q-big .q-rule { flex: 1 1 auto; min-width: 1.5em; height: max(1.5px, .028em); background: currentColor; transform: translateY(-.26em); }
   .quote-08 .q-sub { margin: var(--sp-4) 0 0; max-width: 36ch; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-l); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: pretty; }
-  .quote-08 .sec-08-acts { margin-top: var(--sp-5); }
-  .quote-08 .q-big, .quote-08 .q-sub { text-shadow: 0 0 4px #000, 0 0 10px #000, 0 0 10px #000; }      /* the halo over the print */
+  .quote-08 .q-big, .quote-08 .q-sub { text-shadow: 0 0 4px var(--paper), 0 0 10px var(--paper), 0 0 10px var(--paper); }      /* the halo over the print */
   /* entrance as 03's quote: each part fades in from a blur in place, one beat after the other */
   .js .quote-08 .rv { opacity: 0; filter: blur(7px); transition: opacity .7s ease calc(.15s + var(--d) * .12s), filter .8s ease calc(.15s + var(--d) * .12s); }
   .js .quote-08 .rv.in { opacity: 1; filter: none; }
@@ -1479,7 +1486,7 @@
     .sec-08-faq-col + .sec-08-faq-col .sec-08-q:first-child { border-top: 0; } .sec-08-faq-col:first-child .sec-08-q:last-child { border-bottom: 0; } }
   @media (max-width: 1023px) {
     .sec-08 { --t-lead-m: 16px; --t-display-m: 26px; --t-display-l: 33px; }
-    .quote-08 { padding: 104px 0 88px; }
+    .quote-08 { padding: 104px 0 144px; }
     .sec-08-close { grid-template-columns: minmax(0, 1fr); }
     .sec-08-mod { grid-template-columns: minmax(0, 3fr) minmax(0, 7fr); padding: 44px 0 80px; gap: 28px 32px; }
     .sec-08-ui-b { grid-template-columns: minmax(0, 1fr); }
@@ -1498,8 +1505,9 @@
     .sec-08-mod-h .sec-08-note { display: none; }
   }
   @media (max-width: 600px) {
-    .quote-08 { padding: 88px 0 72px; }
+    .quote-08 { padding: 88px 0 112px; }
     .quote-08 .q-big { font-size: clamp(40px, 12vw, 56px); }
+    .quote-08 .q-big .q-l:first-child { white-space: normal; }
     .sec-08-acts .btn { flex: 1 1 100%; }      /* as 06 and 07: stacked, full width */
     .sec-08-qform { padding: 0 16px; }
     .sec-08-ui-h { padding: 0 16px; }
@@ -2830,16 +2838,12 @@
 <!-- 08 split (26.11): the old 08 is now five sections, each in its own block (quote, demo, price, faq, close),
      so each can be worked on alone. They share the .sec-08 class (tokens, type); the ids stay as they were. -->
 <!-- @section:08-quote html:start -->
-<!-- power quote (26.11): the old head of 08 as a quote, as "Comp AI shows the work." before 03; the shared print comes back on the right -->
+<!-- power quote (26.11): the old head of 08 as a quote, as "Comp AI shows the work." before 03, on light (the paper of 04-07);
+     the shared print comes back on the right at 80 %; no buttons (the next sections carry them); dark starts at the demo -->
 <section class="sec-08 quote-08" id="sec-08" aria-labelledby="sec-08-title">
   <div class="wrap" id="demo">
-    <h2 id="sec-08-title" class="q-big"><span class="q-l rv" style="--d:0">See the work</span> <span class="q-l q-r rv" style="--d:1"><i class="q-rule" aria-hidden="true"></i>done, live.</span></h2>
+    <h2 id="sec-08-title" class="q-big"><span class="q-l rv" style="--d:0">See the work done,</span> <span class="q-l q-r rv" style="--d:1"><i class="q-rule" aria-hidden="true"></i>live.</span></h2>
     <p class="q-sub rv" style="--d:2">Watch Comp AI do the work on your own stack in a <span class="sec-08-nb">20-minute</span> call. See what sets your price, and get answers to the questions teams ask first.</p>
-    <div class="sec-08-acts rv" style="--d:3">
-      <!-- placeholder link: the Book a Demo page (in scope, not built yet) -->
-      <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
-      <a class="btn btn-secondary" href="#sec-08-price"><span class="lb">Build your quote</span></a>
-    </div>
   </div>
 </section>
 <!-- @section:08-quote html:end -->
@@ -5024,6 +5028,8 @@
   let raf = 0;
   const update = () => { raf = 0;
     const vh = innerHeight, k = 1 - Math.max(1 - inOf(s3), inOf(q8) * (1 - inOf(n8, .75, .5)));
+    // 08's quote is light: paper behind the page and the print turned light while any of the quote is on screen
+    const qr = q8 && q8.getBoundingClientRect(); document.documentElement.classList.toggle('q08-light', !!qr && qr.top < vh && qr.bottom > 0);
     if (k !== window.printOut) { window.printOut = k; dispatchEvent(new Event('heromist')); }      // the hero redraws with it
     print.style.visibility = k >= 1 ? 'hidden' : ''; };
   addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
@@ -5036,7 +5042,7 @@
 (() => {
   const root = document.documentElement, hero = document.querySelector('.hero'), row = document.querySelector('.site-nav .nav-row');
   if (!hero || !row) return;
-  const light = ['sec-04', 'sec-05', 'sec-06', 'sec-07'].map(id => document.getElementById(id)).filter(Boolean);
+  const light = ['sec-04', 'sec-05', 'sec-06', 'sec-07', 'sec-08'].map(id => document.getElementById(id)).filter(Boolean);
   let raf = 0;
   function update() {
     raf = 0;
