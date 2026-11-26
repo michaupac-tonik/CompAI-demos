@@ -5441,7 +5441,8 @@
     // measured on the layout (offsets), not the screen: the logo block's entrance and the scroll fade move it by a few px
     const docTop = el => { let y = 0; for (let e = el; e; e = e.offsetParent) y += e.offsetTop; return y; };
     const lift = logos ? Math.max(0, docTop(host) - (docTop(logos) + logos.offsetHeight)) : 0;
-    cvs.style.top = -lift + 'px'; cvs.style.height = (host.offsetHeight + lift) + 'px';
+    // the exact (fractional) height, not offsetHeight: a rounded-down height left a hairline of paper above the black demo (26.11)
+    cvs.style.top = -lift + 'px'; cvs.style.height = (host.getBoundingClientRect().height + lift) + 'px';
     const r = cvs.getBoundingClientRect(); view.w = r.width; view.h = r.height;
     view.dpr = Math.min(window.devicePixelRatio || 1, 2);
     cvs.width = Math.round(view.w * view.dpr); cvs.height = Math.round(view.h * view.dpr);
@@ -5690,6 +5691,8 @@
   addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { place(); draw(performance.now()); kick(); }); });
   addEventListener('load', () => { place(); draw(performance.now()); });
   place(); draw(performance.now());
+  // and again whenever the section changes height (type settling, the copy reflowing): the print always ends on the black edge
+  { let hh = 0, ro; new ResizeObserver(() => { const h = host.getBoundingClientRect().height; if (Math.abs(h - hh) < .1) return; hh = h; cancelAnimationFrame(ro); ro = requestAnimationFrame(() => { place(); draw(performance.now()); kick(); }); }).observe(host); }
 })();
 </script>
 <!-- @section:08 js:end -->
