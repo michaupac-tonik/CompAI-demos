@@ -2328,6 +2328,24 @@
   html.v06-d .sec-06 .pr:is(:hover, :focus-within) .win { opacity: 1; filter: none; translate: 0 -4px; }
   html.v06-d .sec-06 .win-f, html.v06-d .sec-06 .try, html.v06-d .sec-06 .commits { display: none; }
   html.v06-d .sec-06 .code { border-bottom: 0; flex: 1; }
+  /* 06: the report request's answer inside the trust center window (26.11): the controls fade up and out, a short panel comes in from below */
+  .sec-06 .win[data-tc] .tc-b { transition: opacity .35s ease, filter .35s ease, transform .45s cubic-bezier(.2,.7,.1,1); }
+  .sec-06 .win[data-tc].req .tc-b { opacity: 0; filter: blur(4px); transform: translateY(-8px); pointer-events: none; }
+  .sec-06 .tc-req { position: absolute; left: 0; right: 0; top: 47px; bottom: 41px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 14px 16px 14px;
+    opacity: 0; filter: blur(4px); transform: translateY(10px); pointer-events: none; visibility: hidden;
+    transition: opacity .45s ease, filter .45s ease, transform .6s cubic-bezier(.2,.7,.1,1), visibility 0s linear .6s; }
+  .sec-06 .win[data-tc].req .tc-req { opacity: 1; filter: none; transform: none; pointer-events: auto; visibility: visible; transition: opacity .5s ease .15s, filter .5s ease .15s, transform .7s cubic-bezier(.2,.7,.1,1) .15s, visibility 0s; }
+  .sec-06 .tc-req .ok { display: grid; place-items: center; flex: none; width: 28px; height: 28px; min-height: 28px; aspect-ratio: 1; background: var(--mint); color: var(--ink); }
+  .sec-06 .tc-req .ok svg { width: 14px; height: 14px; }
+  .sec-06 .tc-req b { margin-top: 6px; font-family: var(--sans); font-weight: 400; font-size: 18px; line-height: 1.2; letter-spacing: -.01em; color: var(--ink); }
+  .sec-06 .tc-req p { margin: 0; font-size: 13.5px; line-height: 1.4; color: #515151; }
+  .sec-06 .tc-req ol { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; width: 100%; }
+  .sec-06 .tc-req li { display: grid; grid-template-columns: 26px minmax(0, 1fr); align-items: baseline; padding-top: 6px; border-top: 1px solid rgba(22,22,22,.08); font-size: 13.5px; line-height: 1.35; color: var(--ink); }
+  .sec-06 .tc-req li em { font-family: var(--mono); font-size: 11px; font-style: normal; letter-spacing: .04em; color: #696969; }
+  .sec-06 .win .tc-req button.back { margin-top: auto; padding-top: 12px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
+  .sec-06 .win .tc-req button.back svg { width: 12px; height: 12px; transition: transform .3s var(--ease); }
+  .sec-06 .win .tc-req button.back:is(:hover, :focus-visible) svg { transform: translateX(3px); }
+  @media (prefers-reduced-motion: reduce) { .sec-06 .win[data-tc] .tc-b, .sec-06 .tc-req { transition: none; } }
 </style>
 </head>
 <body>
@@ -4809,6 +4827,17 @@
     commits.prepend(li); [...commits.children].forEach((el, i) => { if (i) { el.classList.remove('new'); el.querySelector('.t').textContent = ['now', '2h', '5h', '1d'][i] || '1d'; } });
     while (commits.children.length > 3) commits.lastElementChild.remove(); };
   const recheck = () => { const c = ctl(); c.forEach(x => x.classList.remove('chk')); void sec.offsetWidth; c[ki++ % c.length].classList.add('chk'); };
+  // the request's answer: the controls step aside for a short panel (requested, and the steps that follow), then come back by
+  // themselves after 7 s or with "Back to controls". WORKING SAMPLE DATA: the steps are to be confirmed with the client.
+  const req = document.createElement('div'); req.className = 'tc-req'; req.setAttribute('aria-live', 'polite');
+  req.innerHTML = '<span class="ok">' + OK + '</span><b>Report requested</b>'
+    + '<ol><li><em>01</em>Sign a short NDA</li><li><em>02</em>Get the SOC 2 Type II report by email</li><li><em>03</em>Ask our team anything about it</li></ol>'
+    + '<button class="back" type="button">Back to controls <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg></button>';
+  if (tc) tc.append(req);
+  let reqT = 0;
+  const showReq = () => { if (!tc) return; clearTimeout(reqT); tc.classList.add('req'); reqT = setTimeout(hideReq, 7000); };
+  const hideReq = () => { if (!tc) return; clearTimeout(reqT); tc.classList.remove('req'); const a = tc.querySelector('button.ask');
+    if (a) setTimeout(() => { a.classList.remove('sent'); a.textContent = 'Request report'; delete a.dataset.busy; }, 400); };
   // open one item of a list, close the others
   const openOne = (li, list) => { const was = li.classList.contains('open');
     [...list.children].forEach(x => { x.classList.remove('open'); const b = x.querySelector('button'); if (b) b.setAttribute('aria-expanded', 'false'); });
@@ -4830,11 +4859,12 @@
       setTimeout(() => { tag.outerHTML = passed(); num.textContent = 'now'; li.classList.remove('new'); void li.offsetWidth; li.classList.add('new'); since = 0; sync.textContent = '0s'; }, 1200);
     } else if (t.parentElement.classList.contains('ci')) {    // a control opens its evidence
       const box = t.closest('[data-ctl]'); tc.classList.toggle('ctl-open', openOne(t.parentElement, box));
-    } else if (t.classList.contains('ask')) {                 // request the report
+    } else if (t.classList.contains('ask')) {                 // request the report: sending, then the window shows what happens next (26.11)
       if (t.classList.contains('sent') || t.dataset.busy) return;
       t.dataset.busy = 1; t.textContent = 'Sending…';
-      setTimeout(() => { t.classList.add('sent'); t.textContent = 'Requested ✓'; }, 900);
-      setTimeout(() => { t.classList.remove('sent'); t.textContent = 'Request report'; delete t.dataset.busy; }, 5200);
+      setTimeout(() => { t.classList.add('sent'); t.textContent = 'Requested ✓'; showReq(t); }, 900);
+    } else if (t.classList.contains('back')) {                // back to the controls
+      hideReq();
     }
   });
   if (!reduced) setInterval(() => {
