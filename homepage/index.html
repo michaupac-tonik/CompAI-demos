@@ -6017,5 +6017,20 @@
       pr.addEventListener('pointerenter', on); pr.addEventListener('pointerleave', off); pr.addEventListener('focusin', on); pr.addEventListener('focusout', off); }).catch(() => {}); });
 })();
 </script>
+<script>
+/* 04 chat scroll (Michał, 26.11): the chat window no longer stops the page. A wheel that is part of a page scroll
+   (the page moved in the last 700 ms) keeps scrolling the page when the cursor lands on the chat, and at the chat's
+   top or bottom the wheel goes on to the page instead of dead-ending. A wheel started over a resting page scrolls the chat. */
+(() => {
+  const b = document.querySelector('.sec-04 .chat-b'); if (!b) return;
+  let lastPage = 0; addEventListener('scroll', () => { lastPage = performance.now(); }, { passive: true });
+  b.addEventListener('wheel', e => {
+    if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1); if (!dy) return;
+    const atEnd = dy < 0 ? b.scrollTop <= 0 : b.scrollTop + b.clientHeight >= b.scrollHeight - 1;
+    if (performance.now() - lastPage < 700 || atEnd) { e.preventDefault(); scrollBy(0, dy); }
+  }, { passive: false });
+})();
+</script>
 </body>
 </html>
