@@ -2244,8 +2244,6 @@
   .sec-04 .chat-track > :not(.on) { display: none; }      /* rows still to come take no room: the window scrolls only through what has been said */
   .sec-04 .chat-track > .msg.on { animation: s04row .7s cubic-bezier(.2,.7,.1,1) both; }
   @keyframes s04row { from { opacity: 0; filter: blur(7px); transform: translateY(10px); } to { opacity: 1; filter: none; transform: none; } }
-  .sec-04 .tags-04 .tg:not(.on):hover { background: rgba(22,22,22,.06); border-color: var(--ink); color: var(--ink); }
-  .sec-04 .tags-04 .tg { transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
   .sec-04 .fc.a .who { width: 100%; justify-self: stretch; align-items: center; }
   .sec-04 .fc.a .who .nm { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1 1 auto; }
   .sec-04 .fc.a .who .nm b { font-weight: inherit; position: static; }
@@ -2257,6 +2255,21 @@
   .sec-04 .chat-04:not(.rt) .reply-time { justify-self: start; margin: 2px 0 8px 56px; padding: 5px 8px 5px 6px; background: rgba(36, 255, 99, .28); color: var(--ink); }
   .sec-04 .chat-04:not(.rt) .reply-time::before { transform: translateY(-3px); }
   @media (prefers-reduced-motion: reduce) { .sec-04 .chat-track > .msg.on { animation: none; } }
+  /* ==== one switch on the whole page (Michał, 26.11): the stage switch of 02, also for the frameworks legend of 05 and the chat views
+     of 04. Text in mono led by a square; the chosen option has the square filled and the text in full ink. On light sections the
+     square takes an ink edge; in 05 it keeps the colour it stands for (reused white, new mint). */
+  :is(#sec-04, #sec-05) .sw-l { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--sp-3); padding: 0; list-style: none; }
+  :is(#sec-04, #sec-05) .sw-l li { display: contents; }
+  :is(#sec-04, #sec-05) .sw-l button { appearance: none; border: 0; border-radius: 0; background: none; box-shadow: none; padding: 8px 0; margin: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
+    color: color-mix(in srgb, var(--ink) 64%, transparent); font-family: var(--mono); font-size: var(--fs-label-s); font-weight: 400; line-height: 1; letter-spacing: .04em; text-transform: uppercase; transition: color .3s; }
+  :is(#sec-04, #sec-05) .sw-l button::before { content: ""; width: 8px; height: 8px; flex: none; box-sizing: border-box; border: 1px solid currentColor; background: transparent; transition: background-color .3s, border-color .3s; }
+  :is(#sec-04, #sec-05) .sw-l button:hover, :is(#sec-04, #sec-05) .sw-l button[aria-pressed="true"] { color: var(--ink); background: none; }
+  :is(#sec-04, #sec-05) .sw-l button[aria-pressed="true"]::before { background: var(--mint); border-color: var(--ink); }
+  #sec-05 .sw-l button.k[aria-pressed="true"]::before { background: #fff; }
+  :is(#sec-04, #sec-05) .sw-l button:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+  /* 05: one kind of framework at a time; the other steps back */
+  .sec-05 .chart-05 .fw-05 { transition: opacity .45s ease; }
+  .sec-05 .chart-05[data-show="kept"] .fw-05.new, .sec-05 .chart-05[data-show="new"] .fw-05.kept { opacity: .2; }
 </style>
 </head>
 <body>
@@ -2527,7 +2540,7 @@
         <p class="eyebrow-04 rv" style="--d:0">The people</p>
         <h2 id="sec-04-title" class="rv" style="--d:1">An extension of your team.</h2>
         <p class="lead-04 rv" style="--d:2">Compliance experts work alongside the software. They reach out before you ask and answer within minutes.</p>
-        <ul class="tags-04 rv" style="--d:3" role="group" aria-label="Chat view"><li><button type="button" class="tg on" data-m="conv" aria-pressed="true">Real conversation</button></li><li><button type="button" class="tg" data-m="rt" aria-pressed="false">Response time</button></li></ul>
+        <ul class="tags-04 sw-l rv" style="--d:3" role="group" aria-label="Chat view"><li><button type="button" class="tg on" data-m="conv" aria-pressed="true">Real conversation</button></li><li><button type="button" class="tg" data-m="rt" aria-pressed="false">Response time</button></li></ul>
         <div class="chat-04 rv" style="--d:4" role="log" aria-label="Sample conversation with a compliance expert">
           <div class="chat-rail" role="group" aria-label="Channels"><b>Comp AI</b><p>Channels</p><button type="button" class="ch on" data-c="0"># access-reviews<i></i></button><button type="button" class="ch" data-c="1"># audit-prep<i></i></button><button type="button" class="ch" data-c="2"># vendors<i></i></button><p>Direct</p><button type="button" class="ch dm" data-c="3">Compliance expert<u></u></button></div>
           <div class="chat-main">
@@ -2576,7 +2589,7 @@
       <figure class="chart-05 rv" style="--d:3" aria-label="Frameworks by stage. Startup: SOC 2. Mid-market: SOC 2 reused, ISO 27001 and HIPAA new. Enterprise: SOC 2, ISO 27001 and HIPAA reused, GDPR, ISO 42001 and PCI DSS new.">
         <div class="top-05">
           <b>Frameworks as you grow</b>
-          <ul class="legend-05"><li><i class="k"></i>Reused</li><li><i class="w"></i>New at this stage</li></ul>
+          <ul class="legend-05 sw-l" role="group" aria-label="Show frameworks"><li><button type="button" class="k" data-f="kept" aria-pressed="true">Reused</button></li><li><button type="button" class="w" data-f="new" aria-pressed="true">New at this stage</button></li></ul>
         </div>
         <div class="bars-05">
           <div class="col-05" style="--s:0">
@@ -4222,6 +4235,11 @@
       const m = node.textContent.match(/^(\D*)(\d+)(.*)$/); if (!m) return; const to = +m[2], t0 = performance.now(), D = 1100;
       const step = now => { const u = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - u, 3); node.textContent = m[1] + Math.round(to * e) + m[3]; if (u < 1) requestAnimationFrame(step); };
       requestAnimationFrame(step); }); };
+  // the legend is a switch (26.11): one kind of framework at a time, the other steps back; the shown one again (or the other) brings both back
+  const lgB = [...sec.querySelectorAll('.legend-05 button')], chartF = sec.querySelector('.chart-05');
+  lgB.forEach(b => b.addEventListener('click', () => { const solo = chartF.dataset.show, f = b.dataset.f;
+    const next = !solo || solo === 'all' ? f : 'all'; chartF.dataset.show = next;
+    lgB.forEach(x => x.setAttribute('aria-pressed', next === 'all' || x.dataset.f === next ? 'true' : 'false')); }));
   const chartEl = sec.querySelector('.chart-05');
   if (chartEl) { if ('IntersectionObserver' in window) { const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io2.disconnect(); setTimeout(() => { countUp(); startCards(); }, 900); } }), { threshold: .3 }); io2.observe(chartEl); }
     else startCards(); }
