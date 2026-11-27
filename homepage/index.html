@@ -1770,6 +1770,47 @@
     background: var(--black); border-top: 1px solid var(--f-line); }
   .sec-09 .cta-09 + .top-09 ~ .bar-09 { position: relative; z-index: 2; }
   .sec-09 .cta-09-t, .sec-09 .cta-09-sub, .sec-09 .cta-09-note { text-shadow: 0 0 4px var(--black), 0 0 10px var(--black), 0 0 10px var(--black); }
+  /* ---- links module (27.11, cleaned up): the page's 12-column grid. Brand column (logo, the Trust Center line, system status)
+     on 1-3; the six groups on 4-12, three to a row, each 3 columns wide, two rows; the bottom bar on the same grid: copyright on
+     1-3, legal under the first group (4-9), the channels under the third (10-12, right). Group heads are label-s (mono caps,
+     text-2), links body-m in text-2 lighting up to white; one rhythm: 8 between links, 16 under a head, 64 between rows. */
+  @media (min-width: 1024px) {
+    .sec-09 .top-09 { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3, 24px); row-gap: 0; padding: var(--sp-6, 104px) 0; }
+    .sec-09 .brand-09 { grid-column: 1 / span 3; }
+    .sec-09 .cols-09 { grid-column: 4 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--sp-3, 24px); row-gap: var(--sp-5, 64px); }
+    .sec-09 .bar-09 { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3, 24px); row-gap: 8px; padding: var(--sp-3, 24px) 0 var(--sp-4, 40px); }
+    .sec-09 .bar-09 > p { grid-column: 1 / span 3; }
+    .sec-09 .bar-09 .r { grid-column: 4 / -1; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); column-gap: var(--sp-3, 24px); }
+    .sec-09 .bar-09 .r > nav { grid-column: 1 / span 6; }
+    .sec-09 .bar-09 .r > ul { grid-column: 7 / span 3; }
+  }
+  @media (min-width: 768px) {
+    .sec-09 .cols-09 .col-09 summary { margin-bottom: var(--sp-2, 16px); font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--text-2); }
+    .sec-09 .cols-09 .col-09 li + li { margin-top: var(--sp-1, 8px); }
+    .sec-09 .cols-09 .col-09 a { font: 400 var(--fs-body-m, 16px)/1.45 var(--sans); }
+  }
+  .sec-09 .home-09 { margin-bottom: var(--sp-3, 24px); }
+  .sec-09 .home-09 + .certs-09 { margin-top: 0; }
+  .sec-09 .brand-09 .certs-09 { max-width: 24em; font: 400 var(--fs-body-s, 14px)/1.5 var(--sans); color: var(--text-2); }
+  .sec-09 .brand-09 .status-09 { margin-top: var(--sp-2, 16px); font: 400 var(--fs-body-s, 14px)/1.5 var(--sans); color: var(--text-2); transition: color .2s; }
+  .sec-09 .brand-09 .status-09:is(:hover, :focus-visible) { color: var(--white); }
+  .sec-09 .bar-09 ul { gap: 6px var(--sp-3, 24px); }
+  .sec-09 .bar-09 .r > ul { justify-content: flex-end; }
+  .sec-09 .bar-09 .rr { display: block; }      /* two clean lines in the brand column's width */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .sec-09 .bar-09 .r > nav { grid-column: 1 / span 5; }
+    .sec-09 .bar-09 .r > ul { grid-column: 6 / span 4; }
+  }
+  @media (max-width: 1023px) {
+    .sec-09 .cols-09 { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 48px; }
+    .sec-09 .bar-09 .r { flex-direction: column; align-items: flex-start; }
+    .sec-09 .bar-09 .r > ul { justify-content: flex-start; }
+  }
+  @media (max-width: 767px) {
+    .sec-09 .cols-09 { grid-template-columns: 1fr; row-gap: 0; }
+    /* the accordion heads are titles here, in sans as the rest (the label-s mono caps are for desktop column heads) */
+    .sec-09 .cols-09 .col-09 summary { font: 300 18px/1 var(--sans); letter-spacing: -.01em; text-transform: none; color: var(--white); }
+  }
   /* isolated view (?only=09): the footer alone */
   html.only-09 .site-nav, html.only-09 .mega-scrim, html.only-09 main, html.only-09 .sheet, html.only-09 #sheet { display: none !important; }
   /* @section:09 css:end */
@@ -3212,6 +3253,7 @@
     <div class="brand-09">
       <a class="home-09" href="/" aria-label="Comp AI home"><img class="m" src="assets/img/logo-mark.svg" alt="" width="28" height="26"><img class="w" src="assets/img/logo-wordmark.svg" alt="" width="77" height="21"></a>
       <p class="certs-09">Our own <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">SOC 2</span></a>, <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">ISO 27001</span></a>, <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">HIPAA</span></a> and <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">GDPR</span></a> evidence is open in the Trust Center.</p>
+      <a class="status-09" href="https://status.trycomp.ai" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"></span><span class="u">All systems normal</span></a>
     </div>
     <nav class="cols-09" aria-label="Footer">
     <details class="col-09" open>
@@ -3277,7 +3319,7 @@
   </div>
 
   <div class="bar-09">
-    <p>© 2026 Bubba AI, Inc. d/b/a Comp AI. All rights reserved.</p>
+    <p>© 2026 Bubba AI, Inc. d/b/a Comp AI. <span class="rr">All rights reserved.</span></p>
     <div class="r">
       <nav aria-label="Legal">
         <ul>
@@ -3296,7 +3338,6 @@
         <li><a href="https://www.linkedin.com/company/trycompai" target="_blank" rel="noopener"><span class="u">LinkedIn</span></a></li>
         <li><a href="https://www.youtube.com/@trycompai" target="_blank" rel="noopener"><span class="u">YouTube</span></a></li>
       </ul>
-      <a class="status-09" href="https://status.trycomp.ai" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"></span><span class="u">All systems normal</span></a>
     </div>
   </div>
   </div>
