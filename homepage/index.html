@@ -1728,7 +1728,7 @@
      flat, from the page's own parts: the field in the secondary button's outline, the primary Book a demo beside it;
      under it the quote builder's gradient chip before a short note. Not a power quote (those are 03 and 08). */
   .sec-09 .cta-09 { padding: var(--sp-7, 168px) 0 var(--sp-6, 104px); }      /* the footer's top room is the CTA's: the whole area is the wordmark's */
-  /* the heading as the power quotes in 03 and 08 (display-xl): two lines, the second opening with a rule that ends flush with the first */
+  /* the heading as the power quotes in 03 and 08 (display-xl): three lines, the last opening with a rule that ends flush with the widest */
   .sec-09 .cta-09-t { display: grid; width: fit-content; max-width: 100%; margin: 0; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-xl, 68px); line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .sec-09 .cta-09-t .q-l { display: block; white-space: nowrap; }
   .sec-09 .cta-09-t .q-r { display: flex; align-items: baseline; gap: .32em; }
@@ -1752,7 +1752,6 @@
   @media (max-width: 767px) {
     .sec-09 .cta-09 { padding: 72px 0 56px; }
     .sec-09 .cta-09-t { font-size: clamp(36px, 10.5vw, 56px); }
-    .sec-09 .cta-09-t .q-l:first-child { white-space: normal; }
     .sec-09 .cta-09-form { flex-direction: column; margin-top: 32px; }
     .sec-09 .cta-09-form .btn { width: 100%; }
     .sec-09 .cta-09-note { align-items: baseline; }
@@ -3199,7 +3198,7 @@
   <div class="cta-09">
     <!-- behind the CTA: the "Comp AI" wordmark at full width, cut by the rule under it, in small dimmed pixels like the mist behind 02 -->
     <canvas class="word-09" aria-hidden="true"></canvas>
-    <h2 class="cta-09-t"><span class="q-l">Compliance that helps you</span> <span class="q-l q-r"><i class="q-rule" aria-hidden="true"></i>close deals.</span></h2>
+    <h2 class="cta-09-t"><span class="q-l">Compliance</span> <span class="q-l">that helps you</span> <span class="q-l q-r"><i class="q-rule" aria-hidden="true"></i>close deals.</span></h2>
     <p class="cta-09-sub">AI-powered compliance platform. Get SOC 2, ISO 27001, HIPAA and GDPR audit-ready in record time.</p>
     <!-- placeholder: the Book a Demo page takes the email and goes on from there (not built yet) -->
     <form class="cta-09-form" action="/book-a-demo" method="post">
