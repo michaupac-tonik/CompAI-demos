@@ -5765,7 +5765,10 @@
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const D = window.WORD_FIELDS;
-  const MODE = new URLSearchParams(location.search).get('w09') === 'mist' ? 'mist' : 'print', ABOVE = .62;      // 27.11: the full print is the working option
+  const MODE = new URLSearchParams(location.search).get('w09') === 'mist' ? 'mist' : 'print', ABOVE = .62;
+  const HEAT = new URLSearchParams(location.search).get('h09') !== '0';
+  // under the copy on the left the pixels are kept small, growing back gradually to full size toward the right (share of the width)
+  const CALM_FROM = .3, CALM_TO = .62, CALM_MIN = .28;      // 27.11: the full print is the working option
   const cvs = document.querySelector('.sec-09 .word-09'), host = cvs && cvs.closest('.cta-09');
   if (!D || !cvs) return;
   const ctx = cvs.getContext('2d');
@@ -5835,7 +5838,10 @@
   const Y_BANDS = 28, WARM_STEPS = 8, DIM_STEPS = 3;
   const mix = (a, b, u) => a.map((v, i) => Math.round(v + (b[i] - v) * u));
   const colourOf = (band, heat) => {        // heat: -DIM_STEPS..WARM_STEPS
-    const c = mix(BASE_TOP, BASE_BOT, band / (Y_BANDS - 1));      // 08: mint to cyan only, no warm heat (the colours stay as approved)
+    let c = mix(BASE_TOP, BASE_BOT, band / (Y_BANDS - 1));
+    // 09 (27.11, test): the hero's heat map: pressed lines warm toward yellow and orange, the side that lets go dims (?h09=0: off)
+    if (HEAT && heat > 0) { const u = heat / WARM_STEPS; c = u < .6 ? mix(c, WARM[0], u / .6) : mix(WARM[0], WARM[1], (u - .6) / .4); }
+    else if (HEAT && heat < 0) c = c.map(v => Math.round(v * (1 - .16 * -heat)));
     return `rgb(${c.join(',')})`;
   };
   const PAL = new Map(), paths = new Map();
@@ -6029,6 +6035,8 @@
       if (out > 0) h *= outOf(i, x, y, out);
       if (revealT0 < 0) continue;
       if (!reduced) { const rp = (now - revealT0) / REVEAL_MS; if (rp < 1.2) { const sy = Math.min(1, Math.max(0, (y * view.k + view.oy) / view.h)), th = sy * .84 + RJ[i] * .14; h *= smooth(th, th + .1, rp); } }
+      { const sx = (x * view.k + view.ox) / view.w;      // 09: smaller under the copy, a gradual ramp to full size
+        h *= CALM_MIN + (1 - CALM_MIN) * smooth(CALM_FROM, CALM_TO, sx); }
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
