@@ -5748,22 +5748,23 @@
   sync(); mq.addEventListener('change', sync);
 
   // the wordmark behind the CTA: small dimmed diamond pixels on the print's 45° lattice, mint to cyan, like the mist behind 02.
-  // Still at rest. Near the cursor the letters come apart from the outside in: every pixel knows how deep it sits in its letter
-  // (lattice steps from the edge), and while the cursor stays near, a peel level rises; the pixels at the letters' outer edge
-  // let go first and are drawn toward the cursor, then the next layer, each one trailing behind the one outside it, so they
-  // stream toward the cursor in order. The core of each stroke stays in place. Each pixel rides its own spring (a little
-  // different each), so they trail and settle back when the cursor leaves. Pixels grow and light up under the cursor and its
-  // trail; each is capped by the distance to its lattice neighbours, so they do not overlap.
+  // Still at rest. The cursor has gravity and every pixel a mass: the deeper a pixel sits in its letter (lattice steps from the
+  // edge), the heavier it is. All pixels near the cursor feel the pull at once, so each letter moves as one body, but the light
+  // ones at the edge give first and travel furthest, the heavy core barely moves. A pixel pulled far enough tears loose from its
+  // place and follows the cursor (its tether goes slack), so a letter the cursor has passed is left with gaps: it comes apart,
+  // and its own pixels are the ones streaming after the cursor. When the cursor leaves, every pixel is reeled back to its place.
+  // Pixels grow and light up under the cursor and its trail, each capped by the distance to its lattice neighbours.
   const cta = sec.querySelector('.cta-09'), wc = cta && cta.querySelector('.word-09');
   if (cta && wc) {
     const ctx = wc.getContext('2d'), MINT = [36, 255, 99], CYAN = [0, 255, 238];
     const DIM = .34, ABOVE = .62;                 // resting strength (as the mist), share of the wordmark above the rule
-    const PULL = .72, GROW = 2.4;                 // how far an edge pixel goes toward the cursor; how much the pixels under it grow
-    const PEEL_MAX = 1.2, PEEL_IN = .028, PEEL_OUT = .05;      // peel: deepest layer that lets go (lattice steps; the core stays), per frame up and down
+    const GRAV = 2.2, R0 = 130, MASS = 3, HOME = .045, SLACK = .12, TEAR = 3.6, DAMP = .88, GROW = 2.4;
+    // GRAV: the cursor's pull; R0: its reach (falls off as 1 / (1 + (d / R0)^2)); MASS: extra mass per layer inward;
+    // HOME: the tether's spring; SLACK: what is left of it once torn; TEAR: how far (lattice steps) a pixel goes before it tears
     const live = !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches;
     const img = new Image(); img.src = 'assets/img/logo-wordmark.svg';
     let W = 0, H = 0, G = 7, R = 200, RG = 40, yT = 0, yB = 1, dpr = 1, raf = 0;
-    let X0 = null, Y0 = null, Z = null, C = [], NB = null, N = 0, X = null, Y = null, DP = null, A = null, OX = null, OY = null, VX = null, VY = null, K = null, peel = 0;
+    let X0 = null, Y0 = null, Z = null, C = [], NB = null, N = 0, X = null, Y = null, DP = null, A = null, OX = null, OY = null, VX = null, VY = null, K = null, M = null, TORN = null;
     // the grab: a point on a spring toward the cursor (rubber), its strength on a spring too; the trail a slower point behind it
     const P = { x: -1e4, y: -1e4, vx: 0, vy: 0, tx: -1e4, ty: -1e4, a: 0, va: 0, target: 0 }, T = { x: -1e4, y: -1e4 };
     const build = () => {
@@ -5792,26 +5793,44 @@
       for (let n = 0; n < N; n++) for (let m = 0; m < 4; m++) if (NB[4 * n + m] < 0) { DP[n] = 0; qu.push(n); break; }
       for (let h = 0; h < qu.length; h++) { const n = qu[h]; for (let m = 0; m < 4; m++) { const v = NB[4 * n + m]; if (v >= 0 && DP[v] > DP[n] + 1) { DP[v] = DP[n] + 1; qu.push(v); } } }
       A = new Float32Array(N); OX = new Float32Array(N); OY = new Float32Array(N); VX = new Float32Array(N); VY = new Float32Array(N);
-      K = Float32Array.from(Z, (z, n) => .05 + .05 * ((Math.sin(n * 12.9898) * 43758.5453) % 1 + 1) % 1);      // springs, each a little different
+      // mass: 1 at the edge, heavier inward, each a little different
+      M = Float32Array.from(DP, (d, n) => (1 + MASS * Math.min(d, 4)) * (.85 + .3 * (((Math.sin(n * 12.9898) * 43758.5453) % 1 + 1) % 1)));
+      TORN = new Uint8Array(N);
     };
     const paint = (step) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      const pa = Math.max(0, P.a), s2 = 2 * (G * 22) ** 2, g2 = 2 * RG * RG;      // the peel's reach: about 150 px around the cursor
+      const pa = Math.max(0, P.a), g2 = 2 * RG * RG, r02 = R0 * R0, tear = TEAR * G;
       let busy = false;
       for (let n = 0; n < N; n++) {
         if (step) {
-          const hx = P.x - X0[n], hy = P.y - Y0[n], f = pa * Math.exp(-(hx * hx + hy * hy) / s2);
-          // the layer this pixel is in lets go once the peel reaches it (near the cursor the peel goes deeper)
-          const t = Math.max(0, Math.min(1, peel * f - DP[n]));
-          A[n] += (t - A[n]) * (t > A[n] ? .08 : .06);
-          // let go: drawn toward the cursor, the outer layers furthest, each inner one trailing behind
-          const k = A[n] * PULL * (1 - .45 * Math.min(1, DP[n] / PEEL_MAX));
-          const tx = hx * k, ty = hy * k;
-          VX[n] = (VX[n] + (tx - OX[n]) * K[n]) * .82; VY[n] = (VY[n] + (ty - OY[n]) * K[n]) * .82;
+          let ax = 0, ay = 0;
+          if (pa > .001) {
+            const dx = P.x - X0[n] - OX[n], dy = P.y - Y0[n] - OY[n], d = Math.hypot(dx, dy) || 1;
+            // gravity: falls off with distance, softened at the cursor (pixels gather around it, not into a point); lighter pixels feel more
+            const f = GRAV * pa / (1 + d * d / r02) * (d / (d + 18)) / M[n];
+            ax = dx / d * f; ay = dy / d * f;
+          }
+          const off = Math.hypot(OX[n], OY[n]);
+          if (pa > .001 && off > tear) TORN[n] = 1; else if (TORN[n] && (pa < .05 || off < G)) TORN[n] = 0;
+          const k = (TORN[n] ? HOME * SLACK : HOME) / Math.sqrt(M[n]) * (pa < .05 ? 1.6 : 1);      // reeled back firmly once the cursor has left
+          VX[n] = (VX[n] + ax - OX[n] * k) * DAMP; VY[n] = (VY[n] + ay - OY[n] * k) * DAMP;
           OX[n] += VX[n]; OY[n] += VY[n];
-          if (A[n] > .002 || Math.abs(OX[n]) + Math.abs(OY[n]) > .05) busy = true; else { A[n] = OX[n] = OY[n] = VX[n] = VY[n] = 0; }
+          A[n] = Math.min(1, off / tear);
+          if (off > .05 || Math.abs(VX[n]) + Math.abs(VY[n]) > .02) busy = true; else { OX[n] = OY[n] = VX[n] = VY[n] = 0; TORN[n] = 0; }
         }
         X[n] = X0[n] + OX[n]; Y[n] = Y0[n] + OY[n];
+      }
+      // pixels that left their place keep their distance from each other (no pile-up at the cursor): a soft push apart
+      if (step) {
+        const fr = []; for (let n = 0; n < N; n++) if (A[n] > .25) fr.push(n);
+        const md = G * 1.25, md2 = md * md;
+        for (let a = 0; a < fr.length; a++) for (let b = a + 1; b < fr.length; b++) {
+          const i = fr[a], j = fr[b], dx = X[j] - X[i], dy = Y[j] - Y[i], d2 = dx * dx + dy * dy;
+          if (d2 >= md2 || d2 === 0) continue;
+          const d = Math.sqrt(d2), push = (md - d) / d * .5;
+          OX[i] -= dx * push; OY[i] -= dy * push; OX[j] += dx * push; OY[j] += dy * push;
+          X[i] = X0[i] + OX[i]; Y[i] = Y0[i] + OY[i]; X[j] = X0[j] + OX[j]; Y[j] = Y0[j] + OY[j];
+        }
       }
       for (let n = 0; n < N; n++) {
         const x = X[n], y = Y[n];
@@ -5826,13 +5845,11 @@
       return busy;
     };
     const frame = () => {
-      P.x += (P.tx - P.x) * .3; P.y += (P.ty - P.y) * .3;
-      P.a += (P.target - P.a) * (P.target ? .1 : .06);
+      P.x += (P.tx - P.x) * .35; P.y += (P.ty - P.y) * .35;
+      P.a += (P.target - P.a) * (P.target ? .1 : .08);
       T.x += (P.x - T.x) * .08; T.y += (P.y - T.y) * .08;
-      // the peel rises while the cursor stays, from the edge layer in, and falls when it leaves
-      peel = P.target ? Math.min(PEEL_MAX + .5, peel + PEEL_IN * (PEEL_MAX + .5)) : Math.max(0, peel - PEEL_OUT * (PEEL_MAX + .5));
       const busy = paint(true);
-      if (!P.target && P.a < .002 && !busy) { P.a = 0; peel = 0; raf = 0; paint(false); } else raf = requestAnimationFrame(frame);
+      if (!P.target && P.a < .002 && !busy) { P.a = 0; raf = 0; paint(false); } else raf = requestAnimationFrame(frame);
     };
     const start = () => { build(); paint(false); };
     if (img.complete) start(); else img.addEventListener('load', start);
