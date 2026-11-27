@@ -5748,20 +5748,22 @@
   sync(); mq.addEventListener('change', sync);
 
   // the wordmark behind the CTA: small dimmed diamond pixels on the print's 45° lattice, mint to cyan, like the mist behind 02.
-  // Still at rest. The cursor works as on the mist in 02: the wordmark is a rubber sheet pinned along its bottom edge (hidden under
-  // the links), and the cursor's gravity stretches it toward itself, more the higher a pixel sits and the nearer it is, so the
-  // letters draw out like taffy and keep their order; the grab follows the cursor on a spring (it overshoots and wobbles back),
-  // and lets go with a wobble too. Pixels grow and light up under the cursor and along its trail. No overlaps: each pixel is
-  // capped by the distance to its lattice neighbours after the stretch.
+  // Still at rest. Near the cursor the letters come apart from the outside in: every pixel knows how deep it sits in its letter
+  // (lattice steps from the edge), and while the cursor stays near, a peel level rises; the pixels at the letters' outer edge
+  // let go first and are drawn toward the cursor, then the next layer, each one trailing behind the one outside it, so they
+  // stream toward the cursor in order. The core of each stroke stays in place. Each pixel rides its own spring (a little
+  // different each), so they trail and settle back when the cursor leaves. Pixels grow and light up under the cursor and its
+  // trail; each is capped by the distance to its lattice neighbours, so they do not overlap.
   const cta = sec.querySelector('.cta-09'), wc = cta && cta.querySelector('.word-09');
   if (cta && wc) {
     const ctx = wc.getContext('2d'), MINT = [36, 255, 99], CYAN = [0, 255, 238];
     const DIM = .34, ABOVE = .62;                 // resting strength (as the mist), share of the wordmark above the rule
-    const GRAV = .8, GROW = 2.6;                  // the pull at the cursor, and how much the pixels under it grow
+    const PULL = .72, GROW = 2.4;                 // how far an edge pixel goes toward the cursor; how much the pixels under it grow
+    const PEEL_MAX = 1.2, PEEL_IN = .028, PEEL_OUT = .05;      // peel: deepest layer that lets go (lattice steps; the core stays), per frame up and down
     const live = !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches;
     const img = new Image(); img.src = 'assets/img/logo-wordmark.svg';
     let W = 0, H = 0, G = 7, R = 200, RG = 40, yT = 0, yB = 1, dpr = 1, raf = 0;
-    let X0 = null, Y0 = null, Z = null, C = [], NB = null, N = 0, X = null, Y = null;
+    let X0 = null, Y0 = null, Z = null, C = [], NB = null, N = 0, X = null, Y = null, DP = null, A = null, OX = null, OY = null, VX = null, VY = null, K = null, peel = 0;
     // the grab: a point on a spring toward the cursor (rubber), its strength on a spring too; the trail a slower point behind it
     const P = { x: -1e4, y: -1e4, vx: 0, vy: 0, tx: -1e4, ty: -1e4, a: 0, va: 0, target: 0 }, T = { x: -1e4, y: -1e4 };
     const build = () => {
@@ -5785,47 +5787,61 @@
       NB = new Int32Array(4 * N).fill(-1);      // the four diagonal neighbours on the lattice
       for (const [k, n] of idx) { const i = Math.floor(k / 8192), j = k % 8192;
         [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([di, dj], m) => { const v = idx.get((i + di) * 8192 + j + dj); if (v !== undefined) NB[4 * n + m] = v; }); }
+      // depth in the letter: 0 on the edge (a neighbour missing), +1 per step inward (breadth-first)
+      DP = new Float32Array(N).fill(1e9); const qu = [];
+      for (let n = 0; n < N; n++) for (let m = 0; m < 4; m++) if (NB[4 * n + m] < 0) { DP[n] = 0; qu.push(n); break; }
+      for (let h = 0; h < qu.length; h++) { const n = qu[h]; for (let m = 0; m < 4; m++) { const v = NB[4 * n + m]; if (v >= 0 && DP[v] > DP[n] + 1) { DP[v] = DP[n] + 1; qu.push(v); } } }
+      A = new Float32Array(N); OX = new Float32Array(N); OY = new Float32Array(N); VX = new Float32Array(N); VY = new Float32Array(N);
+      K = Float32Array.from(Z, (z, n) => .05 + .05 * ((Math.sin(n * 12.9898) * 43758.5453) % 1 + 1) % 1);      // springs, each a little different
     };
-    const paint = () => {
+    const paint = (step) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      const pa = P.a, s2 = 2 * R * R, g2 = 2 * RG * RG, act = Math.abs(pa) > .001;
+      const pa = Math.max(0, P.a), s2 = 2 * (G * 22) ** 2, g2 = 2 * RG * RG;      // the peel's reach: about 150 px around the cursor
+      let busy = false;
       for (let n = 0; n < N; n++) {
-        let x = X0[n], y = Y0[n];
-        if (act) {
-          const dx = P.x - x, dy = P.y - y, f = Math.exp(-(dx * dx + dy * dy) / s2);
-          const pin = Math.pow(Math.min(1, Math.max(0, (yB - y) / (yB - yT))), 1.15);      // 0 at the pinned foot, 1 at the top
-          const g = GRAV * pa * f * pin; x += dx * g; y += dy * g;
+        if (step) {
+          const hx = P.x - X0[n], hy = P.y - Y0[n], f = pa * Math.exp(-(hx * hx + hy * hy) / s2);
+          // the layer this pixel is in lets go once the peel reaches it (near the cursor the peel goes deeper)
+          const t = Math.max(0, Math.min(1, peel * f - DP[n]));
+          A[n] += (t - A[n]) * (t > A[n] ? .08 : .06);
+          // let go: drawn toward the cursor, the outer layers furthest, each inner one trailing behind
+          const k = A[n] * PULL * (1 - .45 * Math.min(1, DP[n] / PEEL_MAX));
+          const tx = hx * k, ty = hy * k;
+          VX[n] = (VX[n] + (tx - OX[n]) * K[n]) * .82; VY[n] = (VY[n] + (ty - OY[n]) * K[n]) * .82;
+          OX[n] += VX[n]; OY[n] += VY[n];
+          if (A[n] > .002 || Math.abs(OX[n]) + Math.abs(OY[n]) > .05) busy = true; else { A[n] = OX[n] = OY[n] = VX[n] = VY[n] = 0; }
         }
-        X[n] = x; Y[n] = y;
+        X[n] = X0[n] + OX[n]; Y[n] = Y0[n] + OY[n];
       }
       for (let n = 0; n < N; n++) {
         const x = X[n], y = Y[n];
-        let q = 0; if (act) { const tx = T.x - x, ty = T.y - y, ux = P.x - x, uy = P.y - y;
-          q = Math.max(0, Math.min(1, pa)) * Math.max(Math.exp(-(tx * tx + ty * ty) / g2), .7 * Math.exp(-(ux * ux + uy * uy) / g2)); }
+        let q = 0; if (pa > .001) { const tx = T.x - x, ty = T.y - y, ux = P.x - x, uy = P.y - y;
+          q = pa * Math.max(Math.exp(-(tx * tx + ty * ty) / g2), .7 * Math.exp(-(ux * ux + uy * uy) / g2)); }
         let room = G * 1.42;      // diagonal neighbour distance at rest
-        if (act) for (let m = 0; m < 4; m++) { const v = NB[4 * n + m]; if (v >= 0) room = Math.min(room, Math.hypot(X[v] - x, Y[v] - y)); }
-        const s = Math.min(G * .24 * Z[n] * (1 + GROW * q), room * .46);
-        ctx.fillStyle = `rgba(${C[n]},${Math.min(1, DIM + (1 - DIM) * q * 1.4).toFixed(3)})`;
+        if (A[n] > .001 || q > .001) for (let m = 0; m < 4; m++) { const v = NB[4 * n + m]; if (v >= 0) room = Math.min(room, Math.hypot(X[v] - x, Y[v] - y)); }
+        const s = Math.max(.6, Math.min(G * .24 * Z[n] * (1 + GROW * q), room * .46));
+        ctx.fillStyle = `rgba(${C[n]},${Math.min(1, DIM + (1 - DIM) * Math.max(q * 1.4, A[n] * .8)).toFixed(3)})`;
         ctx.beginPath(); ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.fill();
       }
+      return busy;
     };
     const frame = () => {
-      // rubber: the grab and its strength on underdamped springs
-      P.vx = (P.vx + (P.tx - P.x) * .11) * .76; P.vy = (P.vy + (P.ty - P.y) * .11) * .76; P.x += P.vx; P.y += P.vy;
-      P.va = (P.va + (P.target - P.a) * .07) * .8; P.a += P.va;
+      P.x += (P.tx - P.x) * .3; P.y += (P.ty - P.y) * .3;
+      P.a += (P.target - P.a) * (P.target ? .1 : .06);
       T.x += (P.x - T.x) * .08; T.y += (P.y - T.y) * .08;
-      paint();
-      const rest = !P.target && Math.abs(P.a) < .002 && Math.abs(P.va) < .002;
-      if (rest) { P.a = P.va = 0; paint(); raf = 0; } else raf = requestAnimationFrame(frame);
+      // the peel rises while the cursor stays, from the edge layer in, and falls when it leaves
+      peel = P.target ? Math.min(PEEL_MAX + .5, peel + PEEL_IN * (PEEL_MAX + .5)) : Math.max(0, peel - PEEL_OUT * (PEEL_MAX + .5));
+      const busy = paint(true);
+      if (!P.target && P.a < .002 && !busy) { P.a = 0; peel = 0; raf = 0; paint(false); } else raf = requestAnimationFrame(frame);
     };
-    const start = () => { build(); paint(); };
+    const start = () => { build(); paint(false); };
     if (img.complete) start(); else img.addEventListener('load', start);
     document.fonts && document.fonts.ready.then(() => { if (img.complete) start(); });      // the CTA's height settles with the type
     addEventListener('resize', () => { cancelAnimationFrame(raf); raf = 0; if (img.complete) start(); });
     if (live) {
       cta.addEventListener('pointermove', e => { if (e.pointerType === 'touch') return;
         const r = wc.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-        if (Math.abs(P.a) < .02) { P.x = T.x = x; P.y = T.y = y; P.vx = P.vy = 0; } P.tx = x; P.ty = y; P.target = 1;
+        if (P.a < .02) { P.x = T.x = x; P.y = T.y = y; } P.tx = x; P.ty = y; P.target = 1;
         if (!raf) raf = requestAnimationFrame(frame); }, { passive: true });
       cta.addEventListener('pointerleave', () => { P.target = 0; if (!raf) raf = requestAnimationFrame(frame); });
     }
