@@ -1755,15 +1755,13 @@
     .sec-09 .cta-09-note { align-items: baseline; }
   }
   .sec-09 .home-09 + .certs-09 { margin-top: -7px; }      /* the brand line went into the CTA above: the Trust Center line sits under the logo */
-  /* ---- the wordmark at the bottom (26.11): "Comp AI" alone (no mark) at the footer's full width, cut horizontally by the bottom
-     of the page at 56 % of its height. White and still at rest; the canvas over it draws only while the cursor is on it. */
-  .sec-09 .mark-09 { position: relative; display: block; margin-top: var(--sp-5, 64px); aspect-ratio: 76.7 / 11.76; overflow: hidden; }
-  .sec-09 .lk-09 { display: block; width: 100%; }
-  .sec-09 .lk-09 .w { display: block; width: 100%; height: auto; aspect-ratio: 76.7 / 21; }
-  .sec-09 .mark-09 canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  .sec-09 .mark-09.live .lk-09 { visibility: hidden; }
-  .sec-09 .bar-09 { padding-bottom: 0; }
-  @media (max-width: 767px) { .sec-09 .mark-09 { margin-top: 40px; } }
+  /* ---- the wordmark behind the CTA (27.11): "Comp AI" (no mark) at the footer's full width, cut by the rule under the CTA at
+     56 % of its height, drawn in small dimmed pixels like the mist behind sections 02 and 03 (the print's diamonds, mint to cyan,
+     at .34). Around the cursor the pixels grow, light up and are pulled toward it. The copy keeps a halo of the ground. */
+  .sec-09 .cta-09 { position: relative; }
+  .sec-09 .cta-09 > :not(.word-09) { position: relative; z-index: 1; }
+  .sec-09 .word-09 { position: absolute; z-index: 0; left: 0; bottom: 0; width: 100%; height: auto; aspect-ratio: 76.7 / 11.76; pointer-events: none; }
+  .sec-09 .cta-09-t, .sec-09 .cta-09-sub, .sec-09 .cta-09-note { text-shadow: 0 0 4px var(--black), 0 0 10px var(--black), 0 0 10px var(--black); }
   /* isolated view (?only=09): the footer alone */
   html.only-09 .site-nav, html.only-09 .mega-scrim, html.only-09 main, html.only-09 .sheet, html.only-09 #sheet { display: none !important; }
   /* @section:09 css:end */
@@ -3190,6 +3188,8 @@
   <div class="wrap">
   <!-- the closing CTA (26.11): 08's "Compliance that helps you close deals." opens the footer, a CTA of its own (not a power quote), one action -->
   <div class="cta-09">
+    <!-- behind the CTA: the "Comp AI" wordmark at full width, cut by the rule under it, in small dimmed pixels like the mist behind 02 -->
+    <canvas class="word-09" aria-hidden="true"></canvas>
     <h2 class="cta-09-t">Compliance that helps you close deals.</h2>
     <p class="cta-09-sub">AI-powered compliance platform. Get SOC 2, ISO 27001, HIPAA and GDPR audit-ready in record time.</p>
     <!-- placeholder: the Book a Demo page takes the email and goes on from there (not built yet) -->
@@ -3291,12 +3291,6 @@
       <a class="status-09" href="https://status.trycomp.ai" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"></span><span class="u">All systems normal</span></a>
     </div>
   </div>
-  <!-- the wordmark across the footer's width, cut by the bottom of the page; around the cursor it breaks into pixels, large
-       ones first, then smaller (drawn on the canvas over it) -->
-  <a class="mark-09" href="/" aria-label="Comp AI home">
-    <span class="lk-09"><img class="w" src="assets/img/logo-wordmark.svg" alt="" width="77" height="21"></span>
-    <canvas aria-hidden="true"></canvas>
-  </a>
   </div>
 </footer>
 <!-- @section:09 html:end -->
@@ -5755,96 +5749,64 @@
   groups.forEach(g => g.querySelector('summary').addEventListener('click', e => { if (!mq.matches) e.preventDefault(); }));
   sync(); mq.addEventListener('change', sync);
 
-  // the wordmark at the bottom: at rest the white image. Around the cursor (a radius of about half its visible height) it breaks
-  // into the print's diamond pixels, step by step as the hero's print does: first large pixels, then each splits into four
-  // smaller ones, down to the finest, closest to the cursor and the longer it stays; the pixels there turn mint to cyan and
-  // lean toward the cursor. Outside the radius the wordmark stays whole. Off with reduced motion and on touch.
-  const mk = sec.querySelector('.mark-09'), cv = mk && mk.querySelector('canvas'), im = mk && mk.querySelector('.lk-09 img');
-  if (mk && cv && im && !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches) {
-    const ctx = cv.getContext('2d'), MINT = [36, 255, 99], CYAN = [0, 255, 238], DEPTH = 3;
-    let W = 0, H = 0, S0 = 32, R = 160, dpr = 1, raf = 0, on = false, cells = [], solid = null;
-    const cur = { x: -1e4, y: -1e4, tx: -1e4, ty: -1e4 };
+  // the wordmark behind the CTA: small dimmed diamond pixels on the print's 45° lattice, mint to cyan, like the mist behind 02.
+  // Still at rest. Around the cursor they grow, light up and fall toward it (a mass on a spring each, a little different, so
+  // they trail and overshoot); when it leaves they settle back. Drawn once at rest; animated only while the cursor is near.
+  const cta = sec.querySelector('.cta-09'), wc = cta && cta.querySelector('.word-09');
+  if (cta && wc) {
+    const ctx = wc.getContext('2d'), MINT = [36, 255, 99], CYAN = [0, 255, 238];
+    const DIM = .34, GROW = 2.6, GRAV = .5, DAMP = .86;
+    const live = !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches;
+    const img = new Image(); img.src = 'assets/img/logo-wordmark.svg';
+    let W = 0, H = 0, G = 7, R = 200, dpr = 1, dots = [], raf = 0, pres = 0, on = false;
+    const cur = { x: -1e4, y: -1e4 };
     const build = () => {
-      const r = mk.getBoundingClientRect(), b = im.getBoundingClientRect(); W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, 2);
-      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-      S0 = Math.max(12, Math.round(W / 44)); R = Math.max(90, H * .75);
-      solid = document.createElement('canvas'); solid.width = cv.width; solid.height = cv.height;
-      const sc = solid.getContext('2d'); sc.setTransform(dpr, 0, 0, dpr, 0, 0); sc.drawImage(im, b.left - r.left, b.top - r.top, b.width, b.height);
-      const a = sc.getImageData(0, 0, solid.width, solid.height).data;
-      const alpha = (x, y) => { const px = Math.round(x * dpr), py = Math.round(y * dpr);
-        return px < 0 || py < 0 || px >= solid.width || py >= solid.height ? 0 : a[(py * solid.width + px) * 4 + 3] / 255; };
-      // a diamond (half-diagonal s) splits into four of half s/2 at c ± (s/2, 0) and c ± (0, s/2); levels 0..DEPTH, coverage
-      // sampled at the finest level and averaged up
-      const split = (x, y, s, d) => {
-        const r = (h => h - Math.floor(h))(Math.sin(x * 12.9898 + y * 78.233 + d * 3.7) * 43758.5453);
-        if (d === DEPTH) { const q = s / 2, c = (alpha(x, y) * 2 + alpha(x - q, y) + alpha(x + q, y) + alpha(x, y - q) + alpha(x, y + q)) / 6; return { x, y, s, c, r, t: -1 }; }
-        const h = s / 2, k = [split(x - h, y, h, d + 1), split(x + h, y, h, d + 1), split(x, y - h, h, d + 1), split(x, y + h, h, d + 1)];
-        return { x, y, s, c: (k[0].c + k[1].c + k[2].c + k[3].c) / 4, k, r, t: -1 };
-      };
-      cells = [];
-      for (let j = -1; j * S0 <= H + S0; j++) for (let i = -1 + ((j + 1) % 2); i * S0 <= W + S0; i += 2) {
-        const n = split(i * S0, j * S0, S0, 0); if (n.c > .01) { n.v = 0; cells.push(n); } }
+      W = wc.clientWidth; H = wc.clientHeight; if (!W || !H) return;
+      dpr = Math.min(devicePixelRatio || 1, 2); wc.width = Math.round(W * dpr); wc.height = Math.round(H * dpr);
+      G = Math.max(5, Math.round(W / 200)); R = Math.max(120, H * 1.1);
+      const off = document.createElement('canvas'); off.width = Math.ceil(W); off.height = Math.ceil(H);
+      const o = off.getContext('2d'); o.drawImage(img, 0, 0, W, W * 21 / 76.7);
+      const a = o.getImageData(0, 0, off.width, off.height).data;
+      dots = [];
+      for (let j = 0; j * G < H; j++) for (let i = j % 2; i * G <= W; i += 2) {
+        const x = i * G, y = j * G, px = Math.min(off.width - 1, Math.round(x)), py = Math.min(off.height - 1, Math.round(y));
+        if (a[(py * off.width + px) * 4 + 3] < 128) continue;
+        const h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453, u = x / W;
+        dots.push({ x, y, ox: 0, oy: 0, vx: 0, vy: 0, r: h - Math.floor(h), c: MINT.map((m, n) => Math.round(m + (CYAN[n] - m) * u)).join(',') });
+      }
     };
-    const diamond = (x, y, s) => { ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.closePath(); };
-    // physics: every pixel is a small mass on a spring to its place in the letter, pulled toward the cursor by a gravity that
-    // falls off with distance. Smaller pixels are lighter (pulled harder, held looser), each a little different, so they trail
-    // the cursor and overshoot instead of moving as one block. A pixel that appears takes its parent's position and motion.
-    const PULL = .62, SIG = .6, DAMP = .86;
-    let F = 0, moved = 0;
-    const step = (n, d, v, px, py, pvx, pvy) => {
-      if (n.t !== F - 1) { n.ox = px; n.oy = py; n.vx = pvx; n.vy = pvy; }      // new on screen: from its parent
-      n.t = F;
-      const hx = cur.tx - n.x, hy = cur.ty - n.y, g = PULL * v * (1 + .3 * d) * Math.exp(-(hx * hx + hy * hy) / (2 * R * R * SIG * SIG));
-      const k = (.055 - .01 * d) * (.65 + .7 * n.r);
-      n.vx = (n.vx + (hx * g - n.ox) * k) * DAMP; n.vy = (n.vy + (hy * g - n.oy) * k) * DAMP;
-      n.ox += n.vx; n.oy += n.vy;
-      moved = Math.max(moved, Math.abs(n.ox) + Math.abs(n.oy));
-    };
-    const draw = (n, d, lvl, v, px, py, pvx, pvy) => {
-      step(n, d, v, px, py, pvx, pvy);
-      if (d < lvl && n.k) { n.k.forEach(c => draw(c, d + 1, lvl, v, n.ox, n.oy, n.vx, n.vy)); return; }
-      if (n.c < .5) return;
-      const x = n.x + n.ox, y = n.y + n.oy, sp = Math.min(1, Math.hypot(n.vx, n.vy) / 6);
-      const s = n.s * (.86 - .05 * d) * (1 - .25 * sp);      // a moving pixel shrinks a little: the pull reads as speed
-      const u = Math.min(1, Math.max(0, x / W)), t = Math.min(1, v * 1.5);
-      const c = MINT.map((m, i) => Math.round(252 + (m + (CYAN[i] - m) * u - 252) * t));
-      ctx.fillStyle = `rgb(${c})`; ctx.beginPath(); diamond(x, y, s); ctx.fill();
+    const paint = () => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      let moving = 0; const s2 = 2 * (R * .5) ** 2;
+      for (const d of dots) {
+        const hx = cur.x - d.x, hy = cur.y - d.y, inf = pres * Math.exp(-(hx * hx + hy * hy) / s2);
+        if (pres > 0 || d.ox || d.oy) {
+          const k = .05 * (.65 + .7 * d.r);
+          d.vx = (d.vx + (hx * GRAV * inf - d.ox) * k) * DAMP; d.vy = (d.vy + (hy * GRAV * inf - d.oy) * k) * DAMP;
+          d.ox += d.vx; d.oy += d.vy;
+          if (Math.abs(d.ox) + Math.abs(d.oy) < .05 && Math.abs(d.vx) + Math.abs(d.vy) < .02 && inf < .001) d.ox = d.oy = d.vx = d.vy = 0;
+          else moving = 1;
+        }
+        const s = G * .24 * (1 + GROW * inf), x = d.x + d.ox, y = d.y + d.oy;
+        ctx.fillStyle = `rgba(${d.c},${(DIM + (1 - DIM) * Math.min(1, inf * 1.3)).toFixed(3)})`;
+        ctx.beginPath(); ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.fill();
+      }
+      return moving;
     };
     const frame = () => {
-      F++;
-      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.drawImage(solid, 0, 0);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      let busy = on;
-      for (const n of cells) {
-        const d = Math.hypot(n.x - cur.tx, n.y - cur.ty), target = on ? Math.max(0, Math.min(1, (R - d) / (R * .7))) : 0;
-        n.v += (target - n.v) * (target > n.v ? .06 : .04);      // builds quickly, lets go a little slower: a short wake behind the cursor
-        if (n.v < .02 && n.t !== F - 1) continue;
-        moved = 0;
-        ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); diamond(n.x, n.y, n.s + .5); ctx.fill();
-        ctx.globalCompositeOperation = 'source-over';
-        // at the start and the end the whole letter fades into the large pixels (and back), so it never snaps
-        const fade = Math.min(1, n.v / .25);
-        if (fade < 1) { ctx.save(); ctx.beginPath(); diamond(n.x, n.y, n.s + .5); ctx.clip(); ctx.globalAlpha = 1 - fade;
-          ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(solid, 0, 0); ctx.restore(); }
-        ctx.globalAlpha = fade;
-        draw(n, 0, Math.min(DEPTH, Math.floor(n.v * (DEPTH + 1))), n.v, 0, 0, 0, 0);      // large pixels first, then smaller, the finest at the core
-        ctx.globalAlpha = 1;
-        if (n.v < .02 && moved < .3) n.t = -1;      // back in place: the letter is whole again here
-        busy = true;
-      }
-      if (busy) raf = requestAnimationFrame(frame);
-      else { raf = 0; mk.classList.remove('live'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); }
+      pres += ((on ? 1 : 0) - pres) * (on ? .08 : .05); if (!on && pres < .002) pres = 0;
+      const moving = paint();
+      raf = (on || pres > 0 || moving) ? requestAnimationFrame(frame) : 0;
     };
-    const pos = e => { const r = mk.getBoundingClientRect(); cur.tx = e.clientX - r.left; cur.ty = e.clientY - r.top; };
-    mk.addEventListener('pointerenter', e => {
-      if (e.pointerType === 'touch' || !im.complete) return;
-      if (!cells.length || Math.abs(mk.getBoundingClientRect().width - W) > 1) build();
-      pos(e);
-      on = true; mk.classList.add('live'); if (!raf) raf = requestAnimationFrame(frame);
-    });
-    mk.addEventListener('pointermove', pos);
-    mk.addEventListener('pointerleave', () => { on = false; });
-    addEventListener('resize', () => { if (!raf) cells = []; });
+    const start = () => { build(); paint(); };
+    if (img.complete) start(); else img.addEventListener('load', start);
+    addEventListener('resize', () => { cancelAnimationFrame(raf); raf = 0; if (img.complete) start(); });
+    if (live) {
+      cta.addEventListener('pointermove', e => { if (e.pointerType === 'touch') return;
+        const r = wc.getBoundingClientRect(); cur.x = e.clientX - r.left; cur.y = e.clientY - r.top;
+        on = true; if (!raf) raf = requestAnimationFrame(frame); });
+      cta.addEventListener('pointerleave', () => { on = false; });
+    }
   }
 })();
 </script>
