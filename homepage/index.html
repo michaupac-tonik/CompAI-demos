@@ -5748,72 +5748,75 @@
   sync(); mq.addEventListener('change', sync);
 
   // the wordmark behind the CTA: small dimmed diamond pixels on the print's 45° lattice, mint to cyan, like the mist behind 02.
-  // Still at rest. Under the cursor the field is rubber: every pixel keeps its place on the lattice and a smooth, wide displacement
-  // moves it, so the letters keep their shape and only stretch. Two parts: gravity, a pull toward the cursor that saturates (the
-  // pixels right at the cursor hardly move, those further out lean in by up to GMAX), and a drag: an elastic vector the cursor's
-  // movement tugs and a spring brings back with a wobble, so the letters are pulled along and snap back like rubber. Each pixel is
-  // capped to the room the field leaves it (no overlaps); inside the press they grow a little and light up.
+  // Still at rest. The cursor works as on the mist in 02: the wordmark is a rubber sheet pinned along its bottom edge (hidden under
+  // the links), and the cursor's gravity stretches it toward itself, more the higher a pixel sits and the nearer it is, so the
+  // letters draw out like taffy and keep their order; the grab follows the cursor on a spring (it overshoots and wobbles back),
+  // and lets go with a wobble too. Pixels grow and light up under the cursor and along its trail. No overlaps: each pixel is
+  // capped by the distance to its lattice neighbours after the stretch.
   const cta = sec.querySelector('.cta-09'), wc = cta && cta.querySelector('.word-09');
   if (cta && wc) {
     const ctx = wc.getContext('2d'), MINT = [36, 255, 99], CYAN = [0, 255, 238];
-    const DIM = .34, GROW = .7, ABOVE = .62;      // ABOVE: share of the wordmark above the rule
-    const GMAX = 46, GSAT = 60;                   // gravity: the most a pixel leans in (px), and the distance at which it saturates
-    const DRAG = .55, EMAX = 90, SPRING = .07, DAMP = .84;      // rubber: how much of the cursor's movement tugs the field, its spring
-    const P_IN = .1, P_OUT = .04, FOLLOW = .2;
-    const E = { x: 0, y: 0, vx: 0, vy: 0 };
+    const DIM = .34, ABOVE = .62;                 // resting strength (as the mist), share of the wordmark above the rule
+    const GRAV = .8, GROW = 2.6;                  // the pull at the cursor, and how much the pixels under it grow
     const live = !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches;
     const img = new Image(); img.src = 'assets/img/logo-wordmark.svg';
-    let W = 0, H = 0, G = 7, R = 200, dpr = 1, dots = [], raf = 0;
-    const press = { x: -1e4, y: -1e4, tx: -1e4, ty: -1e4, amt: 0, target: 0 };
+    let W = 0, H = 0, G = 7, R = 200, RG = 40, yT = 0, yB = 1, dpr = 1, raf = 0;
+    let X0 = null, Y0 = null, Z = null, C = [], NB = null, N = 0, X = null, Y = null;
+    // the grab: a point on a spring toward the cursor (rubber), its strength on a spring too; the trail a slower point behind it
+    const P = { x: -1e4, y: -1e4, vx: 0, vy: 0, tx: -1e4, ty: -1e4, a: 0, va: 0, target: 0 }, T = { x: -1e4, y: -1e4 };
     const build = () => {
       W = cta.clientWidth; if (!W) return;
       const hw = W * 21 / 76.7, top = cta.clientHeight - hw * ABOVE;      // the wordmark's top: 62 % of it above the CTA's bottom
-      H = Math.ceil(top + hw); wc.style.height = H + 'px';
+      H = Math.ceil(top + hw); wc.style.height = H + 'px'; yT = top; yB = top + hw * .96;      // pinned along the letters' foot
       dpr = Math.min(devicePixelRatio || 1, 2); wc.width = Math.round(W * dpr); wc.height = Math.round(H * dpr);
-      G = Math.max(5, Math.round(W / 200)); R = Math.max(220, cta.clientHeight * .5);      // the press reach (wide: a gentle gradient keeps the letters' shape)
+      G = Math.max(5, Math.round(W / 200)); R = Math.max(240, cta.clientHeight * .5); RG = G * 6;
       const off = document.createElement('canvas'); off.width = Math.ceil(W); off.height = H;
       const o = off.getContext('2d'); o.drawImage(img, 0, top, W, hw);
       const a = o.getImageData(0, 0, off.width, off.height).data;
-      dots = [];
+      const xs = [], ys = [], zs = [], idx = new Map(); C = [];
       for (let j = Math.floor(top / G); j * G < H; j++) for (let i = j % 2; i * G <= W; i += 2) {
         const x = i * G, y = j * G, px = Math.min(off.width - 1, Math.round(x)), py = Math.min(off.height - 1, Math.round(y));
         if (a[(py * off.width + px) * 4 + 3] < 128) continue;
-        const h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453, u = x / W;
-        const r = h - Math.floor(h), q = (h2 => h2 - Math.floor(h2))(Math.sin(x * 4.898 + y * 7.23) * 24634.63);
-        // sizes vary as the print's dots do: mostly small, some larger
-        dots.push({ x, y, z: .45 + 1.1 * q * q, c: MINT.map((m, n) => Math.round(m + (CYAN[n] - m) * u)).join(',') });
+        const q = (h => h - Math.floor(h))(Math.sin(x * 4.898 + y * 7.23) * 24634.63);
+        idx.set(i * 8192 + j, xs.length); xs.push(x); ys.push(y); zs.push(.45 + 1.1 * q * q);      // sizes vary as the print's dots
+        const u = x / W; C.push(MINT.map((m, n) => Math.round(m + (CYAN[n] - m) * u)).join(','));
       }
+      N = xs.length; X0 = Float32Array.from(xs); Y0 = Float32Array.from(ys); Z = Float32Array.from(zs); X = new Float32Array(N); Y = new Float32Array(N);
+      NB = new Int32Array(4 * N).fill(-1);      // the four diagonal neighbours on the lattice
+      for (const [k, n] of idx) { const i = Math.floor(k / 8192), j = k % 8192;
+        [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([di, dj], m) => { const v = idx.get((i + di) * 8192 + j + dj); if (v !== undefined) NB[4 * n + m] = v; }); }
     };
     const paint = () => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      const pa = press.amt, s2 = 2 * R * R;
-      for (const d of dots) {
-        let x = d.x, y = d.y, p = 0, grad = 0;
-        if (pa > .001 || E.x || E.y) {
-          const dx = press.x - x, dy = press.y - y, dist = Math.hypot(dx, dy) || 1, f = Math.exp(-(dist * dist) / s2);
-          p = pa * f;
-          const pull = GMAX * p * dist / (dist + GSAT);      // gravity, saturating: the letters lean in, the core does not collapse
-          x += dx / dist * pull + E.x * f; y += dy / dist * pull + E.y * f;
-          grad = (GMAX * pa + Math.hypot(E.x, E.y)) * f / R;      // how much the field squeezes here
+      const pa = P.a, s2 = 2 * R * R, g2 = 2 * RG * RG, act = Math.abs(pa) > .001;
+      for (let n = 0; n < N; n++) {
+        let x = X0[n], y = Y0[n];
+        if (act) {
+          const dx = P.x - x, dy = P.y - y, f = Math.exp(-(dx * dx + dy * dy) / s2);
+          const pin = Math.pow(Math.min(1, Math.max(0, (yB - y) / (yB - yT))), 1.15);      // 0 at the pinned foot, 1 at the top
+          const g = GRAV * pa * f * pin; x += dx * g; y += dy * g;
         }
-        const s = Math.min(G * .24 * d.z * (1 + GROW * p), G * Math.max(.2, 1 - grad) * .46);
-        ctx.fillStyle = `rgba(${d.c},${Math.min(1, DIM + (1 - DIM) * p * 1.3).toFixed(3)})`;
+        X[n] = x; Y[n] = y;
+      }
+      for (let n = 0; n < N; n++) {
+        const x = X[n], y = Y[n];
+        let q = 0; if (act) { const tx = T.x - x, ty = T.y - y, ux = P.x - x, uy = P.y - y;
+          q = Math.max(0, Math.min(1, pa)) * Math.max(Math.exp(-(tx * tx + ty * ty) / g2), .7 * Math.exp(-(ux * ux + uy * uy) / g2)); }
+        let room = G * 1.42;      // diagonal neighbour distance at rest
+        if (act) for (let m = 0; m < 4; m++) { const v = NB[4 * n + m]; if (v >= 0) room = Math.min(room, Math.hypot(X[v] - x, Y[v] - y)); }
+        const s = Math.min(G * .24 * Z[n] * (1 + GROW * q), room * .46);
+        ctx.fillStyle = `rgba(${C[n]},${Math.min(1, DIM + (1 - DIM) * q * 1.4).toFixed(3)})`;
         ctx.beginPath(); ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.fill();
       }
     };
     const frame = () => {
-      press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN : P_OUT);
-      const mx = (press.tx - press.x) * FOLLOW, my = (press.ty - press.y) * FOLLOW;
-      press.x += mx; press.y += my;
-      // rubber: the cursor's movement tugs the elastic vector, a spring pulls it back (underdamped: a short wobble)
-      E.vx = (E.vx + mx * DRAG * press.amt - E.x * SPRING) * DAMP; E.vy = (E.vy + my * DRAG * press.amt - E.y * SPRING) * DAMP;
-      E.x += E.vx; E.y += E.vy;
-      const m = Math.hypot(E.x, E.y); if (m > EMAX) { E.x *= EMAX / m; E.y *= EMAX / m; }
-      if (Math.abs(E.x) + Math.abs(E.y) + Math.abs(E.vx) + Math.abs(E.vy) < .05) E.x = E.y = E.vx = E.vy = 0;
-      if (!press.target && press.amt < .002) press.amt = 0;
+      // rubber: the grab and its strength on underdamped springs
+      P.vx = (P.vx + (P.tx - P.x) * .11) * .76; P.vy = (P.vy + (P.ty - P.y) * .11) * .76; P.x += P.vx; P.y += P.vy;
+      P.va = (P.va + (P.target - P.a) * .07) * .8; P.a += P.va;
+      T.x += (P.x - T.x) * .08; T.y += (P.y - T.y) * .08;
       paint();
-      const busy = press.target || press.amt > 0 || E.x || E.y;
-      raf = busy ? requestAnimationFrame(frame) : 0;
+      const rest = !P.target && Math.abs(P.a) < .002 && Math.abs(P.va) < .002;
+      if (rest) { P.a = P.va = 0; paint(); raf = 0; } else raf = requestAnimationFrame(frame);
     };
     const start = () => { build(); paint(); };
     if (img.complete) start(); else img.addEventListener('load', start);
@@ -5822,9 +5825,9 @@
     if (live) {
       cta.addEventListener('pointermove', e => { if (e.pointerType === 'touch') return;
         const r = wc.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-        if (press.amt < .05) { press.x = x; press.y = y; } press.tx = x; press.ty = y; press.target = 1;
+        if (Math.abs(P.a) < .02) { P.x = T.x = x; P.y = T.y = y; P.vx = P.vy = 0; } P.tx = x; P.ty = y; P.target = 1;
         if (!raf) raf = requestAnimationFrame(frame); }, { passive: true });
-      cta.addEventListener('pointerleave', () => { press.target = 0; if (!raf) raf = requestAnimationFrame(frame); });
+      cta.addEventListener('pointerleave', () => { P.target = 0; if (!raf) raf = requestAnimationFrame(frame); });
     }
   }
 })();
