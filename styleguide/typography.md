@@ -72,6 +72,10 @@ In CSS one global rule, `text-wrap: balance` on headings, paragraphs, quotes, li
 balance up to about six lines; longer text keeps the normal break. Copy is still written so that it balances well:
 when a block keeps breaking badly, shorten or reword it rather than adding manual line breaks.
 
+**Measure**: a heading set over a paragraph gets a column of its own measure, so it breaks into two balanced lines and
+never into one wide line over a narrow paragraph; the paragraph runs a little narrower (in 03: heading about 540 px,
+paragraph about 480 px, ~55ch of `body-m`).
+
 ## Actions (27.11)
 
 | Action | Text | Icon | Gap | Hover |
