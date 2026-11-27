@@ -2646,6 +2646,11 @@
   html:not(#_) .sec-05 .q-05 .go .chev { width: 13px; height: 13px; }      /* the same chevron as every other tertiary action (was 11) */
   html:not(#_) .mega-feat .art.photo i { font: 400 var(--fs-label-s)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
 
+  /* ==== general fixes 27.11: balanced text. Headings, leads and paragraphs break into lines of even length, so no block ends on a
+     short hanging line (the browser balances up to six lines; longer text keeps the normal break). Overrides the "pretty" set
+     on some paragraphs, which only avoided a single last word */
+  html:not(#_) :is(h1, h2, h3, h4, p, blockquote, figcaption, dt, dd, legend, summary, li, .steps .d, .sec-03 .ex) { text-wrap: balance; }
+
   /* ==== general fixes 27.11: above 1920 the hero headline goes one step up the scale (68 -> 87, x 1.272), sliding from 1920 to 2560
      so there is no jump at 1921 */
   @media (min-width: 1921px) {

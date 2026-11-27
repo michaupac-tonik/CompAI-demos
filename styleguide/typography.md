@@ -65,6 +65,13 @@ Roles of 20 px and less do not scale. In CSS: `clamp(lo, lo + (hi − lo) × (10
 
 Mono is used only in `eyebrow` and `label-s`. Nav links and buttons are in sans.
 
+## Line breaks (27.11)
+
+**Balance**: a heading, lead or paragraph breaks into lines of even length and never ends on a short hanging line.
+In CSS one global rule, `text-wrap: balance` on headings, paragraphs, quotes, list items, terms and legends. Browsers
+balance up to about six lines; longer text keeps the normal break. Copy is still written so that it balances well:
+when a block keeps breaking badly, shorten or reword it rather than adding manual line breaks.
+
 ## Actions (27.11)
 
 | Action | Text | Icon | Gap | Hover |
@@ -106,6 +113,7 @@ Not defined yet: below 1024 px the page still uses each section's own sizes. To 
 - Off-scale sizes removed: 15 → 16, 22 → 20; the mock-ups lose their micro sizes (10 to 13.5) and use the roles.
 - Hero figures (G2 rating, 1,000+) take `lead-l`; the price figure and the pricing steps take `lead-m`.
 - Actions: one chevron, one gap (8) and one tertiary hover (the chevron moves) on the whole page; see Actions.
+- Balanced line breaks everywhere (`text-wrap: balance`); see Line breaks.
 
 ## Changes from v0.1 (17.11)
 
