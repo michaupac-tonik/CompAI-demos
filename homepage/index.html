@@ -1727,14 +1727,14 @@
      (lead-m), and the action right under them,
      flat, from the page's own parts: the field in the secondary button's outline, the primary Book a demo beside it;
      under it the quote builder's gradient chip before a short note. Not a power quote (those are 03 and 08). */
-  .sec-09 .cta-09 { padding: var(--sp-7, 168px) 0 var(--sp-6, 104px); }      /* the footer's top room is the CTA's: the whole area is the wordmark's */
+  .sec-09 .cta-09 { --col-09: clamp(360px, 30vw, 540px); padding: var(--sp-7, 168px) 0 var(--sp-6, 104px); }      /* the footer's top room is the CTA's: the whole area is the wordmark's; --col-09: one width for the column under the heading */
   /* the heading as the power quotes in 03 and 08 (display-xl): three lines, the last opening with a rule that ends flush with the widest */
   .sec-09 .cta-09-t { display: grid; width: fit-content; max-width: 100%; margin: 0; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-xl, 68px); line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .sec-09 .cta-09-t .q-l { display: block; white-space: nowrap; }
   .sec-09 .cta-09-t .q-r { display: flex; align-items: baseline; gap: .32em; }
   .sec-09 .cta-09-t .q-rule { flex: 1 1 auto; min-width: 1.5em; height: max(1.5px, .028em); background: currentColor; transform: translateY(-.26em); }
-  .sec-09 .cta-09-sub { margin: var(--sp-3, 24px) 0 0; max-width: 28em; font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m, 20px); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: pretty; }
-  .sec-09 .cta-09-form { display: flex; align-items: stretch; gap: 8px; width: min(100%, 520px); margin-top: var(--sp-4, 40px); }
+  .sec-09 .cta-09-sub { margin: var(--sp-3, 24px) 0 0; max-width: var(--col-09); font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m, 20px); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: balance; }      /* balanced lines, the column's width */
+  .sec-09 .cta-09-form { display: flex; align-items: stretch; gap: 8px; width: min(100%, var(--col-09)); margin-top: var(--sp-4, 40px); }      /* the subheading's width */
   .sec-09 .cta-09-form .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   /* the field is the secondary button's outline: flat, 1px, the same fill; its height follows the button (40, 44 from 1680) */
   .sec-09 .cta-09-form input { flex: 1 1 auto; min-width: 0; height: auto; min-height: 40px; margin: 0; padding: 0 14px; border: 1px solid rgba(252,252,252,.6); border-radius: var(--r);
@@ -1742,8 +1742,8 @@
   .sec-09 .cta-09-form input::placeholder { color: rgba(252,252,252,.72); opacity: 1; }
   .sec-09 .cta-09-form input:is(:hover, :focus) { border-color: var(--white); }
   .sec-09 .cta-09-form .btn { flex: none; }
-  .sec-09 .cta-09-note { display: flex; align-items: center; gap: 8px; margin: var(--sp-2, 16px) 0 0; font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); color: var(--text-2); }
-  .sec-09 .cta-09-note::before { content: ""; flex: none; width: 10px; height: 6px; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  .sec-09 .cta-09-note { display: flex; align-items: flex-start; gap: 8px; max-width: var(--col-09); text-wrap: balance; margin: var(--sp-2, 16px) 0 0; font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); color: var(--text-2); }
+  .sec-09 .cta-09-note::before { content: ""; flex: none; width: 10px; height: 6px; margin-top: calc(.725em - 3px);      /* on the first line's middle */ background: linear-gradient(90deg, var(--mint), var(--cyan)); }
   @media (max-width: 1023px) {
     .sec-09 .cta-09 { padding: 88px 0 72px; }
     .sec-09 .cta-09-t { font-size: 53px; }
@@ -1754,7 +1754,6 @@
     .sec-09 .cta-09-t { font-size: clamp(36px, 10.5vw, 56px); }
     .sec-09 .cta-09-form { flex-direction: column; margin-top: 32px; }
     .sec-09 .cta-09-form .btn { width: 100%; }
-    .sec-09 .cta-09-note { align-items: baseline; }
   }
   .sec-09 .home-09 + .certs-09 { margin-top: -7px; }      /* the brand line went into the CTA above: the Trust Center line sits under the logo */
   /* ---- the wordmark behind the CTA (27.11): "Comp AI" (no mark) at the footer's full width, whole: 62 % of it above the rule
