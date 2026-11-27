@@ -1757,7 +1757,8 @@
      at .34). Around the cursor the pixels grow, light up and are pulled toward it. The copy keeps a halo of the ground. */
   .sec-09 .cta-09 { position: relative; }
   .sec-09 .cta-09 > :not(.word-09) { position: relative; z-index: 1; }
-  .sec-09 .word-09 { position: absolute; z-index: 0; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }      /* height set by the script: the CTA plus the hidden part */
+  .sec-09 .word-09 { position: absolute; z-index: 0; left: calc(50% - 50vw); top: 0; width: 100vw; height: 100%; pointer-events: none; }      /* the window's full width, past the wrap's margins */
+  .sec-09 { overflow-x: clip; }      /* height set by the script: the CTA plus the hidden part */
   .sec-09 .cta-09 + .top-09 { position: relative; z-index: 2; background: var(--black); }      /* the links cover the wordmark's lower part */
   .sec-09 .cta-09-t, .sec-09 .cta-09-sub, .sec-09 .cta-09-note { text-shadow: 0 0 4px var(--black), 0 0 10px var(--black), 0 0 10px var(--black); }
   /* isolated view (?only=09): the footer alone */
@@ -5754,13 +5755,13 @@
 /* 09 · the wordmark behind the CTA (27.11): the hero's print engine (a copy of 08's copy: draw, press that follows the cursor,
    gravity, morph to the next shape on hover, trail, ambient drift) on the "Comp AI" Blend fields made with the shapes generator
    (window.WORD_FIELDS, assets/js/word-fields.js: two shapes on the hero's 1480 x 1891 lattice). The wordmark spans the CTA's
-   width, 62 % of it above the rule under the CTA; the links hide the rest. Default: the mist of section 02 (fine dimmed dots that
-   grow around the cursor and smear along its trail); ?w09=print: the hero's full press (gravity, spread, the far side letting go).
+   the window's full width (no margins), 62 % of it above the rule under the CTA; the links hide the rest. Default: the hero's full
+   press (gravity, spread, the far side letting go); ?w09=mist: the mist of section 02 (fine dimmed dots that grow around the cursor).
    Cursor over the CTA only. */
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const D = window.WORD_FIELDS;
-  const MODE = new URLSearchParams(location.search).get('w09') === 'print' ? 'print' : 'mist', ABOVE = .62;
+  const MODE = new URLSearchParams(location.search).get('w09') === 'mist' ? 'mist' : 'print', ABOVE = .62;      // 27.11: the full print is the working option
   const cvs = document.querySelector('.sec-09 .word-09'), host = cvs && cvs.closest('.cta-09');
   if (!D || !cvs) return;
   const ctx = cvs.getContext('2d');
@@ -5919,8 +5920,8 @@
   // 09: the wordmark across the CTA's width (its letters' extent, with a small margin), its bottom part under the links
   const logos = null;
   function place() {
-    const S = F[0], hh = host.getBoundingClientRect().height, wv = host.getBoundingClientRect().width;
-    view.k = wv * .98 / (2 * S.rx);
+    const S = F[0], hh = host.getBoundingClientRect().height, wv = cvs.getBoundingClientRect().width;      // the canvas spans the window
+    view.k = wv / (2 * S.rx);                                        // the letters edge to edge
     const top = hh - 2 * S.ry * view.k * ABOVE;                      // the letters' top: 62 % of them above the rule
     view.ox = wv / 2 - S.cx * view.k; view.oy = top - (S.cy - S.ry) * view.k;
     cvs.style.height = Math.ceil(hh + 2 * S.ry * view.k * (1 - ABOVE) + 40) + 'px';
