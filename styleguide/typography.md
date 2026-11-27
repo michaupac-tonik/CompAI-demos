@@ -104,7 +104,10 @@ Two levels, set from the ground's full-strength text colour (`--fg`: white on da
 | `--text-2` | 72% of `--fg` | `lead-l`, `lead-m`, `body-m`, `body-s` |
 
 Contrast: about 10:1 on black and 7:1 on the light grey ground, both above WCAG AA.
-Interactive states (inactive tabs and steps, hover) keep their own values. Eyebrows and labels keep their own colours.
+Interactive states (inactive tabs and steps, hover) keep their own values. Labels keep their own colours.
+
+**Eyebrows** (27.11): mint (`--eyebrow`, #24FF63) on dark grounds, orange (`--eyebrow-light`, brand coral 040, #C12000,
+5.7:1 on the light grey, AA) on light ones.
 
 ## Mobile
 
