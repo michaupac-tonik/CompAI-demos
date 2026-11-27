@@ -1759,7 +1759,11 @@
   .sec-09 .cta-09 > :not(.word-09) { position: relative; z-index: 1; }
   .sec-09 .word-09 { position: absolute; z-index: 0; left: calc(50% - 50vw); top: 0; width: 100vw; height: 100%; pointer-events: none; }      /* the window's full width, past the wrap's margins */
   .sec-09 { overflow-x: clip; }      /* height set by the script: the CTA plus the hidden part */
-  .sec-09 .cta-09 + .top-09 { position: relative; z-index: 2; background: var(--black); }      /* the links cover the wordmark's lower part */
+  /* the links are a full-width block over the wordmark's lower part: a black ground and the rule across the whole window */
+  .sec-09 .cta-09 + .top-09 { position: relative; z-index: 2; isolation: isolate; border-top: 0; }
+  .sec-09 .cta-09 + .top-09::before { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: calc(50% - 50vw); width: 100vw;
+    background: var(--black); border-top: 1px solid var(--f-line); }
+  .sec-09 .cta-09 + .top-09 ~ .bar-09 { position: relative; z-index: 2; }
   .sec-09 .cta-09-t, .sec-09 .cta-09-sub, .sec-09 .cta-09-note { text-shadow: 0 0 4px var(--black), 0 0 10px var(--black), 0 0 10px var(--black); }
   /* isolated view (?only=09): the footer alone */
   html.only-09 .site-nav, html.only-09 .mega-scrim, html.only-09 main, html.only-09 .sheet, html.only-09 #sheet { display: none !important; }
