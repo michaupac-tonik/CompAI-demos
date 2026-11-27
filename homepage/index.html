@@ -2446,6 +2446,28 @@
   /* 04 (26.11): the reply-time chip keeps clear of the card: it starts at least 20 px past the card's right edge (the card is 268 px
      from -32 px), so they no longer overlap at 1440 */
   @media (min-width: 1024px) { #sec-04 .fc.d { left: max(32%, calc(min(268px, 58%) + max(-5%, -32px) + 20px)); } }
+  /* ==== general fixes 27.11: hero on large screens (feedback 27.11, 01:36): the type and the whole logo table above the fold.
+     Below this size the second logo row still continues under the fold; here the hero is one screen tall, so the text block
+     moves up by a row and both rows end 24px above the bottom edge. */
+  @media (min-width: 1921px) and (min-height: 1000px) {
+    .hero-inner { min-height: 100svh; }
+    .logos-tbl { margin-top: var(--sp-6); }      /* more air between the tagline block and the logos (was 40px); the text moves up, the logos stay */
+  }
+
+  /* ==== general fixes 27.11: nav links and every button two steps up the scale (13px -> body-m 16px).
+     The button token follows, and one rule outranks the per-section button sizes (hero, mega menu, 05-07, touch, nav compact). */
+  /* fluid down from 1920 like the rest of the scale: 16px at 1920 and up, 14px at 1280 and below */
+  :root { --fs-button: clamp(14px, calc(14px + 2 * (100vw - 1280px) / 640), 16px); }
+  .site-nav .links > a, .site-nav .links > button { font-size: var(--fs-button); }
+  html:not(#_) .btn { font-size: var(--fs-button); }
+  /* the larger buttons would push the G2 rating to a second line at 1280 (the text block is 46% wide there): the CTA row may run
+     past the text block's width, into the free space on the right */
+  @media (min-width: 1024px) { .hero .ctas { flex-wrap: nowrap; width: max-content; } }
+
+  /* ==== general fixes 27.11: one mono size (max 3-4 type sizes a section): the eyebrows (14px) take the label size (13px),
+     so mono is one step in every section */
+  :root { --fs-eyebrow: var(--fs-label-s); }
+
   /* ==== 06 Trust, layout C (approved 26.11): the three columns side by side, the words above the windows, with more air.
      ?only=06 shows the section alone */
   html.only-06 .site-nav, html.only-06 main > :not(#sec-06), html.only-06 footer, html.only-06 .sheet, html.only-06 #sheet { display: none !important; }
@@ -3444,6 +3466,10 @@
 
   // placement: the print sits right of the type on desktop and below it on a phone, larger than
   // the screen so its lines run off the edges
+  // 27.11 (general fixes): the print follows the type's fluid rule: 1.2 at 1920 and up (it stops growing, as the type does),
+  // down to 0.8 at 1280 on one fluid line (as the clamp() type tokens), and no larger below; short windows still limit it by height.
+  // Shared with the dots of section 03, which must match.
+  window.heroPrintK = (W, H) => { const kw = Math.min(1.2, Math.max(.8, .8 + .4 * (W - 1280) / 640)); return Math.max(.6, Math.min(kw, H / 900)); };
   const view = { k: 1, ox: 0, oy: 0, w: 0, h: 0, dpr: 1 };
   function place() {
     const r = cvs.getBoundingClientRect(); view.w = r.width; view.h = r.height;
@@ -3453,7 +3479,7 @@
     if (view.w >= 1024) {
       // 26.11: the composition of 1920 kept on every desktop width: the scale follows the width (1.2 at 1920, as the type's fluid
       // scale), limited by the height only on short windows; the centre stays at 74.2 % (it used to drift right below 1440)
-      view.k = Math.max(.6, Math.min(view.w / 1600, view.h / 900));
+      view.k = window.heroPrintK(view.w, view.h);
       view.ox = view.w * .742 - coreX * view.k;
       view.oy = view.h * .44 - coreY * view.k;
     } else if (view.w > 600) {
@@ -4093,7 +4119,7 @@
     let vL = 0, vT = 0;
     const layout = () => { W = document.documentElement.clientWidth; H = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
       cv.width = cvB.width = Math.round(W * dpr); cv.height = cvB.height = Math.round(H * dpr);
-      let ox, oy; if (W >= 1024) { k0 = Math.max(.6, Math.min(W / 1600, H / 900)); ox = W * .742 - CX * k0;      /* as the hero's place() (26.11) */ oy = H * .44 - CY * k0; }
+      let ox, oy; if (W >= 1024) { k0 = window.heroPrintK(W, H); ox = W * .742 - CX * k0;      /* as the hero's place() (26.11) */ oy = H * .44 - CY * k0; }
       else if (W > 600) { k0 = Math.max(.62, W / 1440 * 1.15); ox = W * .7 - CX * k0; oy = H * .3 - CY * k0; }
       else { k0 = Math.max(.5, W / 1440 * 1.6); ox = W * .62 - CX * k0; oy = H * .2 - CY * k0; }
       const a = art.getBoundingClientRect(); lw = a.width; lh = a.height;
