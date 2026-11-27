@@ -2749,6 +2749,84 @@
      above, the same room under (154 at 1920, 99 at 1366) */
   @media (min-width: 1024px) { html:not(#_) .quote-08 { min-height: 0; padding: calc(var(--sp-7) - 14px) 0 calc(2 * (var(--sp-7) - 14px)); } }      /* twice the room (27.11): 308 above and under the text at 1920 */
 
+  /* ==== general fixes 27.11: the quote builder's choices read as the controls they are (the diamond said neither). Pick any
+     (Frameworks, Systems: aria-pressed): a square checkbox, filled mint with a tick when on. Pick one (Company size, Audit: role=radio):
+     a round radio, a ring with a dot when on. A chosen chip: a clearer ground and a lighter grey edge */
+  html:not(#_) .sec-08-chip::before { width: 14px; height: 14px; transform: none; box-sizing: border-box; border: 1.5px solid rgba(252,252,252,.45); background: transparent no-repeat center / 10px 10px; border-radius: 0; }
+  html:not(#_) .sec-08-chip[role="radio"]::before { border-radius: 50%; }
+  html:not(#_) .sec-08-chip[aria-pressed="true"]::before { border-color: var(--mint); background-color: var(--mint);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.6 5.2 4 7.5 8.4 2.6' fill='none' stroke='%23161616' stroke-width='1.6'/%3E%3C/svg%3E"); }
+  html:not(#_) .sec-08-chip[aria-checked="true"]::before { background: radial-gradient(circle, var(--mint) 0 3px, transparent 3.5px); }      /* the ring stays grey, only the dot is mint */
+  html:not(#_) .sec-08-chip[aria-pressed="true"], html:not(#_) .sec-08-chip[aria-checked="true"] { border-color: rgba(252,252,252,.45); background: rgba(252,252,252,.1); color: var(--white); }      /* a lighter grey edge, not pure white */
+
+  /* ==== general fixes 27.11: the pricing's left column, quieter. No indent (the list's 24px, for a rail that is not drawn, goes): the steps
+     line up with the heading. Four styles: the label (13 mono, grey, one colour for "Step 1 · Min 0-5"), the title (title-m 33, as the axis
+     in 02), the line (body-m 16, text-2) and the small pieces (13 sans). The pieces stay but say less:
+     1 · the tools as plain words that light up one by one (no boxes, no diamonds; no More / Try it, no count);
+     2 · the tasks as three plain lines (no strike-through, no control codes), a small mint mark when one is done;
+     3 · the plan as its three bars and their names (no axis) */
+  html:not(#_) #sec-08-price .s8n-tl { padding-left: 0; }
+  html:not(#_) #sec-08-price .s8n-tl .t .n { color: var(--text-2); }
+  html:not(#_) #sec-08-price .s8n-tl b { font-family: var(--sans); font-size: var(--fs-title-m); line-height: 1.1; letter-spacing: -.04em; font-weight: 300; }
+  html:not(#_) #sec-08-price .s8n-tl .d { font-size: var(--fs-body-m); line-height: 1.55; color: var(--text-2); }
+  html:not(#_) #sec-08-price .s8n-conn { gap: 4px var(--sp-3); }
+  html:not(#_) #sec-08-price .s8n-conn > span { height: auto; padding: 0; border: 0; background: none; }
+  html:not(#_) #sec-08-price .s8n-sum, html:not(#_) #sec-08-price .s8n-more em,
+  html:not(#_) #sec-08-price .s8n-list .c, html:not(#_) #sec-08-price .s8n-plan .ax { display: none; }
+  /* 1 · each tool carries a small square, outline while it waits and mint once connected (staggered, as before), so they read
+     as integrations, not words; More comes back as a plain "+ More" in the same line: no dashed box, no Try it */
+  html:not(#_) #sec-08-price .s8n-conn > span::before { width: 6px; height: 6px; transform: rotate(45deg); border-color: rgba(252,252,252,.35); }
+  html:not(#_) #sec-08-price .s8n-tl li.on .s8n-conn > span::before { background: var(--mint); border-color: var(--mint); }
+  html:not(#_) #sec-08-price .s8n-conn > span.pulse { animation: none; }
+  html:not(#_) #sec-08-price .s8n-more { height: auto; padding: 0; gap: 8px; border: 0; background: none; color: var(--text-2); font-size: var(--fs-body-s); }
+  html:not(#_) #sec-08-price .s8n-more svg { width: 11px; height: 11px; }
+  html:not(#_) #sec-08-price .s8n-more:is(:hover, :focus-visible) { color: var(--white); }
+  html:not(#_) #sec-08-price .s8n-more.on { border: 0; background: none; color: var(--white); }
+  html:not(#_) #sec-08-price .s8n-more.on::before { width: 6px; height: 6px; transform: rotate(45deg); background: var(--mint); }
+  /* 3 · the plan: only the bars and their names (no track line, no week grid), the bars thinner */
+  html:not(#_) #sec-08-price .s8n-plan .tr::before, html:not(#_) #sec-08-price .s8n-plan .tr::after { content: none; }
+  html:not(#_) #sec-08-price .s8n-plan .tr i { top: 2px; height: 4px; background: rgba(36,255,99,.45); }
+  /* 27.11: a weak mint tint on the left (half strength), not the full mint and gradient, so the column weighs less than the builder */
+  html:not(#_) #sec-08-price .s8n-px { --c: rgba(36,255,99,.5) !important; }
+  html:not(#_) #sec-08-price .s8n-plan .l { color: var(--text-2); }
+  /* the minutes and the step number grey */
+  html:not(#_) #sec-08-price .s8n-tl .t { color: var(--text-2); }
+  html:not(#_) #sec-08-price .s8n-tl .t .n::after { color: rgba(252,252,252,.3); }
+  html:not(#_) #sec-08-price .s8n-list .r { color: var(--text-2); }
+  html:not(#_) #sec-08-price .s8n-list .r::before { transform: none; border-color: rgba(252,252,252,.3); }
+  html:not(#_) #sec-08-price .s8n-list .r.done::before { background: rgba(36,255,99,.35); border-color: transparent; }
+
+  /* 27.11, variant "text" (data-v="text" on #sec-08-next): fewer widgets, one line of text per step; remove the attribute to
+     bring all the widgets back */
+  html:not(#_) #sec-08-next[data-v="text"] :is(.s8n-sum, .s8n-plan) { display: none; }
+  /* 27.11 (2): step 1 keeps the tools and + More; step 2 keeps one line of the task ticker (the newest task); step 3 no widget.
+     (3): step 1's tools connect with mint diamonds (the full mint: a choice that is made), step 2's task with a faint tinted
+     square (work in progress); the widget lines take label-s, as the step label over them, so a step has three styles */
+  html:not(#_) #sec-08-next[data-v="text"] :is(.s8n-conn > span, .s8n-more, .s8n-list) { font: 400 var(--fs-label-s)/1.3 var(--mono) !important; letter-spacing: .04em; text-transform: uppercase; }
+  html:not(#_) #sec-08-next[data-v="text"] .s8n-tl li.on .s8n-conn > span { color: var(--text-2); }
+  /* (4): the added tool says it can be clicked again by its hover: the name turns white, a thin underline draws in and its
+     diamond turns a half turn (the next tool comes in); no "Next" label */
+  html:not(#_) #sec-08-price .s8n-more.on .nm { background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0 1px; padding-bottom: 2px; transition: background-size .3s ease; }
+  html:not(#_) #sec-08-price .s8n-more.on:is(:hover, :focus-visible) .nm { background-size: 100% 1px; }
+  html:not(#_) #sec-08-price .s8n-more.on::before { transition: transform .4s var(--ease); }
+  html:not(#_) #sec-08-price .s8n-more.on:is(:hover, :focus-visible)::before { transform: rotate(225deg); }
+  /* step 2: the strike-through of a done task draws from left to right */
+  html:not(#_) #sec-08-price .s8n-list .r span { text-decoration-line: none; background: linear-gradient(currentColor, currentColor) no-repeat 0 52% / 0 1px; transition: background-size .5s ease, color .5s ease; }
+  html:not(#_) #sec-08-price .s8n-list .r.done span { background-size: 100% 1px; }
+  html:not(#_) #sec-08-next[data-v="text"] .s8n-list { height: 1.2em; gap: 0; }
+  html:not(#_) #sec-08-next[data-v="text"] .d { display: block; max-width: 34em; }
+
+  /* 27.11 (5): the step number stands apart from the minutes, before the headline, in a column of its own; the minutes
+     stay as the label over the headline */
+  html:not(#_) #sec-08-price .s8n-tl li { grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--sp-3); }
+  html:not(#_) #sec-08-price .s8n-tl li > :not(.n) { grid-column: 2; }
+  html:not(#_) #sec-08-price .s8n-tl li > b { align-self: baseline; }
+  html:not(#_) #sec-08-price .s8n-tl li > .n { grid-column: 1; grid-row: 2; align-self: baseline; font: 400 var(--fs-label-s)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--text-2); }
+
+  /* ==== general fixes 27.11: the presets (Startup / Scale-up / Enterprise) under the quote builder, on its left edge (were over it, on the right) */
+  .s8p-grid > .s8p-presets { grid-column: 6 / -1; justify-self: start; margin-top: calc(var(--sp-3) - 32px); }
+  @media (max-width: 1023px) { .s8p-grid > .s8p-presets { grid-column: 1 / -1; } }
+
   /* ==== general fixes 27.11: the dark mode switch is hidden for now (a prototype: the light theme is a later step); its markup
      and script stay, so it comes back by deleting this rule */
   .site-nav .nav-ic.theme { display: none; }
@@ -3371,18 +3449,17 @@
         <p class="sec-08-lead">Pick what applies to you, or start from a company like yours. We confirm your number on a <span class="sec-08-nb">20-minute</span> call.</p>
       </div>
       <!-- presets (the switch of 02, over the builder): each fills the builder with a typical company; placeholders to confirm -->
-      <div class="shift-switch s8p-presets" role="group" aria-label="Start from a company like yours"><button type="button" aria-pressed="false" data-p="0">Startup</button><button type="button" aria-pressed="true" data-p="1">Scale-up</button><button type="button" aria-pressed="false" data-p="2">Enterprise</button></div>
     </div>
     <div class="s8p-grid">
-      <div class="s8n" id="sec-08-next" role="group" aria-label="The 20-minute call, step by step">
+      <div class="s8n" id="sec-08-next" data-v="text" role="group" aria-label="The 20-minute call, step by step">
         <!-- working copy: the systems, tasks and figures in the small UI pieces are placeholders -->
         <ol class="s8n-tl" data-dir="v">
-          <li><span class="t"><span class="n">Step 1</span>Min 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span>
+          <li><span class="n">Step 1</span><span class="t">Min 0–5</span><b>You show us your stack</b><span class="d">Your tools and the frameworks you need.</span>
             <span class="s8n-conn"><span style="--i:0">AWS</span><span style="--i:1">GitHub</span><span style="--i:2">Google Workspace</span><span style="--i:3">Okta</span><button type="button" class="s8n-more" aria-label="Add one more tool"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg><span class="nm">More</span><em>Try it</em></button></span>
             <span class="s8n-sum" aria-live="polite"><em data-count="212">0</em> controls mapped to your stack</span></li>
-          <li><span class="t"><span class="n">Step 2</span>Min 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies while you watch.</span>
+          <li><span class="n">Step 2</span><span class="t">Min 5–15</span><b>We do the work, live</b><span class="d">Agents collect evidence and draft policies while you watch.</span>
             <span class="s8n-list" aria-hidden="true"></span></li>
-          <li><span class="t"><span class="n">Step 3</span>Min 15–20</span><b>You leave with a plan and your number</b><span class="d">What audit-ready takes, and what it costs.</span>
+          <li><span class="n">Step 3</span><span class="t">Min 15–20</span><b>You leave with your number</b><span class="d">What audit-ready takes, and what it costs.</span>
             <span class="s8n-plan" aria-hidden="true">
               <span class="l">Connect</span><span class="tr"><i style="--s:0;--e:.14;--d:0"></i></span>
               <span class="l">Evidence, policies</span><span class="tr"><i style="--s:.08;--e:.72;--d:1"></i></span>
@@ -3413,6 +3490,7 @@
           </div>
         </div>
       </div>
+        <div class="shift-switch s8p-presets" role="group" aria-label="Start from a company like yours"><button type="button" aria-pressed="false" data-p="0">Startup</button><button type="button" aria-pressed="true" data-p="1">Scale-up</button><button type="button" aria-pressed="false" data-p="2">Enterprise</button></div>
     </div>
   </div>
 </section>
