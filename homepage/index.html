@@ -1660,7 +1660,7 @@
   .sec-09 { --t-label: 13px; --t-body: 16px; --t-lead-m: 20px;     /* the type scale of 03 to 08 */
     --f-line: rgba(252,252,252,.16); --f-dim: rgba(252,252,252,.74); --f-faint: rgba(252,252,252,.56);
     position: relative; z-index: 1; background: var(--black); color: var(--white); font-weight: 400; }
-  .sec-09 a { color: inherit; text-decoration: none; }
+  .sec-09 a:not(.btn) { color: inherit; text-decoration: none; }      /* the buttons keep their own colours */
   .sec-09 ul { margin: 0; padding: 0; list-style: none; }
   /* the nav's hover: an underline that runs in from the left */
   .sec-09 .u { position: relative; }
@@ -1723,6 +1723,120 @@
   @media (prefers-reduced-motion: reduce) {
     .sec-09 *, .sec-09 *::before, .sec-09 *::after { transition: none !important; }
   }
+  /* ---- the closing CTA (26.11): one column on the left, as the section heads: the heading (display-l), the subheading
+     (lead-m), and the action right under them,
+     flat, from the page's own parts: the field in the secondary button's outline, the primary Book a demo beside it;
+     under it the quote builder's gradient chip before a short note. Not a power quote (those are 03 and 08). */
+  .sec-09 .cta-09 { --col-09: clamp(360px, 30vw, 540px); padding: var(--sp-7, 168px) 0; }      /* the same room above and below (the largest step); the footer's top room is the CTA's: the whole area is the wordmark's; --col-09: one width for the column under the heading */
+  /* the heading as the power quotes in 03 and 08 (display-xl): two lines, the second opening with a rule that ends flush with the first */
+  .sec-09 .cta-09-t { display: grid; width: fit-content; max-width: 100%; margin: 0; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-xl, 68px); line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
+  .sec-09 .cta-09-t .q-l { display: block; white-space: nowrap; }
+  .sec-09 .cta-09-t .q-r { display: flex; align-items: baseline; gap: .32em; }
+  .sec-09 .cta-09-t .q-rule { flex: 1 1 auto; min-width: 1.5em; height: max(1.5px, .028em); background: currentColor; transform: translateY(-.26em); }
+  .sec-09 .cta-09-sub { margin: var(--sp-3, 24px) 0 0; max-width: var(--col-09); font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m, 20px); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: balance; }      /* balanced lines, the column's width */
+  .sec-09 .cta-09-form { display: flex; align-items: stretch; gap: 8px; width: min(100%, var(--col-09)); margin-top: var(--sp-4, 40px); }      /* the subheading's width */
+  .sec-09 .cta-09-form .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* the field is the secondary button's outline: flat, 1px, the same fill; its height follows the button (40, 44 from 1680) */
+  .sec-09 .cta-09-form input { flex: 1 1 auto; min-width: 0; height: auto; min-height: 40px; margin: 0; padding: 0 14px; border: 1px solid rgba(252,252,252,.6); border-radius: var(--r);
+    background: rgba(8,8,8,.94); color: var(--white); font: 400 var(--fs-body-m, 16px)/1 var(--sans); outline: none; transition: border-color .2s; }      /* nearly opaque: the pixels behind never cross the text */
+  .sec-09 .cta-09-form input::placeholder { color: rgba(252,252,252,.72); opacity: 1; }
+  .sec-09 .cta-09-form input:is(:hover, :focus) { border-color: var(--white); }
+  .sec-09 .cta-09-form .btn { flex: none; }
+  .sec-09 .cta-09-note { display: flex; align-items: flex-start; gap: 8px; max-width: var(--col-09); text-wrap: balance; margin: var(--sp-2, 16px) 0 0; font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); color: var(--text-2); }
+  .sec-09 .cta-09-note::before { content: ""; flex: none; width: 10px; height: 6px; margin-top: calc(.725em - 3px);      /* on the first line's middle */ background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+  @media (max-width: 1023px) {
+    .sec-09 .cta-09 { padding: 88px 0; }
+    .sec-09 .cta-09-t { font-size: 53px; }
+    .sec-09 .cta-09-sub { font-size: 16px; }
+  }
+  @media (max-width: 767px) {
+    .sec-09 .cta-09 { padding: 72px 0; }
+    .sec-09 .cta-09-t { font-size: clamp(36px, 10.5vw, 56px); }
+    .sec-09 .cta-09-t .q-l:first-child { white-space: normal; }
+    .sec-09 .cta-09-form { flex-direction: column; margin-top: 32px; }
+    .sec-09 .cta-09-form .btn { width: 100%; }
+  }
+  .sec-09 .home-09 + .certs-09 { margin-top: -7px; }      /* the brand line went into the CTA above: the Trust Center line sits under the logo */
+  /* ---- the wordmark behind the CTA (27.11): "Comp AI" (no mark) at the footer's full width, whole: 62 % of it above the rule
+     under the CTA, the rest hidden under the links (so a pull upward never shows a cut edge), drawn in small dimmed pixels like the mist behind sections 02 and 03 (the print's diamonds, mint to cyan,
+     at .34). Around the cursor the pixels grow, light up and are pulled toward it. The copy keeps a halo of the ground. */
+  .sec-09 .cta-09 { position: relative; }
+  .sec-09 .cta-09 > :not(.word-09) { position: relative; z-index: 1; }
+  .sec-09 .word-09 { position: absolute; z-index: 0; left: calc(50% - 50vw); top: 0; width: 100vw; height: 100%; pointer-events: none; }      /* the window's full width, past the wrap's margins */
+  .sec-09 { overflow-x: clip; }      /* height set by the script: the CTA plus the hidden part */
+  /* the links are a full-width block over the wordmark's lower part: a black ground and the rule across the whole window */
+  .sec-09 .cta-09 + .top-09 { position: relative; z-index: 2; isolation: isolate; border-top: 0; }
+  .sec-09 .cta-09 + .top-09::before { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: calc(50% - 50vw); width: 100vw;
+    background: var(--black); border-top: 1px solid var(--f-line); }
+  .sec-09 .cta-09 + .top-09 ~ .bar-09 { position: relative; z-index: 2; }
+  .sec-09 .cta-09-t, .sec-09 .cta-09-sub, .sec-09 .cta-09-note { text-shadow: 0 0 4px var(--black), 0 0 10px var(--black), 0 0 10px var(--black); }
+  /* ---- links module (27.11, cleaned up): the page's 12-column grid. Brand column (logo, the Trust Center line, system status)
+     on 1-3; the six groups on 4-12, three to a row, each 3 columns wide, two rows; the bottom bar on the same grid: copyright on
+     1-3, legal under the first group (4-9), the channels under the third (10-12, right). Group heads are label-s (mono caps,
+     text-2), links body-m in text-2 lighting up to white; one rhythm: 8 between links, 16 under a head, 64 between rows. */
+  @media (min-width: 1024px) {
+    .sec-09 .top-09 { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3, 24px); row-gap: 0; padding: var(--sp-5, 64px) 0; }
+    .sec-09 .brand-09 { grid-column: 1 / span 3; }
+    .sec-09 .cols-09 { grid-column: 4 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--sp-3, 24px); row-gap: var(--sp-5, 64px); }
+    .sec-09 .bar-09 { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-3, 24px); row-gap: 8px; padding: var(--sp-3, 24px) 0 var(--sp-4, 40px); }
+    .sec-09 .bar-09 > p { grid-column: 1 / span 3; }
+    .sec-09 .bar-09 .r { grid-column: 4 / -1; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); column-gap: var(--sp-3, 24px); }
+    .sec-09 .bar-09 .r > nav { grid-column: 1 / span 6; }
+    .sec-09 .bar-09 .r > .out-09 { grid-column: 7 / span 3; }
+  }
+  /* from 1280: the six groups in one row across 4-12 (a lower footer), links in body-s */
+  @media (min-width: 1280px) {
+    .sec-09 .cols-09 { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--sp-2, 16px); row-gap: 0; }
+    .sec-09 .cols-09 .col-09 a { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
+  }
+  @media (min-width: 768px) {
+    .sec-09 .cols-09 .col-09 summary { margin-bottom: var(--sp-2, 16px); font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--text-1); }      /* heads white, links in text-2 */
+    .sec-09 .cols-09 .col-09 li + li { margin-top: var(--sp-1, 8px); }
+    .sec-09 .cols-09 .col-09 a { font: 400 var(--fs-body-m, 16px)/1.45 var(--sans); }
+  }
+  .sec-09 .home-09 { margin-bottom: var(--sp-3, 24px); }
+  .sec-09 .home-09 + .certs-09 { margin-top: 0; }
+  .sec-09 .brand-09 .certs-09 { max-width: 24em; font: 400 var(--fs-body-s, 14px)/1.5 var(--sans); color: var(--text-2); }
+  .sec-09 .brand-09 .status-09 { margin-top: var(--sp-2, 16px); font: 400 var(--fs-body-s, 14px)/1.5 var(--sans); color: var(--text-2); transition: color .2s; }
+  .sec-09 .brand-09 .status-09:is(:hover, :focus-visible) { color: var(--white); }
+  .sec-09 .bar-09 ul { gap: 6px var(--sp-3, 24px); }
+  .sec-09 .bar-09 .r > .out-09 { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px var(--sp-3, 24px); margin-top: -6px; }      /* the 32 px icon boxes centred on the bar's first line */
+  .sec-09 .agent-09 { display: inline-flex; align-items: center; gap: 6px; color: var(--f-dim); }
+  .sec-09 .agent-09 svg { width: 14px; height: 14px; flex: none; }
+  .sec-09 .bar-09 .social-09 { display: flex; gap: 4px; margin-right: -7px; }      /* the last icon's glyph on the right edge */
+  .sec-09 .social-09 a { display: grid; place-items: center; width: 32px; height: 32px; color: var(--f-dim); transition: color .2s; }
+  .sec-09 .social-09 a:is(:hover, :focus-visible) { color: var(--white); }
+  .sec-09 .social-09 svg { width: 18px; height: 18px; fill: currentColor; }
+  /* the bar in one row: the copyright on one line, the legal links after it, View as agent and the channels on the right */
+  @media (min-width: 1024px) {
+    .sec-09 .bar-09 { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-6, 104px); }      /* clear room between the copyright and the legal links (64 at 1280, 104 at 1920) */
+    .sec-09 .bar-09 > p { white-space: nowrap; }
+    .sec-09 .bar-09 .r { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: var(--sp-4, 40px); }
+    .sec-09 .bar-09 .r > .out-09 { margin-top: 0; }
+  }
+  /* G2, as in the hero, in the brand column */
+  .sec-09 .g2-09 { margin: var(--sp-3, 24px) 0 0; padding: 0; box-shadow: none; display: inline-flex; align-items: center; gap: 8px; }
+  /* small, one line, so it does not compete with the Comp AI logo above: mark 18, score body-s, stars 60, the link label-s */
+  .sec-09 .g2-09 .g2-mark { width: 18px; height: 18px; margin: 0; }
+  html .sec-09 .g2-09 .g2-score { font: 400 var(--fs-body-s, 14px)/1 var(--sans); letter-spacing: 0; }
+  .sec-09 .g2-09 .g2-stars { width: 60px; height: 10px; }
+  html .sec-09 .g2-09 .g2-go { margin-left: 4px; font: 400 var(--fs-label-s, 13px)/1 var(--sans); letter-spacing: 0; text-transform: none; }
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .sec-09 .bar-09 .r > nav { grid-column: 1 / span 5; }
+    .sec-09 .bar-09 .r > .out-09 { grid-column: 6 / span 4; }
+  }
+  @media (max-width: 1023px) {
+    .sec-09 .cols-09 { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 48px; }
+    .sec-09 .bar-09 .r { flex-direction: column; align-items: flex-start; }
+    .sec-09 .bar-09 .r > .out-09 { justify-content: flex-start; }
+  }
+  @media (max-width: 767px) {
+    .sec-09 .cols-09 { grid-template-columns: 1fr; row-gap: 0; }
+    /* the accordion heads are titles here, in sans as the rest (the label-s mono caps are for desktop column heads) */
+    .sec-09 .cols-09 .col-09 summary { font: 300 18px/1 var(--sans); letter-spacing: -.01em; text-transform: none; color: var(--white); }
+  }
+  /* isolated view (?only=09): the footer alone */
+  html.only-09 .site-nav, html.only-09 .mega-scrim, html.only-09 main, html.only-09 .sheet, html.only-09 #sheet { display: none !important; }
   /* @section:09 css:end */
 
   /* ---- review 24.11: one type system across the page -------------------------------------------------------------
@@ -2531,7 +2645,7 @@
 <body>
 <script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
 (() => { const q = new URLSearchParams(location.search), v = q.get('v05'), r = document.documentElement;
-  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); if (q.get('only') === '06') r.classList.add('only-06'); })();</script>
+  r.classList.add('v05-' + (/^[abcd]$/.test(v || '') ? v : 'd'));      /* D approved 25.11 (the default); a, b, c stay for comparison */ if (q.get('only') === '05') r.classList.add('only-05'); if (q.get('only') === '09') r.classList.add('only-09'); if (q.get('only') === '06') r.classList.add('only-06'); })();</script>
 <header class="nav site-nav">
   <a class="skip" href="#main">Skip to content</a>
   <div class="wrap announce">
@@ -3160,32 +3274,35 @@
 </section>
 <!-- @section:08-faq html:end -->
 <!-- @section:08-close html:start -->
-<section class="sec-08" id="sec-08-close" aria-labelledby="sec-08-close-t">
-  <div class="wrap">
-    <div class="sec-08-close">
-      <div>
-        <p class="sec-08-eyebrow">Comp AI</p>
-        <h3 class="sec-08-close-t" id="sec-08-close-t">Compliance that helps you close deals.</h3>
-        <p class="sec-08-lead">AI-powered compliance platform. Get SOC 2, ISO 27001, HIPAA and GDPR audit-ready in record time.</p>
-      </div>
-      <div class="sec-08-acts">
-        <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
-        <a class="btn btn-secondary" href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="lb">Visit the Trust Center</span></a>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- the closing CTA moved into the footer (09, 26.11) -->
 <!-- @section:08-close html:end -->
 <!-- @section:08 html:end -->
 </main>
 <!-- @section:09 html:start -->
 <footer class="sec-09" id="sec-09" aria-label="Footer">
   <div class="wrap">
+  <!-- the closing CTA (26.11): 08's "Compliance that helps you close deals." opens the footer, a CTA of its own (not a power quote), one action -->
+  <div class="cta-09">
+    <!-- behind the CTA: the "Comp AI" wordmark at full width, cut by the rule under it, in small dimmed pixels like the mist behind 02 -->
+    <canvas class="word-09" aria-hidden="true"></canvas>
+    <h2 class="cta-09-t"><span class="q-l">Compliance that helps you</span> <span class="q-l q-r"><i class="q-rule" aria-hidden="true"></i>close deals.</span></h2>
+    <p class="cta-09-sub">AI-powered compliance platform. Get SOC 2, ISO 27001, HIPAA and GDPR audit-ready in record time.</p>
+    <!-- placeholder: the Book a Demo page takes the email and goes on from there (not built yet) -->
+    <form class="cta-09-form" action="/book-a-demo" method="post">
+      <label class="vh" for="cta-09-email">Work email</label>
+      <input id="cta-09-email" name="email" type="email" autocomplete="email" placeholder="Work email" required>
+      <button class="btn btn-primary" type="submit"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></button>
+    </form>
+    <p class="cta-09-note">A 20-minute call on your own stack. No price list, your quote on the call.</p>
+  </div>
   <div class="top-09">
     <div class="brand-09">
       <a class="home-09" href="/" aria-label="Comp AI home"><img class="m" src="assets/img/logo-mark.svg" alt="" width="28" height="26"><img class="w" src="assets/img/logo-wordmark.svg" alt="" width="77" height="21"></a>
-      <p class="line-09">Get compliance-ready faster while Comp AI does more of the work.</p>
       <p class="certs-09">Our own <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">SOC 2</span></a>, <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">ISO 27001</span></a>, <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">HIPAA</span></a> and <a href="https://security.trycomp.ai" target="_blank" rel="noopener"><span class="u">GDPR</span></a> evidence is open in the Trust Center.</p>
+      <a class="g2-rating g2-09" href="https://www.g2.com/products/comp-ai/reviews" aria-label="Comp AI is rated 4.7 out of 5 on G2. Read the reviews">
+        <img class="g2-mark" src="assets/img/g2-logo-white.svg" alt="" width="32" height="32"><b class="g2-score">4.7</b><svg class="g2-stars" viewBox="0 0 84 14" aria-hidden="true" focusable="false"><defs><path id="g2-st-09" d="M7 .6l1.9 4.2 4.5.4-3.4 3 1 4.5L7 10.4 3 12.7l1-4.5-3.4-3 4.5-.4z"/><clipPath id="g2-47-09"><rect width="79.8" height="14"/></clipPath></defs><g opacity=".28"><use href="#g2-st-09"/><use href="#g2-st-09" x="17.5"/><use href="#g2-st-09" x="35"/><use href="#g2-st-09" x="52.5"/><use href="#g2-st-09" x="70"/></g><g clip-path="url(#g2-47-09)"><use href="#g2-st-09"/><use href="#g2-st-09" x="17.5"/><use href="#g2-st-09" x="35"/><use href="#g2-st-09" x="52.5"/><use href="#g2-st-09" x="70"/></g></svg><span class="g2-go">Read the reviews</span>
+      </a>
+      <a class="status-09" href="https://status.trycomp.ai" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"></span><span class="u">All systems normal</span></a>
     </div>
     <nav class="cols-09" aria-label="Footer">
     <details class="col-09" open>
@@ -3204,7 +3321,6 @@
         <li><a href="/tools"><span class="u">Tools &amp; templates</span></a></li>
         <li><a href="/docs"><span class="u">Documentation</span></a></li>
         <li><a href="https://github.com/trycompai/comp" target="_blank" rel="noopener"><span class="u">GitHub</span><span aria-hidden="true"> ↗</span></a></li>
-        <li><a href="/llms.txt"><span class="u">For Agents</span></a></li>
       </ul>
     </details>
     <details class="col-09" open>
@@ -3264,13 +3380,16 @@
           <li><a href="/legal/subprocessors"><span class="u">Subprocessors</span></a></li>
         </ul>
       </nav>
-      <ul aria-label="Comp AI elsewhere">
-        <li><a href="https://github.com/trycompai/comp" target="_blank" rel="noopener"><span class="u">GitHub</span></a></li>
-        <li><a href="https://x.com/compai" target="_blank" rel="noopener"><span class="u">X</span></a></li>
-        <li><a href="https://www.linkedin.com/company/trycompai" target="_blank" rel="noopener"><span class="u">LinkedIn</span></a></li>
-        <li><a href="https://www.youtube.com/@trycompai" target="_blank" rel="noopener"><span class="u">YouTube</span></a></li>
-      </ul>
-      <a class="status-09" href="https://status.trycomp.ai" target="_blank" rel="noopener"><span class="dot" aria-hidden="true"></span><span class="u">All systems normal</span></a>
+      <div class="out-09">
+        <!-- the page in plain text for AI agents (llms.txt; was "For Agents" under Resources) -->
+        <a class="agent-09" href="/llms.txt"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 5 2 8l3 3M11 5l3 3-3 3M9.2 3.5l-2.4 9" stroke="currentColor" stroke-width="1.3"/></svg><span class="u">View as agent</span></a>
+        <ul class="social-09" aria-label="Comp AI elsewhere">
+        <li><a href="https://github.com/trycompai/comp" target="_blank" rel="noopener" aria-label="Comp AI on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a></li>
+        <li><a href="https://www.linkedin.com/company/trycompai" target="_blank" rel="noopener" aria-label="Comp AI on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></li>
+        <li><a href="https://x.com/compai" target="_blank" rel="noopener" aria-label="Comp AI on X"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a></li>
+        <li><a href="https://www.youtube.com/@trycompai" target="_blank" rel="noopener" aria-label="Comp AI on YouTube"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a></li>
+        </ul>
+      </div>
     </div>
   </div>
   </div>
@@ -5734,6 +5853,446 @@
   const sync = () => groups.forEach(g => { g.open = !mq.matches; });
   groups.forEach(g => g.querySelector('summary').addEventListener('click', e => { if (!mq.matches) e.preventDefault(); }));
   sync(); mq.addEventListener('change', sync);
+
+})();
+</script>
+<script src="assets/js/word-fields.js"></script>
+<script>
+/* 09 · the wordmark behind the CTA (27.11): the hero's print engine (a copy of 08's copy: draw, press that follows the cursor,
+   gravity, morph to the next shape on hover, trail, ambient drift) on the "Comp AI" Blend fields made with the shapes generator
+   (window.WORD_FIELDS, assets/js/word-fields.js: two shapes on the hero's 1480 x 1891 lattice). The wordmark spans the CTA's
+   the window's full width (no margins), 62 % of it above the rule under the CTA; the links hide the rest. Default: the hero's full
+   press (gravity, spread, the far side letting go); ?w09=mist: the mist of section 02 (fine dimmed dots that grow around the cursor).
+   Cursor over the CTA only. */
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const D = window.WORD_FIELDS;
+  const MODE = new URLSearchParams(location.search).get('w09') === 'mist' ? 'mist' : 'print', ABOVE = .62;
+  const HEAT = new URLSearchParams(location.search).get('h09') !== '0';
+  // under the copy on the left the pixels are kept small, growing back gradually to full size toward the right (share of the width)
+  const CALM_FROM = .3, CALM_TO = .62, CALM_MIN = .16, CALM_LIFT = .3;      // CALM_LIFT: how much of the size the press gives back there      // 27.11: the full print is the working option
+  const cvs = document.querySelector('.sec-09 .word-09'), host = cvs && cvs.closest('.cta-09');
+  if (!D || !cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dec = (b64, T) => { const s = atob(b64), u = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new T(u.buffer); };
+  const N = D.pts.length / 2, order = D.order, TAU = 2 * Math.PI;
+  const F = order.map(k => {
+    const c = Float32Array.from(dec(D.c[k], Int16Array), v => v / 1000);
+    const f = Float32Array.from(dec(D.f[k], Int16Array), v => v / 1000);
+    return { b: c.map((v, i) => v - f[i]), f,
+             w: Float32Array.from(dec(D.w[k], Uint8Array), v => v / 255),
+             m: Float32Array.from(dec(D.m[k], Uint8Array), v => v / 255) };
+  });
+  const A = (D.pts[2] - D.pts[0]) / 2, key = (i, j) => i * 4096 + j, idx = new Map();
+  for (let n = 0; n < N; n++) idx.set(key(Math.round(D.pts[2*n] / A), Math.round(D.pts[2*n+1] / A)), n);
+  const diag = new Int32Array(4 * N).fill(-1);
+  for (let n = 0; n < N; n++) {
+    const i = Math.round(D.pts[2*n] / A), j = Math.round(D.pts[2*n+1] / A);
+    [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([a, b], k) => { const v = idx.get(key(i + a, j + b)); if (v !== undefined) diag[4*n + k] = v; });
+  }
+  // axis neighbours two steps away (same distance on the 45° lattice as the diagonal ones)
+  const axn = new Int32Array(4 * N).fill(-1);
+  for (let n = 0; n < N; n++) {
+    const i = Math.round(D.pts[2*n] / A), j = Math.round(D.pts[2*n+1] / A);
+    [[2, 0], [-2, 0], [0, 2], [0, -2]].forEach(([a, b], k) => { const v = idx.get(key(i + a, j + b)); if (v !== undefined) axn[4*n + k] = v; });
+  }
+  for (const S of F) {
+    let h = S.m.slice();
+    for (let it = 0; it < 9; it++) {
+      const nx = h.slice();
+      for (let n = 0; n < N; n++) for (let k = 0; k < 4; k++) { const v = diag[4*n + k]; if (v >= 0 && h[v] * .86 > nx[n]) nx[n] = h[v] * .86; }
+      h = nx;
+    }
+    S.h = h;
+  }
+  for (const S of F) {
+    let sx = 0, sy = 0, n = 0, x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    for (let i = 0; i < N; i++) if (S.m[i] > .3) { const x = D.pts[2*i], y = D.pts[2*i+1];
+      sx += x; sy += y; n++; x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    Object.assign(S, { cx: sx / n, cy: sy / n, rx: (x1 - x0) / 2, ry: (y1 - y0) / 2 });
+  }
+  const near = (x, y) => {
+    let i = Math.round(x / A), j = Math.round(y / A);
+    if ((((i + j) % 2) + 2) % 2) { const fx = x / A - i, fy = y / A - j;
+      if (Math.abs(fx) > Math.abs(fy)) i += fx > 0 ? 1 : -1; else j += fy > 0 ? 1 : -1; }
+    const v = idx.get(key(i, j)); return v === undefined ? -1 : v;
+  };
+  const Cf = new Float32Array(N), Wf = new Float32Array(N), Mf = new Float32Array(N), Hf = new Float32Array(N), Dr = new Uint8Array(N), Xs = new Float32Array(N), Ys = new Float32Array(N), Hs = new Float32Array(N);
+
+  // ---- tuning (press-screen.html, 16.11) ---------------------------------------------------
+  const SPEED = reduced ? 1e9 : 1.7, LOCAL = reduced ? 300 : 2800, SWELL = reduced ? 0 : 0.6;      // 08 (26.11): a calmer morph than the hero's (3.3 / 2300 / .94): no snatch while the cursor keeps moving
+  const P_RADIUS = 180, P_REACH = 0.75, P_DENSE = 0.24, P_SPILL = 1.5, P_SPREAD = 0.3, P_CRISP = 0.2, P_EDGE = 5.1;
+  const GRAVITY = 0.24, LIFT_W = 0.25, LIFT_M = 0.35;
+  const FAR_FROM = 120, FAR_TO = 640, FAR_W = 0.29, FAR_M = 0.47;
+  const P_IN = 0.07, P_OUT = 0.03, P_FOLLOW = 0.05;      // 08 (26.11): slower than the hero's (.12 / .1): the press builds slowly and trails the cursor a little;      // eased (Michał, 25.11; review 15): the print follows the cursor slowly instead of jumping to it
+  const MORPH_GAP = 1400;      // ms after a morph ends before the next can start: fast passes over the print no longer stack morphs
+  const TRAIL = 260, TRAIL_SIZE = 0.38, HOVER_ZONE = 0.5;
+  // ---- hero additions ----------------------------------------------------------------------
+  const AMBIENT = 0.42;      // strength of the slow drifting press when nobody points
+  const IDLE_MS = 2600;      // pointer still this long -> ambient takes over
+  const REST_MS = 3000;      // cursor still this long over the page -> the print lets go and returns to its first shape
+  const GRAD_AMP = .14;      // idle: the mint-to-cyan gradient drifts this far (share of its length)
+  const GRAD_PERIOD = 14;    // seconds for one slow pass of the drift
+  // base colour (Figma 251:362): #24FF63 at the top of the screen to #00FFEE at the bottom.
+  // heat on top: pressed lines warm toward yellow and orange, the side that lets go dims.
+  const BASE_TOP = [36,255,99], BASE_BOT = [0,255,238], WARM = [[241,188,55], [245,56,14]];
+  const Y_BANDS = 28, WARM_STEPS = 8, DIM_STEPS = 3;
+  const mix = (a, b, u) => a.map((v, i) => Math.round(v + (b[i] - v) * u));
+  const colourOf = (band, heat) => {        // heat: -DIM_STEPS..WARM_STEPS
+    let c = mix(BASE_TOP, BASE_BOT, band / (Y_BANDS - 1));
+    // 09 (27.11, test): the hero's heat map: pressed lines warm toward yellow and orange, the side that lets go dims (?h09=0: off)
+    if (HEAT && heat > 0) { const u = heat / WARM_STEPS; c = u < .6 ? mix(c, WARM[0], u / .6) : mix(WARM[0], WARM[1], (u - .6) / .4); }
+    else if (HEAT && heat < 0) c = c.map(v => Math.round(v * (1 - .16 * -heat)));
+    return `rgb(${c.join(',')})`;
+  };
+  const PAL = new Map(), paths = new Map();
+  const pathFor = (band, heat) => { const k = band * 32 + heat + DIM_STEPS; let P = paths.get(k);
+    if (!P) { P = new Path2D(); paths.set(k, P); if (!PAL.has(k)) PAL.set(k, colourOf(band, heat)); } return P; };
+
+  const jit = new Float32Array(N);
+  for (let i = 0; i < N; i++) { const h = Math.sin(D.pts[2*i] * 0.9285 + D.pts[2*i+1] * 5.5881) * 43758.5453; jit[i] = (h - Math.floor(h)) * 2 - 1;}
+  // the way out as section 03 comes in (26.11): each dot has its own moment to go; it starts clearly at the bottom of the screen
+  // (where 03 rises from) and climbs, at random within that; window.printOut 0..1 is set by the scroll script near the end of the page
+  const OUTR = new Float32Array(N); for (let i = 0; i < N; i++) { const h = Math.sin(D.pts[2*i] * 12.9898 + D.pts[2*i+1] * 78.233) * 24634.6345; OUTR[i] = h - Math.floor(h); }
+  const outOf = (i, x, y, out) => { const sy = Math.min(1, Math.max(0, (y * view.k + view.oy) / view.h)), th = (.4 * OUTR[i] + .6 * (1 - sy)) * .9;      /* from the bottom up, frayed: position leads (60 %), chance breaks the edge (40 %) */
+    return 1 - smooth(th, th + .1, out); };
+
+  // ---- intro: the print is pressed in from black, front running along its own lines ------------
+  const S0 = F[0], CX = S0.cx, CY = S0.cy - S0.ry * .28;
+  const dC = new Float32Array(N); let RMAX = 0;
+  for (let i = 0; i < N; i++) { dC[i] = Math.hypot(D.pts[2*i] - CX, D.pts[2*i+1] - CY); if (S0.m[i] > .05 && dC[i] > RMAX) RMAX = dC[i]; }
+  const med = a => { a.sort((x, y) => x - y); return a[a.length >> 1] || 0; };
+  // line spacing in shape units and which way the phase runs away from the core
+  const grads = [], dirs = [];
+  for (let n = 0; n < N; n++) { if (S0.m[n] < .6) continue; const a = diag[4*n], c2 = diag[4*n + 1];
+    if (a < 0 || c2 < 0) continue;
+    const db1 = S0.b[a] - S0.b[n], db2 = S0.b[c2] - S0.b[n];
+    grads.push(Math.hypot(db1, db2) / (A * Math.SQRT2)); dirs.push(Math.sign(db1 * (dC[a] - dC[n]) + db2 * (dC[c2] - dC[n]))); }
+  const LINE = 1 / med(grads), SGN = med(dirs) < 0 ? -1 : 1;
+  // press front: not a circle. It follows the print's own lines counted out from the core,
+  // stretched to the silhouette in each direction, with a slow uneven wobble on top.
+  const PRESS_LINES = .6, PRESS_SIL = .4, PRESS_WOBBLE = .12;
+  const BINS = 96, ext = new Float32Array(BINS);
+  const angOf = i => Math.atan2(D.pts[2*i+1] - CY, D.pts[2*i] - CX);
+  for (let i = 0; i < N; i++) if (S0.m[i] > .3) { const k = Math.floor((angOf(i) / TAU + .5) * BINS) % BINS; if (dC[i] > ext[k]) ext[k] = dC[i]; }
+  const extS = ext.map((_, k) => { let s = 0, n = 0; for (let j = -4; j <= 4; j++) { const v = ext[(k + j + BINS) % BINS]; if (v > 0) { s += v; n++; } } return n ? s / n : RMAX; });
+  let core = 0; for (let i = 1; i < N; i++) if (dC[i] < dC[core]) core = i;
+  const dP = new Float32Array(N); let PMAX = 0;
+  for (let i = 0; i < N; i++) {
+    const a = angOf(i), u = (a / TAU + .5) * BINS, k0 = Math.floor(u) % BINS, fr = u - Math.floor(u);
+    const e = extS[k0] * (1 - fr) + extS[(k0 + 1) % BINS] * fr;
+    const sil = dC[i] / Math.max(e, 60) * RMAX;                          // silhouette-shaped distance
+    const lines = Math.max(0, SGN * (S0.b[i] - S0.b[core])) * LINE;      // ridge count from the core
+    const wob = 1 + PRESS_WOBBLE * (Math.sin(3 * a + 1.3) + .6 * Math.sin(5 * a + .4) + .4 * Math.sin(8 * a + 2.1));
+    dP[i] = (PRESS_LINES * Math.min(lines, sil * 1.6) + PRESS_SIL * sil) * wob;
+    if (S0.m[i] > .05 && dP[i] > PMAX) PMAX = dP[i];
+  }
+  let dis = MODE === 'mist' ? 1 : 0;                  // 09: 1 = the mist of 02 (fine dots), 0 = the hero's print
+  const MIST_H = 1.5;                                 // size of the mist dots left behind (shape units)
+  const MIST_R = 380;                                 // mist: reach of the cursor (shape units); dots grow within it
+  const INTRO_LEN = 3.5;                              // seconds; the cursor press waits until it is over
+  let introT0 = performance.now(), introOn = false;      // 08 (26.11): no press-in from the middle; the reveal from the top below replaces it
+  // 08 (26.11): the print waits until the logo block of 07 (the row from "1,000+") is fully on screen and in, then comes in from
+  // the top down, dot by dot (a soft, slightly uneven edge), so it is never seen cut by a block that is not there yet
+  let revealT0 = reduced ? 0 : -1; const REVEAL_MS = 1700;
+  const RJ = new Float32Array(N); for (let i = 0; i < N; i++) { const h = Math.sin(D.pts[2*i] * 12.9898 + D.pts[2*i+1] * 78.233) * 43758.5453; RJ[i] = h - Math.floor(h); }
+  let paused = reduced;
+
+  let cur = 0;
+  const copy = s => ({ b: s.b.slice(), f: s.f.slice(), w: s.w.slice(), m: s.m.slice(), h: s.h.slice() });
+  const shown = copy(F[0]);
+  let from = copy(shown), to = { ...F[0], shift: 0 };
+  const dist = new Float32Array(N);
+  let t0 = -1, tEnd = 0;
+  const press = { x: D.W / 2, y: D.H / 2, tx: D.W / 2, ty: D.H / 2, amt: 0, target: 0, force: 1 };
+  const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  function bestShift(a, b) {
+    const diffs = [];
+    for (let i = 0; i < N; i += 3) if (a.m[i] > .3 || b.m[i] > .3) diffs.push(a.b[i] - b.b[i]);
+    diffs.sort((x, y) => x - y);
+    return Math.round(diffs[diffs.length >> 1] || 0);
+  }
+  function morph(px, py, to_ = (cur + 1) % order.length) {
+    from = copy(shown);
+    cur = to_;
+    const T = F[cur];
+    to = { ...T, shift: bestShift(from, T) };
+    let max = 0;
+    for (let i = 0; i < N; i++) { const d = Math.hypot(D.pts[2*i] - px, D.pts[2*i+1] - py); dist[i] = d; if (d > max) max = d; }
+    t0 = performance.now(); tEnd = t0 + max / SPEED + LOCAL;
+    kick();
+  }
+
+  // placement: the print sits right of the type on desktop and below it on a phone, larger than
+  // the screen so its lines run off the edges
+  const view = { k: 1, ox: 0, oy: 0, w: 0, h: 0, dpr: 1 };
+  // 09: the wordmark across the CTA's width (its letters' extent, with a small margin), its bottom part under the links
+  const logos = null;
+  function place() {
+    const S = F[0], hh = host.getBoundingClientRect().height, wv = cvs.getBoundingClientRect().width;      // the canvas spans the window
+    view.k = wv / (2 * S.rx);                                        // the letters edge to edge
+    const top = hh - 2 * S.ry * view.k * ABOVE;                      // the letters' top: 62 % of them above the rule
+    view.ox = wv / 2 - S.cx * view.k; view.oy = top - (S.cy - S.ry) * view.k;
+    cvs.style.height = Math.ceil(hh + 2 * S.ry * view.k * (1 - ABOVE) + 40) + 'px';
+    const r = cvs.getBoundingClientRect(); view.w = r.width; view.h = r.height;
+    view.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cvs.width = Math.round(view.w * view.dpr); cvs.height = Math.round(view.h * view.dpr);
+    cvs.style.opacity = dis ? .5 : 1;                                // the mist is dimmed as in 02 (the hero's canvas at .32 to .5)
+  }
+  const toShape = (cx, cy) => { const r = cvs.getBoundingClientRect();
+    return [(cx - r.left - view.ox) / view.k, (cy - r.top - view.oy) / view.k]; };
+
+  const dmd = (P, x, y, hh) => { P.moveTo(x, y - hh); P.lineTo(x + hh, y); P.lineTo(x, y + hh); P.lineTo(x - hh, y); P.closePath(); };
+
+  function draw(now) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, cvs.width, cvs.height);      // 08: on paper, no black ground
+    ctx.setTransform(view.k * view.dpr, 0, 0, view.k * view.dpr, view.ox * view.dpr, view.oy * view.dpr);
+    paths.clear(); Dr.fill(0);
+    // base gradient by screen height; while idle it drifts: a slow diagonal swell moves through the print
+    const ga = GRAD_AMP * gradAmt, gph = gradT / GRAD_PERIOD * TAU;
+    // 08: the gradient runs out from the middle of the print (mint) to its edge (cyan), as the key visual in Figma (315:834)
+    const bandOf = (x, y) => { const sx = (x * view.k + view.ox) / view.w, sy = (y * view.k + view.oy) / view.h;
+      const g = Math.hypot(x - S0.cx, y - (S0.cy + .1 * S0.ry)) / (1.05 * Math.max(S0.rx, S0.ry)) + ga * Math.sin(TAU * (.55 * sx + .35 * sy) - gph) + ga * .5 * Math.sin(TAU * (.2 * sx - .6 * sy) - gph * .6 + 1.7);
+      return Math.max(0, Math.min(Y_BANDS - 1, Math.floor(g * Y_BANDS))); };
+    const mz = smooth(.3, .8, dis);                    // 0 in the hero, 1 once only the mist is left
+    const pz = press.amt * mz;                         // cursor presence on the mist
+    const out = 0;                                     // 08: the print does not scroll out
+    const r = D.round * (1 - .7 * dis), hmax = D.hmax, hmin = D.hmin, active = t0 >= 0 && now < tEnd;   // finer dots on the mist
+    const pa = press.amt * press.force * (introOn ? smooth(.15, 1.4, (now - introT0) / 1000) : 1) * (1 - .8 * dis);   // a fifth of the press on the mist
+    const d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2);
+    const R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
+    const far = smooth(FAR_FROM, FAR_TO, d0) * pa;
+    const qNear = Math.exp(-Math.pow(Math.max(0, d0 - 560), 2) / pr2);
+    const it = (now - introT0) / 1000, ik = introOn && it < INTRO_LEN;
+    const cull = ik ? .5 : (dis > .05 ? .4 : hmin);
+    const frontR = 30 + (1 - Math.pow(1 - Math.min(1, it / 3.0), 2)) * (PMAX + 300), inkFade = 1 - smooth(2.0, 3.4, it);
+    for (let i = 0; i < N; i++) {
+      let b, f, w, m, hl, swell = 0;
+      if (active) {
+        const t = ease(Math.min(1, Math.max(0, (now - t0 - dist[i] / SPEED) / LOCAL)));
+        b = from.b[i] + (to.b[i] + to.shift - from.b[i]) * t;
+        const zx = (1 - t) * Math.cos(TAU * from.f[i]) + t * Math.cos(TAU * to.f[i]);
+        const zy = (1 - t) * Math.sin(TAU * from.f[i]) + t * Math.sin(TAU * to.f[i]);
+        f = Math.atan2(zy, zx) / TAU;
+        w = from.w[i] + (to.w[i] - from.w[i]) * t;
+        m = from.m[i] + (to.m[i] - from.m[i]) * t;
+        hl = from.h[i] + (to.h[i] - from.h[i]) * t;
+        swell = SWELL * Math.sin(Math.PI * t);
+        shown.b[i] = b; shown.f[i] = f; shown.w[i] = w; shown.m[i] = m; shown.h[i] = hl;
+      } else {
+        b = shown.b[i] = to.b[i] + to.shift; f = shown.f[i] = to.f[i];
+        w = shown.w[i] = to.w[i]; m = shown.m[i] = to.m[i]; hl = shown.h[i] = to.h[i];
+      }
+      let c = b + f;
+      Mf[i] = 0;
+      let x = D.pts[2*i], y = D.pts[2*i+1];
+      // intro: squares grow in behind the press front, which carries a little extra ink outward
+      let rv = 1;
+      if (ik) {
+        const d = dC[i];
+        {
+          const e = frontR - dP[i], bump = Math.exp(-Math.pow((e - 50) / 120, 2)) * inkFade;
+          rv = smooth(-30, 120, e);
+          w = Math.min(.92, w + .34 * bump);
+          m = Math.max(m * rv, hl * .85 * bump);
+          const push = 14 * bump / Math.max(d, 1); x += (x - CX) * push; y += (y - CY) * push;
+        }
+      }
+      if (hl < .01) continue;
+      let p = 0, q = 0, away = 0, g = 0;
+      if (pa > .001) {
+        const dx = x - press.x, dy = y - press.y;
+        q = Math.min(1, Math.exp(-(dx * dx + dy * dy) / pr2) / qNear);
+        p = pa * q;
+        away = 1 - q;
+        // on the mist the whole-print reactions (the far side letting go, the pull to the press) fade out:
+        // together they read as a tilting 3D object; the mist only smears along the cursor's movement
+        w = Math.min(.9, w + P_SPREAD * p) - (LIFT_W * pa * away + FAR_W * far * away) * (1 - mz);
+        m = (1 - Math.pow(1 - m, 1 + P_EDGE * p)) * (1 - LIFT_M * pa * away * (1 - m * m) * (1 - mz));
+        m *= 1 - FAR_M * far * Math.pow(away, 1.6) * (1 - mz);
+        m = Math.max(m, hl * P_SPILL * p * p);
+        c = b * (1 + P_DENSE * p) + f;
+        g = GRAVITY * p * Math.min(1, P_RADIUS / R) * (1 - mz);
+        x -= dx * g; y -= dy * g;
+      }
+      // heat: warm where pressed, cool on the side that lets go, neutral white at rest
+      const heat = p > .04 ? Math.round(Math.min(1, p * 1.15) * WARM_STEPS) : -Math.round(pa * away * DIM_STEPS * (1 - mz));
+      Cf[i] = c - swell; Wf[i] = w; Mf[i] = m; Hf[i] = heat;
+      if (m < .01) continue;
+      const v = .5 + .5 * Math.cos(TAU * (c - swell));
+      const soft = 1 - P_CRISP * p;
+      let s = smooth(1 - w - .34 * soft, 1 - w + .30 * soft, v) * Math.max(m, 0);
+      s *= 1 + .12 * jit[i] * (1 - s);
+      let h = hmax * s * rv;
+      // scroll-out: the work disappears from the outer edge in, squares shrink to a mist of fine dots
+      if (dis > 0) { const th = (1 - dis) * (PMAX + 320) - 60, kd = smooth(-160, 0, th - dP[i]);
+        h = Math.max(h * kd, s > .4 ? MIST_H * Math.min(1, dis * 1.6) : 0); }
+      // mist: the small dimmed dots are the resting form and never go away; around the cursor they grow,
+      // getting smaller again with distance until they are back at their resting size
+      if (pz > .01) h *= 1 + .8 * pz * (1 - smooth(0, MIST_R * .7, Math.hypot(x - press.x, y - press.y)));
+      if (out > 0) h *= outOf(i, x, y, out);
+      { const sx = (x * view.k + view.ox) / view.w;      // 09: smaller under the copy, a gradual ramp to full size
+        const calm = CALM_MIN + (1 - CALM_MIN) * smooth(CALM_FROM, CALM_TO, sx);
+        if (calm < .999) { h *= calm + (1 - calm) * CALM_LIFT * p;      // the press lets them grow a little
+          if (s > .3) h = Math.max(h, r + .65); } }                      // but they never vanish: a letter's pixel keeps a fine dot
+      if (revealT0 < 0) continue;
+      if (!reduced) { const rp = (now - revealT0) / REVEAL_MS; if (rp < 1.2) {      // 09: it rises from the rule under the CTA
+        const hh0 = host.offsetHeight, up = Math.min(1, Math.max(0, (hh0 - (y * view.k + view.oy)) / hh0)), th = up * .84 + RJ[i] * .14; h *= smooth(th, th + .1, rp); } }
+      if (h < cull) continue;
+      const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
+      let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
+      // hard rule: never touch a square already drawn next to it (squares are L1 balls: apart when the
+      // L1 distance is at least the sum of their reaches)
+      for (let k2 = 0; k2 < 8; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
+        if (nb >= 0 && Dr[nb]) hh = Math.min(hh, Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) - Hs[nb] - r - 1); }
+      if (hh < .5) continue;
+      dmd(pathFor(bandOf(x, y), heat), x, y, hh); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hh + r;
+    }
+    const tp = Math.max(pa * (1 - mz), pz);             // trail strength: the hero's press, or the cursor on the mist
+    if (tp > .001 && TRAIL > 0) {
+      const L = TRAIL * tp;
+      for (let i = 0; i < N; i++) {
+        if (Mf[i] > .45 || Dr[i]) continue;
+        let x = D.pts[2*i], y = D.pts[2*i+1];
+        { const dx = x - press.x, dy = y - press.y;
+          const g = GRAVITY * pa * Math.min(1, Math.exp(-(dx * dx + dy * dy) / pr2) / qNear) * Math.min(1, P_RADIUS / R);
+          x -= dx * g; y -= dy * g; }
+        let ux = press.x - x, uy = press.y - y; const ul = Math.hypot(ux, uy);
+        if (ul < 1) continue; ux /= ul; uy /= ul;
+        for (let k = 1; k <= 4; k++) {
+          const j = near(x - ux * L * k / 4, y - uy * L * k / 4);
+          if (j < 0 || Mf[j] < .35) continue;
+          const v = .5 + .5 * Math.cos(TAU * Cf[j]);
+          const s = smooth(1 - Wf[j] - .34, 1 - Wf[j] + .30, v) * Mf[j];
+          const h = (mz > .5 ? MIST_H * 2.2 : hmax * TRAIL_SIZE) * s * (1 - (k - 1) / 4) * tp * (1 - Mf[i]) * (out > 0 ? outOf(i, x, y, out) : 1);
+          if (h > (mz > .5 ? .3 : .9)) {
+            const hd = Math.min(h - r, 3.2) + r;
+            let clear = true;                                   // keep clear of the drawn squares around it
+            for (let k2 = 0; k2 < 8 && clear; k2++) { const nb = k2 < 4 ? diag[4*i + k2] : axn[4*i + k2 - 4];
+              if (nb >= 0 && Dr[nb] && Math.abs(Xs[nb] - x) + Math.abs(Ys[nb] - y) < Hs[nb] + hd + 1.5) clear = false; }
+            if (clear) { dmd(pathFor(bandOf(x, y), Hf[j]), x, y, Math.max(hd - r, .35)); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = hd; }
+          }
+          break;
+        }
+      }
+    }
+    ctx.lineWidth = 2 * r; ctx.lineJoin = 'round';
+    for (const [k, P] of paths) { ctx.fillStyle = ctx.strokeStyle = PAL.get(k); ctx.fill(P); ctx.stroke(P); }
+  }
+
+  // ---- loop: pointer press, ambient drift, morph; sleeps off screen and when paused ---------
+  let raf = 0, visible = true, lastPointer = -1e9, ambientT = Math.random() * 100, lastNow = performance.now();
+  let gradT = Math.random() * GRAD_PERIOD, gradAmt = 0;   // idle gradient drift: its clock and strength
+  const kick = () => { if (!raf && visible) raf = requestAnimationFrame(frame); };
+  function frame(now) {
+    const dt = Math.min(64, now - lastNow); lastNow = now;
+    { const live = !paused && !reduced && now - lastPointer > IDLE_MS;
+      gradAmt += ((live ? 1 : 0) - gradAmt) * (live ? .012 : .05);
+      if (!paused && !reduced) gradT += dt / 1000; }
+    const inIntro = introOn && now - introT0 < INTRO_LEN * 1000;
+    // the cursor press works from the first frame (it builds with the reveal, see draw); only the
+    // ambient press waits until the reveal is over, plus about a second
+    const ambientOk = !introOn || now - introT0 > INTRO_LEN * 1000 + 900;
+    // a resting cursor keeps its press; the ambient press only runs when no cursor is over the page
+    const idle = !pointerIn && now - lastPointer > IDLE_MS && ambientOk && dis < .05;
+    if (!pointerIn && !ambientOk) press.target = 0;
+    // cursor resting: after REST_MS the press lets go (shape and colours settle back), and a print that was
+    // morphed on hover flows back to the first one; any movement brings the press back
+    if (pointerIn && now - lastPointer > REST_MS && !inIntro) {
+      press.target = 0;
+      if (cur !== 0 && !(t0 >= 0 && now < tEnd)) morph(press.x, press.y, 0);
+    }
+    if (idle && !paused && !reduced) {
+      // a slow loop around the print, just off its edge, so a soft warm patch keeps moving
+      ambientT += dt * .00011;
+      press.tx = D.W / 2 + Math.cos(ambientT * 1.0) * D.W * .62;
+      press.ty = D.H / 2 + Math.sin(ambientT * 1.7) * D.H * .46;
+      press.target = AMBIENT; press.force = 1;
+    } else if (idle) press.target = 0;
+    if (pointerIn && !idle && press.target === 0 && engaged(now) && now - lastPointer < REST_MS) press.target = 1;      // the beat is over: the press may begin
+    const ee = idle ? 1 : engEase(now), follow = idle ? .02 : P_FOLLOW * ee;
+    press.amt += (press.target - press.amt) * (press.target > press.amt ? (idle ? .02 : P_IN * ee) : P_OUT);
+    press.x += (press.tx - press.x) * follow;
+    press.y += (press.ty - press.y) * follow;
+    draw(now);
+    const moving = (revealT0 >= 0 && now - revealT0 < REVEAL_MS * 1.25) || inIntro || (introOn && !ambientOk && !paused && !reduced) || (idle && !paused && !reduced) || Math.abs(press.target - press.amt) > .002 || Math.hypot(press.tx - press.x, press.ty - press.y) > .5;
+    raf = (visible && (now < tEnd || moving)) ? requestAnimationFrame(frame) : 0;
+  }
+
+  let armed = true, pointerIn = false, restTimer = 0;
+  const introBusy = () => introOn && performance.now() - introT0 < INTRO_LEN * 1000;
+  // 08 (26.11): no jump when the print meets a cursor that is already there (after the reveal, or as the page scrolls under it):
+  // it waits a beat after it finds the cursor, then the press builds and follows slowly at first (eased), and the hover morph
+  // waits a little longer still
+  const ENG_DELAY = 600, MORPH_WAIT = 1200, ENG_RAMP = 2600; let engageAt = -1e9;
+  const engaged = (t, extra = 0) => revealT0 >= 0 && t > revealT0 + REVEAL_MS * .9 && t - engageAt > ENG_DELAY + extra;
+  const engEase = t => .08 + .92 * smooth(0, 1, (t - engageAt - ENG_DELAY) / ENG_RAMP);
+  const onPointer = e => {
+    if (paused || e.pointerType === 'touch') return;
+    pointerIn = true;
+    clearTimeout(restTimer); restTimer = setTimeout(kick, REST_MS + 30);   // wake the loop to let go after a rest
+    const [x, y] = toShape(e.clientX, e.clientY);
+    const nowp = performance.now();
+    if (nowp - lastPointer > IDLE_MS) { engageAt = nowp; if (press.amt < .05) { press.x = x; press.y = y; } setTimeout(kick, ENG_DELAY + 20); }      // a press already there (the ambient one) glides over instead of jumping
+    lastPointer = nowp;
+    press.tx = x; press.ty = y; press.target = engaged(nowp) ? 1 : 0;
+    press.force = e.pressure > 0 && e.pointerType !== 'mouse' ? .4 + 1.2 * e.pressure : 1;
+    const S = F[cur], zx = (x - S.cx) / (S.rx * HOVER_ZONE), zy = (y - S.cy) / (S.ry * HOVER_ZONE);
+    const z = zx * zx + zy * zy, busy = t0 >= 0 && performance.now() < tEnd;
+    if (z < 1 && armed && !busy && !introBusy() && engaged(nowp, MORPH_WAIT) && nowp > tEnd + MORPH_GAP) { armed = false; morph(x, y); }   // also on the mist
+    else if (z > 1.3) armed = true;
+    kick();
+  };
+  // pointerover also fires when the page appears under a cursor that has not moved yet
+  host.addEventListener('pointermove', onPointer, { passive: true });      // 09: only over the CTA
+  host.addEventListener('pointerover', onPointer, { passive: true });
+  // touch: a ripple runs out from the point of touch and the press warms that spot
+  host.addEventListener('pointerdown', e => {
+    if (paused || e.pointerType !== 'touch' || e.target.closest('a,button')) return;
+    const [x, y] = toShape(e.clientX, e.clientY);
+    lastPointer = performance.now();
+    Object.assign(press, { x, y, tx: x, ty: y, target: 1, force: .4 + 1.2 * (e.pressure || .5) });
+    if (!(t0 >= 0 && performance.now() < tEnd) && !introBusy()) morph(x, y);
+    kick();
+  });
+  const release = () => { pointerIn = false; press.target = 0; lastPointer = performance.now(); kick(); };
+  host.addEventListener('pointerleave', release);
+  addEventListener('pointerup', e => { if (e.pointerType === 'touch') release(); });
+  addEventListener('blur', release);
+
+  // 08: the press-in intro runs the first time the print comes into view (half of it on screen)
+  let seen = false;
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting;
+    if (visible && !seen && en.intersectionRatio >= .5) { seen = true; press.amt = press.target = 0; t0 = -1; }
+    revealCheck();
+    if (visible) kick(); }, { threshold: [0, .5] }).observe(cvs);
+  // 09: the reveal starts once the power quote is in view (its heading 15 % above the bottom of the screen), rising from the rule
+  const pq = host.querySelector('.cta-09-t');
+  function revealCheck() { if (revealT0 >= 0 || !pq) return; const b = pq.getBoundingClientRect();
+    if (b.top < innerHeight * .85 && b.bottom > 0) { revealT0 = performance.now(); kick(); } }
+  addEventListener('scroll', revealCheck, { passive: true }); addEventListener('load', revealCheck);
+  // the gate: the logo block in (its entrance done) and wholly on screen, or already scrolled past; then a short beat
+  let gateT = 0, inAt = logos && logos.classList.contains('in') ? -1e9 : 0;
+  const ENTRANCE = 1800;      // the logo block's own entrance (its delay and fade) once it is in
+  const gate = () => { if (revealT0 >= 0 || gateT) return; if (!logos) return;      // 09: the reveal starts when the CTA comes into view (below)
+    const r = logos.getBoundingClientRect(), isIn = logos.classList.contains('in'), shown = isIn && r.top >= 0 && r.bottom <= innerHeight, past = r.bottom < 0;
+    if (!(shown || past)) return;
+    const wait = past ? 0 : Math.max(250, ENTRANCE - (performance.now() - inAt));
+    gateT = setTimeout(() => { gateT = 0; const q = logos.getBoundingClientRect(); if (q.bottom < 0 || (q.top >= 0 && q.bottom <= innerHeight)) { revealT0 = performance.now(); kick(); } }, wait); };
+  if (logos) new MutationObserver(() => { if (logos.classList.contains('in') && !inAt) inAt = performance.now(); gate(); }).observe(logos, { attributes: true, attributeFilter: ['class'] });
+  addEventListener('scroll', gate, { passive: true }); addEventListener('resize', gate); gate();
+  document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) kick(); });
+
+  let rz = 0;
+  addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { place(); draw(performance.now()); kick(); }); });
+  addEventListener('load', () => { place(); draw(performance.now()); });
+  place(); draw(performance.now());
+  // and again whenever the section changes height (type settling, the copy reflowing): the print always ends on the black edge
+  { let hh = 0, ro; new ResizeObserver(() => { const h = host.getBoundingClientRect().height; if (Math.abs(h - hh) < .1) return; hh = h; cancelAnimationFrame(ro); ro = requestAnimationFrame(() => { place(); draw(performance.now()); kick(); }); }).observe(host); }
 })();
 </script>
 <!-- @section:09 js:end -->
