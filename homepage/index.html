@@ -1732,7 +1732,8 @@
   .sec-09 .cta-09-t { display: grid; width: fit-content; max-width: 100%; margin: 0; font-family: var(--sans); font-weight: 300; font-size: var(--fs-display-xl, 68px); line-height: 1; letter-spacing: -.04em; color: var(--text-1); }
   .sec-09 .cta-09-t .q-l { display: block; white-space: nowrap; }
   .sec-09 .cta-09-t .q-r { display: flex; align-items: baseline; gap: .32em; }
-  .sec-09 .cta-09-t .q-rule { flex: 1 1 auto; min-width: 1.5em; height: max(1.5px, .028em); background: currentColor; transform: translateY(-.26em); }
+  .sec-09 .cta-09-t .q-rule { flex: 0 0 3.9em; min-width: 1.5em;      /* 27.11 (2): a third shorter than the line it filled (5.86em); "close deals." no longer ends on the first line's edge */
+    height: max(1.5px, .028em); background: currentColor; transform: translateY(-.26em); }
   .sec-09 .cta-09-sub { margin: var(--sp-3, 24px) 0 0; max-width: var(--col-09); font-family: var(--sans); font-weight: 300; font-size: var(--fs-lead-m, 20px); line-height: 1.4; letter-spacing: -.01em; color: var(--text-2); text-wrap: balance; }      /* balanced lines, the column's width */
   .sec-09 .cta-09-form { display: flex; align-items: stretch; gap: 8px; width: min(100%, var(--col-09)); margin-top: var(--sp-4, 40px); }      /* the subheading's width */
   .sec-09 .cta-09-form .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -1768,7 +1769,8 @@
   .sec-09 .cta-09 + .top-09 { position: relative; z-index: 2; isolation: isolate; border-top: 0; }
   .sec-09 .cta-09 + .top-09::before { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: calc(50% - 50vw); width: 100vw;
     background: var(--black); border-top: 1px solid var(--f-line); }
-  .sec-09 .cta-09 + .top-09 ~ .bar-09 { position: relative; z-index: 2; }
+  .sec-09 .cta-09 + .top-09 ~ .bar-09 { position: relative; z-index: 2; isolation: isolate; }
+  .sec-09 .cta-09 + .top-09 ~ .bar-09::before { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: calc(50% - 50vw); width: 100vw; background: var(--black); }      /* 27.11 (3): the bottom bar covers the wordmark too */
   .sec-09 .cta-09-t, .sec-09 .cta-09-sub, .sec-09 .cta-09-note { text-shadow: 0 0 4px var(--black), 0 0 10px var(--black), 0 0 10px var(--black); }
   /* ---- links module (27.11, cleaned up): the page's 12-column grid. Brand column (logo, the Trust Center line, system status)
      on 1-3; the six groups on 4-12, three to a row, each 3 columns wide, two rows; the bottom bar on the same grid: copyright on
@@ -1790,8 +1792,8 @@
     .sec-09 .cols-09 .col-09 a { font: 400 var(--fs-body-s, 14px)/1.45 var(--sans); }
   }
   @media (min-width: 768px) {
-    .sec-09 .cols-09 .col-09 summary { margin-bottom: var(--sp-2, 16px); font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--text-1); }      /* heads white, links in text-2 */
-    .sec-09 .cols-09 .col-09 li + li { margin-top: var(--sp-1, 8px); }
+    .sec-09 .cols-09 .col-09 summary { margin-bottom: var(--sp-3, 24px); font: 400 var(--fs-label-s, 13px)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--text-1); }      /* heads white, links in text-2 */
+    .sec-09 .cols-09 .col-09 li + li { margin-top: var(--sp-2, 16px); }      /* 27.11 (2): more room between the links (was 8) */
     .sec-09 .cols-09 .col-09 a { font: 400 var(--fs-body-m, 16px)/1.45 var(--sans); }
   }
   .sec-09 .home-09 { margin-bottom: var(--sp-3, 24px); }
@@ -2822,6 +2824,12 @@
   html:not(#_) #sec-08-price .s8n-tl li > :not(.n) { grid-column: 2; }
   html:not(#_) #sec-08-price .s8n-tl li > b { align-self: baseline; }
   html:not(#_) #sec-08-price .s8n-tl li > .n { grid-column: 1; grid-row: 2; align-self: baseline; font: 400 var(--fs-label-s)/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--text-2); }
+
+  /* ==== general fixes 27.11: the pricing, the FAQ and the footer come in as the other sections do (fade, blur, a small rise, staggered): the CTA's
+     lines, then the brand, the link columns and the bar (classes and delays set by the 09 script) */
+  .js :is(.sec-09, #sec-08-price, #sec-08-faq) .rv { opacity: 0; filter: blur(7px); transform: translateY(14px); transition: opacity .7s ease calc(var(--d, 0) * .12s), filter .8s ease calc(var(--d, 0) * .12s), transform .9s var(--ease) calc(var(--d, 0) * .12s); }
+  .js :is(.sec-09, #sec-08-price, #sec-08-faq) .rv.in { opacity: 1; filter: none; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .js :is(.sec-09, #sec-08-price, #sec-08-faq) .rv { opacity: 1; filter: none; transform: none; transition: none; } }
 
   /* ==== general fixes 27.11: the presets (Startup / Scale-up / Enterprise) under the quote builder, on its left edge (were over it, on the right) */
   .s8p-grid > .s8p-presets { grid-column: 6 / -1; justify-self: start; margin-top: calc(var(--sp-3) - 32px); }
@@ -4570,13 +4578,15 @@
       const aR = art.getBoundingClientRect(), a = { left: vL, top: vT, width: aR.width, height: aR.height, right: vL + aR.width, bottom: vT + aR.height },
         sTop = sec.getBoundingClientRect().top - aR.top + vT, Cx = a.left + a.width / 2, Cy = a.top + a.height / 2, mistA = clamp(window.heroMist || .32, .15, 1);
       if (pointerIn && now - lastPtr > REST_MS) press.target = 0;
-      press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN : P_OUT);
-      press.x += (press.tx - press.x) * P_FOLLOW; press.y += (press.ty - press.y) * P_FOLLOW;
+      if (pointerIn && press.target === 0 && engaged(now) && now - lastPtr < REST_MS) press.target = 1;      // the beat is over: the press may begin
+      const ee = engEase(now);
+      press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN * ee : P_OUT);
+      press.x += (press.tx - press.x) * P_FOLLOW * ee; press.y += (press.ty - press.y) * P_FOLLOW * ee;
       if (hov && now > hov.tEnd) { From = copy(To); hov = null; }
       const pa = press.amt, d0 = Math.hypot(press.x - D.W / 2, press.y - D.H / 2), R = P_RADIUS + P_REACH * Math.max(0, d0 - P_RADIUS), pr2 = R * R;
       const far = smooth(FAR_FROM, FAR_TO, d0) * pa, qNear = Math.exp(-Math.pow(Math.max(0, d0 - 560), 2) / pr2);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ctxB.setTransform(dpr, 0, 0, dpr, 0, 0); ctxB.clearRect(0, 0, W, H);
-      const mT = cursor.in && now - cursor.t < REST_MS ? 1 : 0, MR2 = 300 * k0 * 300 * k0; mp += (mT - mp) * (mT > mp ? P_IN : P_OUT); if (mp < .004 && !mT) mp = 0;
+      const mT = cursor.in && now - cursor.t < REST_MS ? 1 : 0, MR2 = 300 * k0 * 300 * k0; mp += (mT - mp) * (mT > mp ? P_IN * engEase(now) : P_OUT); if (mp < .004 && !mT) mp = 0;
       const paths = new Map(), grid = new Map(), CELL = 28 * k0; let moving = Ps !== target || mp > 0 || !!phA;
       // entrance (as the hero's intro): a front runs out from the centre of the head, squares grow in behind it with a little extra ink at the front
       const iT = intro ? (now - intro.t0) / 1000 : 9, iOn = !!intro && iT < 2.8; if (intro && !iOn) intro = null; if (iOn) moving = true;
@@ -4654,17 +4664,24 @@
     addEventListener('pointermove', e => {
       if (e.pointerType !== 'touch') { cursor.x = e.clientX; cursor.y = e.clientY; cursor.t = performance.now(); cursor.in = true; if (active) kick(); }
       if (!active || Ps < .98 || e.pointerType === 'touch') return;      // the hero-style press works once the print has docked
-      pointerIn = true; lastPtr = performance.now(); const [x, y] = toShape(e.clientX, e.clientY);
-      if (press.amt < .5) { press.x = x; press.y = y; }
-      press.tx = x; press.ty = y; press.target = 1;
+      const nowp = performance.now(), [x, y] = toShape(e.clientX, e.clientY);
+      // 27.11: as in 08's power quote, a cursor that arrives (or comes back after a pause) is met after a beat: the press waits
+      // ENG_DELAY, then builds and follows slowly at first (eased over ENG_RAMP); the hover morph waits MORPH_WAIT more
+      if (!pointerIn || nowp - lastPtr > IDLE_MS) { engageAt = nowp; setTimeout(kick, ENG_DELAY + 20); }
+      pointerIn = true; lastPtr = nowp;
+      if (press.amt < .05) { press.x = x; press.y = y; }
+      press.tx = x; press.ty = y; press.target = engaged(nowp) ? 1 : 0;
       // 27.11 (the generator's hover): entering the ellipse in the middle of the head (HOVER_ZONE of its half axes) morphs it into the
       // other head; the next morph only after leaving 1.3 of that ellipse; after REST_MS of stillness it returns to the head with the neck
       const S = ST[cur], q = Math.hypot((x - S.cx) / (S.rx * HOVER_ZONE), (y - S.cy) / (S.ry * HOVER_ZONE));
       if (q > 1.3) armed = true;
-      if (!reduced && armed && q < 1 && !hov && (cur === 3 || cur === 4)) { armed = false; startHover(x, y, cur === 3 ? 4 : 3); }
+      if (!reduced && armed && q < 1 && !hov && engaged(nowp, MORPH_WAIT) && (cur === 3 || cur === 4)) { armed = false; startHover(x, y, cur === 3 ? 4 : 3); }
       clearTimeout(restTm); restTm = setTimeout(() => { if (cur === 4 && !hov) { startHover(ST[4].cx, ST[4].cy, 3); kick(); } }, REST_MS);
       kick(); }, { passive: true });
     let restTm = 0;
+    const ENG_DELAY = 600, MORPH_WAIT = 1200, ENG_RAMP = 2600, IDLE_MS = 2600; let engageAt = -1e9;
+    const engaged = (t, extra = 0) => t - engageAt > ENG_DELAY + extra;
+    const engEase = t => reduced ? 1 : .08 + .92 * Math.min(1, Math.max(0, (t - engageAt - ENG_DELAY) / ENG_RAMP)) ** 2 * (3 - 2 * Math.min(1, Math.max(0, (t - engageAt - ENG_DELAY) / ENG_RAMP)));
     const startHover = (x, y, to) => { const nx = to ?? (cur + 1) % F.length; From = copy(To); To = makeTo(nx, From); cur = nx;
       const d = new Float32Array(N); let mx = 0; for (let i = 0; i < N; i++) { d[i] = Math.hypot(X0[i] - x, Y0[i] - y); if (d[i] > mx) mx = d[i]; }
       const t0 = performance.now(); hov = { d, t0, tEnd: t0 + mx / SPEED + LOCAL }; };
@@ -6146,6 +6163,16 @@
   groups.forEach(g => g.querySelector('summary').addEventListener('click', e => { if (!mq.matches) e.preventDefault(); }));
   sync(); mq.addEventListener('change', sync);
 
+  // reveal on scroll (27.11), as in the other sections: each group comes in when it is on screen, staggered within its row
+  const groupsRv = [[...sec.querySelectorAll('.cta-09-t .q-l, .cta-09-sub, .cta-09-form, .cta-09-note')],
+    [sec.querySelector('.brand-09'), ...sec.querySelectorAll('.col-09')], [sec.querySelector('.bar-09')]];
+  const els = groupsRv.flatMap(g => g.filter(Boolean).map((el, i) => (el.classList.add('rv'), el.style.setProperty('--d', i), el)));
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) els.forEach(el => el.classList.add('in'));
+  else { const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+    // the bar sits at the very bottom of the page: it never gets 10 % above the window's foot, so it comes in as soon as it shows
+    const io0 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io0.unobserve(e.target); } }));
+    els.forEach(el => (el.classList.contains('bar-09') ? io0 : io).observe(el)); }
+
 })();
 </script>
 <script src="assets/js/word-fields.js"></script>
@@ -6162,7 +6189,8 @@
   const MODE = new URLSearchParams(location.search).get('w09') === 'mist' ? 'mist' : 'print', ABOVE = .62;
   const HEAT = new URLSearchParams(location.search).get('h09') !== '0';
   // under the copy on the left the pixels are kept small, growing back gradually to full size toward the right (share of the width)
-  const CALM_FROM = .3, CALM_TO = .62, CALM_MIN = .16, CALM_LIFT = .3;      // CALM_LIFT: how much of the size the press gives back there      // 27.11: the full print is the working option
+  const CALM_FROM = .34, CALM_TO = .72, CALM_MIN = .05, CALM_LIFT = .18;      // 27.11 (2): a stronger fade on the left (was .3 / .62 / .16 / .3)
+       // CALM_LIFT: how much of the size the press gives back there      // 27.11: the full print is the working option
   const cvs = document.querySelector('.sec-09 .word-09'), host = cvs && cvs.closest('.cta-09');
   if (!D || !cvs) return;
   const ctx = cvs.getContext('2d');
@@ -6238,7 +6266,9 @@
     else if (HEAT && heat < 0) c = c.map(v => Math.round(v * (1 - .16 * -heat)));
     return `rgb(${c.join(',')})`;
   };
-  const PAL = new Map(), paths = new Map();
+  const PAL = new Map(), paths = new Map(), fines = new Map();      // fines (27.11 (3)): the fine dots under the copy, filled, no round stroke
+  const FINE_PX = .8;      // their half-diagonal on screen, px (a dot about 1.6 px across)
+  const fineFor = (band, heat) => { pathFor(band, heat); const k = band * 32 + heat + DIM_STEPS; let P = fines.get(k); if (!P) fines.set(k, P = new Path2D()); return P; };
   const pathFor = (band, heat) => { const k = band * 32 + heat + DIM_STEPS; let P = paths.get(k);
     if (!P) { P = new Path2D(); paths.set(k, P); if (!PAL.has(k)) PAL.set(k, colourOf(band, heat)); } return P; };
 
@@ -6325,7 +6355,7 @@
   const logos = null;
   function place() {
     const S = F[0], hh = host.getBoundingClientRect().height, wv = cvs.getBoundingClientRect().width;      // the canvas spans the window
-    view.k = Math.min(wv, 1920) / (2 * S.rx);                        // the letters edge to edge, up to the 1920 width (27.11: above it they stay that size, centred)
+    view.k = wv / (2 * S.rx);                                        // the letters edge to edge at every width (27.11 (2): full width, also above 1920)
     const top = hh - 2 * S.ry * view.k * ABOVE;                      // the letters' top: 62 % of them above the rule
     view.ox = wv / 2 - S.cx * view.k; view.oy = top - (S.cy - S.ry) * view.k;
     cvs.style.height = Math.ceil(hh + 2 * S.ry * view.k * (1 - ABOVE) + 40) + 'px';
@@ -6343,7 +6373,7 @@
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, cvs.width, cvs.height);      // 08: on paper, no black ground
     ctx.setTransform(view.k * view.dpr, 0, 0, view.k * view.dpr, view.ox * view.dpr, view.oy * view.dpr);
-    paths.clear(); Dr.fill(0);
+    paths.clear(); fines.clear(); Dr.fill(0);
     // base gradient by screen height; while idle it drifts: a slow diagonal swell moves through the print
     const ga = GRAD_AMP * gradAmt, gph = gradT / GRAD_PERIOD * TAU;
     // 08: the gradient runs out from the middle of the print (mint) to its edge (cyan), as the key visual in Figma (315:834)
@@ -6427,13 +6457,17 @@
       // getting smaller again with distance until they are back at their resting size
       if (pz > .01) h *= 1 + .8 * pz * (1 - smooth(0, MIST_R * .7, Math.hypot(x - press.x, y - press.y)));
       if (out > 0) h *= outOf(i, x, y, out);
+      let fine = false;
       { const sx = (x * view.k + view.ox) / view.w;      // 09: smaller under the copy, a gradual ramp to full size
         const calm = CALM_MIN + (1 - CALM_MIN) * smooth(CALM_FROM, CALM_TO, sx);
         if (calm < .999) { h *= calm + (1 - calm) * CALM_LIFT * p;      // the press lets them grow a little
-          if (s > .3) h = Math.max(h, r + .65); } }                      // but they never vanish: a letter's pixel keeps a fine dot
+          // 27.11 (3): a pixel left small here is drawn as a very fine dot without the round stroke (the stroke alone made it
+          // about 5 px, too heavy under the form); a letter's pixel never vanishes
+          if (s > .3 && h < r + 1.2) { h = Math.max(h, FINE_PX / view.k); fine = true; } } }
       if (revealT0 < 0) continue;
       if (!reduced) { const rp = (now - revealT0) / REVEAL_MS; if (rp < 1.2) {      // 09: it rises from the rule under the CTA
         const hh0 = host.offsetHeight, up = Math.min(1, Math.max(0, (hh0 - (y * view.k + view.oy)) / hh0)), th = up * .84 + RJ[i] * .14; h *= smooth(th, th + .1, rp); } }
+      if (fine) { if (h * view.k < .3) continue; dmd(fineFor(bandOf(x, y), heat), x, y, h); Dr[i] = 1; Xs[i] = x; Ys[i] = y; Hs[i] = h; continue; }
       if (h < cull) continue;
       const room = (A - r - .6) * (1 - 1.5 * g);          // diagonal neighbours touch at half-diagonal A
       let hh = Math.max(Math.min(h - r, room), dis > .5 ? .2 : .4);
@@ -6474,6 +6508,7 @@
     }
     ctx.lineWidth = 2 * r; ctx.lineJoin = 'round';
     for (const [k, P] of paths) { ctx.fillStyle = ctx.strokeStyle = PAL.get(k); ctx.fill(P); ctx.stroke(P); }
+    for (const [k, P] of fines) { ctx.fillStyle = PAL.get(k); ctx.fill(P); }
   }
 
   // ---- loop: pointer press, ambient drift, morph; sleeps off screen and when paused ---------
@@ -6533,7 +6568,8 @@
     lastPointer = nowp;
     press.tx = x; press.ty = y; press.target = engaged(nowp) ? 1 : 0;
     press.force = e.pressure > 0 && e.pointerType !== 'mouse' ? .4 + 1.2 * e.pressure : 1;
-    const S = F[cur], zx = (x - S.cx) / (S.rx * HOVER_ZONE), zy = (y - S.cy) / (S.ry * HOVER_ZONE);
+    // 27.11 (2): the hover zone is a band along the letters' top edge (the part over the rule), not their middle, which the links hide
+    const S = F[cur], zx = (x - S.cx) / (S.rx * .85), zy = (y - (S.cy - S.ry * .62)) / (S.ry * .38);
     const z = zx * zx + zy * zy, busy = t0 >= 0 && performance.now() < tEnd;
     if (z < 1 && armed && !busy && !introBusy() && engaged(nowp, MORPH_WAIT) && nowp > tEnd + MORPH_GAP) { armed = false; morph(x, y); }   // also on the mist
     else if (z > 1.3) armed = true;
@@ -6984,6 +7020,22 @@
     const atEnd = dy < 0 ? b.scrollTop <= 0 : b.scrollTop + b.clientHeight >= b.scrollHeight - 1;
     if (performance.now() - lastPage < 700 || atEnd) { e.preventDefault(); scrollBy(0, dy); }
   }, { passive: false });
+})();
+</script>
+<script>
+/* general fixes 27.11: the pricing and the FAQ come in on scroll as the other sections do (the reveal style of 03 to 07):
+   the head's lines one after another, then the content, staggered within each group */
+(() => {
+  const G = [
+    ['#sec-08-price', ['.s8p-head > *', '.s8n-tl > li', '.sec-08-ui, .s8p-presets']],
+    ['#sec-08-faq', ['.s8p-head > *', '.sec-08-faq-col:first-child > *', '.sec-08-faq-col:last-child > *']],
+  ];
+  const els = [];
+  for (const [id, groups] of G) { const sec = document.querySelector(id); if (!sec) continue;
+    groups.forEach(q => [...sec.querySelectorAll(q)].forEach((el, i) => { el.classList.add('rv'); el.style.setProperty('--d', i); els.push(el); })); }
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('in')); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  els.forEach(el => io.observe(el));
 })();
 </script>
 </body>
