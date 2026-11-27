@@ -2563,6 +2563,12 @@
   /* ==== general fixes 27.11: hero on large screens (feedback 27.11, 01:36): the type and the whole logo table above the fold.
      Below this size the second logo row still continues under the fold; here the hero is one screen tall, so the text block
      moves up by a row and both rows end 24px above the bottom edge. */
+  /* 1024-1599: the larger buttons (16px) bring the G2 rating up to the print's lines; the soft lift behind the type reaches it */
+  @media (min-width: 1024px) and (max-width: 1599px) {
+    .hero::after { background: linear-gradient(180deg, rgba(0,0,0,.85) 0, rgba(0,0,0,.6) 78px, rgba(0,0,0,0) 130px),
+      radial-gradient(48% 42% at 22% 74%, rgba(0,0,0,.9) 0%, rgba(0,0,0,.78) 55%, rgba(0,0,0,0) 100%),
+      radial-gradient(70% 70% at 0% 100%, rgba(0,0,0,.92) 0%, rgba(0,0,0,.8) 45%, rgba(0,0,0,0) 75%); }
+  }
   @media (min-width: 1921px) and (min-height: 1000px) {
     .hero-inner { min-height: 100svh; }
     .logos-tbl { margin-top: var(--sp-6); }      /* more air between the tagline block and the logos (was 40px); the text moves up, the logos stay */
@@ -2605,7 +2611,9 @@
       .sec-06 .win .try, .sec-06 .win .live, .sec-06 .win-f .ask) { font-family: var(--mono); font-size: var(--fs-label-s); letter-spacing: 0; font-style: normal; }
     html:not(#_) :is(.sec-04 .fc.a .tt, .sec-04 .chat-h b, .sec-06 .tc-id b) { font-size: var(--fs-body-m); }
     /* the board in 02 reads as a table: its rows (the tasks and who does them) are body 16, the meta under them 13 mono */
-    html:not(#_) :is(.shift .board .task, .shift .board .t, .shift .board .a, .shift .board .foot > span:first-child, .shift .board .foot b) { font-size: var(--fs-body-m); }
+    @media (min-width: 1280px) {      /* below 1280 the board is too narrow for 16: its rows stay body-s 13 (the text was cut at 1024) */
+      html:not(#_) :is(.shift .board .task, .shift .board .t, .shift .board .a, .shift .board .foot > span:first-child, .shift .board .foot b) { font-size: var(--fs-body-m); }
+    }
     /* 05: the stage names (left) and the figures (right) keep title-m (33 at 1920); the quote in the card on the right is body 16 */
     html:not(#_) .sec-05 .steps-05 li > b { font-size: var(--fs-title-m); }
     html:not(#_) .sec-05 .q-05 blockquote { font-size: var(--fs-body-m); }
