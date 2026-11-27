@@ -1,11 +1,20 @@
 # Typography v0.2
 
-> **Work in progress (v0.2), not final.** Describes the v3 layout in progress on branch `homepage-v3`, not the page currently in `main`. Do not build tokens or components from this yet. Last updated: 26.11.2026.
+> **Work in progress (v0.2), not final.** Describes the v3 layout in progress on branch `homepage-v3`, not the page currently in `main`. Do not build tokens or components from this yet. Last updated: 27.11.2026 (general fixes, branch `claude/v3-general-fixes-84f7b3`, not merged yet).
 
 The type system of the Comp AI homepage. Every text style on the page belongs to one of the roles below. There are no
 variants of a role: if two elements have the same function, they share one role and look the same.
-The product UI mock-ups (the app windows in sections 03, 04, 06 and 08, the cards in 05) illustrate the product and are
-outside this system.
+The product UI mock-ups (the board in 02, the chat and cards in 04, the windows in 06) use the same roles: their text is
+`body-s`, their meta (tools, times, channels, badges, tags, file paths, code, counts) is `label-s` in its own case, and the
+title of a card or a window is `body-m`. There is no separate scale for them.
+
+## Sizes per section (27.11)
+
+A section uses **at most four sizes**. The section head (eyebrow, headline and lead) counts as **one component**, so the
+four are: the head, one title size (`title-m` or `title-s`), `body-m` and `label-s`.
+
+Accepted exceptions (five sizes): **05** (figures in `title-m` with their units in `title-s`) and **07** (the featured
+card's title in `title-m`, the small cards' titles in `title-s`).
 
 Implemented in `homepage/index.html` as tokens (`--fs-*` on `:root`) and one CSS rule per role at the end of the
 stylesheet (block “Type system v0.2”).
@@ -13,7 +22,7 @@ stylesheet (block “Type system v0.2”).
 ## Scale
 
 Ratio 1.272 (√φ) on a 16 px base, rounded to whole pixels:
-**13 · 16 · 20 · 26 · 33 · 53 · 68**, plus one half-step, **14**, for secondary text and eyebrows.
+**13 · 16 · 20 · 26 · 33 · 53 · 68**. The half-step 14 was dropped on 27.11: secondary text and eyebrows are 13.
 
 ## Fonts and weights
 
@@ -48,12 +57,30 @@ Roles of 20 px and less do not scale. In CSS: `clamp(lo, lo + (hi − lo) × (10
 | `lead-m` | Sans | 20 | 1.4 | −1% | 300 | | Section leads |
 | `title-s` | Sans | 20 | 1.3 | −1% | 300 | | Tab titles, card titles, list titles, FAQ questions |
 | `body-m` | Sans | 16 | 1.55 | 0 | Book | | Running text, menu item titles, footer links |
-| `body-s` | Sans | 14 | 1.45 | 0 | Book | | Secondary text: descriptions, notes, answers, captions, small print |
-| `eyebrow` | Mono | 14 | 1.3 | +5% | Book | Upper | One per section head |
+| `body-s` | Sans | 13 | 1.45 | 0 | Book | | Secondary text: descriptions, notes, answers, captions, small print |
+| `eyebrow` | Mono | 13 | 1.3 | +5% | Book | Upper | One per section head |
 | `label-s` | Mono | 13 | 1.3 | +4% | Book | Upper | Short labels (badges, categories, column heads, step numbers, legends, metric labels) and tertiary actions (text links with an arrow) |
-| `button` | Sans | 13 | 1 | 0 | Book | | Primary, secondary and quiet buttons; nav links |
+| `button` | Sans | 16 | 1 | 0 | Book | | Primary, secondary and quiet buttons; nav links (one size at every width) |
 
 Mono is used only in `eyebrow` and `label-s`. Nav links and buttons are in sans.
+
+## Actions (27.11)
+
+| Action | Text | Icon | Gap | Hover |
+|---|---|---|---|---|
+| Button (primary, secondary, quiet, nav) | `button`, 16 | chevron 14 | 8 | the button's own fill change; the chevron moves 3 px |
+| Tertiary (text link with a chevron: cards, panels, mega menu, announcement bar) | `label-s`, 13 mono, `--text-1` | chevron 13 | 8 | only the chevron moves 3 px: no backdrop, no colour change |
+
+- One chevron for every action (path `M5.5 3.5 10.5 8l-5 4.5`); no arrows (→) on actions. ↗ marks an external link
+  (the logo tables' "All customer stories", the footer) and stays.
+- The chevron's centre sits on the middle of the capitals (tertiary chevrons are lifted 1 px for this).
+- A whole card that is a link (07) moves its chevron when the card is hovered.
+- Grid cells that are links (the logo tables) keep the cell backdrop on hover, as their neighbours.
+
+## Mega menu (27.11)
+
+Column heads `label-s`; items `body-m` with `body-s` under them; the card's title `body-m`, its text `body-s`; the title in
+a card's art `title-m`; actions tertiary.
 
 ## Text colour
 
@@ -70,6 +97,14 @@ Interactive states (inactive tabs and steps, hover) keep their own values. Eyebr
 ## Mobile
 
 Not defined yet: below 1024 px the page still uses each section's own sizes. To be decided in a later round.
+
+## Changes on 27.11 (general fixes)
+
+- One mono size: eyebrows 13 like the labels. `body-s` 14 → 13 (the FAQ answers move to `body-m`).
+- Buttons and nav links 16 (were 13), at every width.
+- Off-scale sizes removed: 15 → 16, 22 → 20; the mock-ups lose their micro sizes (10 to 13.5) and use the roles.
+- Hero figures (G2 rating, 1,000+) take `lead-l`; the price figure and the pricing steps take `lead-m`.
+- Actions: one chevron, one gap (8) and one tertiary hover (the chevron moves) on the whole page; see Actions.
 
 ## Changes from v0.1 (17.11)
 

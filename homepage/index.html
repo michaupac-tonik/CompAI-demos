@@ -2570,8 +2570,8 @@
 
   /* ==== general fixes 27.11: nav links and every button two steps up the scale (13px -> body-m 16px).
      The button token follows, and one rule outranks the per-section button sizes (hero, mega menu, 05-07, touch, nav compact). */
-  /* fluid down from 1920 like the rest of the scale: 16px at 1920 and up, 14px at 1280 and below */
-  :root { --fs-button: clamp(14px, calc(14px + 2 * (100vw - 1280px) / 640), 16px); }
+  /* always body 16 (27.11): a fluid size below 1920 added a step next to body 16 in every section with a button */
+  :root { --fs-button: var(--fs-body-m); }
   .site-nav .links > a, .site-nav .links > button { font-size: var(--fs-button); }
   html:not(#_) .btn { font-size: var(--fs-button); }
   /* the larger buttons would push the G2 rating to a second line at 1280 (the text block is 46% wide there): the CTA row may run
@@ -2581,6 +2581,62 @@
   /* ==== general fixes 27.11: one mono size (max 3-4 type sizes a section): the eyebrows (14px) take the label size (13px),
      so mono is one step in every section */
   :root { --fs-eyebrow: var(--fs-label-s); }
+  /* the type set a section may use (27.11): at most four sizes, counting the section head (eyebrow, headline and lead) as one
+     component: the head, a title (title-m 33 or title-s 20), body 16 and label 13. The product mock-ups use the same styles.
+     body-s (14) is folded into 13: secondary text takes the label size; text that is read (the FAQ answers) takes body 16 */
+  :root { --fs-body-s: var(--fs-label-s); }
+  @media (min-width: 1024px) {
+    html:not(#_) .sec-08-a p { font-size: var(--fs-body-m); line-height: 1.55; }
+    /* hero figures take the hero lead (one size fewer in the hero); the price takes lead-m (was 33) */
+    html:not(#_) .hero .lt-lead b, html:not(#_) .hero .g2-rating .g2-score { font-size: var(--fs-lead-l); }
+    html:not(#_) #sec-08-price .sec-08-qprice b, html:not(#_) #sec-08-price .s8n-tl b { font-size: var(--fs-lead-m); }      /* were 33 and 22 */
+    /* off-scale controls: the framework buttons in 05 take the button size (15 -> 16), the small mono labels take 13 (were 11) */
+    html:not(#_) .sec-05 .fw-05, html:not(#_) .sec-05 button.fw-05.next { font-size: var(--fs-button); }
+    @container (max-width: 210px) { html:not(#_) .sec-05 button.fw-05.next .nm { font-size: var(--fs-label-s); } }      /* narrow column: 13, not 14 */
+    html:not(#_) .sec-05 .steps-05 .sb, html:not(#_) .sec-05 .q-05 .hd .n, html:not(#_) .sec-05 .q-05 .tg .tl { font-size: var(--fs-label-s); }
+    /* product mock-ups on the page's own text styles (27.11): no scale of their own. Text in the board (02), the chat and its cards (04)
+       and the windows (06) is body-s (13 sans); the meta (tools, times, channels, badges, tags, file paths, code, counts) is the label
+       (13 mono, its own case kept); the titles of a card or a window are body-m (16) */
+    html:not(#_) :is(.shift .board, .sec-04 .chat-04, .sec-04 .fc, .sec-06 .win), html:not(#_) :is(.shift .board, .sec-04 .chat-04, .sec-04 .fc, .sec-06 .win) :is(*, ::before) { font-size: var(--fs-body-s); }
+    html:not(#_) :is(.shift .board .tool, .shift .board .tool *, .shift .board .foot small, .shift .board .a small, .shift .board .ts,
+      .sec-04 .chat-04 small, .sec-04 .chat-04 em, .sec-04 .chat-04 time, .sec-04 .chat-04 .reply-time, .sec-04 .chat-04 .who i, .sec-04 .chat-rail p,
+      .sec-04 .chat-h .live, .sec-04 .fc time, .sec-04 .fc .st, .sec-04 .fc .st *, .sec-04 .fc.d,
+      .sec-06 .win .tag, .sec-06 .win .tag *, .sec-06 .win .num, .sec-06 .code, .sec-06 .code *, .sec-06 .commits .t, .sec-06 .feed .tx span, .sec-06 .tc-id small,
+      .sec-06 .win .try, .sec-06 .win .live, .sec-06 .win-f .ask) { font-family: var(--mono); font-size: var(--fs-label-s); letter-spacing: 0; font-style: normal; }
+    html:not(#_) :is(.sec-04 .fc.a .tt, .sec-04 .chat-h b, .sec-06 .tc-id b) { font-size: var(--fs-body-m); }
+    /* the board in 02 reads as a table: its rows (the tasks and who does them) are body 16, the meta under them 13 mono */
+    html:not(#_) :is(.shift .board .task, .shift .board .t, .shift .board .a, .shift .board .foot > span:first-child, .shift .board .foot b) { font-size: var(--fs-body-m); }
+    /* 05: the stage names (left) and the figures (right) keep title-m (33 at 1920); the quote in the card on the right is body 16 */
+    html:not(#_) .sec-05 .steps-05 li > b { font-size: var(--fs-title-m); }
+    html:not(#_) .sec-05 .q-05 blockquote { font-size: var(--fs-body-m); }
+  }
+
+  /* ==== general fixes 27.11: mega menu on the roles. Column heads label (13 mono), items body-m 16 with body-s 13 under them,
+     tertiary actions label: already so. Off the scale were the title in a card's art (30 -> title-m, 33 at 1920, letter-spacing
+     as title-m) and the photo placeholder (11 -> label) */
+  html:not(#_) .mega-feat .art b { font-size: var(--fs-title-m); line-height: 1.05; letter-spacing: -.04em; }
+  /* one tertiary action in the menu: the column link ("See all frameworks") as the card links, no underline, the chevron that moves on hover */
+  html:not(#_) .mega-col .all { align-items: center; gap: 8px; color: var(--text-1); }
+  html:not(#_) .mega-col .all span { text-decoration: none; }
+  .mega-col .all .chev { width: 13px; height: 13px; flex: none; transition: transform .3s var(--ease); }
+  .mega-col .all:is(:hover, :focus-visible) .chev { transform: translateX(3px); }
+  /* one hover for every tertiary action on the page (text + chevron): only the chevron moves (3px). No backdrop (the menu's column
+     link took the menu items' one), no colour change (05 and 06 turned to the section accent); the label is text-1 at rest */
+  html:not(#_) .mega-col .all:is(:hover, :focus-visible) { background: none; }
+  html:not(#_) :is(.sec-05 .q-05 .go, .sec-06 .cap .go), html:not(#_) :is(.sec-05 .q-05 .go, .sec-06 .cap .go):is(:hover, :focus-visible) { color: var(--text-1); }
+  html:not(#_) .sec-07 .go-07 svg { color: currentColor; }
+  /* text to chevron (27.11): 8px everywhere; the chevron 13 next to 13px text (tertiary), 14 next to the 16px buttons;
+     on the tertiary actions it is lifted 1px so its centre sits on the middle of the capitals (it sat 1px low) */
+  html:not(#_) .btn:has(> .chev) { gap: 8px; }
+  html:not(#_) .btn > .chev { width: 14px; height: 14px; }
+  html:not(#_) :is(.go, .go-07, .mega-col .all) { gap: 8px; }
+  html:not(#_) :is(.go, .mega-col .all) > .chev, html:not(#_) .go-07 > svg { width: 13px; height: 13px; translate: 0 -1px; }
+  /* the announcement bar's link as the tertiary actions: chevron 13, 8px from "Read the news" (the bar's gap is 10), 1px up, 3px on hover */
+  html:not(#_) .site-nav .announce a > svg { width: 13px; height: 13px; margin-left: -2px; translate: 0 -1px; }
+  html:not(#_) .site-nav .announce a:is(:hover, :focus-visible) > svg { transform: translateX(3px); }      /* 07: the chevron (was an arrow) in the label's colour (was the accent) */
+  html:not(#_) .sec-05 .q-05 .go { gap: 8px; }
+  html:not(#_) .sec-05 .q-05 .go .chev { width: 13px; height: 13px; }      /* the same chevron as every other tertiary action (was 11) */
+  html:not(#_) .mega-feat .art.photo i { font: 400 var(--fs-label-s)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
 
   /* ==== 06 Trust, layout C (approved 26.11): the three columns side by side, the words above the windows, with more air.
      ?only=06 shows the section alone */
@@ -2660,7 +2716,7 @@
     <div class="nav-actions">
       <button class="nav-ic theme" id="theme" type="button" role="switch" aria-checked="true" aria-label="Dark mode" title="Dark / light mode"><svg class="i-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5z"/></svg><svg class="i-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.8"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg></button>
       <a class="btn btn-quiet" href="#"><span class="lb">Sign in</span></a>
-      <a class="btn btn-outline" href="#demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+      <a class="btn btn-outline" href="#demo"><span class="lb">Book a demo</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="sheet">Menu</button>
     </div>
   </div>
@@ -2700,7 +2756,7 @@
           <li><a href="#"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg></span><b>ISO 42001</b><small>AI management systems</small></a></li>
           <li><a href="#"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h16v10H4z"/><path d="M4 11h16"/></svg></span><b>Framework name</b><small>Placeholder until the list is confirmed</small></a></li>
           <li><a href="#"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z"/><path d="M9 9h6v6H9z"/></svg></span><b>Framework name</b><small>Placeholder until the list is confirmed</small></a></li>
-        </ul><a class="all" href="#"><span>See all frameworks</span> →</a></div>
+        </ul><a class="all" href="#"><span>See all frameworks</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg></a></div>
         <div class="mega-feat"><h3>Frameworks overview</h3><div class="art"><b>One platform.<br>Every framework.</b></div><p><b>Start with one, add the next</b>Reuse your evidence across frameworks without starting over.</p><a class="go" href="#">Explore frameworks <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg></a></div>
       </div>
 
@@ -2800,7 +2856,7 @@
       <h1 id="hero-title"><span class="kicker">AI-native compliance platform</span><span class="line">Watch the work</span> <span class="line">disappear.</span></h1>
       <p class="sub">Get compliance-ready faster while Comp AI does more of the work.</p>
       <div class="ctas">
-        <a class="btn btn-primary" href="#demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+        <a class="btn btn-primary" href="#demo"><span class="lb">Book a demo</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         <a class="btn btn-secondary" href="#product"><span class="lb">See the product</span></a>
         <!-- G2 rating (25.11): the official G2 mark, unaltered and in its circle; the rating links to the G2 profile, as G2 asks
              when a rating is republished. The rating comes from the CMS in production (4.7 on 25.11). -->
@@ -2948,8 +3004,8 @@
           <li><span class="n">03</span><b>Enterprise</b><span><strong>Both</strong> add the next framework without starting over.</span></li>
         </ol>
         <div class="acts-05 rv" style="--d:4">
-          <a class="btn btn-primary" href="#demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
-          <a class="btn link-05" href="#frameworks"><span class="lb">Explore frameworks</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="btn btn-primary" href="#demo"><span class="lb">Book a demo</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="btn link-05" href="#frameworks"><span class="lb">Explore frameworks</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </div>
 
@@ -3007,8 +3063,8 @@
       <p class="lead-06 rv" style="--d:2">Security leaders have heard enough big AI claims. So don't take ours on faith: the code is open source, the evidence updates live, and our trust center is public.</p>
       <!-- PLACEHOLDER LINKS: confirm the trust center URL and the GitHub repository before launch -->
       <div class="acts-06 rv" style="--d:3">
-        <a class="btn btn-primary" href="#trust-center"><span class="lb">Visit the trust center</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
-        <a class="btn link-06" href="https://github.com/trycompai/comp"><span class="lb">View the code on GitHub</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+        <a class="btn btn-primary" href="#trust-center"><span class="lb">Visit the trust center</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+        <a class="btn link-06" href="https://github.com/trycompai/comp"><span class="lb">View the code on GitHub</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
       </div>
       </div>
     </div>
@@ -3102,7 +3158,7 @@
       <div class="rv" style="--d:2">
         <p class="lead-07">More than 1,000 companies run compliance on Comp AI. Here is what changed for some of them.</p>
         <div class="acts-07">
-          <a class="btn btn-primary" href="#demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="btn btn-primary" href="#demo"><span class="lb">Book a demo</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
           <a class="btn link-07" href="https://www.trycomp.ai/case-studies"><span class="lb">All customer stories</span></a>
         </div>
       </div>
@@ -3121,7 +3177,7 @@
             <div><dt>To audit-ready</dt><dd>6 days</dd></div>
             <div><dt>Hours saved</dt><dd>85 h</dd></div>
           </dl>
-          <a class="go-07" href="https://www.trycomp.ai/case-studies/persona-ai">Read the story<span class="vh-07">: Persona AI</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="go-07" href="https://www.trycomp.ai/case-studies/persona-ai">Read the story<span class="vh-07">: Persona AI</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
       <li class="st-07 sm rv" style="--d:4">
@@ -3130,7 +3186,7 @@
           <span class="lg-07 lg-img" role="img" aria-label="Zernio"><img src="assets/img/customers/zernio.svg" alt="" width="3867" height="814"></span>
           <p class="k-07">SOC 2 · GDPR</p>
           <h3>Audit-ready in days, SOC 2 and GDPR won in 3 months, ~200 hours saved.</h3>
-          <a class="go-07" href="https://www.trycomp.ai/case-studies/zernio">Read the story<span class="vh-07">: Zernio</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="go-07" href="https://www.trycomp.ai/case-studies/zernio">Read the story<span class="vh-07">: Zernio</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
       <li class="st-07 sm rv" style="--d:7;--gx:80%">
@@ -3139,7 +3195,7 @@
           <span class="lg-07 lg-img" role="img" aria-label="Luthor AI"><img src="assets/img/customers/luthor-ai.svg" alt="" width="93" height="18"></span>
           <p class="k-07">SOC 2 Type II</p>
           <h3>SOC 2 Type II audit-ready in 2 weeks, 120 hours saved.</h3>
-          <a class="go-07" href="https://www.trycomp.ai/case-studies/luthor-ai">Read the story<span class="vh-07">: Luthor AI</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="go-07" href="https://www.trycomp.ai/case-studies/luthor-ai">Read the story<span class="vh-07">: Luthor AI</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
       <li class="st-07 sm rv" style="--d:5;--gx:80%">
@@ -3148,7 +3204,7 @@
           <span class="nm-07 nm-icon"><img src="assets/img/customers/riskinmind.png" alt="" width="28" height="28">RiskInMind</span>
           <p class="k-07">SOC 2</p>
           <h3>SOC 2 passed in 20 days, and a $100K first customer landed.</h3>
-          <a class="go-07" href="https://www.trycomp.ai/case-studies/riskinmind">Read the story<span class="vh-07">: RiskInMind</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="go-07" href="https://www.trycomp.ai/case-studies/riskinmind">Read the story<span class="vh-07">: RiskInMind</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
       <li class="st-07 sm rv" style="--d:6">
@@ -3157,7 +3213,7 @@
           <span class="nm-07">Anodes AI</span>
           <p class="k-07">HIPAA · SOC 2</p>
           <h3>HIPAA and SOC 2 audit-ready in 5 weeks, so the pilots could start.</h3>
-          <a class="go-07" href="https://www.trycomp.ai/case-studies/anodes-ai">Read the story<span class="vh-07">: Anodes AI</span> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+          <a class="go-07" href="https://www.trycomp.ai/case-studies/anodes-ai">Read the story<span class="vh-07">: Anodes AI</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
         </div>
       </li>
     </ul>
@@ -3239,7 +3295,7 @@
               <div><dt>Audit</dt><dd data-out="aud">With Comp AI</dd></div>
             </dl>
             <div class="sec-08-qprice"><span class="sec-08-mono">Your price</span><b>Shared on the call</b><small>We confirm the number with you in 20 minutes.</small></div>
-            <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span> <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
+            <a class="btn btn-primary" href="/book-a-demo"><span class="lb">Book a demo</span><svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 3.5 10.5 8l-5 4.5" stroke-width="1.5" stroke-linecap="square"/></svg></a>
           </div>
         </div>
       </div>
