@@ -2646,6 +2646,29 @@
   html:not(#_) .sec-05 .q-05 .go .chev { width: 13px; height: 13px; }      /* the same chevron as every other tertiary action (was 11) */
   html:not(#_) .mega-feat .art.photo i { font: 400 var(--fs-label-s)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
 
+  /* ==== general fixes 27.11: above 1920 the hero headline goes one step up the scale (68 -> 87, x 1.272), sliding from 1920 to 2560
+     so there is no jump at 1921 */
+  @media (min-width: 1921px) {
+    html:not(#_) #hero-title, html:not(#_) #hero-title .line { font-size: clamp(68px, calc(68px + 19 * (100vw - 1920px) / 640), 87px); }
+  }
+
+  /* ==== general fixes 27.11: 02 The shift. The axis on the left: its stage names read as headings (title-s 20, sans Light, no caps;
+     were label 13 mono). The stage switch moves under the board (was over it, right of the lead). "+ Expert review" in sans (body-s) */
+  @media (min-width: 1024px) {
+    /* title-m (33 at 1920), a section exception (27.11) */
+    html:not(#_) .shift .steps .k { font-family: var(--sans); font-size: var(--fs-title-m); line-height: 1.05; letter-spacing: -.04em; font-weight: 300; text-transform: none; }
+    html:not(#_) .shift-grid .shift-switch { grid-column: 7 / span 6; grid-row: 6; justify-self: start; align-self: start; margin-top: var(--sp-3); }
+  }
+  /* the board's secondary lines in sans (body-s 13), as "+ Expert review": the tool under each task and the frameworks under Standards */
+  @media (min-width: 1024px) {      /* the axis diamonds on the middle of the 33px headings' capitals (were at the top of the line) */
+    html:not(#_) .shift .steps li::before, html:not(#_) .shift .steps li::after { top: calc(var(--fs-title-m) * .475 - 2.7px); }
+  }
+  html:not(#_) :is(.shift .board .who .a small, .shift .board .tool, .shift .board .tool *, .shift .board .foot small) { font-family: var(--sans); letter-spacing: 0; text-transform: none; }
+
+  /* ==== general fixes 27.11: the dark mode switch is hidden for now (a prototype: the light theme is a later step); its markup
+     and script stay, so it comes back by deleting this rule */
+  .site-nav .nav-ic.theme { display: none; }
+
   /* ==== 06 Trust, layout C (approved 26.11): the three columns side by side, the words above the windows, with more air.
      ?only=06 shows the section alone */
   html.only-06 .site-nav, html.only-06 main > :not(#sec-06), html.only-06 footer, html.only-06 .sheet, html.only-06 #sheet { display: none !important; }

@@ -13,8 +13,9 @@ title of a card or a window is `body-m`. There is no separate scale for them.
 A section uses **at most four sizes**. The section head (eyebrow, headline and lead) counts as **one component**, so the
 four are: the head, one title size (`title-m` or `title-s`), `body-m` and `label-s`.
 
-Accepted exceptions (five sizes): **05** (figures in `title-m` with their units in `title-s`) and **07** (the featured
-card's title in `title-m`, the small cards' titles in `title-s`).
+Accepted exceptions (five sizes): **02** (the stage names on the axis in `title-m`, next to the board's `body-s` rows and
+`label-s` heads), **05** (figures in `title-m` with their units in `title-s`) and **07** (the featured card's title in
+`title-m`, the small cards' titles in `title-s`).
 
 Implemented in `homepage/index.html` as tokens (`--fs-*` on `:root`) and one CSS rule per role at the end of the
 stylesheet (block “Type system v0.2”).
