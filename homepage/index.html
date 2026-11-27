@@ -5658,7 +5658,8 @@
     // the hero's composition (its core at 74.2 % of the width), the print OVER x the section's height;
     // on narrow screens it sits behind the type, centred
     const S = F[0];
-    if (view.w >= 1024) { view.k = view.h * OVER / (2 * S.ry); view.ox = view.w * .742 - S.cx * view.k; }
+    // 27.11 (general fixes): the print's height stops at its 1920 size (1174 x OVER), as the hero's; it grew with the section on tall screens
+    if (view.w >= 1024) { view.k = Math.min(view.h * OVER, 1700) / (2 * S.ry); view.ox = view.w * .742 - S.cx * view.k; }
     else { view.k = Math.min(view.w * .9 / (2 * S.rx), view.h / (2 * S.ry)); view.ox = view.w * .5 - S.cx * view.k; }
     view.oy = view.h * .54 - S.cy * view.k;      // a little low: the print's narrow foot is cut by the demo too
   }
@@ -6097,7 +6098,7 @@
   const logos = null;
   function place() {
     const S = F[0], hh = host.getBoundingClientRect().height, wv = cvs.getBoundingClientRect().width;      // the canvas spans the window
-    view.k = wv / (2 * S.rx);                                        // the letters edge to edge
+    view.k = Math.min(wv, 1920) / (2 * S.rx);                        // the letters edge to edge, up to the 1920 width (27.11: above it they stay that size, centred)
     const top = hh - 2 * S.ry * view.k * ABOVE;                      // the letters' top: 62 % of them above the rule
     view.ox = wv / 2 - S.cx * view.k; view.oy = top - (S.cy - S.ry) * view.k;
     cvs.style.height = Math.ceil(hh + 2 * S.ry * view.k * (1 - ABOVE) + 40) + 'px';
