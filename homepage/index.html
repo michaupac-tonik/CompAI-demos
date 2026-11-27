@@ -2831,6 +2831,30 @@
   .js :is(.sec-09, #sec-08-price, #sec-08-faq) .rv.in { opacity: 1; filter: none; transform: none; }
   @media (prefers-reduced-motion: reduce) { .js :is(.sec-09, #sec-08-price, #sec-08-faq) .rv { opacity: 1; filter: none; transform: none; transition: none; } }
 
+
+  /* ==== alternative UI (27.11, branch claude/v3-rounded-ui): a rounded version of the same page for the client to compare,
+     switched with the small control at the bottom left (or ?ui=round / ?ui=sharp; the choice is remembered). The sharp page
+     stays the default and is not changed: everything below applies only under html[data-ui="round"]. Corners: panels, cards
+     and windows 14, small bits (tags, checkboxes, FAQ toggles) 8, buttons, inputs, chips and switches fully round (pills). */
+  html[data-ui="round"] { --ui-r: 14px; --r-pill: 999px; }
+  html[data-ui="round"] :is(.sec-05, .sec-07) { --r-sm: 8px; }
+  html[data-ui="round"] :is(.btn, .cta-09-form input, input[type="email"], .sec-08-chip, .s8p-presets button, .s8n-more, .sw-l button, .sec-08-ui-h .sec-08-mono) { border-radius: var(--r-pill); }
+  html[data-ui="round"] .btn::before { border-radius: inherit; }
+  html[data-ui="round"] :is(.sec-08-plus, .social-09 a) { border-radius: 50%; }
+  html[data-ui="round"] .sec-08-chip:not([role="radio"])::before { border-radius: 4px; }
+  html[data-ui="round"] .sec-08-ui { overflow: hidden; }
+  /* the switch itself */
+  .ui-switch { position: fixed; z-index: 200; left: 16px; bottom: 16px; display: flex; gap: 2px; padding: 3px; border: 1px solid rgba(252,252,252,.22);
+    border-radius: var(--ui-r); background: rgba(22,22,22,.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    font: 400 var(--fs-label-s, 13px)/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  html[data-ui="round"] .ui-switch { border-radius: var(--r-pill); }
+  .ui-switch span { align-self: center; padding: 0 8px 0 7px; color: rgba(252,252,252,.5); }
+  .ui-switch button { appearance: none; margin: 0; padding: 8px 10px; border: 0; border-radius: inherit; background: none; color: rgba(252,252,252,.72); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; transition: background-color .2s, color .2s; }
+  .ui-switch button:hover { color: var(--white); }
+  .ui-switch button[aria-pressed="true"] { background: var(--white); color: var(--ink); }
+  .ui-switch button:focus-visible { outline: 1px solid var(--white); outline-offset: 2px; }
+  @media print { .ui-switch { display: none; } }
+
   /* ==== general fixes 27.11: the presets (Startup / Scale-up / Enterprise) under the quote builder, on its left edge (were over it, on the right) */
   .s8p-grid > .s8p-presets { grid-column: 6 / -1; justify-self: start; margin-top: calc(var(--sp-3) - 32px); }
   @media (max-width: 1023px) { .s8p-grid > .s8p-presets { grid-column: 1 / -1; } }
@@ -2898,6 +2922,11 @@
   .sec-06 .win .tc-req button.back:is(:hover, :focus-visible) svg { transform: translateX(3px); }
   @media (prefers-reduced-motion: reduce) { .sec-06 .win[data-tc] .tc-b, .sec-06 .tc-req { transition: none; } }
 </style>
+<script>
+  /* alternative UI: set before the first paint, so the page never flashes the other version (?ui=round|sharp, else the last choice) */
+  (() => { let v = new URLSearchParams(location.search).get('ui'); try { if (v) localStorage.setItem('compai-ui', v); else v = localStorage.getItem('compai-ui'); } catch (e) {}
+    if (v === 'round') document.documentElement.dataset.ui = 'round'; })();
+</script>
 </head>
 <body>
 <script>/* 05 test (Michał, 25.11): ?v05=a|b|c picks the variant of the chart's right side; ?only=05 shows that section alone (the A/B/C preview) */
@@ -7036,6 +7065,19 @@
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('in')); return; }
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
   els.forEach(el => io.observe(el));
+})();
+</script>
+<div class="ui-switch" role="group" aria-label="Interface version"><span>UI</span><button type="button" data-v="sharp">Sharp</button><button type="button" data-v="round">Rounded</button></div>
+<script>
+/* alternative UI switch (27.11): Sharp (the current page) or Rounded; remembered in this browser */
+(() => {
+  const root = document.documentElement, bs = [...document.querySelectorAll('.ui-switch button')];
+  const set = v => { if (v === 'round') root.dataset.ui = 'round'; else delete root.dataset.ui;
+    bs.forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+    try { localStorage.setItem('compai-ui', v); } catch (e) {}
+    const u = new URL(location.href); u.searchParams.set('ui', v); history.replaceState(null, '', u); };
+  bs.forEach(b => b.addEventListener('click', () => set(b.dataset.v)));
+  bs.forEach(b => b.setAttribute('aria-pressed', b.dataset.v === (root.dataset.ui === 'round' ? 'round' : 'sharp')));
 })();
 </script>
 </body>
