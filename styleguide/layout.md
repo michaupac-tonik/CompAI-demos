@@ -1,6 +1,6 @@
 # Layout v0.1
 
-> **Work in progress (v0.1), not final.** Describes the v3 layout in progress on branch `homepage-v3`, not the page currently in `main`. Do not build tokens or components from this yet. Last updated: 26.11.2026.
+> **Work in progress (v0.1), not final.** Describes the v3 page in this branch (`homepage/index.html`); global fixes still in progress may change it. Do not build tokens or components from this yet. Last updated: 27.11.2026.
 
 Spacing and section layout of the Comp AI homepage, desktop (from 1024 px). Implemented in `homepage/index.html`
 as tokens (`--sp-*` on `:root`) and the block “Layout system v0.1” at the end of the stylesheet.
