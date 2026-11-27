@@ -5748,22 +5748,25 @@
   sync(); mq.addEventListener('change', sync);
 
   // the wordmark behind the CTA: small dimmed diamond pixels on the print's 45° lattice, mint to cyan, like the mist behind 02.
-  // Still at rest. Around the cursor they grow, light up and fall toward it (a mass on a spring each, a little different, so
-  // they trail and overshoot); when it leaves they settle back. Drawn once at rest; animated only while the cursor is near.
+  // Still at rest. The cursor works as the hero's press (and the head in 05): every pixel keeps its place on the lattice and the
+  // press warps the whole field toward the cursor with a soft core, so the pixels crowd and stretch toward it but never cross or
+  // overlap (each is capped to the room the warp leaves it); inside the press they grow and light up. The press builds, follows
+  // the cursor with a little lag and lets go as the hero's does. Drawn once at rest; animated only while the press is on.
   const cta = sec.querySelector('.cta-09'), wc = cta && cta.querySelector('.word-09');
   if (cta && wc) {
     const ctx = wc.getContext('2d'), MINT = [36, 255, 99], CYAN = [0, 255, 238];
-    const DIM = .34, GROW = 2.2, GRAV = .9, DAMP = .9, ABOVE = .62;      // ABOVE: share of the wordmark above the rule
+    const DIM = .34, GROW = 1.2, GRAV = 1.1, ABOVE = .62;      // ABOVE: share of the wordmark above the rule; GRAV: the pull (05's head: .85)
+    const P_IN = .12, P_OUT = .04, FOLLOW = .16;
     const live = !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches;
     const img = new Image(); img.src = 'assets/img/logo-wordmark.svg';
-    let W = 0, H = 0, G = 7, R = 200, dpr = 1, dots = [], raf = 0, pres = 0, on = false;
-    const cur = { x: -1e4, y: -1e4 };
+    let W = 0, H = 0, G = 7, R = 200, dpr = 1, dots = [], raf = 0;
+    const press = { x: -1e4, y: -1e4, tx: -1e4, ty: -1e4, amt: 0, target: 0 };
     const build = () => {
       W = cta.clientWidth; if (!W) return;
       const hw = W * 21 / 76.7, top = cta.clientHeight - hw * ABOVE;      // the wordmark's top: 62 % of it above the CTA's bottom
       H = Math.ceil(top + hw); wc.style.height = H + 'px';
       dpr = Math.min(devicePixelRatio || 1, 2); wc.width = Math.round(W * dpr); wc.height = Math.round(H * dpr);
-      G = Math.max(5, Math.round(W / 200)); R = Math.max(220, cta.clientHeight * .55);
+      G = Math.max(5, Math.round(W / 200)); R = Math.max(200, cta.clientHeight * .5);      // the press reach
       const off = document.createElement('canvas'); off.width = Math.ceil(W); off.height = H;
       const o = off.getContext('2d'); o.drawImage(img, 0, top, W, hw);
       const a = o.getImageData(0, 0, off.width, off.height).data;
@@ -5774,31 +5777,32 @@
         const h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453, u = x / W;
         const r = h - Math.floor(h), q = (h2 => h2 - Math.floor(h2))(Math.sin(x * 4.898 + y * 7.23) * 24634.63);
         // sizes vary as the print's dots do: mostly small, some larger
-        dots.push({ x, y, ox: 0, oy: 0, vx: 0, vy: 0, r, z: .45 + 1.1 * q * q, c: MINT.map((m, n) => Math.round(m + (CYAN[n] - m) * u)).join(',') });
+        dots.push({ x, y, z: .45 + 1.1 * q * q, c: MINT.map((m, n) => Math.round(m + (CYAN[n] - m) * u)).join(',') });
       }
     };
     const paint = () => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      let moving = 0; const s2 = 2 * (R * .6) ** 2;
+      const pa = press.amt, r2 = R * R;
       for (const d of dots) {
-        const hx = cur.x - d.x, hy = cur.y - d.y, inf = pres * Math.exp(-(hx * hx + hy * hy) / s2);
-        if (pres > 0 || d.ox || d.oy) {
-          const k = .028 * (.55 + .9 * d.r);      // soft springs: strong gravity stretches the pixels far, and they trail
-          d.vx = (d.vx + (hx * GRAV * inf - d.ox) * k) * DAMP; d.vy = (d.vy + (hy * GRAV * inf - d.oy) * k) * DAMP;
-          d.ox += d.vx; d.oy += d.vy;
-          if (Math.abs(d.ox) + Math.abs(d.oy) < .05 && Math.abs(d.vx) + Math.abs(d.vy) < .02 && inf < .001) d.ox = d.oy = d.vx = d.vy = 0;
-          else moving = 1;
+        let x = d.x, y = d.y, p = 0, g = 0;
+        if (pa > .001) {
+          const dx = x - press.x, dy = y - press.y; p = pa * Math.exp(-(dx * dx + dy * dy) / r2);
+          g = GRAV * p * (1 - .4 * p);      // the pull: a soft core, so the field stretches toward the cursor without folding
+          x -= dx * g; y -= dy * g;
         }
-        const s = G * .24 * d.z * (1 + GROW * inf), x = d.x + d.ox, y = d.y + d.oy;
-        ctx.fillStyle = `rgba(${d.c},${(DIM + (1 - DIM) * Math.min(1, inf * 1.3)).toFixed(3)})`;
+        // the press grows the pixel, but never past the room the warp leaves between neighbours: no overlaps
+        const s = Math.min(G * .24 * d.z * (1 + GROW * p), G * (1 - g) * .46);
+        ctx.fillStyle = `rgba(${d.c},${Math.min(1, DIM + (1 - DIM) * p * 1.2).toFixed(3)})`;
         ctx.beginPath(); ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.fill();
       }
-      return moving;
     };
     const frame = () => {
-      pres += ((on ? 1 : 0) - pres) * (on ? .08 : .05); if (!on && pres < .002) pres = 0;
-      const moving = paint();
-      raf = (on || pres > 0 || moving) ? requestAnimationFrame(frame) : 0;
+      press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN : P_OUT);
+      press.x += (press.tx - press.x) * FOLLOW; press.y += (press.ty - press.y) * FOLLOW;
+      if (!press.target && press.amt < .002) press.amt = 0;
+      paint();
+      const moving = Math.abs(press.tx - press.x) + Math.abs(press.ty - press.y) > .3;
+      raf = (press.target || press.amt > 0 && (moving || press.amt > .002)) ? requestAnimationFrame(frame) : 0;
     };
     const start = () => { build(); paint(); };
     if (img.complete) start(); else img.addEventListener('load', start);
@@ -5806,9 +5810,10 @@
     addEventListener('resize', () => { cancelAnimationFrame(raf); raf = 0; if (img.complete) start(); });
     if (live) {
       cta.addEventListener('pointermove', e => { if (e.pointerType === 'touch') return;
-        const r = wc.getBoundingClientRect(); cur.x = e.clientX - r.left; cur.y = e.clientY - r.top;
-        on = true; if (!raf) raf = requestAnimationFrame(frame); });
-      cta.addEventListener('pointerleave', () => { on = false; });
+        const r = wc.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+        if (press.amt < .05) { press.x = x; press.y = y; } press.tx = x; press.ty = y; press.target = 1;
+        if (!raf) raf = requestAnimationFrame(frame); }, { passive: true });
+      cta.addEventListener('pointerleave', () => { press.target = 0; if (!raf) raf = requestAnimationFrame(frame); });
     }
   }
 })();
