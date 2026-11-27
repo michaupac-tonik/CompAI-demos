@@ -5748,15 +5748,19 @@
   sync(); mq.addEventListener('change', sync);
 
   // the wordmark behind the CTA: small dimmed diamond pixels on the print's 45° lattice, mint to cyan, like the mist behind 02.
-  // Still at rest. The cursor works as the hero's press (and the head in 05): every pixel keeps its place on the lattice and the
-  // press warps the whole field toward the cursor with a soft core, so the pixels crowd and stretch toward it but never cross or
-  // overlap (each is capped to the room the warp leaves it); inside the press they grow and light up. The press builds, follows
-  // the cursor with a little lag and lets go as the hero's does. Drawn once at rest; animated only while the press is on.
+  // Still at rest. Under the cursor the field is rubber: every pixel keeps its place on the lattice and a smooth, wide displacement
+  // moves it, so the letters keep their shape and only stretch. Two parts: gravity, a pull toward the cursor that saturates (the
+  // pixels right at the cursor hardly move, those further out lean in by up to GMAX), and a drag: an elastic vector the cursor's
+  // movement tugs and a spring brings back with a wobble, so the letters are pulled along and snap back like rubber. Each pixel is
+  // capped to the room the field leaves it (no overlaps); inside the press they grow a little and light up.
   const cta = sec.querySelector('.cta-09'), wc = cta && cta.querySelector('.word-09');
   if (cta && wc) {
     const ctx = wc.getContext('2d'), MINT = [36, 255, 99], CYAN = [0, 255, 238];
-    const DIM = .34, GROW = 1.2, GRAV = 1.1, ABOVE = .62;      // ABOVE: share of the wordmark above the rule; GRAV: the pull (05's head: .85)
-    const P_IN = .12, P_OUT = .04, FOLLOW = .16;
+    const DIM = .34, GROW = .7, ABOVE = .62;      // ABOVE: share of the wordmark above the rule
+    const GMAX = 46, GSAT = 60;                   // gravity: the most a pixel leans in (px), and the distance at which it saturates
+    const DRAG = .55, EMAX = 90, SPRING = .07, DAMP = .84;      // rubber: how much of the cursor's movement tugs the field, its spring
+    const P_IN = .1, P_OUT = .04, FOLLOW = .2;
+    const E = { x: 0, y: 0, vx: 0, vy: 0 };
     const live = !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(hover: hover)').matches;
     const img = new Image(); img.src = 'assets/img/logo-wordmark.svg';
     let W = 0, H = 0, G = 7, R = 200, dpr = 1, dots = [], raf = 0;
@@ -5766,7 +5770,7 @@
       const hw = W * 21 / 76.7, top = cta.clientHeight - hw * ABOVE;      // the wordmark's top: 62 % of it above the CTA's bottom
       H = Math.ceil(top + hw); wc.style.height = H + 'px';
       dpr = Math.min(devicePixelRatio || 1, 2); wc.width = Math.round(W * dpr); wc.height = Math.round(H * dpr);
-      G = Math.max(5, Math.round(W / 200)); R = Math.max(200, cta.clientHeight * .5);      // the press reach
+      G = Math.max(5, Math.round(W / 200)); R = Math.max(220, cta.clientHeight * .5);      // the press reach (wide: a gentle gradient keeps the letters' shape)
       const off = document.createElement('canvas'); off.width = Math.ceil(W); off.height = H;
       const o = off.getContext('2d'); o.drawImage(img, 0, top, W, hw);
       const a = o.getImageData(0, 0, off.width, off.height).data;
@@ -5782,27 +5786,34 @@
     };
     const paint = () => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      const pa = press.amt, r2 = R * R;
+      const pa = press.amt, s2 = 2 * R * R;
       for (const d of dots) {
-        let x = d.x, y = d.y, p = 0, g = 0;
-        if (pa > .001) {
-          const dx = x - press.x, dy = y - press.y; p = pa * Math.exp(-(dx * dx + dy * dy) / r2);
-          g = GRAV * p * (1 - .4 * p);      // the pull: a soft core, so the field stretches toward the cursor without folding
-          x -= dx * g; y -= dy * g;
+        let x = d.x, y = d.y, p = 0, grad = 0;
+        if (pa > .001 || E.x || E.y) {
+          const dx = press.x - x, dy = press.y - y, dist = Math.hypot(dx, dy) || 1, f = Math.exp(-(dist * dist) / s2);
+          p = pa * f;
+          const pull = GMAX * p * dist / (dist + GSAT);      // gravity, saturating: the letters lean in, the core does not collapse
+          x += dx / dist * pull + E.x * f; y += dy / dist * pull + E.y * f;
+          grad = (GMAX * pa + Math.hypot(E.x, E.y)) * f / R;      // how much the field squeezes here
         }
-        // the press grows the pixel, but never past the room the warp leaves between neighbours: no overlaps
-        const s = Math.min(G * .24 * d.z * (1 + GROW * p), G * (1 - g) * .46);
-        ctx.fillStyle = `rgba(${d.c},${Math.min(1, DIM + (1 - DIM) * p * 1.2).toFixed(3)})`;
+        const s = Math.min(G * .24 * d.z * (1 + GROW * p), G * Math.max(.2, 1 - grad) * .46);
+        ctx.fillStyle = `rgba(${d.c},${Math.min(1, DIM + (1 - DIM) * p * 1.3).toFixed(3)})`;
         ctx.beginPath(); ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.fill();
       }
     };
     const frame = () => {
       press.amt += (press.target - press.amt) * (press.target > press.amt ? P_IN : P_OUT);
-      press.x += (press.tx - press.x) * FOLLOW; press.y += (press.ty - press.y) * FOLLOW;
+      const mx = (press.tx - press.x) * FOLLOW, my = (press.ty - press.y) * FOLLOW;
+      press.x += mx; press.y += my;
+      // rubber: the cursor's movement tugs the elastic vector, a spring pulls it back (underdamped: a short wobble)
+      E.vx = (E.vx + mx * DRAG * press.amt - E.x * SPRING) * DAMP; E.vy = (E.vy + my * DRAG * press.amt - E.y * SPRING) * DAMP;
+      E.x += E.vx; E.y += E.vy;
+      const m = Math.hypot(E.x, E.y); if (m > EMAX) { E.x *= EMAX / m; E.y *= EMAX / m; }
+      if (Math.abs(E.x) + Math.abs(E.y) + Math.abs(E.vx) + Math.abs(E.vy) < .05) E.x = E.y = E.vx = E.vy = 0;
       if (!press.target && press.amt < .002) press.amt = 0;
       paint();
-      const moving = Math.abs(press.tx - press.x) + Math.abs(press.ty - press.y) > .3;
-      raf = (press.target || press.amt > 0 && (moving || press.amt > .002)) ? requestAnimationFrame(frame) : 0;
+      const busy = press.target || press.amt > 0 || E.x || E.y;
+      raf = busy ? requestAnimationFrame(frame) : 0;
     };
     const start = () => { build(); paint(); };
     if (img.complete) start(); else img.addEventListener('load', start);
